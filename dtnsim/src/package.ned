@@ -1,0 +1,3 @@
+package dtnsim;
+
+@license(LGPL);

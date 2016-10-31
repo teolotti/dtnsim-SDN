@@ -1,0 +1,71 @@
+---- 20160423-13:12:29 ---------------------------------------------------------
+
+
+Tcl error: moduleinspector.cc#652: ptr0x2718ae0 not found
+    while executing
+"error "$tag not found""
+    (procedure "ModuleInspector:getSubmodCoords" line 4)
+    invoked from within
+"ModuleInspector:getSubmodCoords $c $modptr"
+    (procedure "ModuleInspector:drawNextEventMarker" line 2)
+    invoked from within
+"ModuleInspector:drawNextEventMarker .network.c ptr0x2718ae0 2"
+
+
+---- 20160423-13:25:30 ---------------------------------------------------------
+
+
+Tcl error: moduleinspector.cc#652: ptr0x33b25f0 not found
+    while executing
+"error "$tag not found""
+    (procedure "ModuleInspector:getSubmodCoords" line 4)
+    invoked from within
+"ModuleInspector:getSubmodCoords $c $modptr"
+    (procedure "ModuleInspector:drawNextEventMarker" line 2)
+    invoked from within
+"ModuleInspector:drawNextEventMarker .inspector0.c ptr0x33b25f0 2"
+
+
+Tcl error: tkenv.cc#873: can't unset "pil_name(TotSim.node[1]:Nod:3:2)": no such element in array
+    while executing
+"unset pil_name($key)"
+    invoked from within
+"if [info exists pil_name($key)] {
+            debug "trying to open inspector $key"
+            set ptrs [opp_findobjectbyfullpath $pil_name($key) $pi..."
+    (procedure "inspectorList:openInspectors" line 5)
+    invoked from within
+"inspectorList:openInspectors"
+    (procedure "inspectorUpdateCallback" line 6)
+    invoked from within
+"inspectorUpdateCallback"
+
+
+---- 20160423-16:17:55 ---------------------------------------------------------
+
+
+Tcl error: moduleinspector.cc#652: ptr0x2c46820 not found
+    while executing
+"error "$tag not found""
+    (procedure "ModuleInspector:getSubmodCoords" line 4)
+    invoked from within
+"ModuleInspector:getSubmodCoords $c $modptr"
+    (procedure "ModuleInspector:drawNextEventMarker" line 2)
+    invoked from within
+"ModuleInspector:drawNextEventMarker .network.c ptr0x2c46820 2"
+
+
+---- 20161026-13:02:41 ---------------------------------------------------------
+
+
+Tcl error: moduleinspector.cc#652: ptr0x82d4a0 not found
+    while executing
+"error "$tag not found""
+    (procedure "ModuleInspector:getSubmodCoords" line 4)
+    invoked from within
+"ModuleInspector:getSubmodCoords $c $modptr"
+    (procedure "ModuleInspector:drawNextEventMarker" line 2)
+    invoked from within
+"ModuleInspector:drawNextEventMarker .network.c ptr0x82d4a0 2"
+
+
