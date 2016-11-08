@@ -21,15 +21,6 @@ INCLUDE_PATH = \
     -Inode/app \
     -Inode/mac \
     -Inode/net \
-    -Inode/net/ion_interface \
-    -Inode/net/ion_interface/ion \
-    -Inode/net/ion_interface/ion/bp \
-    -Inode/net/ion_interface/ion/bp/cgr \
-    -Inode/net/ion_interface/ion/bp/include \
-    -Inode/net/ion_interface/ion/bp/library \
-    -Inode/net/ion_interface/ion/ici \
-    -Inode/net/ion_interface/ion/ici/include \
-    -Inode/net/ion_interface/ion/ici/library \
     -Iwin
 
 # Additional object and library files to link with
@@ -47,10 +38,9 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 OBJS = \
     $O/node/app/App.o \
     $O/node/mac/Mac.o \
-    $O/node/net/Contact.o \
     $O/node/net/Net.o \
+    $O/node/net/Contact.o \
     $O/node/net/ContactPlan.o \
-    $O/node/net/ion_interface/ION_interface.o \
     $O/dtnsim_m.o
 
 # Message files
@@ -143,15 +133,6 @@ clean:
 	$(Q)-rm -f node/app/*_m.cc node/app/*_m.h node/app/*_sm.cc node/app/*_sm.h
 	$(Q)-rm -f node/mac/*_m.cc node/mac/*_m.h node/mac/*_sm.cc node/mac/*_sm.h
 	$(Q)-rm -f node/net/*_m.cc node/net/*_m.h node/net/*_sm.cc node/net/*_sm.h
-	$(Q)-rm -f node/net/ion_interface/*_m.cc node/net/ion_interface/*_m.h node/net/ion_interface/*_sm.cc node/net/ion_interface/*_sm.h
-	$(Q)-rm -f node/net/ion_interface/ion/*_m.cc node/net/ion_interface/ion/*_m.h node/net/ion_interface/ion/*_sm.cc node/net/ion_interface/ion/*_sm.h
-	$(Q)-rm -f node/net/ion_interface/ion/bp/*_m.cc node/net/ion_interface/ion/bp/*_m.h node/net/ion_interface/ion/bp/*_sm.cc node/net/ion_interface/ion/bp/*_sm.h
-	$(Q)-rm -f node/net/ion_interface/ion/bp/cgr/*_m.cc node/net/ion_interface/ion/bp/cgr/*_m.h node/net/ion_interface/ion/bp/cgr/*_sm.cc node/net/ion_interface/ion/bp/cgr/*_sm.h
-	$(Q)-rm -f node/net/ion_interface/ion/bp/include/*_m.cc node/net/ion_interface/ion/bp/include/*_m.h node/net/ion_interface/ion/bp/include/*_sm.cc node/net/ion_interface/ion/bp/include/*_sm.h
-	$(Q)-rm -f node/net/ion_interface/ion/bp/library/*_m.cc node/net/ion_interface/ion/bp/library/*_m.h node/net/ion_interface/ion/bp/library/*_sm.cc node/net/ion_interface/ion/bp/library/*_sm.h
-	$(Q)-rm -f node/net/ion_interface/ion/ici/*_m.cc node/net/ion_interface/ion/ici/*_m.h node/net/ion_interface/ion/ici/*_sm.cc node/net/ion_interface/ion/ici/*_sm.h
-	$(Q)-rm -f node/net/ion_interface/ion/ici/include/*_m.cc node/net/ion_interface/ion/ici/include/*_m.h node/net/ion_interface/ion/ici/include/*_sm.cc node/net/ion_interface/ion/ici/include/*_sm.h
-	$(Q)-rm -f node/net/ion_interface/ion/ici/library/*_m.cc node/net/ion_interface/ion/ici/library/*_m.h node/net/ion_interface/ion/ici/library/*_sm.cc node/net/ion_interface/ion/ici/library/*_sm.h
 	$(Q)-rm -f win/*_m.cc win/*_m.h win/*_sm.cc win/*_sm.h
 
 cleanall: clean
@@ -159,7 +140,7 @@ cleanall: clean
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc node/net/ion_interface/*.cc node/net/ion_interface/ion/*.cc node/net/ion_interface/ion/bp/*.cc node/net/ion_interface/ion/bp/cgr/*.cc node/net/ion_interface/ion/bp/include/*.cc node/net/ion_interface/ion/bp/library/*.cc node/net/ion_interface/ion/ici/*.cc node/net/ion_interface/ion/ici/include/*.cc node/net/ion_interface/ion/ici/library/*.cc win/*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc win/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/dtnsim_m.o: dtnsim_m.cc \
@@ -181,9 +162,5 @@ $O/node/net/Net.o: node/net/Net.cc \
 	node/app/App.h \
 	node/net/Contact.h \
 	node/net/ContactPlan.h \
-	node/net/Net.h \
-	node/net/ion_interface/ION_interface.h
-$O/node/net/ion_interface/ION_interface.o: node/net/ion_interface/ION_interface.cc \
-	dtnsim_m.h \
-	node/net/ion_interface/ION_interface.h
+	node/net/Net.h
 

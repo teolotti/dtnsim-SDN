@@ -9,7 +9,7 @@
 #include <queue>
 #include "ContactPlan.h"
 #include "dtnsim_m.h"
-#include "ion_interface/ION_interface.h"
+//#include "ion_interface/ION_interface.h"
 
 using namespace omnetpp;
 using namespace std;
