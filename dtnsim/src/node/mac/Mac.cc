@@ -14,7 +14,7 @@ void Mac::handleMessage(cMessage *msg)
 	{
 		Bundle* bundle = check_and_cast<Bundle *>(msg);
 
-		int destinationEid = bundle->getDestinationEid();
+		int destinationEid = bundle->getNextHopEid();
 		int ownEid = check_and_cast<App *>(this->getParentModule()->getSubmodule("app"))->getEid();
 
 		if (ownEid == destinationEid)

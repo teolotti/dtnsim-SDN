@@ -10,6 +10,10 @@
 #include "ContactPlan.h"
 #include "dtnsim_m.h"
 //#include "ion_interface/ION_interface.h"
+#include "Routing.h"
+#include "RoutingDirect.h"
+#include "RoutingCgrModel.h"
+#include "RoutingCgrIon350.h"
 
 using namespace omnetpp;
 using namespace std;
@@ -29,7 +33,6 @@ protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
     virtual void dispatchBundle(Bundle *bundle);
-    virtual void routeBundle(Bundle *bundle);
     virtual double transmitBundle(int neighborEid, int contactId);
     virtual void parseContacts(string fileName);
     virtual void finish();
@@ -38,9 +41,10 @@ private:
 
     int eid_;
 
+    Routing * routing;
     ContactPlan contactPlan_;
 
-    // (neighbor eid --> bundles)
+    // (contact id --> bundles)
     map<int, queue<Bundle *> > bundlesQueue_;
 
     // (contact id --> freeChannelMsg)

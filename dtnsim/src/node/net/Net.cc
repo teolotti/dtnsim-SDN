@@ -7,6 +7,17 @@ void Net::initialize()
 {
 	this->eid_ = this->getParentModule()->getIndex() + 1;
 	this->parseContacts(par("contactsFile"));
+
+	string routeString = par("routing");
+	if (routeString.compare("direct") == 0)
+		routing = new RoutingDirect();
+	if (routeString.compare("cgrModel") == 0)
+		routing = new RoutingCgrModel();
+	if (routeString.compare("cgrIon350") == 0)
+		routing = new RoutingCgrIon350();
+	routing->setLocalNode(eid_);
+	routing->setQueue(&bundlesQueue_);
+	routing->setContactPlan(&contactPlan_);
 }
 
 void Net::handleMessage(cMessage * msg)
@@ -59,7 +70,7 @@ void Net::handleMessage(cMessage * msg)
 		// save freeChannelMsg to cancel event if necessary
 		freeChannelMsgs_[freeChannelMsg->getContactId()] = freeChannelMsg;
 
-		map<int, queue<Bundle *> >::iterator it = bundlesQueue_.find(neighborEid);
+		map<int, queue<Bundle *> >::iterator it = bundlesQueue_.find(contactId);
 
 		// if there are messages in the queue for this neighbor
 		if (it != bundlesQueue_.end())
@@ -94,38 +105,17 @@ void Net::dispatchBundle(Bundle *bundle)
 	// else, route and enqueue bundle
 	else
 	{
-		routeBundle(bundle);
-	}
-}
-
-void Net::routeBundle(Bundle *bundle)
-{
-	EV << "ROUTE BUNDLE" << endl;
-
-	// TODO:call libcgr
-	// now the bundle is enqueued directly for the destination node as neighbor
-
-	int neighborEid = bundle->getDestinationEid();
-	map<int, queue<Bundle *> >::iterator it = bundlesQueue_.find(neighborEid);
-	if (it != bundlesQueue_.end())
-	{
-		it->second.push(bundle);
-	}
-	else
-	{
-		queue<Bundle *> q;
-		q.push(bundle);
-		bundlesQueue_[neighborEid] = q;
+		routing->routeBundle(bundle, simTime().dbl());
 	}
 }
 
 double Net::transmitBundle(int neighborEid, int contactId)
 {
-	EV << "TRANSMIT BUNDLE" << endl;
+	EV << "TRANSMIT BUNDLE" << " contactId: " << contactId << endl;
 
 	double transmissionDuration = 0.0;
 
-	map<int, queue<Bundle *> >::iterator it = bundlesQueue_.find(neighborEid);
+	map<int, queue<Bundle *> >::iterator it = bundlesQueue_.find(contactId);
 
 	// if there is a bundlesQueue for the neighbor
 	if (it != bundlesQueue_.end())
@@ -138,18 +128,24 @@ double Net::transmitBundle(int neighborEid, int contactId)
 		if (!bundlesToTx.empty())
 		{
 			Bundle* bundle = bundlesToTx.front();
-			double dataRate = this->contactPlan_.getContact(contactId)->getDataRate();
+			double dataRate = this->contactPlan_.getContactById(contactId)->getDataRate();
 			transmissionDuration = (double) bundle->getBitLength() / dataRate;
+
+			// Set things that changes on each hop:
+			bundle->setSenderEid(eid_);
+			bundle->setDlvConfidence(0);
+			bundle->setXmitCopiesCount(0);
+
 			send(bundle, "gateToMac$o");
 			bundlesToTx.pop();
 
 			if (!bundlesToTx.empty())
 			{
-				bundlesQueue_[neighborEid] = bundlesToTx;
+				bundlesQueue_[contactId] = bundlesToTx;
 			}
 			else
 			{
-				bundlesQueue_.erase(neighborEid);
+				bundlesQueue_.erase(contactId);
 			}
 		}
 	}
@@ -173,24 +169,16 @@ void Net::parseContacts(string fileName)
 	file.open(fileName.c_str());
 
 	if (!file.is_open())
-	{
 		throw cException(("Error: wrong path to contacts file " + string(fileName)).c_str());
-	}
 
 	while (true)
 	{
 		if (aux.empty())
-		{
 			getline(file, aux, '\n');
-		}
 		else if (aux.at(0) == '#')
-		{
 			getline(file, aux, '\n');
-		}
 		else
-		{
 			break;
-		}
 	}
 
 	stringstream ss(aux);
@@ -225,7 +213,6 @@ void Net::parseContacts(string fileName)
 void Net::finish()
 {
 	//delete enqueued bundles that could not be delivered
-
 	map<int, queue<Bundle *> >::iterator it1 = bundlesQueue_.begin();
 	map<int, queue<Bundle *> >::iterator it2 = bundlesQueue_.end();
 	while (it1 != it2)

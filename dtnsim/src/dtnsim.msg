@@ -6,12 +6,19 @@ cplusplus {{
 class noncobject List;
 
 packet Bundle{
+    	// Things that are set once
     	int sourceEid;
         int destinationEid;
-        
+        bool returnToSender;
+        bool critical;
         simtime_t creationTimestamp;
         simtime_t ttl;
-		
+        
+        // Things that changes on each hop
+        int senderEid;
+        int nextHopEid;
+        int xmitCopiesCount;
+        double dlvConfidence;
         List originalRoute;
         List takenRoute;
 };

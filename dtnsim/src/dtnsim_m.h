@@ -24,12 +24,19 @@
  * <pre>
  * packet Bundle
  * {
+ *     // Things that are set once
  *     int sourceEid;
  *     int destinationEid;
- * 
+ *     bool returnToSender;
+ *     bool critical;
  *     simtime_t creationTimestamp;
  *     simtime_t ttl;
  * 
+ *     // Things that changes on each hop
+ *     int senderEid;
+ *     int nextHopEid;
+ *     int xmitCopiesCount;
+ *     double dlvConfidence;
  *     List originalRoute;
  *     List takenRoute;
  * }
@@ -40,8 +47,14 @@ class Bundle : public ::omnetpp::cPacket
   protected:
     int sourceEid;
     int destinationEid;
+    bool returnToSender;
+    bool critical;
     ::omnetpp::simtime_t creationTimestamp;
     ::omnetpp::simtime_t ttl;
+    int senderEid;
+    int nextHopEid;
+    int xmitCopiesCount;
+    double dlvConfidence;
     List originalRoute;
     List takenRoute;
 
@@ -66,10 +79,22 @@ class Bundle : public ::omnetpp::cPacket
     virtual void setSourceEid(int sourceEid);
     virtual int getDestinationEid() const;
     virtual void setDestinationEid(int destinationEid);
+    virtual bool getReturnToSender() const;
+    virtual void setReturnToSender(bool returnToSender);
+    virtual bool getCritical() const;
+    virtual void setCritical(bool critical);
     virtual ::omnetpp::simtime_t getCreationTimestamp() const;
     virtual void setCreationTimestamp(::omnetpp::simtime_t creationTimestamp);
     virtual ::omnetpp::simtime_t getTtl() const;
     virtual void setTtl(::omnetpp::simtime_t ttl);
+    virtual int getSenderEid() const;
+    virtual void setSenderEid(int senderEid);
+    virtual int getNextHopEid() const;
+    virtual void setNextHopEid(int nextHopEid);
+    virtual int getXmitCopiesCount() const;
+    virtual void setXmitCopiesCount(int xmitCopiesCount);
+    virtual double getDlvConfidence() const;
+    virtual void setDlvConfidence(double dlvConfidence);
     virtual List& getOriginalRoute();
     virtual const List& getOriginalRoute() const {return const_cast<Bundle*>(this)->getOriginalRoute();}
     virtual void setOriginalRoute(const List& originalRoute);
@@ -82,7 +107,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const Bundle& obj) {obj.par
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Bundle& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:19</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:26</tt> by nedtool.
  * <pre>
  * message TrafficGeneratorMsg
  * {
@@ -136,7 +161,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const TrafficGeneratorMsg& 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, TrafficGeneratorMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:27</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:34</tt> by nedtool.
  * <pre>
  * message ContactMsg
  * {
@@ -198,7 +223,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ContactMsg& obj) {obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ContactMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:37</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:44</tt> by nedtool.
  * <pre>
  * message FreeChannelMsg
  * {

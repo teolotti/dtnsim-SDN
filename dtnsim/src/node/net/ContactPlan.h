@@ -16,11 +16,17 @@ public:
     virtual ~ContactPlan();
 
     void addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate);
-    Contact *getContact(int id);
+    Contact *getContactById(int id);
+    vector<Contact> getContactsBySrc(int Src);
+    vector<Contact> getContactsByDst(int Dst);
+    vector<Contact> getContactsBySrcDst(int Src, int Dst);
+
+    simtime_t getLastEditTime();
 
 private:
 
     vector<Contact> contacts_;
+    simtime_t lastEditTime;
 
 };
 

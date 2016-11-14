@@ -167,8 +167,14 @@ Bundle::Bundle(const char *name, int kind) : ::omnetpp::cPacket(name,kind)
 {
     this->sourceEid = 0;
     this->destinationEid = 0;
+    this->returnToSender = false;
+    this->critical = false;
     this->creationTimestamp = 0;
     this->ttl = 0;
+    this->senderEid = 0;
+    this->nextHopEid = 0;
+    this->xmitCopiesCount = 0;
+    this->dlvConfidence = 0;
 }
 
 Bundle::Bundle(const Bundle& other) : ::omnetpp::cPacket(other)
@@ -192,8 +198,14 @@ void Bundle::copy(const Bundle& other)
 {
     this->sourceEid = other.sourceEid;
     this->destinationEid = other.destinationEid;
+    this->returnToSender = other.returnToSender;
+    this->critical = other.critical;
     this->creationTimestamp = other.creationTimestamp;
     this->ttl = other.ttl;
+    this->senderEid = other.senderEid;
+    this->nextHopEid = other.nextHopEid;
+    this->xmitCopiesCount = other.xmitCopiesCount;
+    this->dlvConfidence = other.dlvConfidence;
     this->originalRoute = other.originalRoute;
     this->takenRoute = other.takenRoute;
 }
@@ -203,8 +215,14 @@ void Bundle::parsimPack(omnetpp::cCommBuffer *b) const
     ::omnetpp::cPacket::parsimPack(b);
     doParsimPacking(b,this->sourceEid);
     doParsimPacking(b,this->destinationEid);
+    doParsimPacking(b,this->returnToSender);
+    doParsimPacking(b,this->critical);
     doParsimPacking(b,this->creationTimestamp);
     doParsimPacking(b,this->ttl);
+    doParsimPacking(b,this->senderEid);
+    doParsimPacking(b,this->nextHopEid);
+    doParsimPacking(b,this->xmitCopiesCount);
+    doParsimPacking(b,this->dlvConfidence);
     doParsimPacking(b,this->originalRoute);
     doParsimPacking(b,this->takenRoute);
 }
@@ -214,8 +232,14 @@ void Bundle::parsimUnpack(omnetpp::cCommBuffer *b)
     ::omnetpp::cPacket::parsimUnpack(b);
     doParsimUnpacking(b,this->sourceEid);
     doParsimUnpacking(b,this->destinationEid);
+    doParsimUnpacking(b,this->returnToSender);
+    doParsimUnpacking(b,this->critical);
     doParsimUnpacking(b,this->creationTimestamp);
     doParsimUnpacking(b,this->ttl);
+    doParsimUnpacking(b,this->senderEid);
+    doParsimUnpacking(b,this->nextHopEid);
+    doParsimUnpacking(b,this->xmitCopiesCount);
+    doParsimUnpacking(b,this->dlvConfidence);
     doParsimUnpacking(b,this->originalRoute);
     doParsimUnpacking(b,this->takenRoute);
 }
@@ -240,6 +264,26 @@ void Bundle::setDestinationEid(int destinationEid)
     this->destinationEid = destinationEid;
 }
 
+bool Bundle::getReturnToSender() const
+{
+    return this->returnToSender;
+}
+
+void Bundle::setReturnToSender(bool returnToSender)
+{
+    this->returnToSender = returnToSender;
+}
+
+bool Bundle::getCritical() const
+{
+    return this->critical;
+}
+
+void Bundle::setCritical(bool critical)
+{
+    this->critical = critical;
+}
+
 ::omnetpp::simtime_t Bundle::getCreationTimestamp() const
 {
     return this->creationTimestamp;
@@ -258,6 +302,46 @@ void Bundle::setCreationTimestamp(::omnetpp::simtime_t creationTimestamp)
 void Bundle::setTtl(::omnetpp::simtime_t ttl)
 {
     this->ttl = ttl;
+}
+
+int Bundle::getSenderEid() const
+{
+    return this->senderEid;
+}
+
+void Bundle::setSenderEid(int senderEid)
+{
+    this->senderEid = senderEid;
+}
+
+int Bundle::getNextHopEid() const
+{
+    return this->nextHopEid;
+}
+
+void Bundle::setNextHopEid(int nextHopEid)
+{
+    this->nextHopEid = nextHopEid;
+}
+
+int Bundle::getXmitCopiesCount() const
+{
+    return this->xmitCopiesCount;
+}
+
+void Bundle::setXmitCopiesCount(int xmitCopiesCount)
+{
+    this->xmitCopiesCount = xmitCopiesCount;
+}
+
+double Bundle::getDlvConfidence() const
+{
+    return this->dlvConfidence;
+}
+
+void Bundle::setDlvConfidence(double dlvConfidence)
+{
+    this->dlvConfidence = dlvConfidence;
 }
 
 List& Bundle::getOriginalRoute()
@@ -344,7 +428,7 @@ const char *BundleDescriptor::getProperty(const char *propertyname) const
 int BundleDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 6+basedesc->getFieldCount() : 6;
+    return basedesc ? 12+basedesc->getFieldCount() : 12;
 }
 
 unsigned int BundleDescriptor::getFieldTypeFlags(int field) const
@@ -360,10 +444,16 @@ unsigned int BundleDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
         FD_ISCOMPOUND,
         FD_ISCOMPOUND,
     };
-    return (field>=0 && field<6) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<12) ? fieldTypeFlags[field] : 0;
 }
 
 const char *BundleDescriptor::getFieldName(int field) const
@@ -377,12 +467,18 @@ const char *BundleDescriptor::getFieldName(int field) const
     static const char *fieldNames[] = {
         "sourceEid",
         "destinationEid",
+        "returnToSender",
+        "critical",
         "creationTimestamp",
         "ttl",
+        "senderEid",
+        "nextHopEid",
+        "xmitCopiesCount",
+        "dlvConfidence",
         "originalRoute",
         "takenRoute",
     };
-    return (field>=0 && field<6) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<12) ? fieldNames[field] : nullptr;
 }
 
 int BundleDescriptor::findField(const char *fieldName) const
@@ -391,10 +487,16 @@ int BundleDescriptor::findField(const char *fieldName) const
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='s' && strcmp(fieldName, "sourceEid")==0) return base+0;
     if (fieldName[0]=='d' && strcmp(fieldName, "destinationEid")==0) return base+1;
-    if (fieldName[0]=='c' && strcmp(fieldName, "creationTimestamp")==0) return base+2;
-    if (fieldName[0]=='t' && strcmp(fieldName, "ttl")==0) return base+3;
-    if (fieldName[0]=='o' && strcmp(fieldName, "originalRoute")==0) return base+4;
-    if (fieldName[0]=='t' && strcmp(fieldName, "takenRoute")==0) return base+5;
+    if (fieldName[0]=='r' && strcmp(fieldName, "returnToSender")==0) return base+2;
+    if (fieldName[0]=='c' && strcmp(fieldName, "critical")==0) return base+3;
+    if (fieldName[0]=='c' && strcmp(fieldName, "creationTimestamp")==0) return base+4;
+    if (fieldName[0]=='t' && strcmp(fieldName, "ttl")==0) return base+5;
+    if (fieldName[0]=='s' && strcmp(fieldName, "senderEid")==0) return base+6;
+    if (fieldName[0]=='n' && strcmp(fieldName, "nextHopEid")==0) return base+7;
+    if (fieldName[0]=='x' && strcmp(fieldName, "xmitCopiesCount")==0) return base+8;
+    if (fieldName[0]=='d' && strcmp(fieldName, "dlvConfidence")==0) return base+9;
+    if (fieldName[0]=='o' && strcmp(fieldName, "originalRoute")==0) return base+10;
+    if (fieldName[0]=='t' && strcmp(fieldName, "takenRoute")==0) return base+11;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -409,12 +511,18 @@ const char *BundleDescriptor::getFieldTypeString(int field) const
     static const char *fieldTypeStrings[] = {
         "int",
         "int",
+        "bool",
+        "bool",
         "simtime_t",
         "simtime_t",
+        "int",
+        "int",
+        "int",
+        "double",
         "List",
         "List",
     };
-    return (field>=0 && field<6) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<12) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **BundleDescriptor::getFieldPropertyNames(int field) const
@@ -469,10 +577,16 @@ std::string BundleDescriptor::getFieldValueAsString(void *object, int field, int
     switch (field) {
         case 0: return long2string(pp->getSourceEid());
         case 1: return long2string(pp->getDestinationEid());
-        case 2: return simtime2string(pp->getCreationTimestamp());
-        case 3: return simtime2string(pp->getTtl());
-        case 4: {std::stringstream out; out << pp->getOriginalRoute(); return out.str();}
-        case 5: {std::stringstream out; out << pp->getTakenRoute(); return out.str();}
+        case 2: return bool2string(pp->getReturnToSender());
+        case 3: return bool2string(pp->getCritical());
+        case 4: return simtime2string(pp->getCreationTimestamp());
+        case 5: return simtime2string(pp->getTtl());
+        case 6: return long2string(pp->getSenderEid());
+        case 7: return long2string(pp->getNextHopEid());
+        case 8: return long2string(pp->getXmitCopiesCount());
+        case 9: return double2string(pp->getDlvConfidence());
+        case 10: {std::stringstream out; out << pp->getOriginalRoute(); return out.str();}
+        case 11: {std::stringstream out; out << pp->getTakenRoute(); return out.str();}
         default: return "";
     }
 }
@@ -489,8 +603,14 @@ bool BundleDescriptor::setFieldValueAsString(void *object, int field, int i, con
     switch (field) {
         case 0: pp->setSourceEid(string2long(value)); return true;
         case 1: pp->setDestinationEid(string2long(value)); return true;
-        case 2: pp->setCreationTimestamp(string2simtime(value)); return true;
-        case 3: pp->setTtl(string2simtime(value)); return true;
+        case 2: pp->setReturnToSender(string2bool(value)); return true;
+        case 3: pp->setCritical(string2bool(value)); return true;
+        case 4: pp->setCreationTimestamp(string2simtime(value)); return true;
+        case 5: pp->setTtl(string2simtime(value)); return true;
+        case 6: pp->setSenderEid(string2long(value)); return true;
+        case 7: pp->setNextHopEid(string2long(value)); return true;
+        case 8: pp->setXmitCopiesCount(string2long(value)); return true;
+        case 9: pp->setDlvConfidence(string2double(value)); return true;
         default: return false;
     }
 }
@@ -504,8 +624,8 @@ const char *BundleDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 4: return omnetpp::opp_typename(typeid(List));
-        case 5: return omnetpp::opp_typename(typeid(List));
+        case 10: return omnetpp::opp_typename(typeid(List));
+        case 11: return omnetpp::opp_typename(typeid(List));
         default: return nullptr;
     };
 }
@@ -520,8 +640,8 @@ void *BundleDescriptor::getFieldStructValuePointer(void *object, int field, int 
     }
     Bundle *pp = (Bundle *)object; (void)pp;
     switch (field) {
-        case 4: return (void *)(&pp->getOriginalRoute()); break;
-        case 5: return (void *)(&pp->getTakenRoute()); break;
+        case 10: return (void *)(&pp->getOriginalRoute()); break;
+        case 11: return (void *)(&pp->getTakenRoute()); break;
         default: return nullptr;
     }
 }

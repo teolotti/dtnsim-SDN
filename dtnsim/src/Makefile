@@ -38,6 +38,9 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 OBJS = \
     $O/node/app/App.o \
     $O/node/mac/Mac.o \
+    $O/node/net/RoutingCgrIon350.o \
+    $O/node/net/RoutingCgrModel.o \
+    $O/node/net/RoutingDirect.o \
     $O/node/net/Net.o \
     $O/node/net/Contact.o \
     $O/node/net/ContactPlan.o \
@@ -162,5 +165,27 @@ $O/node/net/Net.o: node/net/Net.cc \
 	node/app/App.h \
 	node/net/Contact.h \
 	node/net/ContactPlan.h \
-	node/net/Net.h
+	node/net/Net.h \
+	node/net/Routing.h \
+	node/net/RoutingCgrIon350.h \
+	node/net/RoutingCgrModel.h \
+	node/net/RoutingDirect.h
+$O/node/net/RoutingCgrIon350.o: node/net/RoutingCgrIon350.cc \
+	dtnsim_m.h \
+	node/net/Contact.h \
+	node/net/ContactPlan.h \
+	node/net/Routing.h \
+	node/net/RoutingCgrIon350.h
+$O/node/net/RoutingCgrModel.o: node/net/RoutingCgrModel.cc \
+	dtnsim_m.h \
+	node/net/Contact.h \
+	node/net/ContactPlan.h \
+	node/net/Routing.h \
+	node/net/RoutingCgrModel.h
+$O/node/net/RoutingDirect.o: node/net/RoutingDirect.cc \
+	dtnsim_m.h \
+	node/net/Contact.h \
+	node/net/ContactPlan.h \
+	node/net/Routing.h \
+	node/net/RoutingDirect.h
 

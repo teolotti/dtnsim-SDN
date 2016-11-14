@@ -22,9 +22,7 @@ void App::initialize()
 			string destinationEidStr = destinationEidTokenizer.nextToken();
 			int destinationEid = stoi(destinationEidStr);
 			if (destinationEid > this->getParentModule()->getVectorSize())
-			{
 				throw cException((string("Error: wrong destinationEid = ") + destinationEidStr).c_str());
-			}
 			destinationEidVec.push_back(destinationEid);
 		}
 
@@ -73,11 +71,15 @@ void App::handleMessage(cMessage *msg)
 		sprintf(bundleName, "Src:%d,Dst:%d", this->eid_, trafficGenMsg->getDestinationEid());
 		bundle->setName(bundleName);
 		bundle->setSourceEid(this->eid_);
+		bundle->setSenderEid(this->eid_);
 		bundle->setDestinationEid(trafficGenMsg->getDestinationEid());
 		bundle->setBitLength(trafficGenMsg->getSize() * 8);
 		bundle->setByteLength(trafficGenMsg->getSize());
 		bundle->setTtl(trafficGenMsg->getTtl());
 		bundle->setCreationTimestamp(simTime());
+		bundle->setDlvConfidence(0);
+		bundle->setReturnToSender(par("returnToSender"));
+		bundle->setCritical(par("critical"));
 		bundle->getOriginalRoute().clear();
 		bundle->getTakenRoute().clear();
 
