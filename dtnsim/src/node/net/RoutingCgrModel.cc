@@ -144,7 +144,7 @@ void RoutingCgrModel::identifyProximateNodes(Bundle * bundle, double simTime, ve
 
 	for (vector<CgrRoute *>::iterator it = routeList_[terminusNode].begin(); it != routeList_[terminusNode].end(); it++)
 	{
-		// TODO: Under work :)
+		// TODO: Under work by Totin :)
 		// cout << (*it)->toNodeNbr << endl;
 
 	}
