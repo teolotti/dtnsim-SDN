@@ -135,17 +135,28 @@ void RoutingCgrModel::identifyProximateNodes(Bundle * bundle, double simTime, ve
 	// If routes are empty for this node, load route list
 	if (routeList_[terminusNode].empty() == true)
 	{
-		cout << "load" << endl;
 		loadRouteList(terminusNode, simTime);
 		routeListLastEditTime = simTime;
 	}
 
-	cout << "routeListSize: " << routeList_[terminusNode].size() << " terminusNode: " << terminusNode << endl;
+	cout << "Node " << eid_ << " routeListSize: " << routeList_[terminusNode].size() << " terminusNode: " << terminusNode << endl;
 
-	for (vector<CgrRoute *>::iterator it = routeList_[terminusNode].begin(); it != routeList_[terminusNode].end(); it++)
+	for (vector<CgrRoute>::iterator it = routeList_[terminusNode].begin(); it != routeList_[terminusNode].end(); ++it)
 	{
-		// TODO: Under work by Totin :)
-		// cout << (*it)->toNodeNbr << endl;
+		if ((*it).toTime < simTime)
+		{
+			recomputeRouteForContact();
+			// TODO: a new route should be looked and the
+			// for loop might need to be restarted if found
+			// Now we just ignore the old route (pesimistic)
+			continue;
+		}
+
+		// If arrival time is after deadline, ignore route
+		if ((*it).arrivalTime > bundle->getTtl().dbl())
+			continue;
+
+		cout << (*it).toNodeNbr << endl;
 
 	}
 
@@ -175,7 +186,9 @@ void RoutingCgrModel::identifyProximateNodes(Bundle * bundle, double simTime, ve
 
 void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
 {
-	vector<CgrRoute *> cgrRoute;
+	cout << "Node " << eid_ << " loadRouteList to terminus " << terminusNode << endl;
+
+	vector<CgrRoute> cgrRoute;
 	routeList_[terminusNode] = cgrRoute;
 
 	// To test some CgrRoute:
@@ -189,8 +202,22 @@ void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
 	route1.hops.push_back(contactPlan_->getContactById(1));
 	route1.hops.push_back(contactPlan_->getContactById(3));
 	route1.hops.push_back(contactPlan_->getContactById(5));
+	routeList_[terminusNode].push_back(route1);
 
-	routeList_[terminusNode].push_back(&route1);
+	CgrRoute route2;
+	route2.toNodeNbr = terminusNode;
+	route2.fromTime = 15;
+	route2.toTime = 20;
+	route2.arrivalConfidence = 1.0;
+	route2.arrivalTime = 15;
+	route2.maxCapacity = 1000;
+	route2.hops.push_back(contactPlan_->getContactById(7));
+	routeList_[terminusNode].push_back(route2);
+}
+
+void RoutingCgrModel::recomputeRouteForContact()
+{
+	cout << "Node " << eid_ << " recomputeRouteForContact not implemented, ignoring route" << endl;
 }
 
 void RoutingCgrModel::enqueueToNeighbor(Bundle * bundle, ProximateNode * selectedNeighbor)

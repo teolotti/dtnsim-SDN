@@ -52,13 +52,14 @@ private:
 		vector<Contact *>	hops; // list: IonCXref addr
 	} CgrRoute;
 
-	map<int, vector<CgrRoute *> > routeList_;
+	map<int, vector<CgrRoute> > routeList_;
 	double routeListLastEditTime=-1;
 
 	void cgrForward(Bundle * bundle, double simTime);
 	void identifyProximateNodes(Bundle * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes);
 	void loadRouteList(int terminusNode, double simTime);
 
+	void recomputeRouteForContact();
 	void enqueueToNeighbor(Bundle * bundle,ProximateNode * selectedNeighbor);
 	void enqueueToLimbo(Bundle * bundle);
 	void bpEnqueue(Bundle * bundle,ProximateNode * selectedNeighbor);
