@@ -46,4 +46,8 @@ message FreeChannelMsg{
     int contactId;
 };
 
+message IonTrafficGeneratorMsg{
+
+};
+
 

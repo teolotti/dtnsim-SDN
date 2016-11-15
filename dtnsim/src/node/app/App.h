@@ -21,6 +21,10 @@ class App : public cSimpleModule
         App();
         virtual ~App();
         int getEid() const;
+        virtual vector<int> getBundlesNumberVec();
+        virtual vector<int> getDestinationEidVec();
+        virtual vector<int> getSizeVec();
+        virtual vector<double> getStartVec();
 
     protected:
         virtual void initialize();
@@ -29,6 +33,11 @@ class App : public cSimpleModule
 
     private:
         int eid_;
+
+        std::vector<int> bundlesNumberVec_;
+        std::vector<int> destinationEidVec_;
+        std::vector<int> sizeVec_;
+        std::vector<double> startVec_;
 };
 
 #endif /* APP_H_ */

@@ -1661,4 +1661,240 @@ void *FreeChannelMsgDescriptor::getFieldStructValuePointer(void *object, int fie
     }
 }
 
+Register_Class(IonTrafficGeneratorMsg);
+
+IonTrafficGeneratorMsg::IonTrafficGeneratorMsg(const char *name, int kind) : ::omnetpp::cMessage(name,kind)
+{
+}
+
+IonTrafficGeneratorMsg::IonTrafficGeneratorMsg(const IonTrafficGeneratorMsg& other) : ::omnetpp::cMessage(other)
+{
+    copy(other);
+}
+
+IonTrafficGeneratorMsg::~IonTrafficGeneratorMsg()
+{
+}
+
+IonTrafficGeneratorMsg& IonTrafficGeneratorMsg::operator=(const IonTrafficGeneratorMsg& other)
+{
+    if (this==&other) return *this;
+    ::omnetpp::cMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void IonTrafficGeneratorMsg::copy(const IonTrafficGeneratorMsg& other)
+{
+}
+
+void IonTrafficGeneratorMsg::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::omnetpp::cMessage::parsimPack(b);
+}
+
+void IonTrafficGeneratorMsg::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::omnetpp::cMessage::parsimUnpack(b);
+}
+
+class IonTrafficGeneratorMsgDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    IonTrafficGeneratorMsgDescriptor();
+    virtual ~IonTrafficGeneratorMsgDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(IonTrafficGeneratorMsgDescriptor);
+
+IonTrafficGeneratorMsgDescriptor::IonTrafficGeneratorMsgDescriptor() : omnetpp::cClassDescriptor("IonTrafficGeneratorMsg", "omnetpp::cMessage")
+{
+    propertynames = nullptr;
+}
+
+IonTrafficGeneratorMsgDescriptor::~IonTrafficGeneratorMsgDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool IonTrafficGeneratorMsgDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<IonTrafficGeneratorMsg *>(obj)!=nullptr;
+}
+
+const char **IonTrafficGeneratorMsgDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *IonTrafficGeneratorMsgDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int IonTrafficGeneratorMsgDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 0+basedesc->getFieldCount() : 0;
+}
+
+unsigned int IonTrafficGeneratorMsgDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    return 0;
+}
+
+const char *IonTrafficGeneratorMsgDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    return nullptr;
+}
+
+int IonTrafficGeneratorMsgDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *IonTrafficGeneratorMsgDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    return nullptr;
+}
+
+const char **IonTrafficGeneratorMsgDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *IonTrafficGeneratorMsgDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int IonTrafficGeneratorMsgDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    IonTrafficGeneratorMsg *pp = (IonTrafficGeneratorMsg *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+std::string IonTrafficGeneratorMsgDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    IonTrafficGeneratorMsg *pp = (IonTrafficGeneratorMsg *)object; (void)pp;
+    switch (field) {
+        default: return "";
+    }
+}
+
+bool IonTrafficGeneratorMsgDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    IonTrafficGeneratorMsg *pp = (IonTrafficGeneratorMsg *)object; (void)pp;
+    switch (field) {
+        default: return false;
+    }
+}
+
+const char *IonTrafficGeneratorMsgDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    return nullptr;
+}
+
+void *IonTrafficGeneratorMsgDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    IonTrafficGeneratorMsg *pp = (IonTrafficGeneratorMsg *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
 

@@ -72,7 +72,7 @@ void Net::handleMessage(cMessage * msg)
 
 		map<int, queue<Bundle *> >::iterator it = bundlesQueue_.find(contactId);
 
-		// if there are messages in the queue for this neighbor
+		// if there are messages in the queue for this contact
 		if (it != bundlesQueue_.end())
 		{
 			// transmit bundle and get transmissionDuration
@@ -81,7 +81,7 @@ void Net::handleMessage(cMessage * msg)
 			// simulate bundle transmission duration by scheduling freeChannelMsg
 			scheduleAt(simTime() + transmissionDuration, freeChannelMsg);
 		}
-		// if there aren't messages for this neighbor, delete freeChannelMsg to stop trying to send bundles through this contact
+		// if there aren't messages for this contact, delete freeChannelMsg to stop trying to send bundles through this contact
 		else
 		{
 			freeChannelMsgs_[freeChannelMsg->getContactId()] = nullptr;
@@ -117,7 +117,7 @@ double Net::transmitBundle(int neighborEid, int contactId)
 
 	map<int, queue<Bundle *> >::iterator it = bundlesQueue_.find(contactId);
 
-	// if there is a bundlesQueue for the neighbor
+	// if there is a bundlesQueue for the contact
 	if (it != bundlesQueue_.end())
 	{
 		queue<Bundle *> bundlesToTx = it->second;

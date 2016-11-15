@@ -264,6 +264,40 @@ class FreeChannelMsg : public ::omnetpp::cMessage
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const FreeChannelMsg& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, FreeChannelMsg& obj) {obj.parsimUnpack(b);}
 
+/**
+ * Class generated from <tt>dtnsim.msg:49</tt> by nedtool.
+ * <pre>
+ * message IonTrafficGeneratorMsg
+ * {
+ * }
+ * </pre>
+ */
+class IonTrafficGeneratorMsg : public ::omnetpp::cMessage
+{
+  protected:
+
+  private:
+    void copy(const IonTrafficGeneratorMsg& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const IonTrafficGeneratorMsg&);
+
+  public:
+    IonTrafficGeneratorMsg(const char *name=nullptr, int kind=0);
+    IonTrafficGeneratorMsg(const IonTrafficGeneratorMsg& other);
+    virtual ~IonTrafficGeneratorMsg();
+    IonTrafficGeneratorMsg& operator=(const IonTrafficGeneratorMsg& other);
+    virtual IonTrafficGeneratorMsg *dup() const {return new IonTrafficGeneratorMsg(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b);
+
+    // field getter/setter methods
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const IonTrafficGeneratorMsg& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, IonTrafficGeneratorMsg& obj) {obj.parsimUnpack(b);}
+
 
 #endif // ifndef __DTNSIM_M_H
 

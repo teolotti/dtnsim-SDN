@@ -17,11 +17,14 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 # C++ include paths (with -I)
 INCLUDE_PATH = \
     -I. \
+    -IcontactPlan \
+    -Iion \
+    -Iion/node1 \
+    -Iion/node2 \
     -Inode \
     -Inode/app \
     -Inode/mac \
-    -Inode/net \
-    -Iwin
+    -Inode/net
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -36,13 +39,14 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
 OBJS = \
+    $O/ion/Ion.o \
     $O/node/app/App.o \
     $O/node/mac/Mac.o \
-    $O/node/net/RoutingCgrIon350.o \
-    $O/node/net/RoutingCgrModel.o \
-    $O/node/net/RoutingDirect.o \
-    $O/node/net/Net.o \
     $O/node/net/Contact.o \
+    $O/node/net/RoutingDirect.o \
+    $O/node/net/RoutingCgrIon350.o \
+    $O/node/net/Net.o \
+    $O/node/net/RoutingCgrModel.o \
     $O/node/net/ContactPlan.o \
     $O/dtnsim_m.o
 
@@ -132,22 +136,29 @@ clean:
 	$(Q)-rm -rf $O
 	$(Q)-rm -f dtnsim dtnsim.exe libdtnsim.so libdtnsim.a libdtnsim.dll libdtnsim.dylib
 	$(Q)-rm -f ./*_m.cc ./*_m.h ./*_sm.cc ./*_sm.h
+	$(Q)-rm -f contactPlan/*_m.cc contactPlan/*_m.h contactPlan/*_sm.cc contactPlan/*_sm.h
+	$(Q)-rm -f ion/*_m.cc ion/*_m.h ion/*_sm.cc ion/*_sm.h
+	$(Q)-rm -f ion/node1/*_m.cc ion/node1/*_m.h ion/node1/*_sm.cc ion/node1/*_sm.h
+	$(Q)-rm -f ion/node2/*_m.cc ion/node2/*_m.h ion/node2/*_sm.cc ion/node2/*_sm.h
 	$(Q)-rm -f node/*_m.cc node/*_m.h node/*_sm.cc node/*_sm.h
 	$(Q)-rm -f node/app/*_m.cc node/app/*_m.h node/app/*_sm.cc node/app/*_sm.h
 	$(Q)-rm -f node/mac/*_m.cc node/mac/*_m.h node/mac/*_sm.cc node/mac/*_sm.h
 	$(Q)-rm -f node/net/*_m.cc node/net/*_m.h node/net/*_sm.cc node/net/*_sm.h
-	$(Q)-rm -f win/*_m.cc win/*_m.h win/*_sm.cc win/*_sm.h
 
 cleanall: clean
 	$(Q)-rm -rf $(PROJECT_OUTPUT_DIR)
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc win/*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/node1/*.cc ion/node2/*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/dtnsim_m.o: dtnsim_m.cc \
 	dtnsim_m.h
+$O/ion/Ion.o: ion/Ion.cc \
+	dtnsim_m.h \
+	ion/Ion.h \
+	node/app/App.h
 $O/node/app/App.o: node/app/App.cc \
 	dtnsim_m.h \
 	node/app/App.h

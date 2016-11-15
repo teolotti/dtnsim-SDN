@@ -1,8 +1,0 @@
-a contact +0 +5 1 2 100000
-a contact +0 +5 2 1 100000
-a contact +5 +10 2 3 100000
-a contact +5 +10 3 2 100000
-a contact +10 +15 3 4 100000
-a contact +10 +15 4 3 100000
-a contact +15 +20 1 4 100000
-a contact +15 +20 4 1 100000
