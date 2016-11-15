@@ -120,7 +120,8 @@ void RoutingCgrModel::cgrForward(Bundle * bundle, double simTime)
 
 	if (selectedNeighbor != NULL)
 	{ // if bundle was enqueued (bundle ->ductXmitElt)
-	  //TODO: clone bundle and send it for routing (enqueueToLimbo in ion, but no sure here)
+	  // TODO: clone bundle and send it for routing (enqueueToLimbo in ion)
+	  // Here we should clone and call cgrForward again (while), Im a genious :)
 	}
 	else
 	{
@@ -156,32 +157,103 @@ void RoutingCgrModel::identifyProximateNodes(Bundle * bundle, double simTime, ve
 		if ((*it).arrivalTime > bundle->getTtl().dbl())
 			continue;
 
-		cout << (*it).toNodeNbr << endl;
+		// TODO: Not sure why only 1st hops with confidence
+		// 1.0 are considered. Maybe when they happen ion
+		// set them to 1.0?
+		if ((*it).hops[0]->getConfidence() != 1.0)
+			continue;
 
+		// If Im the final destination and the next hop,
+		// do not route through myself. Not sure when would
+		// this happen.
+		if ((*it).toNodeNbr == eid_)
+			if (bundle->getDestinationEid() == (*it).toNodeNbr)
+				continue;
+
+		// If bundle does not fit in route, ignore.
+		// TODO: But with proactive fragmentation, this should stay?
+		if (bundle->getByteLength() > (*it).maxCapacity)
+			continue;
+
+		// If next hop is in excluded nodes, ignore.
+		vector<int>::iterator itExl = find(excludedNodes.begin(), excludedNodes.end(), (*it).toNodeNbr);
+		if (itExl != excludedNodes.end())
+			continue;
+
+		// If we got to this point, the route might be
+		// considered. However, some final tests must be
+		// donde before evaluating the node for the proxNodes.
+		tryRoute(bundle, &(*it), proximateNodes);
+	}
+}
+
+void RoutingCgrModel::tryRoute(Bundle * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes)
+{
+
+	// First, ion test if outduct is blocked,
+	// we do not considered blocked outducts here
+
+	// Then, ion test the do-not-fragment flag.
+	// if set, and outduct frame size is not enough,
+	// return. We do not a frame limit in dtnsim.
+
+	// Thirdly, ion computeArrivalTime() to determine
+	// the impact of the outbound queue in the arrival
+	// time. We coud do this here also (TODO).
+
+	// Last, we go through proximateNodes to add the route
+	for (vector<ProximateNode>::iterator it = (*proximateNodes).begin(); it != (*proximateNodes).end(); ++it)
+	{
+		if ((*it).neighborNodeNbr == route->toNodeNbr)
+		{
+			// The next-hop is already among proximateNodes.
+			// Test if we should update this node metrics.
+			if (route->arrivalConfidence > (*it).arrivalConfidence)
+			{
+				(*it).arrivalConfidence = route->arrivalConfidence;
+				(*it).arrivalTime = route->arrivalTime;
+				(*it).hopCount = route->hops.size();
+				(*it).forfeitTime = route->toTime;
+				(*it).contactId = route->hops[0]->getId();
+			}
+			else if (route->arrivalConfidence < (*it).arrivalConfidence)
+				return;
+			else if (route->arrivalTime < (*it).arrivalTime)
+			{
+				(*it).arrivalTime = route->arrivalTime;
+				(*it).hopCount = route->hops.size();
+				(*it).forfeitTime = route->toTime;
+				(*it).contactId = route->hops[0]->getId();
+			}
+			else if (route->arrivalTime > (*it).arrivalTime)
+				return;
+			else if (route->hops.size() < (*it).hopCount)
+			{
+				(*it).hopCount = route->hops.size();
+				(*it).forfeitTime = route->toTime;
+				(*it).contactId = route->hops[0]->getId();
+			}
+			else if (route->hops.size() > (*it).hopCount)
+				return;
+			else if (route->toNodeNbr < (*it).neighborNodeNbr)
+			{
+				(*it).forfeitTime = route->toTime;
+				(*it).contactId = route->hops[0]->getId();
+			}
+			return;
+		}
 	}
 
-	// map<int, vector<CgrRoute *> > routeList_;
-	// double routeListLastEditTime=-1;
-
-//	To test some proximate ProximateNode:
-//	ProximateNode node1;
-//	node1.arrivalConfidence = 0.5;
-//	node1.arrivalTime = 100;
-//	node1.contactId = 10;
-//	node1.forfeitTime = 10;
-//	node1.hopCount = 5;
-//	node1.neighborNodeNbr = 2;
-//	proximateNodes->push_back(node1);
-//
-//	ProximateNode node2;
-//	node2.arrivalConfidence = 0.6;
-//	node2.arrivalTime = 100;
-//	node2.contactId = 7;
-//	node2.forfeitTime = 10;
-//	node2.hopCount = 3;
-//	node2.neighborNodeNbr = 4;
-//	proximateNodes->push_back(node2);
-
+	// If we got to this point, the node is not in
+	// proximateNodes list. So we create and add one.
+	ProximateNode node;
+	node.neighborNodeNbr = route->toNodeNbr;
+	node.arrivalConfidence = route->arrivalConfidence;
+	node.arrivalTime = route->arrivalTime;
+	node.contactId = route->hops[0]->getId();
+	node.forfeitTime = route->toTime;
+	node.hopCount = route->hops.size();
+	proximateNodes->push_back(node);
 }
 
 void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
@@ -191,28 +263,59 @@ void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
 	vector<CgrRoute> cgrRoute;
 	routeList_[terminusNode] = cgrRoute;
 
-	// To test some CgrRoute:
-	CgrRoute route1;
-	route1.toNodeNbr = terminusNode;
-	route1.fromTime = 0;
-	route1.toTime = 5;
-	route1.arrivalConfidence = 1.0;
-	route1.arrivalTime = 10;
-	route1.maxCapacity = 1000;
-	route1.hops.push_back(contactPlan_->getContactById(1));
-	route1.hops.push_back(contactPlan_->getContactById(3));
-	route1.hops.push_back(contactPlan_->getContactById(5));
-	routeList_[terminusNode].push_back(route1);
+	// Some manual routes to node 4 (based on contacts_Totin.txt):
+	// Falta la parte mas copada, el CGR (TODO)
+	if (eid_ == 1)
+	{
+		CgrRoute route1;
+		route1.toNodeNbr = 2;
+		route1.fromTime = 0;
+		route1.toTime = 10;
+		route1.arrivalConfidence = 1.0;
+		route1.arrivalTime = 20;
+		route1.maxCapacity = 1000;
+		route1.hops.push_back(contactPlan_->getContactById(1));
+		route1.hops.push_back(contactPlan_->getContactById(2));
+		route1.hops.push_back(contactPlan_->getContactById(3));
+		routeList_[terminusNode].push_back(route1);
 
-	CgrRoute route2;
-	route2.toNodeNbr = terminusNode;
-	route2.fromTime = 15;
-	route2.toTime = 20;
-	route2.arrivalConfidence = 1.0;
-	route2.arrivalTime = 15;
-	route2.maxCapacity = 1000;
-	route2.hops.push_back(contactPlan_->getContactById(7));
-	routeList_[terminusNode].push_back(route2);
+		CgrRoute route2;
+		route2.toNodeNbr = 2;
+		route2.fromTime = 40;
+		route2.toTime = 50;
+		route2.arrivalConfidence = 1.0;
+		route2.arrivalTime = 40;
+		route2.maxCapacity = 1000;
+		route2.hops.push_back(contactPlan_->getContactById(4));
+		routeList_[terminusNode].push_back(route2);
+	}
+
+	if (eid_ == 2)
+	{
+		CgrRoute route1;
+		route1.toNodeNbr = 3;
+		route1.fromTime = 10;
+		route1.toTime = 20;
+		route1.arrivalConfidence = 1.0;
+		route1.arrivalTime = 30;
+		route1.maxCapacity = 1000;
+		route1.hops.push_back(contactPlan_->getContactById(2));
+		route1.hops.push_back(contactPlan_->getContactById(3));
+		routeList_[terminusNode].push_back(route1);
+	}
+
+	if (eid_ == 3)
+	{
+		CgrRoute route1;
+		route1.toNodeNbr = 4;
+		route1.fromTime = 20;
+		route1.toTime = 30;
+		route1.arrivalConfidence = 1.0;
+		route1.arrivalTime = 20;
+		route1.maxCapacity = 1000;
+		route1.hops.push_back(contactPlan_->getContactById(3));
+		routeList_[terminusNode].push_back(route1);
+	}
 }
 
 void RoutingCgrModel::recomputeRouteForContact()

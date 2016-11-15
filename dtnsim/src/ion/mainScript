@@ -1,0 +1,46 @@
+killm
+rm -f ion_nodes
+sleep 1
+export ION_NODE_LIST_DIR=$PWD
+
+echo "staring nodes"
+cd node1
+./ionstart
+cd ..
+cd node2
+./ionstart
+cd ..
+cd node3
+./ionstart
+cd ..
+cd node4
+./ionstart
+cd ..
+
+cd node4
+bpcounter ipn:4.1 1 &
+cd ..
+
+cd node1
+bpdriver 1 ipn:1.1 ipn:4.1 -100 &
+cd ..
+
+echo "waiting + 60 seconds" 
+sleep 60
+
+echo "stopping nodes"
+cd node1
+./ionstop &
+cd ..
+cd node2
+./ionstop &
+cd ..
+cd node3
+./ionstop &
+cd ..
+cd node4
+./ionstop &
+cd ..
+ 
+killm
+echo "ION terminated"

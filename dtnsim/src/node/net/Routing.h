@@ -11,6 +11,7 @@
 #include <map>
 #include <queue>
 #include <limits>
+#include <algorithm>
 #include "ContactPlan.h"
 #include "dtnsim_m.h"
 

@@ -15,7 +15,7 @@ public:
     ContactPlan();
     virtual ~ContactPlan();
 
-    void addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate);
+    void addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence);
     Contact *getContactById(int id);
     vector<Contact> getContactsBySrc(int Src);
     vector<Contact> getContactsByDst(int Dst);

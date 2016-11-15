@@ -10,9 +10,9 @@ ContactPlan::ContactPlan()
 
 }
 
-void ContactPlan::addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate)
+void ContactPlan::addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
 {
-	Contact contact(id, start, end, sourceEid, destinationEid, dataRate);
+	Contact contact(id, start, end, sourceEid, destinationEid, dataRate, confidence);
 	contacts_.push_back(contact);
 	lastEditTime = simTime();
 }

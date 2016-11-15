@@ -5,7 +5,7 @@ class Contact
 {
 public:
 
-	Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate);
+	Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence);
 	virtual ~Contact();
 	double getDataRate() const;
 	int getDestinationEid() const;
@@ -15,6 +15,7 @@ public:
 	double getStart() const;
 	double getEnd() const;
 	double getDuration() const;
+	float getConfidence() const;
 
 private:
 
@@ -25,6 +26,7 @@ private:
 	int destinationEid_;
 	double dataRate_;
 	double residualCapacity_;
+	float confidence_;
 };
 
 #endif /* CONTACT_H_ */

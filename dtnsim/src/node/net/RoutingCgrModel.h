@@ -37,7 +37,7 @@ private:
 		double	forfeitTime;
 		double	arrivalTime;
 		float	arrivalConfidence;
-		int	hopCount; // hops from dest. node.
+		unsigned int	hopCount; // hops from dest. node.
 		//Scalar	overbooked; 	//Bytes needing reforward.
 		//Scalar	protected; 		//Bytes not overbooked.
 	} ProximateNode;
@@ -48,7 +48,7 @@ private:
 		double	toTime;	 	// Time at which route shuts down: earliest contact end time among all
 		float	arrivalConfidence;
 		double	arrivalTime;
-		int		maxCapacity;
+		int		maxCapacity; // in Bytes (?)
 		vector<Contact *>	hops; // list: IonCXref addr
 	} CgrRoute;
 
@@ -59,6 +59,7 @@ private:
 	void identifyProximateNodes(Bundle * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes);
 	void loadRouteList(int terminusNode, double simTime);
 
+	void tryRoute(Bundle * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes);
 	void recomputeRouteForContact();
 	void enqueueToNeighbor(Bundle * bundle,ProximateNode * selectedNeighbor);
 	void enqueueToLimbo(Bundle * bundle);

@@ -1,6 +1,6 @@
 #include <Contact.h>
 
-Contact::Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate)
+Contact::Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
 {
 	this->id_ = id;
 	this->start_ = start;
@@ -8,6 +8,7 @@ Contact::Contact(int id, double start, double end, int sourceEid, int destinatio
 	this->sourceEid_ = sourceEid;
 	this->destinationEid_ = destinationEid;
 	this->dataRate_ = dataRate;
+	this->confidence_ = confidence;
 }
 
 Contact::~Contact()
@@ -53,4 +54,9 @@ double Contact::getEnd() const
 double Contact::getDuration() const
 {
 	return (end_ - start_);
+}
+
+float Contact::getConfidence() const
+{
+	return confidence_;
 }

@@ -188,7 +188,8 @@ void Net::parseContacts(string fileName)
 	{
 		if ((command.compare("contact") == 0))
 		{
-			contactPlan_.addContact(id, start, end, sourceEid, destinationEid, dataRate);
+			// TODO: We are setting all contacts to confidence 1.0
+			contactPlan_.addContact(id, start, end, sourceEid, destinationEid, dataRate, (float)1.0);
 
 			if (this->eid_ == sourceEid)
 			{
