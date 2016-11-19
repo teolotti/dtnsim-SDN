@@ -1,6 +1,10 @@
 #ifndef CONTACT_H_
 #define CONTACT_H_
 
+#include<iostream>
+
+using namespace std;
+
 class Contact
 {
 public:

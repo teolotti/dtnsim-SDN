@@ -1,1 +1,1 @@
--DHAVE_SWAPCONTEXT -DWITH_QTENV -DWITH_OSG -DWITH_TKENV -DXMLPARSER=libxml -DWITH_PARSIM -DWITH_NETBUILDER  -g -Wall -fPIC  -fno-stack-protector  -I. -IcontactPlan -Iion -Iion/node1 -Iion/node2 -Iion/node3 -Iion/node4 -Inode -Inode/app -Inode/mac -Inode/net -I/home/juanfraire/omnetpp-5.0/include
+-DHAVE_SWAPCONTEXT -DWITH_QTENV -DWITH_OSG -DWITH_TKENV -DXMLPARSER=libxml -DWITH_PARSIM -DWITH_NETBUILDER  -g -Wall -fPIC  -fno-stack-protector  -I. -IcontactPlan -Inode -Inode/app -Inode/mac -Inode/net -I/home/juanfraire/omnetpp-5.0/include

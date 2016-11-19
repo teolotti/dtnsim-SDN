@@ -17,6 +17,7 @@ public:
 
     void addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence);
     Contact *getContactById(int id);
+    vector<Contact> * getContacts();
     vector<Contact> getContactsBySrc(int Src);
     vector<Contact> getContactsByDst(int Dst);
     vector<Contact> getContactsBySrcDst(int Src, int Dst);

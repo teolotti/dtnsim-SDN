@@ -19,9 +19,9 @@ void ContactPlan::addContact(int id, double start, double end, int sourceEid, in
 
 Contact *ContactPlan::getContactById(int id)
 {
-	for(size_t i = 0; i<contacts_.size(); i++)
+	for (size_t i = 0; i < contacts_.size(); i++)
 	{
-		if(contacts_.at(i).getId() == id)
+		if (contacts_.at(i).getId() == id)
 		{
 			return &contacts_.at(i);
 		}
@@ -30,12 +30,17 @@ Contact *ContactPlan::getContactById(int id)
 	return NULL;
 }
 
+vector<Contact> * ContactPlan::getContacts()
+{
+	return &contacts_;
+}
+
 vector<Contact> ContactPlan::getContactsBySrc(int Src)
 {
 	vector<Contact> contacts;
-	for(size_t i = 0; i<contacts_.size(); i++)
+	for (size_t i = 0; i < contacts_.size(); i++)
 	{
-		if(contacts_.at(i).getSourceEid() == Src)
+		if (contacts_.at(i).getSourceEid() == Src)
 		{
 			contacts.push_back(contacts_.at(i));
 		}
@@ -44,11 +49,12 @@ vector<Contact> ContactPlan::getContactsBySrc(int Src)
 	return contacts;
 }
 
-vector<Contact> ContactPlan::getContactsByDst(int Dst){
+vector<Contact> ContactPlan::getContactsByDst(int Dst)
+{
 	vector<Contact> contacts;
-	for(size_t i = 0; i<contacts_.size(); i++)
+	for (size_t i = 0; i < contacts_.size(); i++)
 	{
-		if(contacts_.at(i).getDestinationEid() == Dst)
+		if (contacts_.at(i).getDestinationEid() == Dst)
 		{
 			contacts.push_back(contacts_.at(i));
 		}
@@ -57,11 +63,12 @@ vector<Contact> ContactPlan::getContactsByDst(int Dst){
 	return contacts;
 }
 
-vector<Contact> ContactPlan::getContactsBySrcDst(int Src, int Dst){
+vector<Contact> ContactPlan::getContactsBySrcDst(int Src, int Dst)
+{
 	vector<Contact> contacts;
-	for(size_t i = 0; i<contacts_.size(); i++)
+	for (size_t i = 0; i < contacts_.size(); i++)
 	{
-		if((contacts_.at(i).getSourceEid() == Src)&&(contacts_.at(i).getDestinationEid() == Dst))
+		if ((contacts_.at(i).getSourceEid() == Src) && (contacts_.at(i).getDestinationEid() == Dst))
 		{
 			contacts.push_back(contacts_.at(i));
 		}
@@ -70,6 +77,7 @@ vector<Contact> ContactPlan::getContactsBySrcDst(int Src, int Dst){
 	return contacts;
 }
 
-simtime_t ContactPlan::getLastEditTime(){
+simtime_t ContactPlan::getLastEditTime()
+{
 	return lastEditTime;
 }
