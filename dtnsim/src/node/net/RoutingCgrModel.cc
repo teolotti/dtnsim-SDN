@@ -260,75 +260,87 @@ void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
 {
 	cout << "Node " << eid_ << " loadRouteList to terminus " << terminusNode << endl;
 
-	// Create rootContact and rootWork
+	// Create rootContact and its corresponding rootWork
 	Contact rootContact(0, 0, 0, eid_, eid_, 0, 1.0);
 	Work rootWork;
+	rootWork.contact = &rootContact;
 	rootWork.arrivalTime = simTime;
+	rootContact.work = &rootWork;
 
 	// Create route vector in routeList
 	vector<CgrRoute> cgrRoute;
 	routeList_[terminusNode] = cgrRoute;
 
-	// Create and initialize working area
-	vector<Work> cgrWork;
+	// Create and initialize working area in each contact
 	for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
 	{
-		Work work;
-		work.contact = &(*it);
-		work.arrivalTime = numeric_limits<double>::max();
-		work.capacity = 0;
-		work.predecessor = 0;
-		work.visited = false;
-		work.suppressed = false;
-		cgrWork.push_back(work);
+		(*it).work = new Work;
+		((Work *) (*it).work)->contact = &(*it);
+		((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
+		((Work *) (*it).work)->capacity = 0;
+		((Work *) (*it).work)->predecessor = 0;
+		((Work *) (*it).work)->visited = false;
+		((Work *) (*it).work)->suppressed = false;
 		//cout << (*it).getId() << " - " << (*it).getSourceEid() << " to " << (*it).getDestinationEid() << " +" << (*it).getStart() << " +" << (*it).getEnd() << endl;
 	}
 
-	Work * anchorWork = NULL; // anchorContact in ion
+	Contact * anchorContact = NULL;
 	while (1)
 	{
-		CgrRoute * route = NULL;
-		findNextBestRoute(&rootContact, &rootWork, terminusNode, route);
+		// Find the next best route
+		CgrRoute route;
+		route.toNodeNbr = 0;
+		findNextBestRoute(&rootContact, terminusNode, &route);
 
-		// If null, no routes were found
-		if (route == NULL)
+		// If toNodeNbr still 0, no routes were found
+		// End search
+		if (route.toNodeNbr == 0)
 			break;
+
+		cout << "Node " << eid_ << " record new route: arrivalTime:" << route.arrivalTime << " fromTime:" << route.fromTime << " hops.size:" << route.hops.size() << ", hops[0]: contactId:" << route.hops[0]->getId() << endl;
 
 		// If anchored search on going and firstContact
 		// is not anchor, end the anchor and do not record
 		// this route.
-		Contact * firstContact = route->hops[0];
-		if (anchorWork != NULL)
-			if (firstContact != anchorWork->contact)
+		Contact * firstContact = route.hops[0];
+		if (anchorContact != NULL)
+			if (firstContact != anchorContact)
 			{
+				cout << "Node " << eid_ << " ending anchored search in contactId: " << anchorContact->getId() << endl;
 				// This is endAnchoredSearch() function in ion: it clears the working area
-				for (vector<Work>::iterator it = cgrWork.begin(); it != cgrWork.end(); ++it)
+				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
 				{
-					(*it).arrivalTime = numeric_limits<double>::max();
-					(*it).predecessor = 0;
-					(*it).visited = false;
+					((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
+					((Work *) (*it).work)->predecessor = 0;
+					((Work *) (*it).work)->visited = false;
 					// Unsupress all non-local contacts
-					if ((*it).contact->getSourceEid() != eid_)
-						(*it).suppressed = false;
+					// (local contacts must keep their value).
+					if ((*it).getSourceEid() != eid_)
+						((Work *) (*it).work)->suppressed = false;
 				}
 				// End endAnchoredSearch() function
-				anchorWork->suppressed = 1;
-				anchorWork = NULL;
+				((Work *) anchorContact->work)->suppressed = 1;
+				anchorContact = NULL;
 				continue;
 			}
 
 		// Record route
-		routeList_[terminusNode].push_back(*route);
+		routeList_[terminusNode].push_back(route);
 
 		// Find limiting contact for next iteration
-		Contact * limitContact=NULL;
-		if (route->toTime == firstContact->getEnd())
+		// (earliest ending contact in path, generally the first)
+		Contact * limitContact = NULL;
+		if (route.toTime == firstContact->getEnd())
 			limitContact = firstContact;
 		else
 		{
+			// Start new anchor search. Anchoring only
+			// happens in the first hop.. not good!
+			anchorContact = firstContact;
+			cout << "Node " << eid_ << " starting anchored search in contactId: " << anchorContact->getId() << endl;
 			// find the limiting contact in route
-			for (vector<Contact *>::iterator it = route->hops.begin(); it != route->hops.end(); ++it)
-				if ((*it)->getEnd() == route->toTime)
+			for (vector<Contact *>::iterator it = route.hops.begin(); it != route.hops.end(); ++it)
+				if ((*it)->getEnd() == route.toTime)
 				{
 					limitContact = (*it);
 					break;
@@ -336,79 +348,131 @@ void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
 		}
 
 		// Clear working area and suppress limitingContact
-		for (vector<Work>::iterator it = cgrWork.begin(); it != cgrWork.end(); ++it)
+		for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
 		{
-			(*it).arrivalTime = numeric_limits<double>::max();
-			(*it).predecessor = 0;
-			(*it).visited = false;
+			((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
+			((Work *) (*it).work)->predecessor = 0;
+			((Work *) (*it).work)->visited = false;
 			// Supress limiting contact in next search
-			if ((*it).contact == limitContact)
-				(*it).suppressed = true;
+			if (&(*it) == limitContact)
+				((Work *) (*it).work)->suppressed = true;
 		}
 
 	}
+
+	// Free memory allocated for work
+	for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
+		delete ((Work *) (*it).work);
+
 }
 
-void RoutingCgrModel::findNextBestRoute(Contact * rootContact, Work * rootWork, int terminusNode, CgrRoute * route)
+void RoutingCgrModel::findNextBestRoute(Contact * rootContact, int terminusNode, CgrRoute * route)
 {
+	// If toNodeNbr remains equal to 0, it means no
+	// route was found by this function. In ion this
+	// is signaled by a null psm address.
 
-	// Some manual routes to node 4 (based on contacts_Totin.txt):
-	if (eid_ == 1)
+	// This is the computeDistanceToTerminus() in ion:
+	Contact * currentContact = rootContact;
+	Contact * finalContact = NULL;
+	double earliestFinalArrivalTime = numeric_limits<double>::max();
+	float highestConfidence = 0.0;
+
+	while (1)
 	{
-		CgrRoute route1;
-		route1.toNodeNbr = 2;
-		route1.fromTime = 0;
-		route1.toTime = 10;
-		route1.arrivalConfidence = 1.0;
-		route1.arrivalTime = 20;
-		route1.maxCapacity = 1000;
-		route1.hops.push_back(contactPlan_->getContactById(1));
-		route1.hops.push_back(contactPlan_->getContactById(2));
-		route1.hops.push_back(contactPlan_->getContactById(3));
-		route = &route1;
-		return;
+		// Go thorugh all next hop neighbors in the
+		// contact plan (all contacts which source
+		// node is the currentWork destination node)
+		vector<Contact> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
+		for (vector<Contact>::iterator it = currentNeighbors.begin(); it != currentNeighbors.end(); ++it)
+		{
+			// First, check if contact needs to be considered
+			// in ion an if (contact->fromNode > arg.fromNode)
+			// is necesary due to the red-black tree stuff. Not here :)
 
-//		CgrRoute route2;
-//		route2.toNodeNbr = 2;
-//		route2.fromTime = 40;
-//		route2.toTime = 50;
-//		route2.arrivalConfidence = 1.0;
-//		route2.arrivalTime = 40;
-//		route2.maxCapacity = 1000;
-//		route2.hops.push_back(contactPlan_->getContactById(4));
-//		routeList_[terminusNode].push_back(route2);
+			// This contact is finished, ignore it.
+			if((*it).getEnd()<=((Work *)(currentContact->work))->arrivalTime)
+				continue;
+
+			// This contact is suppressed/visited, ignore it.
+			if(((Work *) (*it).work)->suppressed || ((Work *) (*it).work)->visited)
+				continue;
+
+			// Check if this contact has a range associated
+			// TODO: if (getApplicableRange(contact, &owlt) < 0) continue;
+
+			// Now calculate the cost for this contact:
+
+			// Calculate capacity
+			if(((Work *) (*it).work)->capacity==0)
+				((Work *) (*it).work)->capacity = (*it).getDataRate() * (*it).getDuration();
+
+			// TODO: Got to here!
+
+			cout << (*it).getId() << endl;
+		}
+
 	}
 
-	if (eid_ == 2)
-	{
-		CgrRoute route1;
-		route1.toNodeNbr = 3;
-		route1.fromTime = 10;
-		route1.toTime = 20;
-		route1.arrivalConfidence = 1.0;
-		route1.arrivalTime = 30;
-		route1.maxCapacity = 1000;
-		route1.hops.push_back(contactPlan_->getContactById(2));
-		route1.hops.push_back(contactPlan_->getContactById(3));
-		//routeList_[terminusNode].push_back(route1);
-		route = &route1;
-		return;
-	}
-
-	if (eid_ == 3)
-	{
-		CgrRoute route1;
-		route1.toNodeNbr = 4;
-		route1.fromTime = 20;
-		route1.toTime = 30;
-		route1.arrivalConfidence = 1.0;
-		route1.arrivalTime = 20;
-		route1.maxCapacity = 1000;
-		route1.hops.push_back(contactPlan_->getContactById(3));
-		//routeList_[terminusNode].push_back(route1);
-		route = &route1;
-		return;
-	}
+//	// Some manual routes to node 4 (based on contacts_Totin.txt):
+//	// if at least one contact is suppressed, return (route==NULL);
+//	for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
+//	{
+//		if (((Work *) (*it).work)->suppressed)
+//		{
+//			cout << "contactId " << (*it).getId() << " suppressed!" << endl;
+//			return;
+//		}
+//	}
+//
+//	if ((eid_ == 1))
+//	{
+//		(*route).toNodeNbr = 2;
+//		(*route).fromTime = 0;
+//		(*route).toTime = 20;
+//		(*route).arrivalConfidence = 1.0;
+//		(*route).arrivalTime = 20;
+//		(*route).maxCapacity = 1000;
+//		(*route).hops.push_back(contactPlan_->getContactById(1));
+//		(*route).hops.push_back(contactPlan_->getContactById(2));
+//		(*route).hops.push_back(contactPlan_->getContactById(3));
+//		return;
+//
+////		CgrRoute route2;
+////		route2.toNodeNbr = 2;
+////		route2.fromTime = 40;
+////		route2.toTime = 50;
+////		route2.arrivalConfidence = 1.0;
+////		route2.arrivalTime = 40;
+////		route2.maxCapacity = 1000;
+////		route2.hops.push_back(contactPlan_->getContactById(4));
+////		routeList_[terminusNode].push_back(route2);
+//	}
+//
+//	if (eid_ == 2)
+//	{
+//		(*route).toNodeNbr = 3;
+//		(*route).fromTime = 10;
+//		(*route).toTime = 20;
+//		(*route).arrivalConfidence = 1.0;
+//		(*route).arrivalTime = 30;
+//		(*route).maxCapacity = 1000;
+//		(*route).hops.push_back(contactPlan_->getContactById(2));
+//		(*route).hops.push_back(contactPlan_->getContactById(3));
+//		return;
+//	}
+//
+//	if (eid_ == 3)
+//	{
+//		(*route).toNodeNbr = 4;
+//		(*route).fromTime = 20;
+//		(*route).toTime = 30;
+//		(*route).arrivalConfidence = 1.0;
+//		(*route).arrivalTime = 20;
+//		(*route).maxCapacity = 1000;
+//		(*route).hops.push_back(contactPlan_->getContactById(3));
+//		return;
+//	}
 
 }
 

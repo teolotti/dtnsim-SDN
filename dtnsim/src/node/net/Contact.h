@@ -21,6 +21,11 @@ public:
 	double getDuration() const;
 	float getConfidence() const;
 
+	// A pointer to any external data
+	// that might be required for the
+	// routing algorithm.
+	void * work;
+
 private:
 
 	int id_;

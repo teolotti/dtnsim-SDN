@@ -71,7 +71,7 @@ private:
 	void identifyProximateNodes(Bundle * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes);
 	void loadRouteList(int terminusNode, double simTime);
 
-	void findNextBestRoute(Contact * rootContact, Work * rootWork, int terminusNode, CgrRoute * route);
+	void findNextBestRoute(Contact * rootContact, int terminusNode, CgrRoute * route);
 	void tryRoute(Bundle * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes);
 	void recomputeRouteForContact();
 	void enqueueToNeighbor(Bundle * bundle, ProximateNode * selectedNeighbor);
