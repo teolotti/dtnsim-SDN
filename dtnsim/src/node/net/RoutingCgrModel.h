@@ -30,6 +30,7 @@ private:
 #define	MIN_CONFIDENCE_IMPROVEMENT	(.05)
 #define MIN_NET_DELIVERY_CONFIDENCE	(.80)
 #define MAX_XMIT_COPIES (20)
+#define	MAX_SPEED_MPH	(150000)
 
 	typedef struct
 	{
@@ -57,7 +58,7 @@ private:
 	typedef struct
 	{
 		Contact * contact;
-		int predecessor;	// contactId of predecessor
+		Contact * predecessor;	// predecessor Contact
 		double arrivalTime;
 		double capacity; 	// in Bytes (?)
 		bool visited;
