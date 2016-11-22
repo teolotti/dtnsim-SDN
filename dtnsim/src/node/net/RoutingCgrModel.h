@@ -51,7 +51,7 @@ private:
 		double toTime;	 	// Time at which route shuts down: earliest contact end time among all
 		float arrivalConfidence;
 		double arrivalTime;
-		double maxCapacity; // in Bytes (?)
+		double maxCapacity; // in Bits
 		vector<Contact *> hops; // list: IonCXref addr
 	} CgrRoute;
 
