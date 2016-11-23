@@ -3,10 +3,12 @@ a range +0 +50 1 2 0
 a range +0 +50 2 3 0
 a range +0 +50 3 4 0
 a range +0 +50 1 4 0
-a contact +0 +10 1 2 1000000
-a contact +10 +20 2 3 1000000
-a contact +20 +30 3 4 1000000
-a contact +40 +50 1 4 1000000
+a contact +0 +70 1 2 100000
+a contact +10 +20 2 3 100000
+a contact +20 +30 3 4 100000
+a contact +40 +50 1 4 100000
+a contact +50 +60 2 3 100000
+a contact +60 +70 3 4 100000
 
 
 

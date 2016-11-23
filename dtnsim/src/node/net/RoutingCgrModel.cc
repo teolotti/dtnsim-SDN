@@ -9,13 +9,10 @@
 
 RoutingCgrModel::RoutingCgrModel()
 {
-	// TODO Auto-generated constructor stub
-
 }
 
 RoutingCgrModel::~RoutingCgrModel()
 {
-	// TODO Auto-generated destructor stub
 }
 
 void RoutingCgrModel::setLocalNode(int eid)
@@ -45,6 +42,7 @@ void RoutingCgrModel::routeBundle(Bundle * bundle, double simTime)
 
 void RoutingCgrModel::cgrForward(Bundle * bundle, double simTime)
 {
+	cout << endl << "simTime: " << simTime << "s, Node " << eid_ << ", calling cgrForward (src: " << bundle->getSourceEid() << ", dst:" << bundle->getDestinationEid() << ", created:" << bundle->getCreationTimestamp().dbl() << "s, id:" << bundle->getId() << ")" << endl;
 
 	// If contact plan was changed, discard route list
 	if (contactPlan_->getLastEditTime() > routeListLastEditTime)
@@ -61,52 +59,84 @@ void RoutingCgrModel::cgrForward(Bundle * bundle, double simTime)
 	// Not happening in the DtnSim
 
 	// Populate proximateNodes
+	cout << "  calling identifyProximateNodes: " << endl;
 	identifyProximateNodes(bundle, simTime, excludedNodes, &proximateNodes);
-
-	//cout << "Node " << eid_ << " proximateNodesSize: " << proximateNodes.size() << endl;
 
 	// TODO: send critical bundle to all proximateNodes
 	if (bundle->getCritical())
 	{
-		cout << "Critical bundle forwarding not implemented yet!" << endl;
+		cout << "***Critical bundle forwarding not implemented yet!***" << endl;
 		exit(1);
 	}
+
+	cout << "  proximateNodesSize: " << proximateNodes.size() << ":" << endl;
 
 	ProximateNode * selectedNeighbor = NULL;
 	for (vector<ProximateNode>::iterator it = proximateNodes.begin(); it != proximateNodes.end(); ++it)
 	{
+		cout << "    ProxNode " << (*it).neighborNodeNbr << " (cId:" << (*it).contactId << ") arrivalConf:" << (*it).arrivalConfidence << " arrivalT:" << (*it).arrivalTime << " hopCnt:" << (*it).hopCount << " forfT:" << (*it).forfeitTime << ":";
+
 		// If the confidence improvement is less than the minimal, continue
 		if (bundle->getDlvConfidence() > 0.0 && bundle->getDlvConfidence() < 1.0)
 		{
 			float newDlvConfidence = 1.0 - (1.0 - bundle->getDlvConfidence()) * (1.0 - it->arrivalConfidence);
 			float confidenceImprovement = (newDlvConfidence / bundle->getDlvConfidence()) - 1.0;
 			if (confidenceImprovement < MIN_CONFIDENCE_IMPROVEMENT)
+			{
+				cout << " Not chosen, not enough confidence improvement" << endl;
 				continue;
+			}
 		}
 
 		// Select Neighbor by arrival confidence, arrival time, hop count, and node number
+		// (Confidence criteria to be removed after 3.5.0)
 		if (selectedNeighbor == NULL)
+		{
+			cout << " Chosen, first suitable neighbor" << endl;
 			selectedNeighbor = &(*it);
-		// TODO: confidence criteria to be removed
+		}
+
 		else if (it->arrivalConfidence > selectedNeighbor->arrivalConfidence)
+		{
+			cout << " Chosen, best arrival confidence" << endl;
 			selectedNeighbor = &(*it);
+		}
 		else if (it->arrivalConfidence < selectedNeighbor->arrivalConfidence)
+		{
+			cout << " Not Chosen, bad arrival confidence" << endl;
 			continue;
+		}
 		else if (it->arrivalTime < selectedNeighbor->arrivalTime)
+		{
+			cout << " Chosen, best arrival time" << endl;
 			selectedNeighbor = &(*it);
+		}
 		else if (it->arrivalTime > selectedNeighbor->arrivalTime)
+		{
+			cout << " Not Chosen, bad arrival time" << endl;
 			continue;
+		}
 		else if (it->hopCount < selectedNeighbor->hopCount)
+		{
+			cout << " Chosen, best hop count" << endl;
 			selectedNeighbor = &(*it);
+		}
 		else if (it->hopCount > selectedNeighbor->hopCount)
+		{
+			cout << " Not Chosen, bad hop count" << endl;
 			continue;
+		}
 		else if (it->neighborNodeNbr < selectedNeighbor->neighborNodeNbr)
+		{
+			cout << " Chosen, best node number" << endl;
 			selectedNeighbor = &(*it);
+		}
 	}
 
 	if (selectedNeighbor != NULL)
 	{
 		// enqueueToNeighbor() function in ion
+		cout << "  enqueueing to chosen Neighbor" << endl;
 		enqueueToNeighbor(bundle, selectedNeighbor);
 
 		// TODO: manageOverbooking() function
@@ -115,19 +145,27 @@ void RoutingCgrModel::cgrForward(Bundle * bundle, double simTime)
 
 	// if the expected confidence level is reached, done
 	if (bundle->getDlvConfidence() >= MIN_NET_DELIVERY_CONFIDENCE)
+	{
+		cout << "  delivery confidence reached, end cgrForward" << endl;
 		return;
+	}
 
 	// if no routes to destination, done
 	if (routeList_[bundle->getDestinationEid()].size() == 0)
+	{
+		cout << "  delivery confidence not reached but no routes to dst, end cgrForward" << endl;
 		return;
+	}
 
 	if (selectedNeighbor != NULL)
 	{ // if bundle was enqueued (bundle ->ductXmitElt)
 	  // TODO: clone bundle and send it for routing (enqueueToLimbo in ion)
 	  // Here we should clone and call cgrForward again (while), Im a genious :)
+		cout << "  delivery confidence not reached, clone and repeat forward" << endl;
 	}
 	else
 	{
+		cout << "  no chosen neighbor and delivery confidence not reached, enqueueing to limbo" << endl;
 		enqueueToLimbo(bundle);
 	}
 }
@@ -139,16 +177,20 @@ void RoutingCgrModel::identifyProximateNodes(Bundle * bundle, double simTime, ve
 	// If routes are empty for this node, load route list
 	if (routeList_[terminusNode].empty() == true)
 	{
+		cout << "    routeList to Node:" << terminusNode << " empty, calling loadRouteList" << endl;
 		loadRouteList(terminusNode, simTime);
 		routeListLastEditTime = simTime;
 	}
 
-	//cout << "Node " << eid_ << " routeListSize: " << routeList_[terminusNode].size() << " terminusNode: " << terminusNode << endl;
+	cout << "    routeList to Node:" << terminusNode << " size:" << routeList_[terminusNode].size() << endl;
 
 	for (vector<CgrRoute>::iterator it = routeList_[terminusNode].begin(); it != routeList_[terminusNode].end(); ++it)
 	{
+		cout << "      route through node:" << (*it).toNodeNbr << ", arrivalConf:" << (*it).arrivalConfidence << ", arrivalT:" << (*it).arrivalTime << ", txWin:(" << (*it).fromTime << "-" << (*it).toTime << "), maxCap:" << (*it).maxCapacity << "bits:";
+
 		if ((*it).toTime < simTime)
 		{
+			cout << " ignoring, route due, recompute route for contact" << endl;
 			recomputeRouteForContact();
 			// TODO: a new route should be looked and the
 			// for loop might need to be restarted if found
@@ -158,30 +200,45 @@ void RoutingCgrModel::identifyProximateNodes(Bundle * bundle, double simTime, ve
 
 		// If arrival time is after deadline, ignore route
 		if ((*it).arrivalTime > bundle->getTtl().dbl())
+		{
+			cout << " ignoring, does not satisfies bundle deadline" << endl;
 			continue;
+		}
 
 		// When a contact happen or is in the contact
 		// plan, ion set its confidence to 1.0. Otherwise,
 		// it is an opportunistic contact.
 		if ((*it).hops[0]->getConfidence() != 1.0)
+		{
+			cout << " ignoring, first hop has confidence different than 1" << endl;
 			continue;
+		}
 
 		// If Im the final destination and the next hop,
 		// do not route through myself. Not sure when would
 		// this happen.
 		if ((*it).toNodeNbr == eid_)
 			if (bundle->getDestinationEid() == (*it).toNodeNbr)
+			{
+				cout << " ignoring, first hop and destination is this node" << endl;
 				continue;
+			}
 
 		// If bundle does not fit in route, ignore.
-		// TODO: But with proactive fragmentation, this should not stay.
+		// With proactive fragmentation, this should not stay.
 		if (bundle->getBitLength() > (*it).maxCapacity)
+		{
+			cout << " ignoring, maxCapacity cannot accomodate bundle" << endl;
 			continue;
+		}
 
 		// If next hop is in excluded nodes, ignore.
 		vector<int>::iterator itExl = find(excludedNodes.begin(), excludedNodes.end(), (*it).toNodeNbr);
 		if (itExl != excludedNodes.end())
+		{
+			cout << " ignoring, next hop is in excludedNodes" << endl;
 			continue;
+		}
 
 		// If we got to this point, the route might be
 		// considered. However, some final tests must be
@@ -211,9 +268,10 @@ void RoutingCgrModel::tryRoute(Bundle * bundle, CgrRoute * route, vector<Proxima
 		{
 			// The next-hop is already among proximateNodes.
 			// Test if we should update this node metrics.
-			// TODO: confidence criteria to be removed
+			// Confidence criteria to be removed in post 3.5.0
 			if (route->arrivalConfidence > (*it).arrivalConfidence)
 			{
+				cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
 				(*it).arrivalConfidence = route->arrivalConfidence;
 				(*it).arrivalTime = route->arrivalTime;
 				(*it).hopCount = route->hops.size();
@@ -221,35 +279,49 @@ void RoutingCgrModel::tryRoute(Bundle * bundle, CgrRoute * route, vector<Proxima
 				(*it).contactId = route->hops[0]->getId();
 			}
 			else if (route->arrivalConfidence < (*it).arrivalConfidence)
+			{
+				cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival confidence" << endl;
 				return;
+			}
 			else if (route->arrivalTime < (*it).arrivalTime)
 			{
+				cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
 				(*it).arrivalTime = route->arrivalTime;
 				(*it).hopCount = route->hops.size();
 				(*it).forfeitTime = route->toTime;
 				(*it).contactId = route->hops[0]->getId();
 			}
 			else if (route->arrivalTime > (*it).arrivalTime)
+			{
+				cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival time" << endl;
 				return;
+			}
 			else if (route->hops.size() < (*it).hopCount)
 			{
+				cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
 				(*it).hopCount = route->hops.size();
 				(*it).forfeitTime = route->toTime;
 				(*it).contactId = route->hops[0]->getId();
 			}
 			else if (route->hops.size() > (*it).hopCount)
+			{
+				cout << " route through node " << route->toNodeNbr << " in proxNodes has better hop count" << endl;
 				return;
+			}
 			else if (route->toNodeNbr < (*it).neighborNodeNbr)
 			{
+				cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
 				(*it).forfeitTime = route->toTime;
 				(*it).contactId = route->hops[0]->getId();
 			}
+			cout << " route through node " << route->toNodeNbr << " in proxNodes has same metrics" << endl;
 			return;
 		}
 	}
 
 	// If we got to this point, the node is not in
 	// proximateNodes list. So we create and add one.
+	cout << " good route, add node " << route->toNodeNbr << " to proxNodes" << endl;
 	ProximateNode node;
 	node.neighborNodeNbr = route->toNodeNbr;
 	node.arrivalConfidence = route->arrivalConfidence;
@@ -283,7 +355,6 @@ void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
 		((Work *) (*it).work)->predecessor = 0;
 		((Work *) (*it).work)->visited = false;
 		((Work *) (*it).work)->suppressed = false;
-		//cout << (*it).getId() << " - " << (*it).getSourceEid() << " to " << (*it).getDestinationEid() << " +" << (*it).getStart() << " +" << (*it).getEnd() << endl;
 	}
 
 	Contact * anchorContact = NULL;
@@ -297,9 +368,10 @@ void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
 		// If toNodeNbr still 0, no routes were found
 		// End search
 		if (route.toNodeNbr == 0)
+		{
+			cout << "      no more routes found" << endl;
 			break;
-
-		//cout << "Node " << eid_ << " new route: arrivalTime:" << route.arrivalTime << " fromTime:" << route.fromTime << " toTime: " << route.toTime << " hops:" << route.hops.size() << ", first hop Id:" << route.hops[0]->getId() << " (endTime:" << route.hops[0]->getEnd() << ")" << endl;
+		}
 
 		// If anchored search on going and firstContact
 		// is not anchor, end the anchor and do not record
@@ -308,7 +380,7 @@ void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
 		if (anchorContact != NULL)
 			if (firstContact != anchorContact)
 			{
-				//cout << "Node " << eid_ << " ending anchored search in contactId: " << anchorContact->getId() << endl;
+				cout << "        ending anchored search in contactId: " << anchorContact->getId() << " (src:" << anchorContact->getSourceEid() << "-dst:" << anchorContact->getDestinationEid() << ", " << anchorContact->getStart() << "s to " << anchorContact->getEnd() << "s)" << endl;
 				// This is endAnchoredSearch() function in ion: it clears the working area
 				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
 				{
@@ -327,6 +399,7 @@ void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
 			}
 
 		// Record route
+		cout << "      new route found through node:" << route.toNodeNbr << ", arrivalConf:" << route.arrivalConfidence << ", arrivalT:" << route.arrivalTime << ", txWin:(" << route.fromTime << "-" << route.toTime << "), maxCap:" << route.maxCapacity << "bits:" << endl;
 		routeList_[terminusNode].push_back(route);
 
 		// Find limiting contact for next iteration
@@ -341,7 +414,7 @@ void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
 			// Start new anchor search. Anchoring only
 			// happens in the first hop.. not good!
 			anchorContact = firstContact;
-			//cout << "Node " << eid_ << " starting anchored search in contactId: " << anchorContact->getId() << endl;
+			cout << "        starting anchored search in contactId: " << anchorContact->getId() << " (src:" << anchorContact->getSourceEid() << "-dst:" << anchorContact->getDestinationEid() << ", " << anchorContact->getStart() << "s-" << anchorContact->getEnd() << "s)" << endl;
 			// find the limiting contact in route
 			for (vector<Contact *>::iterator it = route.hops.begin(); it != route.hops.end(); ++it)
 				if ((*it)->getEnd() == route.toTime)
@@ -352,10 +425,10 @@ void RoutingCgrModel::loadRouteList(int terminusNode, double simTime)
 		}
 
 		// Supress limiting contact in next search
+		cout << "        supressing limiting contactId: " << limitContact->getId() << " (src:" << limitContact->getSourceEid() << "-dst:" << limitContact->getDestinationEid() << ", " << limitContact->getStart() << "s-" << limitContact->getEnd() << "s)" << endl;
 		((Work *) limitContact->work)->suppressed = true;
-		//cout << "Node " << eid_ << " suppresing contactId:" << limitContact->getId() << endl;
 
-		// Clear working area and suppress limitingContact
+		// Clear working area
 		for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
 		{
 			((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
@@ -435,7 +508,7 @@ void RoutingCgrModel::findNextBestRoute(Contact * rootContact, int terminusNode,
 				// consider it as final contact
 				if ((*it).getDestinationEid() == terminusNode)
 				{
-					// TODO: confidence criteria to be removed
+					// Confidence criteria to be removed in post 3.5.0
 					if ((*it).getConfidence() > highestConfidence || (((*it).getConfidence() == highestConfidence) && ((Work *) (*it).work)->arrivalTime < earliestFinalArrivalTime))
 					{
 						highestConfidence = (*it).getConfidence();
@@ -519,7 +592,7 @@ void RoutingCgrModel::findNextBestRoute(Contact * rootContact, int terminusNode,
 
 void RoutingCgrModel::recomputeRouteForContact()
 {
-	cout << "Node " << eid_ << " recomputeRouteForContact not implemented, ignoring route" << endl;
+	cout << "***RecomputeRouteForContact not implemented yet!, ignoring route***" << endl;
 }
 
 void RoutingCgrModel::enqueueToNeighbor(Bundle * bundle, ProximateNode * selectedNeighbor)
@@ -553,7 +626,6 @@ void RoutingCgrModel::enqueueToLimbo(Bundle * bundle)
 
 void RoutingCgrModel::bpEnqueue(Bundle * bundle, ProximateNode * selectedNeighbor)
 {
-
 	bundle->setNextHopEid(selectedNeighbor->neighborNodeNbr);
 
 	// TODO: we are forwarding by contact, need to add by node sometime?
@@ -568,6 +640,9 @@ void RoutingCgrModel::bpEnqueue(Bundle * bundle, ProximateNode * selectedNeighbo
 		q.push(bundle);
 		(*bundlesQueue_)[selectedNeighbor->contactId] = q;
 	}
+
+	// TODO: decrease route and contact capacity?
+
 
 	EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued in queueId: " << selectedNeighbor->contactId << " (next hop: " << selectedNeighbor->neighborNodeNbr << ")" << endl;
 }
