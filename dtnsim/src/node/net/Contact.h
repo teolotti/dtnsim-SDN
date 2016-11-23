@@ -21,6 +21,8 @@ public:
 	double getDuration() const;
 	float getConfidence() const;
 
+	void setResidualCapacity(double residualCapacity);
+
 	// A pointer to any external data
 	// that might be required for the
 	// routing algorithm.

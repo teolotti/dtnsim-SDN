@@ -260,6 +260,12 @@ void RoutingCgrModel::tryRoute(Bundle * bundle, CgrRoute * route, vector<Proxima
 	// Thirdly, ion computeArrivalTime() to determine
 	// the impact of the outbound queue in the arrival
 	// time. We coud do this here also (TODO).
+	// We imitate this behaviour by measuring the
+	// residual capacity of the first contact.
+	if(route->hops[0]->getResidualCapacity()<bundle->getBitLength()){
+		cout << " residual capacity of first contact in route depleted" << endl;
+		return;
+	}
 
 	// Last, we go through proximateNodes to add the route
 	for (vector<ProximateNode>::iterator it = (*proximateNodes).begin(); it != (*proximateNodes).end(); ++it)
@@ -277,6 +283,7 @@ void RoutingCgrModel::tryRoute(Bundle * bundle, CgrRoute * route, vector<Proxima
 				(*it).hopCount = route->hops.size();
 				(*it).forfeitTime = route->toTime;
 				(*it).contactId = route->hops[0]->getId();
+				(*it).route = route;
 			}
 			else if (route->arrivalConfidence < (*it).arrivalConfidence)
 			{
@@ -290,6 +297,7 @@ void RoutingCgrModel::tryRoute(Bundle * bundle, CgrRoute * route, vector<Proxima
 				(*it).hopCount = route->hops.size();
 				(*it).forfeitTime = route->toTime;
 				(*it).contactId = route->hops[0]->getId();
+				(*it).route = route;
 			}
 			else if (route->arrivalTime > (*it).arrivalTime)
 			{
@@ -302,6 +310,7 @@ void RoutingCgrModel::tryRoute(Bundle * bundle, CgrRoute * route, vector<Proxima
 				(*it).hopCount = route->hops.size();
 				(*it).forfeitTime = route->toTime;
 				(*it).contactId = route->hops[0]->getId();
+				(*it).route = route;
 			}
 			else if (route->hops.size() > (*it).hopCount)
 			{
@@ -313,6 +322,7 @@ void RoutingCgrModel::tryRoute(Bundle * bundle, CgrRoute * route, vector<Proxima
 				cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
 				(*it).forfeitTime = route->toTime;
 				(*it).contactId = route->hops[0]->getId();
+				(*it).route = route;
 			}
 			cout << " route through node " << route->toNodeNbr << " in proxNodes has same metrics" << endl;
 			return;
@@ -329,6 +339,7 @@ void RoutingCgrModel::tryRoute(Bundle * bundle, CgrRoute * route, vector<Proxima
 	node.contactId = route->hops[0]->getId();
 	node.forfeitTime = route->toTime;
 	node.hopCount = route->hops.size();
+	node.route = route;
 	proximateNodes->push_back(node);
 }
 
@@ -455,11 +466,15 @@ void RoutingCgrModel::findNextBestRoute(Contact * rootContact, int terminusNode,
 	double earliestFinalArrivalTime = numeric_limits<double>::max();
 	float highestConfidence = 0.0;
 
+	cout << "        surfing contact-graph:";
+
 	while (1)
 	{
 		// Go thorugh all next hop neighbors in the
 		// contact plan (all contacts which source
 		// node is the currentWork destination node)
+
+		cout << currentContact->getDestinationEid() << ",";
 		vector<Contact> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
 		for (vector<Contact>::iterator it = currentNeighbors.begin(); it != currentNeighbors.end(); ++it)
 		{
@@ -508,6 +523,7 @@ void RoutingCgrModel::findNextBestRoute(Contact * rootContact, int terminusNode,
 				// consider it as final contact
 				if ((*it).getDestinationEid() == terminusNode)
 				{
+
 					// Confidence criteria to be removed in post 3.5.0
 					if ((*it).getConfidence() > highestConfidence || (((*it).getConfidence() == highestConfidence) && ((Work *) (*it).work)->arrivalTime < earliestFinalArrivalTime))
 					{
@@ -551,6 +567,8 @@ void RoutingCgrModel::findNextBestRoute(Contact * rootContact, int terminusNode,
 		// Update next contact and go with next itartion
 		currentContact = nextContact;
 	} // end while (1)
+
+	cout << endl;
 
 	// If we got a final contact to destination
 	// then it is the best route and we need to
@@ -641,8 +659,18 @@ void RoutingCgrModel::bpEnqueue(Bundle * bundle, ProximateNode * selectedNeighbo
 		(*bundlesQueue_)[selectedNeighbor->contactId] = q;
 	}
 
-	// TODO: decrease route and contact capacity?
+	// Decrease first contact capacity:
+	selectedNeighbor->route->hops[0]->setResidualCapacity(selectedNeighbor->route->hops[0]->getResidualCapacity()-bundle->getBitLength());
 
+	// Decrease route capacity:
+	// It seems this does not happen in ION. In fact, the
+	// queiung process considers the local outbound capacity, which
+	// is analogous to consider the first contact capacity. However,
+	// there is chance to also consider remote contact capacity as
+	// in PA-CGR. Furthermore, the combined effect of routeList
+	// and PA-CGR need to be investigated because an update from
+	// one route might impact other routes that uses the same contacts.
+	selectedNeighbor->route->maxCapacity -= bundle->getBitLength();
 
 	EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued in queueId: " << selectedNeighbor->contactId << " (next hop: " << selectedNeighbor->neighborNodeNbr << ")" << endl;
 }

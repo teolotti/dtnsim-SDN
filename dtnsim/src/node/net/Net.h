@@ -24,31 +24,34 @@ using namespace std;
 #define FREE_CHANNEL 4
 #define BUNDLE 10
 
-class Net: public cSimpleModule {
+class Net: public cSimpleModule
+{
 public:
-    Net();
-    virtual ~Net();
+	Net();
+	virtual ~Net();
 
 protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-    virtual void dispatchBundle(Bundle *bundle);
-    virtual double transmitBundle(int neighborEid, int contactId);
-    virtual void parseContacts(string fileName);
-    virtual void finish();
+	virtual void initialize();
+	virtual void handleMessage(cMessage *msg);
+	virtual void dispatchBundle(Bundle *bundle);
+	virtual double transmitBundle(int neighborEid, int contactId);
+	virtual void parseContacts(string fileName);
+	virtual void finish();
 
 private:
 
-    int eid_;
+	int eid_;
+	float posX, posY, posAngle, posRadius;
 
-    Routing * routing;
-    ContactPlan contactPlan_;
+	Routing * routing;
+	ContactPlan contactPlan_;
 
-    // (contact id --> bundles)
-    map<int, queue<Bundle *> > bundlesQueue_;
+	// (contact id --> bundles)
+	map<int, queue<Bundle *> > bundlesQueue_;
 
-    // (contact id --> freeChannelMsg)
-    map<int, FreeChannelMsg *> freeChannelMsgs_;
+	// (contact id --> freeChannelMsg)
+	map<int, FreeChannelMsg *> freeChannelMsgs_;
+
 };
 
 #endif /* NET_H_ */

@@ -34,18 +34,6 @@ private:
 
 	typedef struct
 	{
-		int neighborNodeNbr;
-		int contactId; // This is not, in ION
-		double forfeitTime;
-		double arrivalTime;
-		float arrivalConfidence;
-		unsigned int hopCount; // hops from dest. node.
-		//Scalar	overbooked; 	//Bytes needing reforward.
-		//Scalar	protected; 		//Bytes not overbooked.
-	} ProximateNode;
-
-	typedef struct
-	{
 		int toNodeNbr; 	//Initial-hop neighbor.
 		double fromTime; 	// init tx time
 		double toTime;	 	// Time at which route shuts down: earliest contact end time among all
@@ -54,6 +42,19 @@ private:
 		double maxCapacity; // in Bits
 		vector<Contact *> hops; // list: IonCXref addr
 	} CgrRoute;
+
+	typedef struct
+	{
+		int neighborNodeNbr;
+		int contactId; // This is not, in ION
+		double forfeitTime;
+		double arrivalTime;
+		float arrivalConfidence;
+		unsigned int hopCount; // hops from dest. node.
+		CgrRoute * route; // pointer to route so we can decrement capacities
+		//Scalar	overbooked; 	//Bytes needing reforward.
+		//Scalar	protected; 		//Bytes not overbooked.
+	} ProximateNode;
 
 	typedef struct
 	{

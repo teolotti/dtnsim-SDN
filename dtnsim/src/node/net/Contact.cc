@@ -9,6 +9,7 @@ Contact::Contact(int id, double start, double end, int sourceEid, int destinatio
 	this->destinationEid_ = destinationEid;
 	this->dataRate_ = dataRate;
 	this->confidence_ = confidence;
+	this->residualCapacity_ = (end-start)*dataRate;
 }
 
 Contact::~Contact()
@@ -34,6 +35,11 @@ int Contact::getId() const
 double Contact::getResidualCapacity() const
 {
 	return residualCapacity_;
+}
+
+void Contact::setResidualCapacity(double residualCapacity)
+{
+	this->residualCapacity_ = residualCapacity;
 }
 
 int Contact::getSourceEid() const

@@ -7,7 +7,8 @@ import dtnsim.node.mac.Mac;
 module Node
 {
     parameters:
-        @display("i=device/satellite;bgb=150,250");
+        @display("i=device/satellite");
+        string icon = default("satellite");
         
     gates:
 
