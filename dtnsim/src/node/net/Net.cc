@@ -7,22 +7,27 @@ void Net::initialize()
 {
 	this->eid_ = this->getParentModule()->getIndex() + 1;
 
-	// Arrange graphical stuff: icon
-	cDisplayString& dispStr = this->getParentModule()->getDisplayString();
-	string icon_path = "device/";
-	string icon = this->getParentModule()->par("icon");
-	icon_path.append(icon);
-	dispStr.setTagArg("i", 0, icon_path.c_str());
-	// Arrange graphical stuff: circular position
-	posRadius = this->getParentModule()->getVectorSize() * 250 / (2 * (3.1415));
-	posAngle = 2 * (3.1415) / ((float) this->getParentModule()->getVectorSize());
-	posX = posRadius * cos((eid_ - 1) * posAngle) + posRadius;
-	posY = posRadius * sin((eid_ - 1) * posAngle) + posRadius;
-	dispStr.setTagArg("p", 0, posX);
-	dispStr.setTagArg("p", 1, posY);
+	if (hasGUI())
+	{
+		// Arrange graphical stuff: icon
+		cDisplayString& dispStr = this->getParentModule()->getDisplayString();
+		string icon_path = "device/";
+		string icon = this->getParentModule()->par("icon");
+		icon_path.append(icon);
+		dispStr.setTagArg("i", 0, icon_path.c_str());
+		// Arrange graphical stuff: circular position
+		posRadius = this->getParentModule()->getVectorSize() * 250 / (2 * (3.1415));
+		posAngle = 2 * (3.1415) / ((float) this->getParentModule()->getVectorSize());
+		posX = posRadius * cos((eid_ - 1) * posAngle) + posRadius;
+		posY = posRadius * sin((eid_ - 1) * posAngle) + posRadius;
+		dispStr.setTagArg("p", 0, posX);
+		dispStr.setTagArg("p", 1, posY);
+	}
 
+	// Parse contacts
 	this->parseContacts(par("contactsFile"));
 
+	// Initialize routing
 	string routeString = par("routing");
 	if (routeString.compare("direct") == 0)
 		routing = new RoutingDirect();
@@ -33,18 +38,56 @@ void Net::initialize()
 	routing->setLocalNode(eid_);
 	routing->setQueue(&bundlesQueue_);
 	routing->setContactPlan(&contactPlan_);
+
+	// Initialize faults
+	if (this->getParentModule()->par("enableFaults").boolValue() == true)
+	{
+		meanTTF = this->getParentModule()->par("meanTTF").doubleValue();
+		meanTTR = this->getParentModule()->par("meanTTR").doubleValue();
+
+		cMessage *faultMsg = new ContactMsg("fault", FAULT_START_TIMER);
+		//faultMsg->setSchedulingPriority(4);
+		scheduleAt(exponential(meanTTF), faultMsg);
+	}
 }
 
 void Net::handleMessage(cMessage * msg)
 {
 	if (msg->getKind() == BUNDLE)
 	{
-		EV << "BUNDLE" << endl;
-
 		Bundle* bundle = check_and_cast<Bundle *>(msg);
 
 		bubble("dispatching bundle");
 		dispatchBundle(bundle);
+	}
+	else if (msg->getKind() == FAULT_START_TIMER)
+	{
+		if (hasGUI())
+		{
+			// Visualize fault start
+			cDisplayString& dispStr = this->getParentModule()->getDisplayString();
+			string faultColor = "red";
+			dispStr.setTagArg("i", 1, faultColor.c_str());
+			dispStr.setTagArg("i2", 0, "status/stop");
+		}
+
+		// Schedule fault recovery
+		msg->setKind(FAULT_END_TIMER);
+		scheduleAt(simTime() + exponential(meanTTR), msg);
+	}
+	else if (msg->getKind() == FAULT_END_TIMER)
+	{
+		if (hasGUI())
+		{
+			// Visualize fault end
+			cDisplayString& dispStr = this->getParentModule()->getDisplayString();
+			dispStr.setTagArg("i", 1, "");
+			dispStr.setTagArg("i2", 0, "");
+		}
+
+		// Schedule next fault
+		msg->setKind(FAULT_START_TIMER);
+		scheduleAt(simTime() + exponential(meanTTF), msg);
 	}
 	else if (msg->getKind() == CONTACT_START_TIMER)
 	{
@@ -63,28 +106,34 @@ void Net::handleMessage(cMessage * msg)
 		freeChannelMsgs_[contactMsg->getId()] = freeChannelMsg;
 		scheduleAt(simTime(), freeChannelMsg);
 
-		// Visualize contact line
-		cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
-		string lineName = "line";
-		lineName.append(to_string(contactMsg->getDestinationEid()));
-		// TODO: Need to delete the newly cLineFigure created!
-		cLineFigure *line = new cLineFigure(lineName.c_str());
-		line->setStart(cFigure::Point(posX, posY));
-		line->setEnd(cFigure::Point(posRadius * cos((contactMsg->getDestinationEid() - 1) * posAngle) + posRadius, posRadius * sin((contactMsg->getDestinationEid() - 1) * posAngle) + posRadius));
-		line->setLineWidth(2);
-		line->setEndArrowhead(cFigure::ARROW_BARBED);
-		canvas->addFigure(line);
+		if (hasGUI())
+		{
+			// Visualize contact line
+			cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
+			string lineName = "line";
+			lineName.append(to_string(contactMsg->getDestinationEid()));
+			cLineFigure *line = new cLineFigure(lineName.c_str());
+			line->setStart(cFigure::Point(posX, posY));
+			line->setEnd(cFigure::Point(posRadius * cos((contactMsg->getDestinationEid() - 1) * posAngle) + posRadius, posRadius * sin((contactMsg->getDestinationEid() - 1) * posAngle) + posRadius));
+			line->setLineWidth(2);
+			line->setEndArrowhead(cFigure::ARROW_BARBED);
+			lines.push_back(line);
+			canvas->addFigure(line);
+		}
 
 	}
 	else if (msg->getKind() == CONTACT_END_TIMER)
 	{
 		ContactMsg* contactMsg = check_and_cast<ContactMsg *>(msg);
 
-		// Visualize contact line end
-		cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
-		string lineName = "line";
-		lineName.append(to_string(contactMsg->getDestinationEid()));
-		canvas->removeFigure(canvas->findFigureRecursively(lineName.c_str()));
+		if (hasGUI())
+		{
+			// Visualize contact line end
+			cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
+			string lineName = "line";
+			lineName.append(to_string(contactMsg->getDestinationEid()));
+			canvas->removeFigure(canvas->findFigureRecursively(lineName.c_str()));
+		}
 
 		int contactId = contactMsg->getId();
 		cancelAndDelete(freeChannelMsgs_[contactId]);
@@ -92,8 +141,6 @@ void Net::handleMessage(cMessage * msg)
 	}
 	else if (msg->getKind() == FREE_CHANNEL)
 	{
-		EV << "FREE CHANNEL" << endl;
-
 		FreeChannelMsg* freeChannelMsg = check_and_cast<FreeChannelMsg *>(msg);
 		int neighborEid = freeChannelMsg->getNeighborEid();
 		int contactId = freeChannelMsg->getContactId();
@@ -106,6 +153,8 @@ void Net::handleMessage(cMessage * msg)
 		// if there are messages in the queue for this contact
 		if (it != bundlesQueue_.end())
 		{
+			// TODO: Need to stop from transmitting if this node
+			// or the next hop is with failure.
 			// transmit bundle and get transmissionDuration
 			double transmissionDuration = transmitBundle(neighborEid, contactId);
 
@@ -115,6 +164,8 @@ void Net::handleMessage(cMessage * msg)
 		// if there aren't messages for this contact, delete freeChannelMsg to stop trying to send bundles through this contact
 		else
 		{
+			// TODO: this needs to be changed, if new bundles are sent
+			// from the App they will not be transmitted after this.
 			freeChannelMsgs_[freeChannelMsg->getContactId()] = nullptr;
 			delete freeChannelMsg;
 		}
@@ -123,8 +174,6 @@ void Net::handleMessage(cMessage * msg)
 
 void Net::dispatchBundle(Bundle *bundle)
 {
-	EV << "DISPATCH BUNDLE" << endl;
-
 	int destinationEid = bundle->getDestinationEid();
 	int ownEid = this->eid_;
 
@@ -142,8 +191,6 @@ void Net::dispatchBundle(Bundle *bundle)
 
 double Net::transmitBundle(int neighborEid, int contactId)
 {
-	EV << "TRANSMIT BUNDLE" << " contactId: " << contactId << endl;
-
 	double transmissionDuration = 0.0;
 
 	map<int, queue<Bundle *> >::iterator it = bundlesQueue_.find(contactId);
@@ -255,6 +302,15 @@ void Net::finish()
 			bundles.pop();
 		}
 		bundlesQueue_.erase(it1++);
+	}
+
+	// Remove and delete visualization lines
+	cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
+	for (vector<cLineFigure *>::iterator it = lines.begin(); it != lines.end(); ++it)
+	{
+		if (canvas->findFigure((*it)) != -1)
+			canvas->removeFigure((*it));
+		delete (*it);
 	}
 }
 

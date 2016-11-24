@@ -23,6 +23,8 @@ using namespace std;
 #define CONTACT_END_TIMER 3
 #define FREE_CHANNEL 4
 #define BUNDLE 10
+#define FAULT_START_TIMER 20
+#define FAULT_END_TIMER 21
 
 class Net: public cSimpleModule
 {
@@ -41,7 +43,6 @@ protected:
 private:
 
 	int eid_;
-	float posX, posY, posAngle, posRadius;
 
 	Routing * routing;
 	ContactPlan contactPlan_;
@@ -51,6 +52,13 @@ private:
 
 	// (contact id --> freeChannelMsg)
 	map<int, FreeChannelMsg *> freeChannelMsgs_;
+
+	// Fault parameters
+	double meanTTF, meanTTR;
+
+	// Visualization
+	float posX, posY, posAngle, posRadius;
+	vector<cLineFigure *> lines;
 
 };
 

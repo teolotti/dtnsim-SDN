@@ -6,6 +6,7 @@ void App::initialize()
 {
 	this->eid_ = this->getParentModule()->getIndex() + 1;
 
+	// Configure Traffic Generator
 	if (par("enable"))
 	{
 		const char *bundlesNumberChar = par("bundlesNumber");
@@ -98,7 +99,7 @@ void App::handleMessage(cMessage *msg)
 
 		if (this->eid_ == destinationEid)
 		{
-			bubble("bundle received");
+			EV << "Bundle Received" << endl;
 			delete msg;
 		}
 		else

@@ -9,6 +9,10 @@ module Node
     parameters:
         @display("i=device/satellite");
         string icon = default("satellite");
+        bool enableFaults = default(false);
+        int faultSeed = default(0);
+        double meanTTF = default(0); // If 0 no faults enabled 
+        double meanTTR = default(0); // If 0 no faults enabled
         
     gates:
 

@@ -20,6 +20,7 @@ public:
 	virtual void setContactPlan(ContactPlan * contactPlan);
 	virtual void routeBundle(Bundle *bundle, double simTime);
 private:
+	bool printDebug = false;
 	int eid_;
 	map<int, queue<Bundle *> > * bundlesQueue_;
 	ContactPlan * contactPlan_;

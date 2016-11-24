@@ -32,8 +32,15 @@ void RoutingCgrModel::setContactPlan(ContactPlan * contactPlan)
 
 void RoutingCgrModel::routeBundle(Bundle * bundle, double simTime)
 {
+	if (!printDebug) // disable cout if degug disabled
+		cout.setstate(std::ios_base::failbit);
+
 	// Call cgrForward from ion (route and forwarding)
 	cgrForward(bundle, simTime);
+
+	if (!printDebug)
+		cout.clear();
+
 }
 
 /////////////////////////////////////////////////
@@ -262,7 +269,8 @@ void RoutingCgrModel::tryRoute(Bundle * bundle, CgrRoute * route, vector<Proxima
 	// time. We coud do this here also (TODO).
 	// We imitate this behaviour by measuring the
 	// residual capacity of the first contact.
-	if(route->hops[0]->getResidualCapacity()<bundle->getBitLength()){
+	if (route->hops[0]->getResidualCapacity() < bundle->getBitLength())
+	{
 		cout << " residual capacity of first contact in route depleted" << endl;
 		return;
 	}
@@ -660,7 +668,7 @@ void RoutingCgrModel::bpEnqueue(Bundle * bundle, ProximateNode * selectedNeighbo
 	}
 
 	// Decrease first contact capacity:
-	selectedNeighbor->route->hops[0]->setResidualCapacity(selectedNeighbor->route->hops[0]->getResidualCapacity()-bundle->getBitLength());
+	selectedNeighbor->route->hops[0]->setResidualCapacity(selectedNeighbor->route->hops[0]->getResidualCapacity() - bundle->getBitLength());
 
 	// Decrease route capacity:
 	// It seems this does not happen in ION. In fact, the
