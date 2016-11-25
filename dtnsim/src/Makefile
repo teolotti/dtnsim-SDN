@@ -21,7 +21,8 @@ INCLUDE_PATH = \
     -Inode \
     -Inode/app \
     -Inode/mac \
-    -Inode/net
+    -Inode/net \
+    -Iresults
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -38,6 +39,7 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 OBJS = \
     $O/node/app/App.o \
     $O/node/mac/Mac.o \
+    $O/node/net/SdrModel.o \
     $O/node/net/RoutingCgrIon350.o \
     $O/node/net/RoutingCgrModel.o \
     $O/node/net/RoutingDirect.o \
@@ -137,13 +139,14 @@ clean:
 	$(Q)-rm -f node/app/*_m.cc node/app/*_m.h node/app/*_sm.cc node/app/*_sm.h
 	$(Q)-rm -f node/mac/*_m.cc node/mac/*_m.h node/mac/*_sm.cc node/mac/*_sm.h
 	$(Q)-rm -f node/net/*_m.cc node/net/*_m.h node/net/*_sm.cc node/net/*_sm.h
+	$(Q)-rm -f results/*_m.cc results/*_m.h results/*_sm.cc results/*_sm.h
 
 cleanall: clean
 	$(Q)-rm -rf $(PROJECT_OUTPUT_DIR)
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc results/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/dtnsim_m.o: dtnsim_m.cc \
@@ -169,23 +172,30 @@ $O/node/net/Net.o: node/net/Net.cc \
 	node/net/Routing.h \
 	node/net/RoutingCgrIon350.h \
 	node/net/RoutingCgrModel.h \
-	node/net/RoutingDirect.h
+	node/net/RoutingDirect.h \
+	node/net/SdrModel.h
 $O/node/net/RoutingCgrIon350.o: node/net/RoutingCgrIon350.cc \
 	dtnsim_m.h \
 	node/net/Contact.h \
 	node/net/ContactPlan.h \
 	node/net/Routing.h \
-	node/net/RoutingCgrIon350.h
+	node/net/RoutingCgrIon350.h \
+	node/net/SdrModel.h
 $O/node/net/RoutingCgrModel.o: node/net/RoutingCgrModel.cc \
 	dtnsim_m.h \
 	node/net/Contact.h \
 	node/net/ContactPlan.h \
 	node/net/Routing.h \
-	node/net/RoutingCgrModel.h
+	node/net/RoutingCgrModel.h \
+	node/net/SdrModel.h
 $O/node/net/RoutingDirect.o: node/net/RoutingDirect.cc \
 	dtnsim_m.h \
 	node/net/Contact.h \
 	node/net/ContactPlan.h \
 	node/net/Routing.h \
-	node/net/RoutingDirect.h
+	node/net/RoutingDirect.h \
+	node/net/SdrModel.h
+$O/node/net/SdrModel.o: node/net/SdrModel.cc \
+	dtnsim_m.h \
+	node/net/SdrModel.h
 

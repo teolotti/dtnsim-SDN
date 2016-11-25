@@ -10,6 +10,7 @@
 #include "ContactPlan.h"
 #include "dtnsim_m.h"
 //#include "ion_interface/ION_interface.h"
+#include "SdrModel.h"
 #include "Routing.h"
 #include "RoutingDirect.h"
 #include "RoutingCgrModel.h"
@@ -39,19 +40,21 @@ protected:
 	virtual double transmitBundle(int neighborEid, int contactId);
 	virtual void parseContacts(string fileName);
 	virtual void finish();
+	virtual bool isOnFault();
 
 private:
 
 	int eid_;
+	bool onFault;
 
 	Routing * routing;
 	ContactPlan contactPlan_;
 
-	// (contact id --> bundles)
-	map<int, queue<Bundle *> > bundlesQueue_;
-
 	// (contact id --> freeChannelMsg)
 	map<int, FreeChannelMsg *> freeChannelMsgs_;
+
+	// (contact id --> bundles)
+	SdrModel sdr_;
 
 	// Fault parameters
 	double meanTTF, meanTTR;
@@ -59,6 +62,15 @@ private:
 	// Visualization
 	float posX, posY, posAngle, posRadius;
 	vector<cLineFigure *> lines;
+
+	// Stats
+	cOutVector netTxBundles;
+	cOutVector netReRoutedBundles;
+	unsigned int reRoutedBundles;
+	cOutVector netEffectiveFailureTime;
+	double effectiveFailureTime;
+	cOutVector sdrBundlesInSdr;
+	cOutVector sdrBundleInLimbo;
 
 };
 

@@ -21,8 +21,8 @@ void RoutingDirect::setLocalNode(int eid){
 	eid_ = eid;
 }
 
-void RoutingDirect::setQueue(map<int, queue<Bundle *> > * bundlesQueue){
-	bundlesQueue_ = bundlesQueue;
+void RoutingDirect::setSdr(SdrModel * sdr){
+	sdr_ = sdr;
 }
 
 void RoutingDirect::setContactPlan(ContactPlan * contactPlan){
@@ -44,17 +44,7 @@ void RoutingDirect::routeBundle(Bundle * bundle, double simTime)
 
 	// Enqueue the bundle
 	bundle->setNextHopEid(contactPlan_->getContactById(contactId)->getDestinationEid());
-	map<int, queue<Bundle *> >::iterator it = bundlesQueue_->find(contactId);
-	if (it != bundlesQueue_->end())
-	{
-		it->second.push(bundle);
-	}
-	else
-	{
-		queue<Bundle *> q;
-		q.push(bundle);
-		(*bundlesQueue_)[contactId] = q;
-	}
+	sdr_->enqueueBundleToContact(bundle, contactId);
 }
 
 

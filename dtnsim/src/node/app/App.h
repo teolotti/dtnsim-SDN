@@ -38,6 +38,9 @@ class App : public cSimpleModule
         std::vector<int> destinationEidVec_;
         std::vector<int> sizeVec_;
         std::vector<double> startVec_;
+
+        // Stats
+        cOutVector appRxBundleDelayTime;
 };
 
 #endif /* APP_H_ */

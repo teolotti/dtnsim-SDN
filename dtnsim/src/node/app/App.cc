@@ -56,6 +56,9 @@ void App::initialize()
 			scheduleAt(startVec_.at(i), trafficGenMsg);
 		}
 	}
+
+	// Init stats
+	appRxBundleDelayTime.setName("appRxBundleDelayTime");
 }
 
 void App::handleMessage(cMessage *msg)
@@ -99,6 +102,7 @@ void App::handleMessage(cMessage *msg)
 
 		if (this->eid_ == destinationEid)
 		{
+			appRxBundleDelayTime.record(simTime() - bundle->getCreationTimestamp());
 			EV << "Bundle Received" << endl;
 			delete msg;
 		}

@@ -6,6 +6,7 @@ Define_Module (Net);
 void Net::initialize()
 {
 	this->eid_ = this->getParentModule()->getIndex() + 1;
+	this->onFault = false;
 
 	if (hasGUI())
 	{
@@ -36,7 +37,7 @@ void Net::initialize()
 	if (routeString.compare("cgrIon350") == 0)
 		routing = new RoutingCgrIon350();
 	routing->setLocalNode(eid_);
-	routing->setQueue(&bundlesQueue_);
+	routing->setSdr(&sdr_);
 	routing->setContactPlan(&contactPlan_);
 
 	// Initialize faults
@@ -49,6 +50,17 @@ void Net::initialize()
 		//faultMsg->setSchedulingPriority(4);
 		scheduleAt(exponential(meanTTF), faultMsg);
 	}
+
+	// Initialize stats
+	netTxBundles.setName("netTxBundle");
+	netReRoutedBundles.setName("netReRoutedBundles");
+	reRoutedBundles = 0;
+	netEffectiveFailureTime.setName("netEffectiveFailureTime");
+	effectiveFailureTime = 0;
+	sdrBundlesInSdr.setName("sdrBundlesInSdr");
+	sdrBundleInLimbo.setName("sdrBundleInLimbo");
+	sdr_.setStatsHandle(&sdrBundlesInSdr, &sdrBundleInLimbo);
+
 }
 
 void Net::handleMessage(cMessage * msg)
@@ -71,6 +83,9 @@ void Net::handleMessage(cMessage * msg)
 			dispStr.setTagArg("i2", 0, "status/stop");
 		}
 
+		// Enable dault mode
+		this->onFault = true;
+
 		// Schedule fault recovery
 		msg->setKind(FAULT_END_TIMER);
 		scheduleAt(simTime() + exponential(meanTTR), msg);
@@ -84,6 +99,9 @@ void Net::handleMessage(cMessage * msg)
 			dispStr.setTagArg("i", 1, "");
 			dispStr.setTagArg("i2", 0, "");
 		}
+
+		// Disable dault mode
+		this->onFault = false;
 
 		// Schedule next fault
 		msg->setKind(FAULT_START_TIMER);
@@ -106,9 +124,9 @@ void Net::handleMessage(cMessage * msg)
 		freeChannelMsgs_[contactMsg->getId()] = freeChannelMsg;
 		scheduleAt(simTime(), freeChannelMsg);
 
+		// Visualize contact line
 		if (hasGUI())
 		{
-			// Visualize contact line
 			cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
 			string lineName = "line";
 			lineName.append(to_string(contactMsg->getDestinationEid()));
@@ -126,9 +144,9 @@ void Net::handleMessage(cMessage * msg)
 	{
 		ContactMsg* contactMsg = check_and_cast<ContactMsg *>(msg);
 
+		// Visualize contact line end
 		if (hasGUI())
 		{
-			// Visualize contact line end
 			cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
 			string lineName = "line";
 			lineName.append(to_string(contactMsg->getDestinationEid()));
@@ -138,6 +156,18 @@ void Net::handleMessage(cMessage * msg)
 		int contactId = contactMsg->getId();
 		cancelAndDelete(freeChannelMsgs_[contactId]);
 		delete contactMsg;
+
+		// Check if bundles are left in contact and re-route them
+		while (sdr_.isBundleForContact(contactId))
+		{
+			Bundle* bundle = sdr_.getNextBundleForContact(contactId);
+			// Reset delivery confidence, the contact did not succedded.
+			bundle->setDlvConfidence(0);
+
+			routing->routeBundle(bundle, simTime().dbl());
+			sdr_.popNextBundleForContact(contactId);
+			netReRoutedBundles.record(reRoutedBundles++);
+		}
 	}
 	else if (msg->getKind() == FREE_CHANNEL)
 	{
@@ -148,24 +178,31 @@ void Net::handleMessage(cMessage * msg)
 		// save freeChannelMsg to cancel event if necessary
 		freeChannelMsgs_[freeChannelMsg->getContactId()] = freeChannelMsg;
 
-		map<int, queue<Bundle *> >::iterator it = bundlesQueue_.find(contactId);
-
 		// if there are messages in the queue for this contact
-		if (it != bundlesQueue_.end())
+		if (sdr_.isBundleForContact(contactId))
 		{
-			// TODO: Need to stop from transmitting if this node
-			// or the next hop is with failure.
-			// transmit bundle and get transmissionDuration
-			double transmissionDuration = transmitBundle(neighborEid, contactId);
-
-			// simulate bundle transmission duration by scheduling freeChannelMsg
-			scheduleAt(simTime() + transmissionDuration, freeChannelMsg);
+			// A very simple fault model: Node refrains from transmitting
+			// a bundle if this node or the next hop are in fault mode.
+			Net * neighborNet = check_and_cast<Net *>(this->getParentModule()->getParentModule()->getSubmodule("node", neighborEid - 1)->getSubmodule("net"));
+			if ((!neighborNet->onFault) && (!this->onFault))
+			{
+				// Transmit bundle normally.
+				double transmissionDuration = transmitBundle(neighborEid, contactId);
+				scheduleAt(simTime() + transmissionDuration, freeChannelMsg);
+			}
+			else
+			{
+				// Local or remote node in fault mode. Wait meanTTR/2 time (?) to retry transmission.
+				scheduleAt(simTime() + meanTTR / 2, freeChannelMsg);
+				effectiveFailureTime += meanTTR / 2;
+				netEffectiveFailureTime.record(effectiveFailureTime);
+			}
 		}
 		// if there aren't messages for this contact, delete freeChannelMsg to stop trying to send bundles through this contact
 		else
 		{
 			// TODO: this needs to be changed, if new bundles are sent
-			// from the App they will not be transmitted after this.
+			// from the App or received, they will not be transmitted after this.
 			freeChannelMsgs_[freeChannelMsg->getContactId()] = nullptr;
 			delete freeChannelMsg;
 		}
@@ -193,40 +230,23 @@ double Net::transmitBundle(int neighborEid, int contactId)
 {
 	double transmissionDuration = 0.0;
 
-	map<int, queue<Bundle *> >::iterator it = bundlesQueue_.find(contactId);
+	// If we got this point, is because there is a
+	// bundle waiting for this contact.
+	Bundle* bundle = sdr_.getNextBundleForContact(contactId);
 
-	// if there is a bundlesQueue for the contact
-	if (it != bundlesQueue_.end())
-	{
-		queue<Bundle *> bundlesToTx = it->second;
+	// Calcualte datarate and Tx duration
+	// TODO: In the future, this should be made by the Mac layer.
+	double dataRate = this->contactPlan_.getContactById(contactId)->getDataRate();
+	transmissionDuration = (double) bundle->getBitLength() / dataRate;
 
-		// if the queue is not empty
-		// send one bundle to Mac Module
-		// and erase bundle pointer from the queue
-		if (!bundlesToTx.empty())
-		{
-			Bundle* bundle = bundlesToTx.front();
-			double dataRate = this->contactPlan_.getContactById(contactId)->getDataRate();
-			transmissionDuration = (double) bundle->getBitLength() / dataRate;
+	// Set bundle parameters that are udated on each hop:
+	bundle->setSenderEid(eid_);
+	bundle->setDlvConfidence(0);
+	bundle->setXmitCopiesCount(0);
+	send(bundle, "gateToMac$o");
 
-			// Set things that changes on each hop:
-			bundle->setSenderEid(eid_);
-			bundle->setDlvConfidence(0);
-			bundle->setXmitCopiesCount(0);
-
-			send(bundle, "gateToMac$o");
-			bundlesToTx.pop();
-
-			if (!bundlesToTx.empty())
-			{
-				bundlesQueue_[contactId] = bundlesToTx;
-			}
-			else
-			{
-				bundlesQueue_.erase(contactId);
-			}
-		}
-	}
+	netTxBundles.record(simTime());
+	sdr_.popNextBundleForContact(contactId);
 
 	return transmissionDuration;
 }
@@ -289,20 +309,8 @@ void Net::parseContacts(string fileName)
 
 void Net::finish()
 {
-	//delete enqueued bundles that could not be delivered
-	map<int, queue<Bundle *> >::iterator it1 = bundlesQueue_.begin();
-	map<int, queue<Bundle *> >::iterator it2 = bundlesQueue_.end();
-	while (it1 != it2)
-	{
-		queue<Bundle *> bundles = it1->second;
-
-		while (!bundles.empty())
-		{
-			delete (bundles.front());
-			bundles.pop();
-		}
-		bundlesQueue_.erase(it1++);
-	}
+	// Delete all stored bundles
+	sdr_.freeSdr();
 
 	// Remove and delete visualization lines
 	cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
@@ -312,6 +320,11 @@ void Net::finish()
 			canvas->removeFigure((*it));
 		delete (*it);
 	}
+}
+
+bool Net::isOnFault()
+{
+	return this->onFault;
 }
 
 Net::Net()

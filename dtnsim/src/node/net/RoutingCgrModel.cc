@@ -20,9 +20,9 @@ void RoutingCgrModel::setLocalNode(int eid)
 	eid_ = eid;
 }
 
-void RoutingCgrModel::setQueue(map<int, queue<Bundle *> > * bundlesQueue)
+void RoutingCgrModel::setSdr(SdrModel * sdr)
 {
-	bundlesQueue_ = bundlesQueue;
+	sdr_ = sdr;
 }
 
 void RoutingCgrModel::setContactPlan(ContactPlan * contactPlan)
@@ -158,6 +158,7 @@ void RoutingCgrModel::cgrForward(Bundle * bundle, double simTime)
 	}
 
 	// if no routes to destination, done
+	// TODO: shouldnt send to limbo?
 	if (routeList_[bundle->getDestinationEid()].size() == 0)
 	{
 		cout << "  delivery confidence not reached but no routes to dst, end cgrForward" << endl;
@@ -653,33 +654,26 @@ void RoutingCgrModel::enqueueToLimbo(Bundle * bundle)
 void RoutingCgrModel::bpEnqueue(Bundle * bundle, ProximateNode * selectedNeighbor)
 {
 	bundle->setNextHopEid(selectedNeighbor->neighborNodeNbr);
+	sdr_->enqueueBundleToContact(bundle, selectedNeighbor->contactId);
 
-	// TODO: we are forwarding by contact, need to add by node sometime?
-	map<int, queue<Bundle *> >::iterator it = bundlesQueue_->find(selectedNeighbor->contactId);
-	if (it != bundlesQueue_->end())
+	if (selectedNeighbor->contactId != 0)
 	{
-		it->second.push(bundle);
+		// Decrease first contact capacity:
+		selectedNeighbor->route->hops[0]->setResidualCapacity(selectedNeighbor->route->hops[0]->getResidualCapacity() - bundle->getBitLength());
+
+		// Decrease route capacity:
+		// It seems this does not happen in ION. In fact, the
+		// queiung process considers the local outbound capacity, which
+		// is analogous to consider the first contact capacity. However,
+		// there is chance to also consider remote contact capacity as
+		// in PA-CGR. Furthermore, the combined effect of routeList
+		// and PA-CGR need to be investigated because an update from
+		// one route might impact other routes that uses the same contacts.
+		selectedNeighbor->route->maxCapacity -= bundle->getBitLength();
+
+		EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued in queueId: " << selectedNeighbor->contactId << " (next hop: " << selectedNeighbor->neighborNodeNbr << ")" << endl;
+	} else {
+		EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued to limbo!" << endl;
 	}
-	else
-	{
-		queue<Bundle *> q;
-		q.push(bundle);
-		(*bundlesQueue_)[selectedNeighbor->contactId] = q;
-	}
-
-	// Decrease first contact capacity:
-	selectedNeighbor->route->hops[0]->setResidualCapacity(selectedNeighbor->route->hops[0]->getResidualCapacity() - bundle->getBitLength());
-
-	// Decrease route capacity:
-	// It seems this does not happen in ION. In fact, the
-	// queiung process considers the local outbound capacity, which
-	// is analogous to consider the first contact capacity. However,
-	// there is chance to also consider remote contact capacity as
-	// in PA-CGR. Furthermore, the combined effect of routeList
-	// and PA-CGR need to be investigated because an update from
-	// one route might impact other routes that uses the same contacts.
-	selectedNeighbor->route->maxCapacity -= bundle->getBitLength();
-
-	EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued in queueId: " << selectedNeighbor->contactId << " (next hop: " << selectedNeighbor->neighborNodeNbr << ")" << endl;
 }
 

@@ -14,6 +14,7 @@
 #include <algorithm>
 #include "ContactPlan.h"
 #include "dtnsim_m.h"
+#include "SdrModel.h"
 
 using namespace omnetpp;
 using namespace std;
@@ -29,7 +30,7 @@ public:
 	}
 	// These are pure virtual methods
 	virtual void setLocalNode(int eid) = 0;
-	virtual void setQueue(map<int, queue<Bundle *> > * bundlesQueue) = 0;
+	virtual void setSdr(SdrModel * sdr) = 0;
 	virtual void setContactPlan(ContactPlan * contactPlan) = 0;
 	virtual void routeBundle(Bundle *bundle, double simTime) = 0;
 };
