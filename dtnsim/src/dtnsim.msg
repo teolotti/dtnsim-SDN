@@ -17,6 +17,7 @@ packet Bundle{
         // Things that changes on each hop
         int senderEid;
         int nextHopEid;
+        int hopCount;
         int xmitCopiesCount;
         double dlvConfidence;
         List originalRoute;

@@ -35,6 +35,7 @@
  *     // Things that changes on each hop
  *     int senderEid;
  *     int nextHopEid;
+ *     int hopCount;
  *     int xmitCopiesCount;
  *     double dlvConfidence;
  *     List originalRoute;
@@ -53,6 +54,7 @@ class Bundle : public ::omnetpp::cPacket
     ::omnetpp::simtime_t ttl;
     int senderEid;
     int nextHopEid;
+    int hopCount;
     int xmitCopiesCount;
     double dlvConfidence;
     List originalRoute;
@@ -91,6 +93,8 @@ class Bundle : public ::omnetpp::cPacket
     virtual void setSenderEid(int senderEid);
     virtual int getNextHopEid() const;
     virtual void setNextHopEid(int nextHopEid);
+    virtual int getHopCount() const;
+    virtual void setHopCount(int hopCount);
     virtual int getXmitCopiesCount() const;
     virtual void setXmitCopiesCount(int xmitCopiesCount);
     virtual double getDlvConfidence() const;
@@ -107,7 +111,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const Bundle& obj) {obj.par
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Bundle& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:26</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:27</tt> by nedtool.
  * <pre>
  * message TrafficGeneratorMsg
  * {
@@ -161,7 +165,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const TrafficGeneratorMsg& 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, TrafficGeneratorMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:34</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:35</tt> by nedtool.
  * <pre>
  * message ContactMsg
  * {
@@ -223,7 +227,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ContactMsg& obj) {obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ContactMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:44</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:45</tt> by nedtool.
  * <pre>
  * message FreeChannelMsg
  * {
@@ -265,7 +269,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const FreeChannelMsg& obj) 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, FreeChannelMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:49</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:50</tt> by nedtool.
  * <pre>
  * message IonTrafficGeneratorMsg
  * {

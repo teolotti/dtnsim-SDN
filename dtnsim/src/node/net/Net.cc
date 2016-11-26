@@ -30,6 +30,7 @@ void Net::initialize()
 	this->parseContacts(par("contactsFile"));
 
 	// Initialize routing
+	this->sdr_.setEid(eid_);
 	string routeString = par("routing");
 	if (routeString.compare("direct") == 0)
 		routing = new RoutingDirect();
@@ -54,6 +55,8 @@ void Net::initialize()
 
 	// Initialize stats
 	netTxBundles.setName("netTxBundle");
+	netRxBundles.setName("netRxBundle");
+	netRxHopCount.setName("netRxHopCount");
 	netReRoutedBundles.setName("netReRoutedBundles");
 	reRoutedBundles = 0;
 	netEffectiveFailureTime.setName("netEffectiveFailureTime");
@@ -68,8 +71,6 @@ void Net::handleMessage(cMessage * msg)
 	if (msg->getKind() == BUNDLE)
 	{
 		Bundle* bundle = check_and_cast<Bundle *>(msg);
-
-		bubble("dispatching bundle");
 		dispatchBundle(bundle);
 	}
 	else if (msg->getKind() == FAULT_START_TIMER)
@@ -124,12 +125,15 @@ void Net::handleMessage(cMessage * msg)
 		freeChannelMsgs_[contactMsg->getId()] = freeChannelMsg;
 		scheduleAt(simTime(), freeChannelMsg);
 
+		if (contactMsg->getId() == 1135)
+			cout << "contact started!" << endl;
+
 		// Visualize contact line
 		if (hasGUI())
 		{
 			cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
 			string lineName = "line";
-			lineName.append(to_string(contactMsg->getDestinationEid()));
+			lineName.append(to_string(contactMsg->getId()));
 			cLineFigure *line = new cLineFigure(lineName.c_str());
 			line->setStart(cFigure::Point(posX, posY));
 			line->setEnd(cFigure::Point(posRadius * cos((contactMsg->getDestinationEid() - 1) * posAngle) + posRadius, posRadius * sin((contactMsg->getDestinationEid() - 1) * posAngle) + posRadius));
@@ -149,7 +153,7 @@ void Net::handleMessage(cMessage * msg)
 		{
 			cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
 			string lineName = "line";
-			lineName.append(to_string(contactMsg->getDestinationEid()));
+			lineName.append(to_string(contactMsg->getId()));
 			canvas->removeFigure(canvas->findFigureRecursively(lineName.c_str()));
 		}
 
@@ -157,10 +161,17 @@ void Net::handleMessage(cMessage * msg)
 		cancelAndDelete(freeChannelMsgs_[contactId]);
 		delete contactMsg;
 
+		if (contactId == 1135)
+			cout << "contact ended! in Node " << eid_ << "and isBundleleft: " << sdr_.isBundleForContact(contactId) << endl;
+
 		// Check if bundles are left in contact and re-route them
 		while (sdr_.isBundleForContact(contactId))
 		{
 			Bundle* bundle = sdr_.getNextBundleForContact(contactId);
+
+			if (contactId == 1135)
+				cout << "Node " << eid_ << ": " << bundle->getId() << endl;
+
 			sdr_.popNextBundleForContact(contactId);
 
 			//cout << simTime() << " Node:" << eid_ <<  ", rerouting: " << bundle->getId() << endl;
@@ -225,11 +236,13 @@ void Net::dispatchBundle(Bundle *bundle)
 	// if this node is the destination, send the bundle to Application Module
 	if (ownEid == destinationEid)
 	{
+		netRxHopCount.record(bundle->getHopCount());
 		send(bundle, "gateToApp$o");
 	}
 	// else, route and enqueue bundle
 	else
 	{
+		netRxBundles.record(simTime());
 		routing->routeBundle(bundle, simTime().dbl());
 		// TODO: Wakeup contacts if asleep
 	}
@@ -244,12 +257,13 @@ double Net::transmitBundle(int neighborEid, int contactId)
 	Bundle* bundle = sdr_.getNextBundleForContact(contactId);
 
 	// Calcualte datarate and Tx duration
-	// TODO: In the future, this should be made by the Mac layer.
+	// TODO: In the future, this should be driven by the Mac layer.
 	double dataRate = this->contactPlan_.getContactById(contactId)->getDataRate();
 	transmissionDuration = (double) bundle->getBitLength() / dataRate;
 
 	// Set bundle parameters that are udated on each hop:
 	bundle->setSenderEid(eid_);
+	bundle->setHopCount(bundle->getHopCount()+1);
 	bundle->setDlvConfidence(0);
 	bundle->setXmitCopiesCount(0);
 	send(bundle, "gateToMac$o");
@@ -319,7 +333,7 @@ void Net::parseContacts(string fileName)
 void Net::finish()
 {
 	// Delete all stored bundles
-	sdr_.freeSdr();
+	sdr_.freeSdr(eid_);
 
 	// Remove and delete visualization lines
 	cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();

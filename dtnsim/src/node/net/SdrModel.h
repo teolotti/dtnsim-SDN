@@ -22,15 +22,18 @@ public:
 	SdrModel();
 	virtual ~SdrModel();
 	virtual void setStatsHandle(cOutVector * sdrBundlesInSdr, cOutVector * sdrBundleInLimbo);
+	virtual void setEid(int eid);
 	virtual void enqueueBundleToContact(Bundle * bundle, int contactId);
 	virtual bool isBundleForContact(int contactId);
 	virtual Bundle * getNextBundleForContact(int contactId);
 	virtual void popNextBundleForContact(int contactId);
-	virtual void freeSdr();
+	virtual void freeSdr(int eid);
 
 private:
 
 	void updateStats();
+
+	int eid_;
 
 	map<int, queue<Bundle *> > bundlesQueue_;
 

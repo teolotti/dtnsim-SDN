@@ -65,6 +65,8 @@ private:
 
 	// Stats
 	cOutVector netTxBundles;
+	cOutVector netRxBundles;
+	cOutVector netRxHopCount;
 	cOutVector netReRoutedBundles;
 	unsigned int reRoutedBundles;
 	cOutVector netEffectiveFailureTime;

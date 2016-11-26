@@ -35,6 +35,9 @@ void RoutingCgrModel::routeBundle(Bundle * bundle, double simTime)
 	if (!printDebug) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);
 
+//	if (eid_==10 && bundle->getSourceEid()==8 && bundle->getDestinationEid()==48)
+//		cout.clear();
+
 	// Call cgrForward from ion (route and forwarding)
 	cgrForward(bundle, simTime);
 
@@ -200,7 +203,7 @@ void RoutingCgrModel::identifyProximateNodes(Bundle * bundle, double simTime, ve
 
 		if ((*it).toTime <= simTime)
 		{
-			cout << " ignoring, route due, recompute route for contact" << endl;
+			cout << " ignoring, route due, recompute route for contact (not implemented yet!)" << endl;
 			recomputeRouteForContact();
 			// TODO: a new route should be looked and the
 			// for loop might need to be restarted if found
@@ -621,7 +624,7 @@ void RoutingCgrModel::findNextBestRoute(Contact * rootContact, int terminusNode,
 
 void RoutingCgrModel::recomputeRouteForContact()
 {
-	cout << "***RecomputeRouteForContact not implemented yet!, ignoring route***" << endl;
+	//cout << "***RecomputeRouteForContact not implemented yet!, ignoring route***" << endl;
 }
 
 void RoutingCgrModel::enqueueToNeighbor(Bundle * bundle, ProximateNode * selectedNeighbor)

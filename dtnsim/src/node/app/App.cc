@@ -70,7 +70,7 @@ void App::handleMessage(cMessage *msg)
 		bundle->setSchedulingPriority(0);
 
 		char bundleName[10];
-		sprintf(bundleName, "Src:%d,Dst:%d", this->eid_, trafficGenMsg->getDestinationEid());
+		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, trafficGenMsg->getDestinationEid(),(int)bundle->getId());
 		bundle->setName(bundleName);
 		bundle->setSourceEid(this->eid_);
 		bundle->setSenderEid(this->eid_);
@@ -79,6 +79,7 @@ void App::handleMessage(cMessage *msg)
 		bundle->setByteLength(trafficGenMsg->getSize());
 		bundle->setTtl(trafficGenMsg->getTtl());
 		bundle->setCreationTimestamp(simTime());
+		bundle->setHopCount(0);
 		bundle->setDlvConfidence(0);
 		bundle->setReturnToSender(par("returnToSender"));
 		bundle->setCritical(par("critical"));

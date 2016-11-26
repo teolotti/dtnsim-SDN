@@ -23,6 +23,10 @@ void SdrModel::setStatsHandle(cOutVector * sdrBundlesInSdr, cOutVector * sdrBund
 	sdrBundleInLimbo = 0;
 }
 
+void SdrModel::setEid(int eid){
+	this->eid_ = eid;
+}
+
 void SdrModel::updateStats()
 {
 	// Only update limbo if it has changed
@@ -57,6 +61,9 @@ void SdrModel::enqueueBundleToContact(Bundle * bundle, int contactId)
 
 	// Update Sdr stats
 	this->updateStats();
+
+//	if (bundle->getId() == 2382 || bundle->getId() == 2035)
+//		cout << "Node: " << eid_ << ", bundle inserted to contactId:" << contactId << endl;
 }
 
 bool SdrModel::isBundleForContact(int contactId)
@@ -103,6 +110,10 @@ void SdrModel::popNextBundleForContact(int contactId)
 	// Pop the next bundle for this contact
 	map<int, queue<Bundle *> >::iterator it = bundlesQueue_.find(contactId);
 	queue<Bundle *> bundlesToTx = it->second;
+
+//	if (bundlesToTx.front()->getId() == 2382 || bundlesToTx.front()->getId() == 2035)
+//		cout << "Node: " << eid_ << ", bundle removed from contactId:" << contactId << endl;
+
 	bundlesToTx.pop();
 
 	// Update queue after popping the bundle
@@ -115,21 +126,29 @@ void SdrModel::popNextBundleForContact(int contactId)
 	this->updateStats();
 }
 
-void SdrModel::freeSdr()
+void SdrModel::freeSdr(int eid)
 {
+	//cout << "Node " << eid << ": ";
 
 	// Delete all enqueued bundles
 	map<int, queue<Bundle *> >::iterator it1 = bundlesQueue_.begin();
 	map<int, queue<Bundle *> >::iterator it2 = bundlesQueue_.end();
 	while (it1 != it2)
 	{
+		int bundlesDeleted=0;
+
 		queue<Bundle *> bundles = it1->second;
 
 		while (!bundles.empty())
 		{
 			delete (bundles.front());
 			bundles.pop();
+			bundlesDeleted++;
 		}
+
+		//cout << "cId:" << it1->first << "(" << bundlesDeleted << "), ";
 		bundlesQueue_.erase(it1++);
 	}
+
+	cout << endl;
 }
