@@ -7,6 +7,7 @@ void Net::initialize()
 {
 	this->eid_ = this->getParentModule()->getIndex() + 1;
 	this->onFault = false;
+	this->meanTTR = 60 * 5; // to retry if neigbor fails, and to poll new bundles in queue
 
 	if (hasGUI())
 	{
@@ -50,10 +51,6 @@ void Net::initialize()
 		//faultMsg->setSchedulingPriority(4);
 		scheduleAt(exponential(meanTTF), faultMsg);
 	}
-	else
-	{
-		meanTTR = 60 * 5; // to retry if neigbor fails
-	}
 
 	// Initialize stats
 	netTxBundles.setName("netTxBundle");
@@ -64,7 +61,6 @@ void Net::initialize()
 	sdrBundlesInSdr.setName("sdrBundlesInSdr");
 	sdrBundleInLimbo.setName("sdrBundleInLimbo");
 	sdr_.setStatsHandle(&sdrBundlesInSdr, &sdrBundleInLimbo);
-
 }
 
 void Net::handleMessage(cMessage * msg)
@@ -165,11 +161,15 @@ void Net::handleMessage(cMessage * msg)
 		while (sdr_.isBundleForContact(contactId))
 		{
 			Bundle* bundle = sdr_.getNextBundleForContact(contactId);
+			sdr_.popNextBundleForContact(contactId);
+
+			//cout << simTime() << " Node:" << eid_ <<  ", rerouting: " << bundle->getId() << endl;
+
 			// Reset delivery confidence, the contact did not succedded.
 			bundle->setDlvConfidence(0);
+			//bundle->setXmitCopiesCount(0);
 
 			routing->routeBundle(bundle, simTime().dbl());
-			sdr_.popNextBundleForContact(contactId);
 			netReRoutedBundles.record(reRoutedBundles++);
 		}
 	}
@@ -207,8 +207,12 @@ void Net::handleMessage(cMessage * msg)
 		{
 			// TODO: this needs to be changed, if new bundles are sent
 			// from the App or received, they will not be transmitted after this.
-			freeChannelMsgs_[freeChannelMsg->getContactId()] = nullptr;
-			delete freeChannelMsg;
+			// This is critical for long contacts (ground contacts)
+			// Maybe something more intelligent is to wake-up the freeChannelMsg
+			// when new bundles arrives instead of polling like this.
+			scheduleAt(simTime() + meanTTR / 2, freeChannelMsg);
+			//freeChannelMsgs_[freeChannelMsg->getContactId()] = nullptr;
+			//delete freeChannelMsg;
 		}
 	}
 }
@@ -227,6 +231,7 @@ void Net::dispatchBundle(Bundle *bundle)
 	else
 	{
 		routing->routeBundle(bundle, simTime().dbl());
+		// TODO: Wakeup contacts if asleep
 	}
 }
 

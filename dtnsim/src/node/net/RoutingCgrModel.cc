@@ -148,21 +148,22 @@ void RoutingCgrModel::cgrForward(Bundle * bundle, double simTime)
 
 		// TODO: manageOverbooking() function
 		// Only necesary for bundles with priority > bulk.
-	}
-
-	// if the expected confidence level is reached, done
-	if (bundle->getDlvConfidence() >= MIN_NET_DELIVERY_CONFIDENCE)
-	{
-		cout << "  delivery confidence reached, end cgrForward" << endl;
 		return;
 	}
+
+//	// if the expected confidence level is reached, done
+//	if (bundle->getDlvConfidence() >= MIN_NET_DELIVERY_CONFIDENCE)
+//	{
+//		cout << "  delivery confidence reached, end cgrForward" << endl;
+//		return;
+//	}
 
 	// if no routes to destination, done
 	// TODO: shouldnt send to limbo?
 	if (routeList_[bundle->getDestinationEid()].size() == 0)
 	{
-		cout << "  delivery confidence not reached but no routes to dst, end cgrForward" << endl;
-		return;
+		// cout << "  delivery confidence not reached but no routes to dst, end cgrForward" << endl;
+		//return;
 	}
 
 	if (selectedNeighbor != NULL)
@@ -175,6 +176,7 @@ void RoutingCgrModel::cgrForward(Bundle * bundle, double simTime)
 	{
 		cout << "  no chosen neighbor and delivery confidence not reached, enqueueing to limbo" << endl;
 		enqueueToLimbo(bundle);
+		return;
 	}
 }
 
@@ -196,7 +198,7 @@ void RoutingCgrModel::identifyProximateNodes(Bundle * bundle, double simTime, ve
 	{
 		cout << "      route through node:" << (*it).toNodeNbr << ", arrivalConf:" << (*it).arrivalConfidence << ", arrivalT:" << (*it).arrivalTime << ", txWin:(" << (*it).fromTime << "-" << (*it).toTime << "), maxCap:" << (*it).maxCapacity << "bits:";
 
-		if ((*it).toTime < simTime)
+		if ((*it).toTime <= simTime)
 		{
 			cout << " ignoring, route due, recompute route for contact" << endl;
 			recomputeRouteForContact();
@@ -640,7 +642,6 @@ void RoutingCgrModel::enqueueToNeighbor(Bundle * bundle, ProximateNode * selecte
 
 void RoutingCgrModel::enqueueToLimbo(Bundle * bundle)
 {
-
 	ProximateNode limboNode;
 	limboNode.contactId = 0;
 	limboNode.neighborNodeNbr = 0;
