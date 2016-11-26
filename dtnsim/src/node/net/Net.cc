@@ -50,6 +50,10 @@ void Net::initialize()
 		//faultMsg->setSchedulingPriority(4);
 		scheduleAt(exponential(meanTTF), faultMsg);
 	}
+	else
+	{
+		meanTTR = 60 * 5; // to retry if neigbor fails
+	}
 
 	// Initialize stats
 	netTxBundles.setName("netTxBundle");
