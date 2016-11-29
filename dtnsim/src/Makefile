@@ -22,7 +22,9 @@ INCLUDE_PATH = \
     -Inode/app \
     -Inode/mac \
     -Inode/net \
-    -Iresults
+    -Iresults-run1 \
+    -Iresults-run1-ATrackBaseline \
+    -Iresults-run1-WalkerBaseline
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -139,14 +141,16 @@ clean:
 	$(Q)-rm -f node/app/*_m.cc node/app/*_m.h node/app/*_sm.cc node/app/*_sm.h
 	$(Q)-rm -f node/mac/*_m.cc node/mac/*_m.h node/mac/*_sm.cc node/mac/*_sm.h
 	$(Q)-rm -f node/net/*_m.cc node/net/*_m.h node/net/*_sm.cc node/net/*_sm.h
-	$(Q)-rm -f results/*_m.cc results/*_m.h results/*_sm.cc results/*_sm.h
+	$(Q)-rm -f results-run1/*_m.cc results-run1/*_m.h results-run1/*_sm.cc results-run1/*_sm.h
+	$(Q)-rm -f results-run1-ATrackBaseline/*_m.cc results-run1-ATrackBaseline/*_m.h results-run1-ATrackBaseline/*_sm.cc results-run1-ATrackBaseline/*_sm.h
+	$(Q)-rm -f results-run1-WalkerBaseline/*_m.cc results-run1-WalkerBaseline/*_m.h results-run1-WalkerBaseline/*_sm.cc results-run1-WalkerBaseline/*_sm.h
 
 cleanall: clean
 	$(Q)-rm -rf $(PROJECT_OUTPUT_DIR)
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc results/*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc results-run1/*.cc results-run1-ATrackBaseline/*.cc results-run1-WalkerBaseline/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/dtnsim_m.o: dtnsim_m.cc \

@@ -154,12 +154,13 @@ void RoutingCgrModel::cgrForward(Bundle * bundle, double simTime)
 		return;
 	}
 
-//	// if the expected confidence level is reached, done
-//	if (bundle->getDlvConfidence() >= MIN_NET_DELIVERY_CONFIDENCE)
-//	{
-//		cout << "  delivery confidence reached, end cgrForward" << endl;
-//		return;
-//	}
+	// if the expected confidence level is reached, done
+	if (bundle->getDlvConfidence() >= MIN_NET_DELIVERY_CONFIDENCE)
+	{
+		cout << "  delivery confidence reached, end cgrForward" << endl;
+		// TODO: delete bundle if not forwarded!
+		return;
+	}
 
 	// if no routes to destination, done
 	// TODO: shouldnt send to limbo?

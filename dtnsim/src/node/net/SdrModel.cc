@@ -21,6 +21,9 @@ void SdrModel::setStatsHandle(cOutVector * sdrBundlesInSdr, cOutVector * sdrBund
 	sdrBundlesInSdr_ = sdrBundlesInSdr;
 	sdrBundleInLimbo_ = sdrBundleInLimbo;
 	sdrBundleInLimbo = 0;
+
+	lastUdateTime=0;
+	bundlesInSdrPerTime=0;
 }
 
 void SdrModel::setEid(int eid){
@@ -29,18 +32,22 @@ void SdrModel::setEid(int eid){
 
 void SdrModel::updateStats()
 {
-	// Only update limbo if it has changed
-	if (bundlesQueue_[0].size() > sdrBundleInLimbo)
-	{
-		sdrBundleInLimbo_->record(bundlesQueue_[0].size());
-		sdrBundleInLimbo=bundlesQueue_[0].size();
-	}
+//	// Only update limbo if it has changed
+//	if (bundlesQueue_[0].size() > sdrBundleInLimbo)
+//	{
+//		sdrBundleInLimbo_->record(bundlesQueue_[0].size());
+//		sdrBundleInLimbo=bundlesQueue_[0].size();
+//	}
 
 	// Allways update total Sdr storage
 	int bundlesInSdr = 0;
 	for (map<int, queue<Bundle *> >::iterator it = bundlesQueue_.begin(); it != bundlesQueue_.end(); ++it)
 		bundlesInSdr += (*it).second.size();
-	sdrBundlesInSdr_->record(bundlesInSdr);
+	//sdrBundlesInSdr_->record(bundlesInSdr);
+
+	bundlesInSdrPerTime += bundlesInSdr * (simTime().dbl()-lastUdateTime);
+	lastUdateTime = simTime().dbl();
+
 }
 
 void SdrModel::enqueueBundleToContact(Bundle * bundle, int contactId)
@@ -128,7 +135,8 @@ void SdrModel::popNextBundleForContact(int contactId)
 
 void SdrModel::freeSdr(int eid)
 {
-	//cout << "Node " << eid << ": ";
+	sdrBundlesInSdr_->record(bundlesInSdrPerTime);
+	sdrBundleInLimbo_->record(bundlesQueue_[0].size());
 
 	// Delete all enqueued bundles
 	map<int, queue<Bundle *> >::iterator it1 = bundlesQueue_.begin();

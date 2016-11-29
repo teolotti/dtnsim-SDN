@@ -38,6 +38,8 @@ private:
 	map<int, queue<Bundle *> > bundlesQueue_;
 
 	// Stats
+	double lastUdateTime;
+	double bundlesInSdrPerTime;
 	cOutVector * sdrBundlesInSdr_;
 	cOutVector * sdrBundleInLimbo_;
 	unsigned int sdrBundleInLimbo;
