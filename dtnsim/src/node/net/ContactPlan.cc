@@ -13,21 +13,35 @@ ContactPlan::ContactPlan()
 void ContactPlan::addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
 {
 	Contact contact(id, start, end, sourceEid, destinationEid, dataRate, confidence);
+
 	contacts_.push_back(contact);
+
 	lastEditTime = simTime();
+}
+
+void ContactPlan::finishContactPlan()
+{
+	for (size_t i = 0; i < contacts_.size(); i++)
+	{
+		Contact *contactPtr = &contacts_.at(i);
+
+		contactsBySrc_[contactPtr->getSourceEid()].push_back(contactPtr);
+		contactsByDst_[contactPtr->getDestinationEid()].push_back(contactPtr);
+		contactsById_[contactPtr->getId()] = contactPtr;
+	}
 }
 
 Contact *ContactPlan::getContactById(int id)
 {
-	for (size_t i = 0; i < contacts_.size(); i++)
+	Contact *contactPtr = NULL;
+
+	map<int, Contact *>::iterator it = contactsById_.find(id);
+	if (it != contactsById_.end())
 	{
-		if (contacts_.at(i).getId() == id)
-		{
-			return &contacts_.at(i);
-		}
+		contactPtr  = it->second;
 	}
 
-	return NULL;
+	return contactPtr;
 }
 
 vector<Contact> * ContactPlan::getContacts()
@@ -38,11 +52,14 @@ vector<Contact> * ContactPlan::getContacts()
 vector<Contact> ContactPlan::getContactsBySrc(int Src)
 {
 	vector<Contact> contacts;
-	for (size_t i = 0; i < contacts_.size(); i++)
+	map<int, vector<Contact *> >::iterator it = contactsBySrc_.find(Src);
+
+	if (it != contactsBySrc_.end())
 	{
-		if (contacts_.at(i).getSourceEid() == Src)
+		vector<Contact *> contactsPtr = it->second;
+		for (size_t i = 0; i < contactsPtr.size(); i++)
 		{
-			contacts.push_back(contacts_.at(i));
+			contacts.push_back(*contactsPtr.at(i));
 		}
 	}
 
@@ -52,11 +69,14 @@ vector<Contact> ContactPlan::getContactsBySrc(int Src)
 vector<Contact> ContactPlan::getContactsByDst(int Dst)
 {
 	vector<Contact> contacts;
-	for (size_t i = 0; i < contacts_.size(); i++)
+	map<int, vector<Contact *> >::iterator it = contactsByDst_.find(Dst);
+
+	if (it != contactsByDst_.end())
 	{
-		if (contacts_.at(i).getDestinationEid() == Dst)
+		vector<Contact *> contactsPtr = it->second;
+		for (size_t i = 0; i < contactsPtr.size(); i++)
 		{
-			contacts.push_back(contacts_.at(i));
+			contacts.push_back(*contactsPtr.at(i));
 		}
 	}
 
@@ -66,12 +86,27 @@ vector<Contact> ContactPlan::getContactsByDst(int Dst)
 vector<Contact> ContactPlan::getContactsBySrcDst(int Src, int Dst)
 {
 	vector<Contact> contacts;
-	for (size_t i = 0; i < contacts_.size(); i++)
+	vector<Contact *> contactsSrcDst;
+	vector<Contact *> contactsSrc;
+
+	map<int, vector<Contact *> >::iterator it = contactsBySrc_.find(Src);
+
+	if (it != contactsBySrc_.end())
 	{
-		if ((contacts_.at(i).getSourceEid() == Src) && (contacts_.at(i).getDestinationEid() == Dst))
+		contactsSrc = it->second;
+	}
+
+	for (size_t i = 0; i < contactsSrc.size(); i++)
+	{
+		if (contactsSrc.at(i)->getDestinationEid() == Dst)
 		{
-			contacts.push_back(contacts_.at(i));
+			contactsSrcDst.push_back(contactsSrc.at(i));
 		}
+	}
+
+	for (size_t i = 0; i < contactsSrcDst.size(); i++)
+	{
+		contacts.push_back(*contactsSrcDst.at(i));
 	}
 
 	return contacts;

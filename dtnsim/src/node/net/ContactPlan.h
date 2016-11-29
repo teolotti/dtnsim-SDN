@@ -22,12 +22,20 @@ public:
     vector<Contact> getContactsByDst(int Dst);
     vector<Contact> getContactsBySrcDst(int Src, int Dst);
 
+    // fill structs to make fast searchs of contacts
+    void finishContactPlan();
+
     simtime_t getLastEditTime();
 
 private:
 
     vector<Contact> contacts_;
     simtime_t lastEditTime;
+
+    // std structs to make fast searchs of contacts
+    map<int, vector<Contact *> > contactsBySrc_;
+    map<int, vector<Contact *> > contactsByDst_;
+    map<int, Contact *> contactsById_;
 
 };
 

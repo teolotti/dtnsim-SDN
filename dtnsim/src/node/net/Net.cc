@@ -328,6 +328,8 @@ void Net::parseContacts(string fileName)
 	} while (file >> a >> command >> start >> end >> sourceEid >> destinationEid >> dataRate);
 
 	file.close();
+
+	contactPlan_.finishContactPlan();
 }
 
 void Net::finish()
