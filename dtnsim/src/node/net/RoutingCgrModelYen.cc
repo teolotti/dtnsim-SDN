@@ -472,7 +472,9 @@ void RoutingCgrModelYen::loadRouteList(int terminusNode, double simTime)
 
 }
 
+//
 // A modified loadRouteList with Yens algorithm approach
+//
 void RoutingCgrModelYen::loadRouteListYen(int terminusNode, double simTime)
 {
 	// Create rootContact and its corresponding rootWork
@@ -483,6 +485,7 @@ void RoutingCgrModelYen::loadRouteListYen(int terminusNode, double simTime)
 	rootContact.work = &rootWork;
 
 	// Create route vector in routeList
+	vector<CgrRoute> routeContainerB;
 	vector<CgrRoute> cgrRoute;
 	routeList_[terminusNode] = cgrRoute;
 
@@ -498,90 +501,124 @@ void RoutingCgrModelYen::loadRouteListYen(int terminusNode, double simTime)
 		((Work *) (*it).work)->suppressed = false;
 	}
 
-	Contact * anchorContact = NULL;
-	while (1)
-	{
-		// Find the next best route
-		CgrRoute route;
-		route.toNodeNbr = 0;
-		findNextBestRoute(&rootContact, terminusNode, &route);
+	// Determine the shortest path from the source to the sink and add it to routeList (A).
+	CgrRoute route;
+	findNextBestRoute(&rootContact, terminusNode, &route);
+	routeList_[terminusNode].push_back(route);
 
-		// If toNodeNbr still 0, no routes were found
-		// End search
-		if (route.toNodeNbr == 0)
-		{
-			cout << "      no more routes found" << endl;
-			break;
-		}
+	while (1){ // for k from 1 to K:
 
-		// If anchored search on going and firstContact
-		// is not anchor, end the anchor and do not record
-		// this route.
-		Contact * firstContact = route.hops[0];
-		if (anchorContact != NULL)
-			if (firstContact != anchorContact)
-			{
-				cout << "        ending anchored search in contactId: " << anchorContact->getId() << " (src:" << anchorContact->getSourceEid() << "-dst:" << anchorContact->getDestinationEid() << ", " << anchorContact->getStart() << "s to " << anchorContact->getEnd() << "s)" << endl;
-				// This is endAnchoredSearch() function in ion: it clears the working area
-				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
-				{
-					((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
-					((Work *) (*it).work)->predecessor = NULL;
-					((Work *) (*it).work)->visited = false;
-					// Unsupress all non-local contacts
-					// (local contacts must keep their value).
-					if ((*it).getSourceEid() != eid_)
-						((Work *) (*it).work)->suppressed = false;
-				}
-				// End endAnchoredSearch() function
-				((Work *) anchorContact->work)->suppressed = 1;
-				anchorContact = NULL;
-				continue;
+		// The spur node ranges from the first node to the next to last node in the previous k-shortest path.
+		for (vector<Contact *>::iterator it = routeList_[terminusNode].back().hops.begin(); it != routeList_[terminusNode].back().hops.end(); ++it){
+
+			// Spur node is retrieved from the previous k-shortest path, k − 1: (*it)
+			cout << "Spur node Id " << (*it)->getId() << ": +" << (*it)->getStart() << " +" << (*it)->getEnd() << " " << (*it)->getSourceEid() << " " << (*it)->getDestinationEid() << endl;
+
+			// The sequence of nodes from the source to the spur node of the previous k-shortest path.
+			vector<Contact *> rootPath;
+			for (vector<Contact *>::iterator it2 = routeList_[terminusNode].back().hops.begin(); it2 != it; ++it2){
+				rootPath.push_back((*it2));
+				cout << (*it2)->getId() << endl;
+			}
+			rootPath.push_back((*it)); // add spur node to root path
+			cout << (*it)->getId() << endl;
+
+			// Remove the links that are part of the previous shortest paths which share the same root path.
+			for (vector<CgrRoute>::iterator it2 = routeList_[terminusNode].begin(); it2 != routeList_[terminusNode].end(); ++it2){
+				//if rootPath is in it2.hops, remove first edge
 			}
 
-		// Record route
-		cout << "      new route found through node:" << route.toNodeNbr << ", arrivalConf:" << route.arrivalConfidence << ", arrivalT:" << route.arrivalTime << ", txWin:(" << route.fromTime << "-" << route.toTime << "), maxCap:" << route.maxCapacity << "bits:" << endl;
-		routeList_[terminusNode].push_back(route);
 
-		// Find limiting contact for next iteration
-		// (earliest ending contact in path, generally the first)
-		Contact * limitContact = NULL;
-		if (route.toTime == firstContact->getEnd())
-		{
-			limitContact = firstContact;
-		}
-		else
-		{
-			// Start new anchor search. Anchoring only
-			// happens in the first hop.. not good!
-			anchorContact = firstContact;
-			cout << "        starting anchored search in contactId: " << anchorContact->getId() << " (src:" << anchorContact->getSourceEid() << "-dst:" << anchorContact->getDestinationEid() << ", " << anchorContact->getStart() << "s-" << anchorContact->getEnd() << "s)" << endl;
-			// find the limiting contact in route
-			for (vector<Contact *>::iterator it = route.hops.begin(); it != route.hops.end(); ++it)
-				if ((*it)->getEnd() == route.toTime)
-				{
-					limitContact = (*it);
-					break;
-				}
 		}
 
-		// Supress limiting contact in next search
-		cout << "        supressing limiting contactId: " << limitContact->getId() << " (src:" << limitContact->getSourceEid() << "-dst:" << limitContact->getDestinationEid() << ", " << limitContact->getStart() << "s-" << limitContact->getEnd() << "s)" << endl;
-		((Work *) limitContact->work)->suppressed = true;
+		break;
 
-		// Clear working area
-		for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
-		{
-			((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
-			((Work *) (*it).work)->predecessor = 0;
-			((Work *) (*it).work)->visited = false;
-		}
+		// for (vector<Contact *>::iterator it = route.hops.begin(); it != route.hops.end(); ++it)
 	}
+
+//	Contact * anchorContact = NULL;
+//	while (1)
+//	{
+//		// Find the next best route
+//		CgrRoute route;
+//		route.toNodeNbr = 0;
+//		findNextBestRoute(&rootContact, terminusNode, &route);
+//
+//		// If toNodeNbr still 0, no routes were found
+//		// End search
+//		if (route.toNodeNbr == 0)
+//		{
+//			cout << "      no more routes found" << endl;
+//			break;
+//		}
+//
+//		// If anchored search on going and firstContact
+//		// is not anchor, end the anchor and do not record
+//		// this route.
+//		Contact * firstContact = route.hops[0];
+//		if (anchorContact != NULL)
+//			if (firstContact != anchorContact)
+//			{
+//				cout << "        ending anchored search in contactId: " << anchorContact->getId() << " (src:" << anchorContact->getSourceEid() << "-dst:" << anchorContact->getDestinationEid() << ", " << anchorContact->getStart() << "s to " << anchorContact->getEnd() << "s)" << endl;
+//				// This is endAnchoredSearch() function in ion: it clears the working area
+//				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
+//				{
+//					((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
+//					((Work *) (*it).work)->predecessor = NULL;
+//					((Work *) (*it).work)->visited = false;
+//					// Unsupress all non-local contacts
+//					// (local contacts must keep their value).
+//					if ((*it).getSourceEid() != eid_)
+//						((Work *) (*it).work)->suppressed = false;
+//				}
+//				// End endAnchoredSearch() function
+//				((Work *) anchorContact->work)->suppressed = 1;
+//				anchorContact = NULL;
+//				continue;
+//			}
+//
+//		// Record route
+//		cout << "      new route found through node:" << route.toNodeNbr << ", arrivalConf:" << route.arrivalConfidence << ", arrivalT:" << route.arrivalTime << ", txWin:(" << route.fromTime << "-" << route.toTime << "), maxCap:" << route.maxCapacity << "bits:" << endl;
+//		routeList_[terminusNode].push_back(route);
+//
+//		// Find limiting contact for next iteration
+//		// (earliest ending contact in path, generally the first)
+//		Contact * limitContact = NULL;
+//		if (route.toTime == firstContact->getEnd())
+//		{
+//			limitContact = firstContact;
+//		}
+//		else
+//		{
+//			// Start new anchor search. Anchoring only
+//			// happens in the first hop.. not good!
+//			anchorContact = firstContact;
+//			cout << "        starting anchored search in contactId: " << anchorContact->getId() << " (src:" << anchorContact->getSourceEid() << "-dst:" << anchorContact->getDestinationEid() << ", " << anchorContact->getStart() << "s-" << anchorContact->getEnd() << "s)" << endl;
+//			// find the limiting contact in route
+//			for (vector<Contact *>::iterator it = route.hops.begin(); it != route.hops.end(); ++it)
+//				if ((*it)->getEnd() == route.toTime)
+//				{
+//					limitContact = (*it);
+//					break;
+//				}
+//		}
+//
+//		// Supress limiting contact in next search
+//		cout << "        supressing limiting contactId: " << limitContact->getId() << " (src:" << limitContact->getSourceEid() << "-dst:" << limitContact->getDestinationEid() << ", " << limitContact->getStart() << "s-" << limitContact->getEnd() << "s)" << endl;
+//		((Work *) limitContact->work)->suppressed = true;
+//
+//		// Clear working area
+//		for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
+//		{
+//			((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
+//			((Work *) (*it).work)->predecessor = 0;
+//			((Work *) (*it).work)->visited = false;
+//		}
+//	}
 
 	// Free memory allocated for work
 	for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
 		delete ((Work *) (*it).work);
-
 }
 
 void RoutingCgrModelYen::findNextBestRoute(Contact * rootContact, int terminusNode, CgrRoute * route)
