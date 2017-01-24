@@ -15,6 +15,7 @@
 #include "RoutingDirect.h"
 #include "RoutingCgrModel.h"
 #include "RoutingCgrIon350.h"
+#include "RoutingCgrModelYen.h"
 
 using namespace omnetpp;
 using namespace std;

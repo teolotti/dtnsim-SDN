@@ -38,6 +38,8 @@ void Net::initialize()
 		routing = new RoutingCgrModel();
 	if (routeString.compare("cgrIon350") == 0)
 		routing = new RoutingCgrIon350();
+	if (routeString.compare("cgrModelYen") == 0)
+		routing = new RoutingCgrModelYen();
 	routing->setLocalNode(eid_);
 	routing->setSdr(&sdr_);
 	routing->setContactPlan(&contactPlan_);
@@ -263,7 +265,7 @@ double Net::transmitBundle(int neighborEid, int contactId)
 
 	// Set bundle parameters that are udated on each hop:
 	bundle->setSenderEid(eid_);
-	bundle->setHopCount(bundle->getHopCount()+1);
+	bundle->setHopCount(bundle->getHopCount() + 1);
 	bundle->setDlvConfidence(0);
 	bundle->setXmitCopiesCount(0);
 	send(bundle, "gateToMac$o");
