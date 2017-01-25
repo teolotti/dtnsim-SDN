@@ -66,6 +66,7 @@ private:
 		double capacity; 	// in Bytes (?)
 		bool visited;
 		bool suppressed;
+		vector<Contact *> suppressedNextContact;
 	} Work;
 
 	map<int, vector<CgrRoute> > routeList_;
