@@ -21,7 +21,7 @@ public:
 	virtual void setContactPlan(ContactPlan * contactPlan);
 	virtual void routeBundle(Bundle *bundle, double simTime);
 private:
-	bool printDebug = false;
+	bool printDebug = true;
 	int eid_;
 	SdrModel * sdr_;
 	ContactPlan * contactPlan_;

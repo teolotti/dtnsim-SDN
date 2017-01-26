@@ -43,6 +43,7 @@ private:
 		double arrivalTime;
 		double maxCapacity; // in Bits
 		vector<Contact *> hops; // list: IonCXref addr
+		int rootPathLenght;
 	} CgrRoute;
 
 	typedef struct

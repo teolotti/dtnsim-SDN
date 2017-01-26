@@ -504,46 +504,100 @@ void RoutingCgrModelYen::loadRouteListYen(int terminusNode, double simTime)
 	// Determine the shortest path from the source to the sink and add it to routeList (A).
 	CgrRoute route;
 	route.toNodeNbr = 0;
+	route.rootPathLenght = 0;
+	cout << "        getting first path" << endl;
 	findNextBestRoute(&rootContact, terminusNode, &route);
+
+	// Add rootNode to path
+	route.hops.insert(route.hops.begin(), &rootContact);
+
+	if (route.toNodeNbr == 0)
+	{
+		cout << "        no route found!" << endl;
+		return;
+	}
+
 	routeList_[terminusNode].push_back(route);
+
 	// Print new route
-	cout << "Next route: ";
+	cout << "        first path: ";
 	for (vector<Contact *>::iterator it2 = route.hops.begin(); it2 != route.hops.end(); ++it2)
 	{
 		cout << (*it2)->getId() << ",";
 	}
 	cout << endl;
 
-	// Clear working area
-	for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
-	{
-		((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
-		((Work *) (*it).work)->predecessor = 0;
-		((Work *) (*it).work)->visited = false;
-		((Work *) (*it).work)->suppressed = false;
-		((Work *) (*it).work)->suppressedNextContact.clear();
-	}
-
 	while (1)
 	{ // for k from 1 to K:
-
-		// The spur node ranges from the first node to the next to (penultimate) last node in the previous k-shortest path.
-		for (vector<Contact *>::iterator it = routeList_[terminusNode].back().hops.begin(); it != --routeList_[terminusNode].back().hops.end(); ++it)
+		cout << "        new Yen's iteration" << endl;
+		// The spur node ranges from the first node to the next to (penultimate)
+		// last node in the previous k-shortest path. Actually, we are using Lawler
+		// modification which starts from the node where the previous route deviated
+		// from the rootPath.
+		vector<Contact *>::iterator it = routeList_[terminusNode].back().hops.begin();
+		std::advance(it, routeList_[terminusNode].back().rootPathLenght);
+		for (; it != --routeList_[terminusNode].back().hops.end(); ++it)
 		{
-
 			// Spur node is retrieved from the previous k-shortest path, k − 1: (*it)
-			cout << "Spur node " << (*it)->getId() << " (+" << (*it)->getStart() << " +" << (*it)->getEnd() << " " << (*it)->getSourceEid() << " " << (*it)->getDestinationEid() << ")" << endl;
+			cout << "          spur node " << (*it)->getId() << " (+" << (*it)->getStart() << " +" << (*it)->getEnd() << " " << (*it)->getSourceEid() << " " << (*it)->getDestinationEid() << ")" << endl;
 
 			// The sequence of nodes from the source to the spur node of the previous k-shortest path.
-			vector<Contact *> rootPath;
-			cout << "RootPath: ";
-			for (vector<Contact *>::iterator it2 = routeList_[terminusNode].back().hops.begin(); it2 != it; ++it2)
+			// If no sorting happens, the working area will remain with
+			// the arrivalTime metrics of each contact which we can use for the
+			// rootPath metrics. At this point we should save necesary metrics.
+			CgrRoute rootPath;
+			double earliestEndTime = numeric_limits<double>::max();
+			double maxCapacity = numeric_limits<double>::max();
+			double arrivalTime = 0;
+			rootPath.arrivalConfidence = 1.0;
+			cout << "          rootPath: ";
+			for (vector<Contact *>::iterator it2 = routeList_[terminusNode].back().hops.begin(); it2 != std::next(it, 1); ++it2)
 			{
-				rootPath.push_back((*it2));
+				rootPath.hops.push_back((*it2));
 				cout << (*it2)->getId() << ",";
+
+				if ((*it2)->getId() == 0) // Ignore rootContact for metrics
+					continue;
+
+				// Get earliest end time
+				if ((*it2)->getEnd() < earliestEndTime)
+					earliestEndTime = (*it2)->getEnd();
+
+				// Calculate capacity and get the minimal capacity
+				double capacity = (*it2)->getDataRate() * (*it2)->getDuration();
+				if (capacity < maxCapacity)
+					maxCapacity = capacity;
+
+				// Update arrival time
+				double owlt = 0;
+				double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
+				owlt += owltMargin;
+				if ((*it2)->getStart() < arrivalTime)
+					arrivalTime = arrivalTime; // no changes
+				else
+					arrivalTime = (*it2)->getStart();
+				arrivalTime += owlt; //TODO: calculate owlt for this step.
+
+				// Update confidence
+				rootPath.arrivalConfidence *= (*it2)->getConfidence();
 			}
-			rootPath.push_back((*it)); // add spur node to root path (?)
-			cout << (*it)->getId() << endl;
+			rootPath.toTime = earliestEndTime;
+			rootPath.maxCapacity = maxCapacity;
+			//rootPath.toNodeNbr = routeList_[terminusNode].back().toNodeNbr; we might not know which is the toNodeNbr
+			rootPath.arrivalTime = arrivalTime;
+			rootPath.fromTime = routeList_[terminusNode].back().fromTime;
+			cout << " toNodeNbr: TBD, arrTime:" << rootPath.arrivalTime << ", fromTime:" << rootPath.fromTime << ", toTime:" << rootPath.toTime << ", maxCap:" << rootPath.maxCapacity << endl;
+
+			// Add back the edges and nodes that were removed from the graph
+			// Clear working area
+			for (vector<Contact>::iterator it2 = contactPlan_->getContacts()->begin(); it2 != contactPlan_->getContacts()->end(); ++it2)
+			{
+				((Work *) (*it2).work)->arrivalTime = numeric_limits<double>::max();
+				((Work *) (*it2).work)->predecessor = 0;
+				((Work *) (*it2).work)->visited = false;
+				((Work *) (*it2).work)->suppressed = false;
+				((Work *) (*it2).work)->suppressedNextContact.clear();
+			}
 
 			// Remove the links that are part of the previous shortest paths which share the same root path.
 			for (vector<CgrRoute>::iterator it2 = routeList_[terminusNode].begin(); it2 != routeList_[terminusNode].end(); ++it2)
@@ -553,7 +607,7 @@ void RoutingCgrModelYen::loadRouteListYen(int terminusNode, double simTime)
 				Contact * nextContact;
 				vector<Contact *>::iterator it3; // rootPath
 				vector<Contact *>::iterator it4; // hops in current route in A
-				for (it3 = rootPath.begin(), it4 = (*it2).hops.begin(); (it3 != rootPath.end()) && (it4 != (*it2).hops.end()); ++it3, ++it4)
+				for (it3 = rootPath.hops.begin(), it4 = (*it2).hops.begin(); (it3 != rootPath.hops.end()) && (it4 != (*it2).hops.end()); ++it3, ++it4)
 				{
 					//cout << "Comp: " << (*it3)->getId() << "-" << (*it4)->getId() << endl;
 					if ((*it3)->getId() != (*it4)->getId())
@@ -567,167 +621,96 @@ void RoutingCgrModelYen::loadRouteListYen(int terminusNode, double simTime)
 				// If yes, remove the next edge from search
 				if (rootPathIsContained)
 				{
-					((Work *) rootPath.back()->work)->suppressedNextContact.push_back(nextContact);
-					cout << "Remove edge " << rootPath.back()->getId() << "-" << nextContact->getId() << endl;
+					((Work *) rootPath.hops.back()->work)->suppressedNextContact.push_back(nextContact);
+					cout << "          remove edge " << rootPath.hops.back()->getId() << " to " << nextContact->getId() << endl;
 				}
 			}
 
 			// Remove the links that are part of the rootPath (except spurNode)
-			for (vector<Contact *>::iterator it2 = rootPath.begin(); it2 != --rootPath.end(); ++it2)
+			for (vector<Contact *>::iterator it2 = rootPath.hops.begin(); it2 != --rootPath.hops.end(); ++it2)
 			{
-				cout << "Remove node " << (*it2)->getId() << endl;
+				cout << "          remove node " << (*it2)->getId() << endl;
 				((Work *) (*it2)->work)->suppressed = true;
 			}
 
 			// Calculate the spur path from the spur node to the sink.
 			// TODO: simTime should be the arrival time of the rootPath?
-			((Work *) ((*it)->work))->arrivalTime = simTime;
+			((Work *) ((*it)->work))->arrivalTime = rootPath.arrivalTime;
 			CgrRoute route;
 			route.toNodeNbr = 0;
 			findNextBestRoute((*it), terminusNode, &route);
 
 			if (route.toNodeNbr == 0)
 			{
-				cout << "No routes found from spur to terminus" << endl;
+				cout << "          no routes found from spur to terminus" << endl;
 				continue;
 			}
 
 			// Entire path is made up of the root path and spur path.
 			// This adds the rootPath to the begining of the route
-			// TODO: modify the route values (arrival time, capacity, etc.).
-			for (vector<Contact *>::reverse_iterator it2 = rootPath.rbegin(); it2 != rootPath.rend(); ++it2)
+			for (vector<Contact *>::reverse_iterator it2 = rootPath.hops.rbegin(); it2 != rootPath.hops.rend(); ++it2)
 			{
 				route.hops.insert(route.hops.begin(), (*it2));
 			}
+			route.rootPathLenght = rootPath.hops.size();
+
+			// update route metrics from rootPath:
+			// arrivalTime should remain as calculated in the last findNextBestRoute call
+			if (route.toTime > rootPath.toTime)
+				route.toTime = rootPath.toTime;
+			if (route.maxCapacity > rootPath.maxCapacity)
+				route.maxCapacity = rootPath.maxCapacity;
+			route.toNodeNbr = route.hops[1]->getDestinationEid(); //hop[0] is rootContact
+			route.fromTime = rootPath.fromTime;
 
 			// Add the potential k-shortest path to the heap.
 			routeContainerB.push_back(route);
 
 			// Print new route
-			cout << "Next route: ";
+			cout << "          new route added to B: ";
 			for (vector<Contact *>::iterator it2 = route.hops.begin(); it2 != route.hops.end(); ++it2)
 			{
 				cout << (*it2)->getId() << ",";
 			}
-			cout << endl;
-
-			// Add back the edges and nodes that were removed from the graph (Clear working area)
-			for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
-			{
-				((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
-				((Work *) (*it).work)->predecessor = 0;
-				((Work *) (*it).work)->visited = false;
-				((Work *) (*it).work)->suppressed = false;
-				((Work *) (*it).work)->suppressedNextContact.clear();
-			}
+			cout << " toNodeNbr:" << route.toNodeNbr << ", arrTime:" << route.arrivalTime << ", fromTime:" << route.fromTime << ", toTime:" << route.toTime << ", maxCap:" << route.maxCapacity << endl;
 		}
 
 		// All spur nodes from previous route have been tested.
 		// If B is empty means there is no more paths in the graph.
 		if (routeContainerB.empty())
 		{
+			cout << "        container B is empty, ending Yen's with " << routeList_[terminusNode].size() << " routes in route list: ";
+
+			// Remove rootNode (hop[0]) from all paths in routeList_[terminusNode]
+			for (vector<CgrRoute>::iterator it = routeList_[terminusNode].begin(); it != routeList_[terminusNode].end(); ++it)
+			{
+				(*it).hops.erase((*it).hops.begin());
+			}
+
+			// Print all routes in routeList_[terminusNode]
+			for (vector<CgrRoute>::iterator it = routeList_[terminusNode].begin(); it != routeList_[terminusNode].end(); ++it)
+			{
+				cout << "(";
+				for (vector<Contact *>::iterator it2 = (*it).hops.begin(); it2 != (*it).hops.end(); ++it2)
+				{
+					cout << (*it2)->getId() << ",";
+				}
+				cout << "),";
+			}
+			cout << endl;
+
 			break;
 		}
 
 		// Sort the potential k-shortest paths by cost (arrival time?).
 		// Do we need to sort B if we are looking for all paths?
 		// routeContainerB.sort();
+		// If no sorting happens, the working area will remain with
+		// the arrivalTime metrics of each contact.
 
 		routeList_[terminusNode].push_back(routeContainerB.back());
 		routeContainerB.pop_back();
 	}
-
-	// Print all routes in routeList_[terminusNode]
-	// Print new route
-	cout << "Routes in A: " << endl;
-	for (vector<CgrRoute>::iterator it = routeList_[terminusNode].begin(); it != routeList_[terminusNode].end(); ++it)
-	{
-		for (vector<Contact *>::iterator it2 = (*it).hops.begin(); it2 != (*it).hops.end(); ++it2)
-		{
-			cout << (*it2)->getId() << ",";
-		}
-		cout << endl;
-	}
-
-//	Contact * anchorContact = NULL;
-//	while (1)
-//	{
-//		// Find the next best route
-//		CgrRoute route;
-//		route.toNodeNbr = 0;
-//		findNextBestRoute(&rootContact, terminusNode, &route);
-//
-//		// If toNodeNbr still 0, no routes were found
-//		// End search
-//		if (route.toNodeNbr == 0)
-//		{
-//			cout << "      no more routes found" << endl;
-//			break;
-//		}
-//
-//		// If anchored search on going and firstContact
-//		// is not anchor, end the anchor and do not record
-//		// this route.
-//		Contact * firstContact = route.hops[0];
-//		if (anchorContact != NULL)
-//			if (firstContact != anchorContact)
-//			{
-//				cout << "        ending anchored search in contactId: " << anchorContact->getId() << " (src:" << anchorContact->getSourceEid() << "-dst:" << anchorContact->getDestinationEid() << ", " << anchorContact->getStart() << "s to " << anchorContact->getEnd() << "s)" << endl;
-//				// This is endAnchoredSearch() function in ion: it clears the working area
-//				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
-//				{
-//					((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
-//					((Work *) (*it).work)->predecessor = NULL;
-//					((Work *) (*it).work)->visited = false;
-//					// Unsupress all non-local contacts
-//					// (local contacts must keep their value).
-//					if ((*it).getSourceEid() != eid_)
-//						((Work *) (*it).work)->suppressed = false;
-//				}
-//				// End endAnchoredSearch() function
-//				((Work *) anchorContact->work)->suppressed = 1;
-//				anchorContact = NULL;
-//				continue;
-//			}
-//
-//		// Record route
-//		cout << "      new route found through node:" << route.toNodeNbr << ", arrivalConf:" << route.arrivalConfidence << ", arrivalT:" << route.arrivalTime << ", txWin:(" << route.fromTime << "-" << route.toTime << "), maxCap:" << route.maxCapacity << "bits:" << endl;
-//		routeList_[terminusNode].push_back(route);
-//
-//		// Find limiting contact for next iteration
-//		// (earliest ending contact in path, generally the first)
-//		Contact * limitContact = NULL;
-//		if (route.toTime == firstContact->getEnd())
-//		{
-//			limitContact = firstContact;
-//		}
-//		else
-//		{
-//			// Start new anchor search. Anchoring only
-//			// happens in the first hop.. not good!
-//			anchorContact = firstContact;
-//			cout << "        starting anchored search in contactId: " << anchorContact->getId() << " (src:" << anchorContact->getSourceEid() << "-dst:" << anchorContact->getDestinationEid() << ", " << anchorContact->getStart() << "s-" << anchorContact->getEnd() << "s)" << endl;
-//			// find the limiting contact in route
-//			for (vector<Contact *>::iterator it = route.hops.begin(); it != route.hops.end(); ++it)
-//				if ((*it)->getEnd() == route.toTime)
-//				{
-//					limitContact = (*it);
-//					break;
-//				}
-//		}
-//
-//		// Supress limiting contact in next search
-//		cout << "        supressing limiting contactId: " << limitContact->getId() << " (src:" << limitContact->getSourceEid() << "-dst:" << limitContact->getDestinationEid() << ", " << limitContact->getStart() << "s-" << limitContact->getEnd() << "s)" << endl;
-//		((Work *) limitContact->work)->suppressed = true;
-//
-//		// Clear working area
-//		for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
-//		{
-//			((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
-//			((Work *) (*it).work)->predecessor = 0;
-//			((Work *) (*it).work)->visited = false;
-//		}
-//	}
 
 	// Free memory allocated for work
 	for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
@@ -808,6 +791,8 @@ void RoutingCgrModelYen::findNextBestRoute(Contact * rootContact, int terminusNo
 				((Work *) (*it).work)->capacity = (*it).getDataRate() * (*it).getDuration();
 
 			// Calculate the cost for this contact (Arrival Time)
+			// TODO: work->arrival time is started to INF??? I think this
+			// needs revision, it sould start at 0. INF + owlt is an overrun?
 			double arrivalTime;
 			if ((*it).getStart() < ((Work *) (currentContact->work))->arrivalTime)
 				arrivalTime = ((Work *) (currentContact->work))->arrivalTime;
@@ -818,6 +803,7 @@ void RoutingCgrModelYen::findNextBestRoute(Contact * rootContact, int terminusNo
 			// Update the cost of this contact
 			if (arrivalTime < ((Work *) (*it).work)->arrivalTime)
 			{
+				cout << (*it).getId() << "<" << arrivalTime << ">";
 				((Work *) (*it).work)->arrivalTime = arrivalTime;
 				((Work *) (*it).work)->predecessor = currentContact;
 
