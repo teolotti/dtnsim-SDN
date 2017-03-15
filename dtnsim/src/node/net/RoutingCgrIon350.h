@@ -12,33 +12,12 @@
 #include "bp/include/cgr.h"
 #include "ici/include/psm.h"
 #include "ici/include/ion.h"
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <stdio.h>
-#include <cstdlib>
-#include <unistd.h>
-#include <string>
-#include <iostream>
-#include <sys/wait.h>
-#include <string>
-#include <iostream>
 #include <map>
 #include <omnetpp.h>
 #include <fstream>
 #include "dtnsim_m.h"
-#include <stdlib.h>
-#include <sdr.h>
-#include <ion.h>
-#include <psm.h>
-#include <bp.h>
-#include <stdio.h>
 #include "ionadmin.h"
 #include "bpadmin.h"
-#include <sys/types.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <signal.h>
 #include "SdrStatus.h"
 
 
