@@ -9,13 +9,13 @@
 #include <queue>
 #include "ContactPlan.h"
 #include "dtnsim_m.h"
-//#include "ion_interface/ION_interface.h"
 #include "SdrModel.h"
 #include "Routing.h"
 #include "RoutingDirect.h"
 #include "RoutingCgrModel.h"
 #include "RoutingCgrIon350.h"
 #include "RoutingCgrModelYen.h"
+#include "Ion.h"
 
 using namespace omnetpp;
 using namespace std;
@@ -35,9 +35,10 @@ public:
 	virtual ~Net();
 
 protected:
-	virtual void initialize();
+	virtual void initialize(int stage);
+	virtual int numInitStages() const;
 	virtual void handleMessage(cMessage *msg);
-	virtual void dispatchBundle(Bundle *bundle);
+	virtual void dispatchBundle(BundlePkt *bundle);
 	virtual double transmitBundle(int neighborEid, int contactId);
 	virtual void parseContacts(string fileName);
 	virtual void finish();

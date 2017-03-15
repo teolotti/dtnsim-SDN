@@ -66,7 +66,7 @@ void App::handleMessage(cMessage *msg)
 	if (msg->getKind() == TRAFFIC_TIMER)
 	{
 		TrafficGeneratorMsg* trafficGenMsg = check_and_cast<TrafficGeneratorMsg *>(msg);
-		Bundle* bundle = new Bundle("123", BUNDLE);
+		BundlePkt* bundle = new BundlePkt("123", BUNDLE);
 		bundle->setSchedulingPriority(0);
 
 		char bundleName[10];
@@ -97,7 +97,7 @@ void App::handleMessage(cMessage *msg)
 	}
 	else if (msg->getKind() == BUNDLE)
 	{
-		Bundle* bundle = check_and_cast<Bundle *>(msg);
+		BundlePkt* bundle = check_and_cast<BundlePkt *>(msg);
 
 		int destinationEid = bundle->getDestinationEid();
 

@@ -29,7 +29,7 @@ void RoutingDirect::setContactPlan(ContactPlan * contactPlan){
 	contactPlan_ = contactPlan;
 }
 
-void RoutingDirect::routeBundle(Bundle * bundle, double simTime)
+void RoutingDirect::routeBundle(BundlePkt * bundle, double simTime)
 {
 	int contactId=0; // contact 0 is the limbo
 

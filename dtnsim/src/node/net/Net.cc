@@ -1,78 +1,95 @@
 #include "Net.h"
 #include "App.h"
 
-Define_Module (Net);
+Define_Module(Net);
 
-void Net::initialize()
+void Net::initialize(int stage)
 {
-	this->eid_ = this->getParentModule()->getIndex() + 1;
-	this->onFault = false;
-	this->meanTTR = 60 * 5; // to retry if neigbor fails, and to poll new bundles in queue
-
-	if (hasGUI())
+	if (stage == 1)
 	{
-		// Arrange graphical stuff: icon
-		cDisplayString& dispStr = this->getParentModule()->getDisplayString();
-		string icon_path = "device/";
-		string icon = this->getParentModule()->par("icon");
-		icon_path.append(icon);
-		dispStr.setTagArg("i", 0, icon_path.c_str());
-		// Arrange graphical stuff: circular position
-		posRadius = this->getParentModule()->getVectorSize() * 250 / (2 * (3.1415));
-		posAngle = 2 * (3.1415) / ((float) this->getParentModule()->getVectorSize());
-		posX = posRadius * cos((eid_ - 1) * posAngle) + posRadius;
-		posY = posRadius * sin((eid_ - 1) * posAngle) + posRadius;
-		dispStr.setTagArg("p", 0, posX);
-		dispStr.setTagArg("p", 1, posY);
+		this->eid_ = this->getParentModule()->getIndex() + 1;
+		this->onFault = false;
+		this->meanTTR = 60 * 5; // to retry if neigbor fails, and to poll new bundles in queue
+
+		if (hasGUI())
+		{
+			// Arrange graphical stuff: icon
+			cDisplayString& dispStr = this->getParentModule()->getDisplayString();
+			string icon_path = "device/";
+			string icon = this->getParentModule()->par("icon");
+			icon_path.append(icon);
+			dispStr.setTagArg("i", 0, icon_path.c_str());
+			// Arrange graphical stuff: circular position
+			posRadius = this->getParentModule()->getVectorSize() * 250 / (2 * (3.1415));
+			posAngle = 2 * (3.1415) / ((float) this->getParentModule()->getVectorSize());
+			posX = posRadius * cos((eid_ - 1) * posAngle) + posRadius;
+			posY = posRadius * sin((eid_ - 1) * posAngle) + posRadius;
+			dispStr.setTagArg("p", 0, posX);
+			dispStr.setTagArg("p", 1, posY);
+		}
+
+		// Parse contacts
+		this->parseContacts(par("contactsFile"));
+
+		// Initialize routing
+		this->sdr_.setEid(eid_);
+		this->sdr_.setNodesNumber(this->getParentModule()->getParentModule()->par("nodesNumber"));
+		this->sdr_.setContactPlan(&contactPlan_);
+		string routeString = par("routing");
+		if (routeString.compare("direct") == 0)
+			routing = new RoutingDirect();
+		if (routeString.compare("cgrModel") == 0)
+			routing = new RoutingCgrModel();
+		if (routeString.compare("cgrIon350") == 0)
+			routing = new RoutingCgrIon350();
+		if (routeString.compare("cgrModelYen") == 0)
+			routing = new RoutingCgrModelYen();
+		routing->setLocalNode(eid_);
+		routing->setSdr(&sdr_);
+		routing->setContactPlan(&contactPlan_);
+		if (RoutingCgrIon350 *routingCgrIon350 = dynamic_cast<RoutingCgrIon350 *>(routing))
+		{
+			int nodesNumber = this->getParentModule()->getParentModule()->par("nodesNumber");
+			routingCgrIon350->setNodesNumber(nodesNumber);
+			routingCgrIon350->initializeIonNode();
+		}
+
+		// Initialize faults
+		if (this->getParentModule()->par("enableFaults").boolValue() == true)
+		{
+			meanTTF = this->getParentModule()->par("meanTTF").doubleValue();
+			meanTTR = this->getParentModule()->par("meanTTR").doubleValue();
+
+			cMessage *faultMsg = new ContactMsg("fault", FAULT_START_TIMER);
+			//faultMsg->setSchedulingPriority(4);
+			scheduleAt(exponential(meanTTF), faultMsg);
+		}
+
+		// Initialize stats
+		netTxBundles.setName("netTxBundle");
+		netRxBundles.setName("netRxBundle");
+		netRxHopCount.setName("netRxHopCount");
+		netReRoutedBundles.setName("netReRoutedBundles");
+		reRoutedBundles = 0;
+		netEffectiveFailureTime.setName("netEffectiveFailureTime");
+		effectiveFailureTime = 0;
+		sdrBundlesInSdr.setName("sdrBundlesInSdr");
+		sdrBundleInLimbo.setName("sdrBundleInLimbo");
+		sdr_.setStatsHandle(&sdrBundlesInSdr, &sdrBundleInLimbo);
 	}
+}
 
-	// Parse contacts
-	this->parseContacts(par("contactsFile"));
-
-	// Initialize routing
-	this->sdr_.setEid(eid_);
-	string routeString = par("routing");
-	if (routeString.compare("direct") == 0)
-		routing = new RoutingDirect();
-	if (routeString.compare("cgrModel") == 0)
-		routing = new RoutingCgrModel();
-	if (routeString.compare("cgrIon350") == 0)
-		routing = new RoutingCgrIon350();
-	if (routeString.compare("cgrModelYen") == 0)
-		routing = new RoutingCgrModelYen();
-	routing->setLocalNode(eid_);
-	routing->setSdr(&sdr_);
-	routing->setContactPlan(&contactPlan_);
-
-	// Initialize faults
-	if (this->getParentModule()->par("enableFaults").boolValue() == true)
-	{
-		meanTTF = this->getParentModule()->par("meanTTF").doubleValue();
-		meanTTR = this->getParentModule()->par("meanTTR").doubleValue();
-
-		cMessage *faultMsg = new ContactMsg("fault", FAULT_START_TIMER);
-		//faultMsg->setSchedulingPriority(4);
-		scheduleAt(exponential(meanTTF), faultMsg);
-	}
-
-	// Initialize stats
-	netTxBundles.setName("netTxBundle");
-	netRxBundles.setName("netRxBundle");
-	netRxHopCount.setName("netRxHopCount");
-	netReRoutedBundles.setName("netReRoutedBundles");
-	reRoutedBundles = 0;
-	netEffectiveFailureTime.setName("netEffectiveFailureTime");
-	effectiveFailureTime = 0;
-	sdrBundlesInSdr.setName("sdrBundlesInSdr");
-	sdrBundleInLimbo.setName("sdrBundleInLimbo");
-	sdr_.setStatsHandle(&sdrBundlesInSdr, &sdrBundleInLimbo);
+int Net::numInitStages() const
+{
+	int stages = 2;
+	return stages;
 }
 
 void Net::handleMessage(cMessage * msg)
 {
 	if (msg->getKind() == BUNDLE)
 	{
-		Bundle* bundle = check_and_cast<Bundle *>(msg);
+		BundlePkt* bundle = check_and_cast<BundlePkt *>(msg);
 		dispatchBundle(bundle);
 	}
 	else if (msg->getKind() == FAULT_START_TIMER)
@@ -127,9 +144,6 @@ void Net::handleMessage(cMessage * msg)
 		freeChannelMsgs_[contactMsg->getId()] = freeChannelMsg;
 		scheduleAt(simTime(), freeChannelMsg);
 
-		if (contactMsg->getId() == 1135)
-			cout << "contact started!" << endl;
-
 		// Visualize contact line
 		if (hasGUI())
 		{
@@ -163,20 +177,12 @@ void Net::handleMessage(cMessage * msg)
 		cancelAndDelete(freeChannelMsgs_[contactId]);
 		delete contactMsg;
 
-		if (contactId == 1135)
-			cout << "contact ended! in Node " << eid_ << "and isBundleleft: " << sdr_.isBundleForContact(contactId) << endl;
-
 		// Check if bundles are left in contact and re-route them
 		while (sdr_.isBundleForContact(contactId))
 		{
-			Bundle* bundle = sdr_.getNextBundleForContact(contactId);
-
-			if (contactId == 1135)
-				cout << "Node " << eid_ << ": " << bundle->getId() << endl;
+			BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
 
 			sdr_.popNextBundleForContact(contactId);
-
-			//cout << simTime() << " Node:" << eid_ <<  ", rerouting: " << bundle->getId() << endl;
 
 			// Reset delivery confidence, the contact did not succedded.
 			bundle->setDlvConfidence(0);
@@ -230,7 +236,7 @@ void Net::handleMessage(cMessage * msg)
 	}
 }
 
-void Net::dispatchBundle(Bundle *bundle)
+void Net::dispatchBundle(BundlePkt *bundle)
 {
 	int destinationEid = bundle->getDestinationEid();
 	int ownEid = this->eid_;
@@ -256,9 +262,9 @@ double Net::transmitBundle(int neighborEid, int contactId)
 
 	// If we got this point, is because there is a
 	// bundle waiting for this contact.
-	Bundle* bundle = sdr_.getNextBundleForContact(contactId);
+	BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
 
-	// Calcualte datarate and Tx duration
+	// Calculate datarate and Tx duration
 	// TODO: In the future, this should be driven by the Mac layer.
 	double dataRate = this->contactPlan_.getContactById(contactId)->getDataRate();
 	transmissionDuration = (double) bundle->getBitLength() / dataRate;
@@ -331,6 +337,7 @@ void Net::parseContacts(string fileName)
 
 	file.close();
 
+	contactPlan_.setContactsFile(fileName);
 	contactPlan_.finishContactPlan();
 }
 

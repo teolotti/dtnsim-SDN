@@ -10,8 +10,12 @@
 
 #include <map>
 #include <queue>
+#include <deque>
 #include <omnetpp.h>
 #include "dtnsim_m.h"
+#include "SdrStatus.h"
+#include "ContactPlan.h"
+#include "assert.h"
 
 using namespace omnetpp;
 using namespace std;
@@ -23,11 +27,15 @@ public:
 	virtual ~SdrModel();
 	virtual void setStatsHandle(cOutVector * sdrBundlesInSdr, cOutVector * sdrBundleInLimbo);
 	virtual void setEid(int eid);
-	virtual void enqueueBundleToContact(Bundle * bundle, int contactId);
+	virtual void setNodesNumber(int nodesNumber);
+	virtual void setContactPlan(ContactPlan *contactPlan);
+	virtual void enqueueBundleToContact(BundlePkt * bundle, int contactId);
 	virtual bool isBundleForContact(int contactId);
-	virtual Bundle * getNextBundleForContact(int contactId);
+	virtual BundlePkt * getNextBundleForContact(int contactId);
 	virtual void popNextBundleForContact(int contactId);
 	virtual void freeSdr(int eid);
+	virtual int getBundlesSizeEnqueuedToNeighbor(int eid);
+	virtual SdrStatus getSdrStatus();
 
 private:
 
@@ -35,7 +43,11 @@ private:
 
 	int eid_;
 
-	map<int, queue<Bundle *> > bundlesQueue_;
+	int nodesNumber_;
+
+	ContactPlan *contactPlan_;
+
+	map<int, deque<BundlePkt *> > bundlesQueue_;
 
 	// Stats
 	double lastUdateTime;

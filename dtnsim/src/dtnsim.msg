@@ -5,7 +5,7 @@ cplusplus {{
 }}
 class noncobject List;
 
-packet Bundle{
+packet BundlePkt{
     	// Things that are set once
     	int sourceEid;
         int destinationEid;
@@ -45,10 +45,6 @@ message ContactMsg{
 message FreeChannelMsg{
     int neighborEid;
     int contactId;
-};
-
-message IonTrafficGeneratorMsg{
-
 };
 
 

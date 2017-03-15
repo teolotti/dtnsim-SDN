@@ -32,7 +32,7 @@ void RoutingCgrModelYen::setContactPlan(ContactPlan * contactPlan)
 	contactPlan_ = contactPlan;
 }
 
-void RoutingCgrModelYen::routeBundle(Bundle * bundle, double simTime)
+void RoutingCgrModelYen::routeBundle(BundlePkt * bundle, double simTime)
 {
 	if (!printDebug) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);
@@ -52,7 +52,7 @@ void RoutingCgrModelYen::routeBundle(Bundle * bundle, double simTime)
 // Ion Cgr Functions based in libcgr.c (v 3.5.0):
 /////////////////////////////////////////////////
 
-void RoutingCgrModelYen::cgrForward(Bundle * bundle, double simTime)
+void RoutingCgrModelYen::cgrForward(BundlePkt * bundle, double simTime)
 {
 	cout << endl << "simTime: " << simTime << "s, Node " << eid_ << ", calling cgrForward (src: " << bundle->getSourceEid() << ", dst:" << bundle->getDestinationEid() << ", created:" << bundle->getCreationTimestamp().dbl() << "s, id:" << bundle->getId() << ")" << endl;
 
@@ -186,7 +186,7 @@ void RoutingCgrModelYen::cgrForward(Bundle * bundle, double simTime)
 	}
 }
 
-void RoutingCgrModelYen::identifyProximateNodes(Bundle * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes)
+void RoutingCgrModelYen::identifyProximateNodes(BundlePkt * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes)
 {
 	int terminusNode = bundle->getDestinationEid();
 
@@ -264,7 +264,7 @@ void RoutingCgrModelYen::identifyProximateNodes(Bundle * bundle, double simTime,
 	}
 }
 
-void RoutingCgrModelYen::tryRoute(Bundle * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes)
+void RoutingCgrModelYen::tryRoute(BundlePkt * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes)
 {
 
 	// First, ion test if outduct is blocked,
@@ -279,7 +279,7 @@ void RoutingCgrModelYen::tryRoute(Bundle * bundle, CgrRoute * route, vector<Prox
 	// time. We coud do this here also (TODO).
 	// We imitate this behaviour by measuring the
 	// residual capacity of the first contact.
-	if (route->hops[0]->getResidualCapacity() < bundle->getBitLength())
+	if (route->hops[0]->getResidualCapacity() <= bundle->getBitLength())
 	{
 		cout << " residual capacity of first contact in route depleted" << endl;
 		return;
@@ -901,7 +901,7 @@ void RoutingCgrModelYen::recomputeRouteForContact()
 	//cout << "***RecomputeRouteForContact not implemented yet!, ignoring route***" << endl;
 }
 
-void RoutingCgrModelYen::enqueueToNeighbor(Bundle * bundle, ProximateNode * selectedNeighbor)
+void RoutingCgrModelYen::enqueueToNeighbor(BundlePkt * bundle, ProximateNode * selectedNeighbor)
 {
 
 	if (bundle->getXmitCopiesCount() == MAX_XMIT_COPIES)
@@ -917,7 +917,7 @@ void RoutingCgrModelYen::enqueueToNeighbor(Bundle * bundle, ProximateNode * sele
 	bpEnqueue(bundle, selectedNeighbor);
 }
 
-void RoutingCgrModelYen::enqueueToLimbo(Bundle * bundle)
+void RoutingCgrModelYen::enqueueToLimbo(BundlePkt * bundle)
 {
 	ProximateNode limboNode;
 	limboNode.contactId = 0;
@@ -929,7 +929,7 @@ void RoutingCgrModelYen::enqueueToLimbo(Bundle * bundle)
 	bpEnqueue(bundle, &limboNode);
 }
 
-void RoutingCgrModelYen::bpEnqueue(Bundle * bundle, ProximateNode * selectedNeighbor)
+void RoutingCgrModelYen::bpEnqueue(BundlePkt * bundle, ProximateNode * selectedNeighbor)
 {
 	bundle->setNextHopEid(selectedNeighbor->neighborNodeNbr);
 	sdr_->enqueueBundleToContact(bundle, selectedNeighbor->contactId);

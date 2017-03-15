@@ -12,7 +12,7 @@ void Mac::handleMessage(cMessage *msg)
 {
 	if (msg->getKind() == BUNDLE)
 	{
-		Bundle* bundle = check_and_cast<Bundle *>(msg);
+		BundlePkt* bundle = check_and_cast<BundlePkt *>(msg);
 
 		int destinationEid = bundle->getNextHopEid();
 		int ownEid = check_and_cast<App *>(this->getParentModule()->getSubmodule("app"))->getEid();

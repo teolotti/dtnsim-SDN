@@ -19,7 +19,7 @@ public:
 	virtual void setLocalNode(int eid);
 	virtual void setSdr(SdrModel * sdr);
 	virtual void setContactPlan(ContactPlan * contactPlan);
-	virtual void routeBundle(Bundle *bundle, double simTime);
+	virtual void routeBundle(BundlePkt *bundle, double simTime);
 private:
 	bool printDebug = true;
 	int eid_;
@@ -71,16 +71,16 @@ private:
 	map<int, vector<CgrRoute> > routeList_;
 	double routeListLastEditTime = -1;
 
-	void cgrForward(Bundle * bundle, double simTime);
-	void identifyProximateNodes(Bundle * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes);
+	void cgrForward(BundlePkt * bundle, double simTime);
+	void identifyProximateNodes(BundlePkt * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes);
 	void loadRouteList(int terminusNode, double simTime);
 
 	void findNextBestRoute(Contact * rootContact, int terminusNode, CgrRoute * route);
-	void tryRoute(Bundle * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes);
+	void tryRoute(BundlePkt * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes);
 	void recomputeRouteForContact();
-	void enqueueToNeighbor(Bundle * bundle, ProximateNode * selectedNeighbor);
-	void enqueueToLimbo(Bundle * bundle);
-	void bpEnqueue(Bundle * bundle, ProximateNode * selectedNeighbor);
+	void enqueueToNeighbor(BundlePkt * bundle, ProximateNode * selectedNeighbor);
+	void enqueueToLimbo(BundlePkt * bundle);
+	void bpEnqueue(BundlePkt * bundle, ProximateNode * selectedNeighbor);
 };
 
 #endif /* SRC_NODE_NET_ROUTINGCGRMODEL_H_ */

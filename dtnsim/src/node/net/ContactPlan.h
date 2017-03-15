@@ -21,11 +21,16 @@ public:
     vector<Contact> getContactsBySrc(int Src);
     vector<Contact> getContactsByDst(int Dst);
     vector<Contact> getContactsBySrcDst(int Src, int Dst);
+    Contact getContactByTuple(int src, int dst, double start, double end);
+
+    void setContactsFile(string contactsFile);
+    const string& getContactsFile() const;
 
     // fill structs to make fast searchs of contacts
     void finishContactPlan();
 
     simtime_t getLastEditTime();
+
 
 private:
 
@@ -36,6 +41,8 @@ private:
     map<int, vector<Contact *> > contactsBySrc_;
     map<int, vector<Contact *> > contactsByDst_;
     map<int, Contact *> contactsById_;
+
+    string contactsFile_;
 
 };
 

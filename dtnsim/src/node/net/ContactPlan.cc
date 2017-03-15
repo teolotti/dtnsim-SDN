@@ -10,9 +10,13 @@ ContactPlan::ContactPlan()
 
 }
 
+// todo fix in simulator: ion considers data rate in contact plan in bytes /second units
+// now the simulator considers bits / second
 void ContactPlan::addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
 {
-	Contact contact(id, start, end, sourceEid, destinationEid, dataRate, confidence);
+	// todo check older contact plans
+	// data rate is in bytes / second
+	Contact contact(id, start, end, sourceEid, destinationEid, dataRate*8, confidence);
 
 	contacts_.push_back(contact);
 
@@ -115,4 +119,35 @@ vector<Contact> ContactPlan::getContactsBySrcDst(int Src, int Dst)
 simtime_t ContactPlan::getLastEditTime()
 {
 	return lastEditTime;
+}
+
+Contact ContactPlan::getContactByTuple(int src, int dst, double start, double end)
+{
+    Contact contactByTuple(0,0,0,0,0,0,0);
+    vector<Contact> contacts = getContactsBySrcDst(src, dst);
+	for(size_t i = 0; i<contacts.size(); i++)
+	{
+		if((contacts.at(i).getSourceEid() != src) || (contacts.at(i).getDestinationEid() != dst))
+		{
+			cout<<"Error in method getContactsBySrcDst"<<endl;
+		}
+
+		if((contacts.at(i).getStart() == start) && (contacts.at(i).getEnd() == end))
+		{
+			contactByTuple = contacts.at(i);
+			break;
+		}
+	}
+
+	return contactByTuple;
+}
+
+void ContactPlan::setContactsFile(string contactsFile)
+{
+	contactsFile_ = contactsFile;
+}
+
+const string& ContactPlan::getContactsFile() const
+{
+	return contactsFile_;
 }

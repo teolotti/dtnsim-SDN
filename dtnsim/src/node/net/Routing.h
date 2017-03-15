@@ -32,7 +32,7 @@ public:
 	virtual void setLocalNode(int eid) = 0;
 	virtual void setSdr(SdrModel * sdr) = 0;
 	virtual void setContactPlan(ContactPlan * contactPlan) = 0;
-	virtual void routeBundle(Bundle *bundle, double simTime) = 0;
+	virtual void routeBundle(BundlePkt *bundle, double simTime) = 0;
 };
 
 

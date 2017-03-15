@@ -19,7 +19,7 @@ public:
 	virtual void setLocalNode(int eid);
 	virtual void setSdr(SdrModel * sdr);
 	virtual void setContactPlan(ContactPlan * contactPlan);
-	virtual void routeBundle(Bundle *bundle, double simTime);
+	virtual void routeBundle(BundlePkt *bundle, double simTime);
 private:
 	int eid_;
 	SdrModel * sdr_;
