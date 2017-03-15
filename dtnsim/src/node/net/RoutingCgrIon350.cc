@@ -348,7 +348,6 @@ void RoutingCgrIon350::routeBundle(BundlePkt * bundlePkt, double simTime)
 		time_t dispatchOffset = 0;
 		time_t expirationOffset = 100000000;
 		time_t nowTime = simTimeUtc;
-		time_t dispatchTime = nowTime + dispatchOffset;
 		time_t expirationTime = nowTime + expirationOffset;
 
 		unsigned int bundleSize = bundlePkt->getByteLength();
