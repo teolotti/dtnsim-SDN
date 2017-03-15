@@ -22,7 +22,7 @@
 /**
  * Class generated from <tt>dtnsim.msg:8</tt> by nedtool.
  * <pre>
- * packet Bundle
+ * packet BundlePkt
  * {
  *     // Things that are set once
  *     int sourceEid;
@@ -43,7 +43,7 @@
  * }
  * </pre>
  */
-class Bundle : public ::omnetpp::cPacket
+class BundlePkt : public ::omnetpp::cPacket
 {
   protected:
     int sourceEid;
@@ -61,18 +61,18 @@ class Bundle : public ::omnetpp::cPacket
     List takenRoute;
 
   private:
-    void copy(const Bundle& other);
+    void copy(const BundlePkt& other);
 
   protected:
     // protected and unimplemented operator==(), to prevent accidental usage
-    bool operator==(const Bundle&);
+    bool operator==(const BundlePkt&);
 
   public:
-    Bundle(const char *name=nullptr, int kind=0);
-    Bundle(const Bundle& other);
-    virtual ~Bundle();
-    Bundle& operator=(const Bundle& other);
-    virtual Bundle *dup() const {return new Bundle(*this);}
+    BundlePkt(const char *name=nullptr, int kind=0);
+    BundlePkt(const BundlePkt& other);
+    virtual ~BundlePkt();
+    BundlePkt& operator=(const BundlePkt& other);
+    virtual BundlePkt *dup() const {return new BundlePkt(*this);}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b);
 
@@ -100,15 +100,15 @@ class Bundle : public ::omnetpp::cPacket
     virtual double getDlvConfidence() const;
     virtual void setDlvConfidence(double dlvConfidence);
     virtual List& getOriginalRoute();
-    virtual const List& getOriginalRoute() const {return const_cast<Bundle*>(this)->getOriginalRoute();}
+    virtual const List& getOriginalRoute() const {return const_cast<BundlePkt*>(this)->getOriginalRoute();}
     virtual void setOriginalRoute(const List& originalRoute);
     virtual List& getTakenRoute();
-    virtual const List& getTakenRoute() const {return const_cast<Bundle*>(this)->getTakenRoute();}
+    virtual const List& getTakenRoute() const {return const_cast<BundlePkt*>(this)->getTakenRoute();}
     virtual void setTakenRoute(const List& takenRoute);
 };
 
-inline void doParsimPacking(omnetpp::cCommBuffer *b, const Bundle& obj) {obj.parsimPack(b);}
-inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Bundle& obj) {obj.parsimUnpack(b);}
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const BundlePkt& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BundlePkt& obj) {obj.parsimUnpack(b);}
 
 /**
  * Class generated from <tt>dtnsim.msg:27</tt> by nedtool.
@@ -267,40 +267,6 @@ class FreeChannelMsg : public ::omnetpp::cMessage
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const FreeChannelMsg& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, FreeChannelMsg& obj) {obj.parsimUnpack(b);}
-
-/**
- * Class generated from <tt>dtnsim.msg:50</tt> by nedtool.
- * <pre>
- * message IonTrafficGeneratorMsg
- * {
- * }
- * </pre>
- */
-class IonTrafficGeneratorMsg : public ::omnetpp::cMessage
-{
-  protected:
-
-  private:
-    void copy(const IonTrafficGeneratorMsg& other);
-
-  protected:
-    // protected and unimplemented operator==(), to prevent accidental usage
-    bool operator==(const IonTrafficGeneratorMsg&);
-
-  public:
-    IonTrafficGeneratorMsg(const char *name=nullptr, int kind=0);
-    IonTrafficGeneratorMsg(const IonTrafficGeneratorMsg& other);
-    virtual ~IonTrafficGeneratorMsg();
-    IonTrafficGeneratorMsg& operator=(const IonTrafficGeneratorMsg& other);
-    virtual IonTrafficGeneratorMsg *dup() const {return new IonTrafficGeneratorMsg(*this);}
-    virtual void parsimPack(omnetpp::cCommBuffer *b) const;
-    virtual void parsimUnpack(omnetpp::cCommBuffer *b);
-
-    // field getter/setter methods
-};
-
-inline void doParsimPacking(omnetpp::cCommBuffer *b, const IonTrafficGeneratorMsg& obj) {obj.parsimPack(b);}
-inline void doParsimUnpacking(omnetpp::cCommBuffer *b, IonTrafficGeneratorMsg& obj) {obj.parsimUnpack(b);}
 
 
 #endif // ifndef __DTNSIM_M_H

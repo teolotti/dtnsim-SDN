@@ -161,9 +161,9 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
     return out;
 }
 
-Register_Class(Bundle);
+Register_Class(BundlePkt);
 
-Bundle::Bundle(const char *name, int kind) : ::omnetpp::cPacket(name,kind)
+BundlePkt::BundlePkt(const char *name, int kind) : ::omnetpp::cPacket(name,kind)
 {
     this->sourceEid = 0;
     this->destinationEid = 0;
@@ -178,16 +178,16 @@ Bundle::Bundle(const char *name, int kind) : ::omnetpp::cPacket(name,kind)
     this->dlvConfidence = 0;
 }
 
-Bundle::Bundle(const Bundle& other) : ::omnetpp::cPacket(other)
+BundlePkt::BundlePkt(const BundlePkt& other) : ::omnetpp::cPacket(other)
 {
     copy(other);
 }
 
-Bundle::~Bundle()
+BundlePkt::~BundlePkt()
 {
 }
 
-Bundle& Bundle::operator=(const Bundle& other)
+BundlePkt& BundlePkt::operator=(const BundlePkt& other)
 {
     if (this==&other) return *this;
     ::omnetpp::cPacket::operator=(other);
@@ -195,7 +195,7 @@ Bundle& Bundle::operator=(const Bundle& other)
     return *this;
 }
 
-void Bundle::copy(const Bundle& other)
+void BundlePkt::copy(const BundlePkt& other)
 {
     this->sourceEid = other.sourceEid;
     this->destinationEid = other.destinationEid;
@@ -212,7 +212,7 @@ void Bundle::copy(const Bundle& other)
     this->takenRoute = other.takenRoute;
 }
 
-void Bundle::parsimPack(omnetpp::cCommBuffer *b) const
+void BundlePkt::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
     doParsimPacking(b,this->sourceEid);
@@ -230,7 +230,7 @@ void Bundle::parsimPack(omnetpp::cCommBuffer *b) const
     doParsimPacking(b,this->takenRoute);
 }
 
-void Bundle::parsimUnpack(omnetpp::cCommBuffer *b)
+void BundlePkt::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
     doParsimUnpacking(b,this->sourceEid);
@@ -248,143 +248,143 @@ void Bundle::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->takenRoute);
 }
 
-int Bundle::getSourceEid() const
+int BundlePkt::getSourceEid() const
 {
     return this->sourceEid;
 }
 
-void Bundle::setSourceEid(int sourceEid)
+void BundlePkt::setSourceEid(int sourceEid)
 {
     this->sourceEid = sourceEid;
 }
 
-int Bundle::getDestinationEid() const
+int BundlePkt::getDestinationEid() const
 {
     return this->destinationEid;
 }
 
-void Bundle::setDestinationEid(int destinationEid)
+void BundlePkt::setDestinationEid(int destinationEid)
 {
     this->destinationEid = destinationEid;
 }
 
-bool Bundle::getReturnToSender() const
+bool BundlePkt::getReturnToSender() const
 {
     return this->returnToSender;
 }
 
-void Bundle::setReturnToSender(bool returnToSender)
+void BundlePkt::setReturnToSender(bool returnToSender)
 {
     this->returnToSender = returnToSender;
 }
 
-bool Bundle::getCritical() const
+bool BundlePkt::getCritical() const
 {
     return this->critical;
 }
 
-void Bundle::setCritical(bool critical)
+void BundlePkt::setCritical(bool critical)
 {
     this->critical = critical;
 }
 
-::omnetpp::simtime_t Bundle::getCreationTimestamp() const
+::omnetpp::simtime_t BundlePkt::getCreationTimestamp() const
 {
     return this->creationTimestamp;
 }
 
-void Bundle::setCreationTimestamp(::omnetpp::simtime_t creationTimestamp)
+void BundlePkt::setCreationTimestamp(::omnetpp::simtime_t creationTimestamp)
 {
     this->creationTimestamp = creationTimestamp;
 }
 
-::omnetpp::simtime_t Bundle::getTtl() const
+::omnetpp::simtime_t BundlePkt::getTtl() const
 {
     return this->ttl;
 }
 
-void Bundle::setTtl(::omnetpp::simtime_t ttl)
+void BundlePkt::setTtl(::omnetpp::simtime_t ttl)
 {
     this->ttl = ttl;
 }
 
-int Bundle::getSenderEid() const
+int BundlePkt::getSenderEid() const
 {
     return this->senderEid;
 }
 
-void Bundle::setSenderEid(int senderEid)
+void BundlePkt::setSenderEid(int senderEid)
 {
     this->senderEid = senderEid;
 }
 
-int Bundle::getNextHopEid() const
+int BundlePkt::getNextHopEid() const
 {
     return this->nextHopEid;
 }
 
-void Bundle::setNextHopEid(int nextHopEid)
+void BundlePkt::setNextHopEid(int nextHopEid)
 {
     this->nextHopEid = nextHopEid;
 }
 
-int Bundle::getHopCount() const
+int BundlePkt::getHopCount() const
 {
     return this->hopCount;
 }
 
-void Bundle::setHopCount(int hopCount)
+void BundlePkt::setHopCount(int hopCount)
 {
     this->hopCount = hopCount;
 }
 
-int Bundle::getXmitCopiesCount() const
+int BundlePkt::getXmitCopiesCount() const
 {
     return this->xmitCopiesCount;
 }
 
-void Bundle::setXmitCopiesCount(int xmitCopiesCount)
+void BundlePkt::setXmitCopiesCount(int xmitCopiesCount)
 {
     this->xmitCopiesCount = xmitCopiesCount;
 }
 
-double Bundle::getDlvConfidence() const
+double BundlePkt::getDlvConfidence() const
 {
     return this->dlvConfidence;
 }
 
-void Bundle::setDlvConfidence(double dlvConfidence)
+void BundlePkt::setDlvConfidence(double dlvConfidence)
 {
     this->dlvConfidence = dlvConfidence;
 }
 
-List& Bundle::getOriginalRoute()
+List& BundlePkt::getOriginalRoute()
 {
     return this->originalRoute;
 }
 
-void Bundle::setOriginalRoute(const List& originalRoute)
+void BundlePkt::setOriginalRoute(const List& originalRoute)
 {
     this->originalRoute = originalRoute;
 }
 
-List& Bundle::getTakenRoute()
+List& BundlePkt::getTakenRoute()
 {
     return this->takenRoute;
 }
 
-void Bundle::setTakenRoute(const List& takenRoute)
+void BundlePkt::setTakenRoute(const List& takenRoute)
 {
     this->takenRoute = takenRoute;
 }
 
-class BundleDescriptor : public omnetpp::cClassDescriptor
+class BundlePktDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    BundleDescriptor();
-    virtual ~BundleDescriptor();
+    BundlePktDescriptor();
+    virtual ~BundlePktDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -405,24 +405,24 @@ class BundleDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(BundleDescriptor);
+Register_ClassDescriptor(BundlePktDescriptor);
 
-BundleDescriptor::BundleDescriptor() : omnetpp::cClassDescriptor("Bundle", "omnetpp::cPacket")
+BundlePktDescriptor::BundlePktDescriptor() : omnetpp::cClassDescriptor("BundlePkt", "omnetpp::cPacket")
 {
     propertynames = nullptr;
 }
 
-BundleDescriptor::~BundleDescriptor()
+BundlePktDescriptor::~BundlePktDescriptor()
 {
     delete[] propertynames;
 }
 
-bool BundleDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool BundlePktDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<Bundle *>(obj)!=nullptr;
+    return dynamic_cast<BundlePkt *>(obj)!=nullptr;
 }
 
-const char **BundleDescriptor::getPropertyNames() const
+const char **BundlePktDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -433,19 +433,19 @@ const char **BundleDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *BundleDescriptor::getProperty(const char *propertyname) const
+const char *BundlePktDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int BundleDescriptor::getFieldCount() const
+int BundlePktDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 13+basedesc->getFieldCount() : 13;
 }
 
-unsigned int BundleDescriptor::getFieldTypeFlags(int field) const
+unsigned int BundlePktDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -471,7 +471,7 @@ unsigned int BundleDescriptor::getFieldTypeFlags(int field) const
     return (field>=0 && field<13) ? fieldTypeFlags[field] : 0;
 }
 
-const char *BundleDescriptor::getFieldName(int field) const
+const char *BundlePktDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -497,7 +497,7 @@ const char *BundleDescriptor::getFieldName(int field) const
     return (field>=0 && field<13) ? fieldNames[field] : nullptr;
 }
 
-int BundleDescriptor::findField(const char *fieldName) const
+int BundlePktDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
@@ -517,7 +517,7 @@ int BundleDescriptor::findField(const char *fieldName) const
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *BundleDescriptor::getFieldTypeString(int field) const
+const char *BundlePktDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -543,7 +543,7 @@ const char *BundleDescriptor::getFieldTypeString(int field) const
     return (field>=0 && field<13) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **BundleDescriptor::getFieldPropertyNames(int field) const
+const char **BundlePktDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -556,7 +556,7 @@ const char **BundleDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *BundleDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *BundlePktDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -569,7 +569,7 @@ const char *BundleDescriptor::getFieldProperty(int field, const char *propertyna
     }
 }
 
-int BundleDescriptor::getFieldArraySize(void *object, int field) const
+int BundlePktDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -577,13 +577,13 @@ int BundleDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    Bundle *pp = (Bundle *)object; (void)pp;
+    BundlePkt *pp = (BundlePkt *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-std::string BundleDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string BundlePktDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -591,7 +591,7 @@ std::string BundleDescriptor::getFieldValueAsString(void *object, int field, int
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    Bundle *pp = (Bundle *)object; (void)pp;
+    BundlePkt *pp = (BundlePkt *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getSourceEid());
         case 1: return long2string(pp->getDestinationEid());
@@ -610,7 +610,7 @@ std::string BundleDescriptor::getFieldValueAsString(void *object, int field, int
     }
 }
 
-bool BundleDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool BundlePktDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -618,7 +618,7 @@ bool BundleDescriptor::setFieldValueAsString(void *object, int field, int i, con
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    Bundle *pp = (Bundle *)object; (void)pp;
+    BundlePkt *pp = (BundlePkt *)object; (void)pp;
     switch (field) {
         case 0: pp->setSourceEid(string2long(value)); return true;
         case 1: pp->setDestinationEid(string2long(value)); return true;
@@ -635,7 +635,7 @@ bool BundleDescriptor::setFieldValueAsString(void *object, int field, int i, con
     }
 }
 
-const char *BundleDescriptor::getFieldStructName(int field) const
+const char *BundlePktDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -650,7 +650,7 @@ const char *BundleDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *BundleDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *BundlePktDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -658,7 +658,7 @@ void *BundleDescriptor::getFieldStructValuePointer(void *object, int field, int 
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    Bundle *pp = (Bundle *)object; (void)pp;
+    BundlePkt *pp = (BundlePkt *)object; (void)pp;
     switch (field) {
         case 11: return (void *)(&pp->getOriginalRoute()); break;
         case 12: return (void *)(&pp->getTakenRoute()); break;
@@ -1676,242 +1676,6 @@ void *FreeChannelMsgDescriptor::getFieldStructValuePointer(void *object, int fie
         field -= basedesc->getFieldCount();
     }
     FreeChannelMsg *pp = (FreeChannelMsg *)object; (void)pp;
-    switch (field) {
-        default: return nullptr;
-    }
-}
-
-Register_Class(IonTrafficGeneratorMsg);
-
-IonTrafficGeneratorMsg::IonTrafficGeneratorMsg(const char *name, int kind) : ::omnetpp::cMessage(name,kind)
-{
-}
-
-IonTrafficGeneratorMsg::IonTrafficGeneratorMsg(const IonTrafficGeneratorMsg& other) : ::omnetpp::cMessage(other)
-{
-    copy(other);
-}
-
-IonTrafficGeneratorMsg::~IonTrafficGeneratorMsg()
-{
-}
-
-IonTrafficGeneratorMsg& IonTrafficGeneratorMsg::operator=(const IonTrafficGeneratorMsg& other)
-{
-    if (this==&other) return *this;
-    ::omnetpp::cMessage::operator=(other);
-    copy(other);
-    return *this;
-}
-
-void IonTrafficGeneratorMsg::copy(const IonTrafficGeneratorMsg& other)
-{
-}
-
-void IonTrafficGeneratorMsg::parsimPack(omnetpp::cCommBuffer *b) const
-{
-    ::omnetpp::cMessage::parsimPack(b);
-}
-
-void IonTrafficGeneratorMsg::parsimUnpack(omnetpp::cCommBuffer *b)
-{
-    ::omnetpp::cMessage::parsimUnpack(b);
-}
-
-class IonTrafficGeneratorMsgDescriptor : public omnetpp::cClassDescriptor
-{
-  private:
-    mutable const char **propertynames;
-  public:
-    IonTrafficGeneratorMsgDescriptor();
-    virtual ~IonTrafficGeneratorMsgDescriptor();
-
-    virtual bool doesSupport(omnetpp::cObject *obj) const override;
-    virtual const char **getPropertyNames() const override;
-    virtual const char *getProperty(const char *propertyname) const override;
-    virtual int getFieldCount() const override;
-    virtual const char *getFieldName(int field) const override;
-    virtual int findField(const char *fieldName) const override;
-    virtual unsigned int getFieldTypeFlags(int field) const override;
-    virtual const char *getFieldTypeString(int field) const override;
-    virtual const char **getFieldPropertyNames(int field) const override;
-    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
-    virtual int getFieldArraySize(void *object, int field) const override;
-
-    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
-    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
-
-    virtual const char *getFieldStructName(int field) const override;
-    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
-};
-
-Register_ClassDescriptor(IonTrafficGeneratorMsgDescriptor);
-
-IonTrafficGeneratorMsgDescriptor::IonTrafficGeneratorMsgDescriptor() : omnetpp::cClassDescriptor("IonTrafficGeneratorMsg", "omnetpp::cMessage")
-{
-    propertynames = nullptr;
-}
-
-IonTrafficGeneratorMsgDescriptor::~IonTrafficGeneratorMsgDescriptor()
-{
-    delete[] propertynames;
-}
-
-bool IonTrafficGeneratorMsgDescriptor::doesSupport(omnetpp::cObject *obj) const
-{
-    return dynamic_cast<IonTrafficGeneratorMsg *>(obj)!=nullptr;
-}
-
-const char **IonTrafficGeneratorMsgDescriptor::getPropertyNames() const
-{
-    if (!propertynames) {
-        static const char *names[] = {  nullptr };
-        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
-        propertynames = mergeLists(basenames, names);
-    }
-    return propertynames;
-}
-
-const char *IonTrafficGeneratorMsgDescriptor::getProperty(const char *propertyname) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
-}
-
-int IonTrafficGeneratorMsgDescriptor::getFieldCount() const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 0+basedesc->getFieldCount() : 0;
-}
-
-unsigned int IonTrafficGeneratorMsgDescriptor::getFieldTypeFlags(int field) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeFlags(field);
-        field -= basedesc->getFieldCount();
-    }
-    return 0;
-}
-
-const char *IonTrafficGeneratorMsgDescriptor::getFieldName(int field) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldName(field);
-        field -= basedesc->getFieldCount();
-    }
-    return nullptr;
-}
-
-int IonTrafficGeneratorMsgDescriptor::findField(const char *fieldName) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? basedesc->findField(fieldName) : -1;
-}
-
-const char *IonTrafficGeneratorMsgDescriptor::getFieldTypeString(int field) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeString(field);
-        field -= basedesc->getFieldCount();
-    }
-    return nullptr;
-}
-
-const char **IonTrafficGeneratorMsgDescriptor::getFieldPropertyNames(int field) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldPropertyNames(field);
-        field -= basedesc->getFieldCount();
-    }
-    switch (field) {
-        default: return nullptr;
-    }
-}
-
-const char *IonTrafficGeneratorMsgDescriptor::getFieldProperty(int field, const char *propertyname) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldProperty(field, propertyname);
-        field -= basedesc->getFieldCount();
-    }
-    switch (field) {
-        default: return nullptr;
-    }
-}
-
-int IonTrafficGeneratorMsgDescriptor::getFieldArraySize(void *object, int field) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldArraySize(object, field);
-        field -= basedesc->getFieldCount();
-    }
-    IonTrafficGeneratorMsg *pp = (IonTrafficGeneratorMsg *)object; (void)pp;
-    switch (field) {
-        default: return 0;
-    }
-}
-
-std::string IonTrafficGeneratorMsgDescriptor::getFieldValueAsString(void *object, int field, int i) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldValueAsString(object,field,i);
-        field -= basedesc->getFieldCount();
-    }
-    IonTrafficGeneratorMsg *pp = (IonTrafficGeneratorMsg *)object; (void)pp;
-    switch (field) {
-        default: return "";
-    }
-}
-
-bool IonTrafficGeneratorMsgDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->setFieldValueAsString(object,field,i,value);
-        field -= basedesc->getFieldCount();
-    }
-    IonTrafficGeneratorMsg *pp = (IonTrafficGeneratorMsg *)object; (void)pp;
-    switch (field) {
-        default: return false;
-    }
-}
-
-const char *IonTrafficGeneratorMsgDescriptor::getFieldStructName(int field) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructName(field);
-        field -= basedesc->getFieldCount();
-    }
-    return nullptr;
-}
-
-void *IonTrafficGeneratorMsgDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
-{
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructValuePointer(object, field, i);
-        field -= basedesc->getFieldCount();
-    }
-    IonTrafficGeneratorMsg *pp = (IonTrafficGeneratorMsg *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }

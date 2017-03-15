@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for dtnsim
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -lpthread
+#  opp_makemake -f --deep -Xion-3.5.0
 #
 
 # Name of target to be created (-o option)
@@ -40,21 +40,16 @@ INCLUDE_PATH = \
     -Iion/ici/library \
     -Iion/ici/sdr \
     -Iion/ici/utils \
-    -Iion/node1 \
-    -Iion/node2 \
-    -Iion/node3 \
-    -Iion/node4 \
     -Inode \
     -Inode/app \
     -Inode/mac \
-    -Inode/net \
-    -Iresults
+    -Inode/net
 
 # Additional object and library files to link with
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS =  -lpthread
+LIBS =
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -245,22 +240,17 @@ clean:
 	$(Q)-rm -f ion/ici/library/*_m.cc ion/ici/library/*_m.h ion/ici/library/*_sm.cc ion/ici/library/*_sm.h
 	$(Q)-rm -f ion/ici/sdr/*_m.cc ion/ici/sdr/*_m.h ion/ici/sdr/*_sm.cc ion/ici/sdr/*_sm.h
 	$(Q)-rm -f ion/ici/utils/*_m.cc ion/ici/utils/*_m.h ion/ici/utils/*_sm.cc ion/ici/utils/*_sm.h
-	$(Q)-rm -f ion/node1/*_m.cc ion/node1/*_m.h ion/node1/*_sm.cc ion/node1/*_sm.h
-	$(Q)-rm -f ion/node2/*_m.cc ion/node2/*_m.h ion/node2/*_sm.cc ion/node2/*_sm.h
-	$(Q)-rm -f ion/node3/*_m.cc ion/node3/*_m.h ion/node3/*_sm.cc ion/node3/*_sm.h
-	$(Q)-rm -f ion/node4/*_m.cc ion/node4/*_m.h ion/node4/*_sm.cc ion/node4/*_sm.h
 	$(Q)-rm -f node/*_m.cc node/*_m.h node/*_sm.cc node/*_sm.h
 	$(Q)-rm -f node/app/*_m.cc node/app/*_m.h node/app/*_sm.cc node/app/*_sm.h
 	$(Q)-rm -f node/mac/*_m.cc node/mac/*_m.h node/mac/*_sm.cc node/mac/*_sm.h
 	$(Q)-rm -f node/net/*_m.cc node/net/*_m.h node/net/*_sm.cc node/net/*_sm.h
-	$(Q)-rm -f results/*_m.cc results/*_m.h results/*_sm.cc results/*_sm.h
 
 cleanall: clean
 	$(Q)-rm -rf $(PROJECT_OUTPUT_DIR)
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc ion/node1/*.cc ion/node2/*.cc ion/node3/*.cc ion/node4/*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc results/*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/dtnsim_m.o: dtnsim_m.cc \
