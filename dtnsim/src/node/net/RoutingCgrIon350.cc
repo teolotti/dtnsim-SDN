@@ -383,11 +383,6 @@ void RoutingCgrIon350::routeBundle(BundlePkt * bundlePkt, double simTime)
 
 		int neighborNodeNbr = traceStateSt.selectedNode;
 		if (neighborNodeNbr != -1)
-
-
-
-
-
 		{
 			PsmPartition ionwm = getIonwm();
 			IonCXref *firstContact = (IonCXref *) psp(ionwm, sm_list_data(ionwm, sm_list_first(ionwm, traceStateSt.hops)));
