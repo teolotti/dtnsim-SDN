@@ -1,7 +1,7 @@
 #include "Net.h"
 #include "App.h"
 
-Define_Module(Net);
+Define_Module (Net);
 
 void Net::initialize(int stage)
 {
@@ -10,6 +10,8 @@ void Net::initialize(int stage)
 		this->eid_ = this->getParentModule()->getIndex() + 1;
 		this->onFault = false;
 		this->meanTTR = 60 * 5; // to retry if neigbor fails, and to poll new bundles in queue
+		this->saveBundleMap_ = par("saveBundleMap");
+		this->generateOutputGraph_ = par("generateOutputGraph");
 
 		if (hasGUI())
 		{
@@ -26,6 +28,15 @@ void Net::initialize(int stage)
 			posY = posRadius * sin((eid_ - 1) * posAngle) + posRadius;
 			dispStr.setTagArg("p", 0, posX);
 			dispStr.setTagArg("p", 1, posY);
+		}
+
+		// BundleMap Init
+		if (saveBundleMap_)
+		{
+			char intStr[30];
+			sprintf(intStr, "results/BundleMap_Node%02d.csv", eid_);
+			bundleMap_.open(intStr);
+			bundleMap_ << "SimTime" << "," << "SRC" << "," << "DST" << "," << "TSRC" << "," << "TDST" << "," << "BitLenght" << "," << "DurationSec" << endl;
 		}
 
 		// Parse contacts
@@ -211,6 +222,7 @@ void Net::handleMessage(cMessage * msg)
 			{
 				// Transmit bundle normally.
 				double transmissionDuration = transmitBundle(neighborEid, contactId);
+
 				scheduleAt(simTime() + transmissionDuration, freeChannelMsg);
 			}
 			else
@@ -277,6 +289,12 @@ double Net::transmitBundle(int neighborEid, int contactId)
 	send(bundle, "gateToMac$o");
 
 	netTxBundles.record(simTime());
+
+	if (saveBundleMap_)
+	{
+		bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << transmissionDuration << endl;
+	}
+
 	sdr_.popNextBundleForContact(contactId);
 
 	return transmissionDuration;
@@ -354,6 +372,17 @@ void Net::finish()
 			canvas->removeFigure((*it));
 		delete (*it);
 	}
+
+	// BundleMap End
+	if (saveBundleMap_)
+	{
+		bundleMap_.close();
+	}
+
+	if (generateOutputGraph_)
+	{
+		outputGraph_.close();
+	}
 }
 
 bool Net::isOnFault()
@@ -369,5 +398,10 @@ Net::Net()
 Net::~Net()
 {
 
+}
+
+void Net::generateOutputGraph()
+{
+	// todo generate dot outputs from bundleMap flow files
 }
 

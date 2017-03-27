@@ -182,21 +182,26 @@ int SdrModel::getBundlesSizeEnqueuedToNeighbor(int eid)
 	for (; it1 != it2; ++it1)
 	{
 		int contactId = it1->first;
-		deque<BundlePkt *> bundlesQueue = it1->second;
 
-		Contact *contact = contactPlan_->getContactById(contactId);
-		int source = contact->getSourceEid();
-		assert(source == this->eid_);
-
-		int destination = contact->getDestinationEid();
-
-		if (eid == destination)
+		// if it's not the limbo contact
+		if (contactId != 0)
 		{
-			deque<BundlePkt *>::iterator ii1 = bundlesQueue.begin();
-			deque<BundlePkt *>::iterator ii2 = bundlesQueue.end();
-			for (; ii1 != ii2; ++ii1)
+			deque<BundlePkt *> bundlesQueue = it1->second;
+
+			Contact *contact = contactPlan_->getContactById(contactId);
+			int source = contact->getSourceEid();
+			assert(source == this->eid_);
+
+			int destination = contact->getDestinationEid();
+
+			if (eid == destination)
 			{
-				size += (*ii1)->getByteLength();
+				deque<BundlePkt *>::iterator ii1 = bundlesQueue.begin();
+				deque<BundlePkt *>::iterator ii2 = bundlesQueue.end();
+				for (; ii1 != ii2; ++ii1)
+				{
+					size += (*ii1)->getByteLength();
+				}
 			}
 		}
 	}

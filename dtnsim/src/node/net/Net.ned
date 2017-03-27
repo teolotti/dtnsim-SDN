@@ -7,7 +7,10 @@ simple Net
         @display("i=block/routing");   
                 
         string contactsFile = default("contacts.txt");     
-        string routing = default("direct");              
+        string routing = default("direct");    
+        
+        bool saveBundleMap=default(false); 
+        bool generateOutputGraph=default(false);        
         
     gates:
         inout gateToApp;

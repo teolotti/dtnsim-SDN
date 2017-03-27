@@ -5,6 +5,7 @@
 #include <string>
 #include <omnetpp.h>
 #include <fstream>
+#include <sstream>
 #include <map>
 #include <queue>
 #include "ContactPlan.h"
@@ -43,6 +44,7 @@ protected:
 	virtual void parseContacts(string fileName);
 	virtual void finish();
 	virtual bool isOnFault();
+	virtual void generateOutputGraph();
 
 private:
 
@@ -75,6 +77,15 @@ private:
 	double effectiveFailureTime;
 	cOutVector sdrBundlesInSdr;
 	cOutVector sdrBundleInLimbo;
+
+    // BundlesMap
+    bool saveBundleMap_;
+    ofstream bundleMap_;
+
+    // OutputGraph
+    bool generateOutputGraph_;
+    ofstream outputGraph_;
+
 
 };
 

@@ -413,6 +413,11 @@ void RoutingCgrIon350::routeBundle(BundlePkt * bundlePkt, double simTime)
 			//cout << "cgr enqueue to " << cgrResult->neighborNode << " in contact " << cgrResult->contactId << endl;
 			cgrEnqueue(bundlePkt, cgrResult->neighborNode, cgrResult->contactId);
 		}
+		else
+		{
+			// enqueue to limbo
+			cgrEnqueue(bundlePkt, 0, 0);
+		}
 
 		shmdt(cgrResult);
 		if (shmctl(mem_id, IPC_RMID, 0) < 0)
