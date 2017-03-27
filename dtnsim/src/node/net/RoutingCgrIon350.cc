@@ -152,9 +152,9 @@ void RoutingCgrIon350::createIonconfigFile(ConfigInfo *configInfo)
 
 	file << "wmKey " + wmKeyStr << endl;
 	file << "sdrName sdr" + eid << endl;
-	file << "wmSize 50000" << endl;
+	file << "wmSize 5000000" << endl;
 	file << "configFlags 1" << endl;
-	file << "heapWords 20000" << endl;
+	file << "heapWords 200000" << endl;
 	file.close();
 }
 
@@ -383,6 +383,11 @@ void RoutingCgrIon350::routeBundle(BundlePkt * bundlePkt, double simTime)
 
 		int neighborNodeNbr = traceStateSt.selectedNode;
 		if (neighborNodeNbr != -1)
+
+
+
+
+
 		{
 			PsmPartition ionwm = getIonwm();
 			IonCXref *firstContact = (IonCXref *) psp(ionwm, sm_list_data(ionwm, sm_list_first(ionwm, traceStateSt.hops)));
