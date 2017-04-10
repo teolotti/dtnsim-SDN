@@ -48,7 +48,10 @@ INCLUDE_PATH = \
     -Inode/app \
     -Inode/mac \
     -Inode/net \
+<<<<<<< HEAD
     -Inode/net/routing \
+=======
+>>>>>>> branch 'master' of https://juanfraire@bitbucket.org/pablomadoery/dtnsim.git
     -Iresults
 
 # Additional object and library files to link with
@@ -127,6 +130,13 @@ OBJS = \
     $O/node/app/App.o \
     $O/node/mac/Mac.o \
     $O/node/net/SdrModel.o \
+<<<<<<< HEAD
+=======
+    $O/node/net/RoutingCgrIon350.o \
+    $O/node/net/RoutingCgrModel.o \
+    $O/node/net/RoutingCgrModelYen.o \
+    $O/node/net/RoutingDirect.o \
+>>>>>>> branch 'master' of https://juanfraire@bitbucket.org/pablomadoery/dtnsim.git
     $O/node/net/SdrStatus.o \
     $O/node/net/Net.o \
     $O/node/net/Contact.o \
@@ -254,7 +264,10 @@ clean:
 	$(Q)-rm -f node/app/*_m.cc node/app/*_m.h node/app/*_sm.cc node/app/*_sm.h
 	$(Q)-rm -f node/mac/*_m.cc node/mac/*_m.h node/mac/*_sm.cc node/mac/*_sm.h
 	$(Q)-rm -f node/net/*_m.cc node/net/*_m.h node/net/*_sm.cc node/net/*_sm.h
+<<<<<<< HEAD
 	$(Q)-rm -f node/net/routing/*_m.cc node/net/routing/*_m.h node/net/routing/*_sm.cc node/net/routing/*_sm.h
+=======
+>>>>>>> branch 'master' of https://juanfraire@bitbucket.org/pablomadoery/dtnsim.git
 	$(Q)-rm -f results/*_m.cc results/*_m.h results/*_sm.cc results/*_sm.h
 
 cleanall: clean
@@ -262,7 +275,11 @@ cleanall: clean
 
 depend:
 	$(qecho) Creating dependencies...
+<<<<<<< HEAD
 	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc ion/node1/*.cc ion/node2/*.cc ion/node3/*.cc ion/node4/*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc node/net/routing/*.cc results/*.cc
+=======
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc ion/node1/*.cc ion/node2/*.cc ion/node3/*.cc ion/node4/*.cc node/*.cc node/app/*.cc node/mac/*.cc node/net/*.cc results/*.cc
+>>>>>>> branch 'master' of https://juanfraire@bitbucket.org/pablomadoery/dtnsim.git
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/dtnsim_m.o: dtnsim_m.cc \
