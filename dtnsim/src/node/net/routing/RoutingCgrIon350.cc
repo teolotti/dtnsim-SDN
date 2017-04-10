@@ -11,34 +11,19 @@ static void handleTraceState(void *data, unsigned int lineNbr, CgrTraceType trac
 static void traceFnDefault(void *data, unsigned int lineNbr, CgrTraceType traceType, ...);
 static int getDirective(uvast nodeNbr, Object plans, Bundle *bundle, FwdDirective *directive);
 
-RoutingCgrIon350::RoutingCgrIon350()
+RoutingCgrIon350::RoutingCgrIon350(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodesNumber)
 {
+	eid_ = eid;
+	sdr_ = sdr;
+	contactPlan_ = contactPlan;
+	nodesNumber_ = nodesNumber;
 
+	this->initializeIonNode();
 }
 
 RoutingCgrIon350::~RoutingCgrIon350()
 {
 
-}
-
-void RoutingCgrIon350::setLocalNode(int eid)
-{
-	eid_ = eid;
-}
-
-void RoutingCgrIon350::setSdr(SdrModel * sdr)
-{
-	sdr_ = sdr;
-}
-
-void RoutingCgrIon350::setContactPlan(ContactPlan * contactPlan)
-{
-	contactPlan_ = contactPlan;
-}
-
-void RoutingCgrIon350::setNodesNumber(int nodesNumber)
-{
-	nodesNumber_ = nodesNumber;
 }
 
 void RoutingCgrIon350::initializeIonNode()

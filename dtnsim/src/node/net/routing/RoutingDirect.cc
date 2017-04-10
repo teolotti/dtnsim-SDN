@@ -7,26 +7,16 @@
 
 #include "RoutingDirect.h"
 
-RoutingDirect::RoutingDirect()
+RoutingDirect::RoutingDirect(int eid, SdrModel * sdr, ContactPlan * contactPlan)
 {
-	// TODO Auto-generated destructor stub
+	eid_ = eid;
+	sdr_ = sdr;
+	contactPlan_ = contactPlan;
 }
 
 RoutingDirect::~RoutingDirect()
 {
-	// TODO Auto-generated destructor stub
-}
 
-void RoutingDirect::setLocalNode(int eid){
-	eid_ = eid;
-}
-
-void RoutingDirect::setSdr(SdrModel * sdr){
-	sdr_ = sdr;
-}
-
-void RoutingDirect::setContactPlan(ContactPlan * contactPlan){
-	contactPlan_ = contactPlan;
 }
 
 void RoutingDirect::routeBundle(BundlePkt * bundle, double simTime)

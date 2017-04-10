@@ -14,11 +14,8 @@
 class RoutingDirect : public Routing
 {
 public:
-	RoutingDirect();
+	RoutingDirect(int eid, SdrModel * sdr, ContactPlan * contactPlan);
 	virtual ~RoutingDirect();
-	virtual void setLocalNode(int eid);
-	virtual void setSdr(SdrModel * sdr);
-	virtual void setContactPlan(ContactPlan * contactPlan);
 	virtual void routeBundle(BundlePkt *bundle, double simTime);
 private:
 	int eid_;

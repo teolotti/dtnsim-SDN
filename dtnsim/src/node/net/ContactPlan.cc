@@ -10,13 +10,59 @@ ContactPlan::ContactPlan()
 
 }
 
+void ContactPlan::parseContactPlanFile(string fileName)
+{
+	int id = 1;
+	double start = 0.0;
+	double end = 0.0;
+	int sourceEid = 0;
+	int destinationEid = 0;
+	double dataRate = 0.0;
+
+	string aux = "#";
+	string a;
+	string command;
+	ifstream file;
+	file.open(fileName.c_str());
+
+	if (!file.is_open())
+		throw cException(("Error: wrong path to contacts file " + string(fileName)).c_str());
+
+	while (true)
+	{
+		if (aux.empty())
+			getline(file, aux, '\n');
+		else if (aux.at(0) == '#')
+			getline(file, aux, '\n');
+		else
+			break;
+	}
+
+	stringstream ss(aux);
+	ss >> a >> command >> start >> end >> sourceEid >> destinationEid >> dataRate;
+
+	do
+	{
+		if ((command.compare("contact") == 0))
+		{
+			this->addContact(id, start, end, sourceEid, destinationEid, dataRate, (float) 1.0);
+			id++;
+		}
+	} while (file >> a >> command >> start >> end >> sourceEid >> destinationEid >> dataRate);
+
+	file.close();
+
+	this->setContactsFile(fileName);
+	this->finishContactPlan();
+}
+
 // todo fix in simulator: ion considers data rate in contact plan in bytes /second units
 // now the simulator considers bits / second
 void ContactPlan::addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
 {
 	// todo check older contact plans
 	// data rate is in bytes / second
-	Contact contact(id, start, end, sourceEid, destinationEid, dataRate*8, confidence);
+	Contact contact(id, start, end, sourceEid, destinationEid, dataRate * 8, confidence);
 
 	contacts_.push_back(contact);
 
@@ -42,7 +88,7 @@ Contact *ContactPlan::getContactById(int id)
 	map<int, Contact *>::iterator it = contactsById_.find(id);
 	if (it != contactsById_.end())
 	{
-		contactPtr  = it->second;
+		contactPtr = it->second;
 	}
 
 	return contactPtr;
@@ -123,16 +169,16 @@ simtime_t ContactPlan::getLastEditTime()
 
 Contact ContactPlan::getContactByTuple(int src, int dst, double start, double end)
 {
-    Contact contactByTuple(0,0,0,0,0,0,0);
-    vector<Contact> contacts = getContactsBySrcDst(src, dst);
-	for(size_t i = 0; i<contacts.size(); i++)
+	Contact contactByTuple(0, 0, 0, 0, 0, 0, 0);
+	vector<Contact> contacts = getContactsBySrcDst(src, dst);
+	for (size_t i = 0; i < contacts.size(); i++)
 	{
-		if((contacts.at(i).getSourceEid() != src) || (contacts.at(i).getDestinationEid() != dst))
+		if ((contacts.at(i).getSourceEid() != src) || (contacts.at(i).getDestinationEid() != dst))
 		{
-			cout<<"Error in method getContactsBySrcDst"<<endl;
+			cout << "Error in method getContactsBySrcDst" << endl;
 		}
 
-		if((contacts.at(i).getStart() == start) && (contacts.at(i).getEnd() == end))
+		if ((contacts.at(i).getStart() == start) && (contacts.at(i).getEnd() == end))
 		{
 			contactByTuple = contacts.at(i);
 			break;

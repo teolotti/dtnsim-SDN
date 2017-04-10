@@ -13,10 +13,10 @@
 #include "SdrModel.h"
 #include "Routing.h"
 #include "RoutingDirect.h"
-#include "RoutingCgrModel.h"
 #include "RoutingCgrIon350.h"
 #include "RoutingCgrModelYen.h"
 #include "Ion.h"
+#include "routing/RoutingCgrModel350.h"
 
 using namespace omnetpp;
 using namespace std;
@@ -39,28 +39,26 @@ protected:
 	virtual void initialize(int stage);
 	virtual int numInitStages() const;
 	virtual void handleMessage(cMessage *msg);
+
 	virtual void dispatchBundle(BundlePkt *bundle);
 	virtual double transmitBundle(int neighborEid, int contactId);
-	virtual void parseContacts(string fileName);
+
 	virtual void finish();
-	virtual bool isOnFault();
-	virtual void generateOutputGraph();
 
 private:
 
 	int eid_;
-	bool onFault;
 
 	Routing * routing;
+
 	ContactPlan contactPlan_;
-
-	// (contact id --> freeChannelMsg)
-	map<int, FreeChannelMsg *> freeChannelMsgs_;
-
-	// (contact id --> bundles)
 	SdrModel sdr_;
 
+	// A data structure to track the forwarding process
+	map<int, FreeChannelMsg *> freeChannelMsgs_;
+
 	// Fault parameters
+	bool onFault;
 	double meanTTF, meanTTR;
 
 	// Visualization
@@ -85,8 +83,6 @@ private:
     // OutputGraph
     bool generateOutputGraph_;
     ofstream outputGraph_;
-
-
 };
 
 #endif /* NET_H_ */

@@ -3,6 +3,7 @@
 
 #include <omnetpp.h>
 #include <vector>
+#include <fstream>
 #include "Contact.h"
 
 using namespace std;
@@ -15,7 +16,12 @@ public:
     ContactPlan();
     virtual ~ContactPlan();
 
+    void parseContactPlanFile(string fileName);
+    void setContactsFile(string contactsFile);
+    const string& getContactsFile() const;
+
     void addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence);
+
     Contact *getContactById(int id);
     vector<Contact> * getContacts();
     vector<Contact> getContactsBySrc(int Src);
@@ -23,14 +29,10 @@ public:
     vector<Contact> getContactsBySrcDst(int Src, int Dst);
     Contact getContactByTuple(int src, int dst, double start, double end);
 
-    void setContactsFile(string contactsFile);
-    const string& getContactsFile() const;
-
     // fill structs to make fast searchs of contacts
     void finishContactPlan();
 
     simtime_t getLastEditTime();
-
 
 private:
 

@@ -14,11 +14,8 @@
 class RoutingCgrModelYen: public Routing
 {
 public:
-	RoutingCgrModelYen();
+	RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan);
 	virtual ~RoutingCgrModelYen();
-	virtual void setLocalNode(int eid);
-	virtual void setSdr(SdrModel * sdr);
-	virtual void setContactPlan(ContactPlan * contactPlan);
 	virtual void routeBundle(BundlePkt *bundle, double simTime);
 private:
 	bool printDebug = true;
