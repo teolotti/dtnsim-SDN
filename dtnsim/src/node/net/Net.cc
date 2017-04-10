@@ -285,8 +285,7 @@ double Net::transmitBundle(int neighborEid, int contactId)
 {
 	double transmissionDuration = 0.0;
 
-	// If we got this point, is because there is a
-	// bundle waiting for this contact.
+	// There is a bundle waiting for this contact.
 	BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
 
 	// Calculate datarate and Tx duration
