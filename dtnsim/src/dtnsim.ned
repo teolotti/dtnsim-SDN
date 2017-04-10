@@ -17,7 +17,7 @@ network dtnsim
 
         ion: Ion {
             parameters:
-                @display("p=350,50");
+                @display("p=40,50");
         }
 
     connections:

@@ -1,0 +1,72 @@
+[1970/01/01-01:00:00] [i] Bundle security is enabled.
+[1970/01/01-01:00:00] at line 6576 of ion/ici/library/platform.cc, Can't execute new process, exiting...: No such file or directory (ionwarn)
+[1970/01/01-01:00:00] at line 6576 of ion/ici/library/platform.cc, Can't execute new process, exiting...: No such file or directory (ipnadmin)
+[1970/01/01-01:00:00] at line 6576 of ion/ici/library/platform.cc, Can't execute new process, exiting...: No such file or directory (bpclock)
+[1970/01/01-01:00:00] at line 6576 of ion/ici/library/platform.cc, Can't execute new process, exiting...: No such file or directory (ipnadminep)
+[1970/01/01-01:00:00] at line 6576 of ion/ici/library/platform.cc, Can't execute new process, exiting...: No such file or directory (ltpcli)
+[1970/01/01-01:00:00] at line 6576 of ion/ici/library/platform.cc, Can't execute new process, exiting...: No such file or directory (bptransit)
+[1970/01/01-01:00:00] at line 6576 of ion/ici/library/platform.cc, Can't execute new process, exiting...: No such file or directory (ipnfw)
+[1970/01/01-01:00:00] at line 6576 of ion/ici/library/platform.cc, Can't execute new process, exiting...: No such file or directory (ltpclo)
+[1970/01/01-01:00:00] at line 6576 of ion/ici/library/platform.cc, Can't execute new process, exiting...: No such file or directory (ltpclo)
+[1970/01/01-01:00:00] at line 1706 of ion/ici/sdr/sdrxn.cc, Assertion failed. (sdrv)
+[1970/01/01-01:00:00] [i] Current stack trace:
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x46db5b]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x46db1d]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x4889f3]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x4168fc]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x41b361]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x4a8955]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x4a84f8]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x49ef0b]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppsimd.so(_ZN7omnetpp7cModu
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppsimd.so(_ZN7omnetpp7cModu
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppsimd.so(_ZN7omnetpp7cModu
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppsimd.so(_ZN7omnetpp7cModu
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppsimd.so(_ZN7omnetpp11cSim
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppenvird.so(_ZN7omnetpp5env
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/libopptkenvd.so(_ZN7omnetpp5tke
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/libopptkenvd.so(_ZN7omnetpp5tke
+[1970/01/01-01:00:00] [i] : /usr/lib/x86_64-linux-gnu/libtcl8.6.so(TclInvokeStringCommand+0x
+[1970/01/01-01:00:00] [i] : /usr/lib/x86_64-linux-gnu/libtcl8.6.so(TclNRRunCallbacks+0x47) [
+[1970/01/01-01:00:00] [i] : /usr/lib/x86_64-linux-gnu/libtcl8.6.so(+0x3c30f) [0x7f1ce796b30f
+[1970/01/01-01:00:00] [i] : /usr/lib/x86_64-linux-gnu/libtcl8.6.so(Tcl_EvalEx+0x16) [0x7f1ce
+[1970/01/01-01:00:00] [i] : /usr/lib/x86_64-linux-gnu/libtcl8.6.so(Tcl_Eval+0x15) [0x7f1ce79
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/libopptkenvd.so(_ZN7omnetpp5tke
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppenvird.so(_ZN7omnetpp5env
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppenvird.so(_ZN7omnetpp5env
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppenvird.so(_ZN7omnetpp5env
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppenvird.so(evMain+0x51) [0
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x4c3f4c]
+[1970/01/01-01:00:00] [i] : /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf5) [0x7f1ce
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x414ca9]
+[1970/01/01-01:00:00] at line 211 of ion/bp/cgr/libcgr.cc, Assertion failed. (sdr_begin_xn(sdr))
+[1970/01/01-01:00:00] [i] Current stack trace:
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x46db5b]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x46db1d]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x416918]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x41b361]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x4a8955]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x4a84f8]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x49ef0b]
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppsimd.so(_ZN7omnetpp7cModu
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppsimd.so(_ZN7omnetpp7cModu
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppsimd.so(_ZN7omnetpp7cModu
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppsimd.so(_ZN7omnetpp7cModu
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppsimd.so(_ZN7omnetpp11cSim
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppenvird.so(_ZN7omnetpp5env
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/libopptkenvd.so(_ZN7omnetpp5tke
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/libopptkenvd.so(_ZN7omnetpp5tke
+[1970/01/01-01:00:00] [i] : /usr/lib/x86_64-linux-gnu/libtcl8.6.so(TclInvokeStringCommand+0x
+[1970/01/01-01:00:00] [i] : /usr/lib/x86_64-linux-gnu/libtcl8.6.so(TclNRRunCallbacks+0x47) [
+[1970/01/01-01:00:00] [i] : /usr/lib/x86_64-linux-gnu/libtcl8.6.so(+0x3c30f) [0x7f1ce796b30f
+[1970/01/01-01:00:00] [i] : /usr/lib/x86_64-linux-gnu/libtcl8.6.so(Tcl_EvalEx+0x16) [0x7f1ce
+[1970/01/01-01:00:00] [i] : /usr/lib/x86_64-linux-gnu/libtcl8.6.so(Tcl_Eval+0x15) [0x7f1ce79
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/libopptkenvd.so(_ZN7omnetpp5tke
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppenvird.so(_ZN7omnetpp5env
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppenvird.so(_ZN7omnetpp5env
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppenvird.so(_ZN7omnetpp5env
+[1970/01/01-01:00:00] [i] : /home/juanfraire/omnetpp-5.0/lib/liboppenvird.so(evMain+0x51) [0
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x4c3f4c]
+[1970/01/01-01:00:00] [i] : /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf5) [0x7f1ce
+[1970/01/01-01:00:00] [i] : /home/juanfraire/git/dtnsim/dtnsim/src/dtnsim() [0x414ca9]
+[1970/01/01-01:00:00] at line 6576 of ion/ici/library/platform.cc, Can't execute new process, exiting...: No such file or directory (ltpclo)

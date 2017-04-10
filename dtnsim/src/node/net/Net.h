@@ -8,8 +8,11 @@
 #include <sstream>
 #include <map>
 #include <queue>
-#include "ContactPlan.h"
+
 #include "dtnsim_m.h"
+
+#include "ContactPlan.h"
+#include "Graphics.h"
 #include "SdrModel.h"
 #include "Routing.h"
 #include "RoutingDirect.h"
@@ -57,13 +60,12 @@ private:
 	// A data structure to track the forwarding process
 	map<int, FreeChannelMsg *> freeChannelMsgs_;
 
+	// Pointer to grahics module
+	Graphics *graphicsModule;
+
 	// Fault parameters
 	bool onFault;
 	double meanTTF, meanTTR;
-
-	// Visualization
-	float posX, posY, posAngle, posRadius;
-	vector<cLineFigure *> lines;
 
 	// Stats
 	cOutVector netTxBundles;
