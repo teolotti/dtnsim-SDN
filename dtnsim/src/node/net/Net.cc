@@ -98,11 +98,17 @@ int Net::numInitStages() const
 
 void Net::handleMessage(cMessage * msg)
 {
+	///////////////////////////////////////////
+	// New Bundle (from App or Mac):
+	///////////////////////////////////////////
 	if (msg->getKind() == BUNDLE)
 	{
 		BundlePkt* bundle = check_and_cast<BundlePkt *>(msg);
 		dispatchBundle(bundle);
 	}
+	///////////////////////////////////////////
+	// Fault Start and End Timers:
+	///////////////////////////////////////////
 	else if (msg->getKind() == FAULT_START_TIMER)
 	{
 		if (hasGUI())
@@ -138,6 +144,9 @@ void Net::handleMessage(cMessage * msg)
 		msg->setKind(FAULT_START_TIMER);
 		scheduleAt(simTime() + exponential(meanTTF), msg);
 	}
+	///////////////////////////////////////////
+	// Contact Start and End
+	///////////////////////////////////////////
 	else if (msg->getKind() == CONTACT_START_TIMER)
 	{
 		// Schedule end of contact
@@ -174,28 +183,26 @@ void Net::handleMessage(cMessage * msg)
 	else if (msg->getKind() == CONTACT_END_TIMER)
 	{
 		ContactMsg* contactMsg = check_and_cast<ContactMsg *>(msg);
-
-		// Visualize contact line end
-		if (hasGUI())
-		{
-			cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
-			string lineName = "line";
-			lineName.append(to_string(contactMsg->getId()));
-			canvas->removeFigure(canvas->findFigureRecursively(lineName.c_str()));
-		}
-
 		int contactId = contactMsg->getId();
 		cancelAndDelete(freeChannelMsgs_[contactId]);
 		delete contactMsg;
 
-		// Check if bundles are left in contact and re-route them
+		// Finish contact line visualization
+		if (hasGUI())
+		{
+			cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
+			string lineName = "line";
+			lineName.append(to_string(contactId));
+			canvas->removeFigure(canvas->findFigureRecursively(lineName.c_str()));
+		}
+
+		// If bundles are left in contact re-route them
 		while (sdr_.isBundleForContact(contactId))
 		{
 			BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
-
 			sdr_.popNextBundleForContact(contactId);
 
-			// Reset delivery confidence, the contact did not succedded.
+			// Reset bundle values
 			bundle->setDlvConfidence(0);
 			//bundle->setXmitCopiesCount(0);
 
@@ -203,6 +210,9 @@ void Net::handleMessage(cMessage * msg)
 			netReRoutedBundles.record(reRoutedBundles++);
 		}
 	}
+	///////////////////////////////////////////
+	// Transmit Bundle message
+	///////////////////////////////////////////
 	else if (msg->getKind() == FREE_CHANNEL)
 	{
 		FreeChannelMsg* freeChannelMsg = check_and_cast<FreeChannelMsg *>(msg);
@@ -215,32 +225,25 @@ void Net::handleMessage(cMessage * msg)
 		// if there are messages in the queue for this contact
 		if (sdr_.isBundleForContact(contactId))
 		{
-			// A very simple fault model: Node refrains from transmitting
-			// a bundle if this node or the next hop are in fault mode.
 			Net * neighborNet = check_and_cast<Net *>(this->getParentModule()->getParentModule()->getSubmodule("node", neighborEid - 1)->getSubmodule("net"));
 			if ((!neighborNet->onFault) && (!this->onFault))
 			{
-				// Transmit bundle normally.
+				// If local/remote node are responsive, then transmit bundle normally.
 				double transmissionDuration = transmitBundle(neighborEid, contactId);
-
 				scheduleAt(simTime() + transmissionDuration, freeChannelMsg);
 			}
 			else
 			{
-				// Local or remote node in fault mode. Wait meanTTR/2 time (?) to retry transmission.
+				// If local/remote node unresponsive, then retry transmission later.
 				scheduleAt(simTime() + meanTTR / 2, freeChannelMsg);
 				effectiveFailureTime += meanTTR / 2;
 				netEffectiveFailureTime.record(effectiveFailureTime);
 			}
 		}
-		// if there aren't messages for this contact, delete freeChannelMsg to stop trying to send bundles through this contact
+		// if there are no messages in the queue for this contact
 		else
 		{
-			// TODO: this needs to be changed, if new bundles are sent
-			// from the App or received, they will not be transmitted after this.
-			// This is critical for long contacts (ground contacts)
-			// Maybe something more intelligent is to wake-up the freeChannelMsg
-			// when new bundles arrives instead of polling like this.
+			// Retry retransmission later // TODO: this needs to be changed.
 			scheduleAt(simTime() + meanTTR / 2, freeChannelMsg);
 			//freeChannelMsgs_[freeChannelMsg->getContactId()] = nullptr;
 			//delete freeChannelMsg;
@@ -291,9 +294,7 @@ double Net::transmitBundle(int neighborEid, int contactId)
 	netTxBundles.record(simTime());
 
 	if (saveBundleMap_)
-	{
 		bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << transmissionDuration << endl;
-	}
 
 	sdr_.popNextBundleForContact(contactId);
 

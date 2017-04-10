@@ -4,8 +4,6 @@ simple Mac
 {
     parameters:
         @display("i=block/wtx");
-        
-        int dataRate = default(1024); 
                       
     gates:
         inout gateToNet;
