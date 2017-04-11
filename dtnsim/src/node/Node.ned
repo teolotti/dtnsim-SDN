@@ -1,5 +1,6 @@
 package dtnsim.node;
 
+import dtnsim.node.fault.Fault;
 import dtnsim.node.graphics.Graphics;
 import dtnsim.node.app.App;
 import dtnsim.node.net.Net;
@@ -10,15 +11,7 @@ module Node
     parameters:
         @display("i=device/satellite");
         string icon = default("satellite");
-        bool enableFaults = default(false);
-
-        int faultSeed = default(0);
-        double meanTTF = default(0); // If 0 no faults enabled 
-        double meanTTR = default(0); // If 0 no faults enabled
-
-    gates:
-
-
+       
     submodules:
         app: App {
             parameters:
@@ -35,6 +28,10 @@ module Node
         graphics: Graphics {
             parameters:
                 @display("p=150,50");
+        }
+        fault: Fault {
+            parameters:
+                @display("p=150,120");
         }
 
     connections:

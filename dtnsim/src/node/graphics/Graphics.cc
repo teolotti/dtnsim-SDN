@@ -2,12 +2,13 @@
 
 Define_Module (Graphics);
 
+int marginX = 160;
+int marginY = 40;
+
 void Graphics::initialize()
 {
 	// Store this node eid
 	this->eid_ = this->getParentModule()->getIndex() + 1;
-	// Store total neighbors
-	this->neighbors_ = this->getParentModule()->getVectorSize();
 
 	// Store a pointer to local node module
 	nodeModule = this->getParentModule();
@@ -27,13 +28,13 @@ void Graphics::initialize()
 		// Arrange graphical stuff: circular position
 		posRadius = nodeModule->getVectorSize() * 250 / (2 * (3.1415));
 		posAngle = 2 * (3.1415) / ((float) nodeModule->getVectorSize());
-		posX = 160 + posRadius * cos((eid_ - 1) * posAngle) + posRadius;
-		posY = 40 + posRadius * sin((eid_ - 1) * posAngle) + posRadius;
+		posX = marginX + posRadius * cos((eid_ - 1) * posAngle) + posRadius;
+		posY = marginY + posRadius * sin((eid_ - 1) * posAngle) + posRadius;
 		dispStr.setTagArg("p", 0, posX);
 		dispStr.setTagArg("p", 1, posY);
 
-		nodeModule->getParentModule()->getDisplayString().setTagArg("bgb", 0, 2 * 160 + 2 * posRadius);
-		nodeModule->getParentModule()->getDisplayString().setTagArg("bgb", 1, 2 * 80 + 2 * posRadius);
+		nodeModule->getParentModule()->getDisplayString().setTagArg("bgb", 0, 2 * marginX + 2 * posRadius);
+		nodeModule->getParentModule()->getDisplayString().setTagArg("bgb", 1, 4 * marginY + 2 * posRadius);
 
 		//networkCanvas->setTagArg();
 	}
@@ -42,7 +43,7 @@ void Graphics::initialize()
 void Graphics::setFaultOn()
 {
 	// Visualize fault start
-	if (hasGUI())
+	if (hasGUI() && this->par("enable"))
 	{
 		cDisplayString& dispStr = nodeModule->getDisplayString();
 		string faultColor = "red";
@@ -54,7 +55,7 @@ void Graphics::setFaultOn()
 
 void Graphics::setFaultOff()
 {
-	if (hasGUI())
+	if (hasGUI() && this->par("enable"))
 	{
 		cDisplayString& dispStr = nodeModule->getDisplayString();
 		dispStr.setTagArg("i", 1, "");
@@ -64,13 +65,15 @@ void Graphics::setFaultOff()
 
 void Graphics::setContactOn(ContactMsg* contactMsg)
 {
-	if (hasGUI())
+	if (hasGUI() && this->par("enable"))
 	{
 		string lineName = "line";
 		lineName.append(to_string(contactMsg->getId()));
 		cLineFigure *line = new cLineFigure(lineName.c_str());
 		line->setStart(cFigure::Point(posX, posY));
-		line->setEnd(cFigure::Point(posRadius * cos((contactMsg->getDestinationEid() - 1) * posAngle) + posRadius, posRadius * sin((contactMsg->getDestinationEid() - 1) * posAngle) + posRadius));
+		float endPosX = marginX + posRadius * cos((contactMsg->getDestinationEid() - 1) * posAngle) + posRadius;
+		float endPosY = marginY + posRadius * sin((contactMsg->getDestinationEid() - 1) * posAngle) + posRadius;
+		line->setEnd(cFigure::Point(endPosX, endPosY));
 		line->setLineWidth(2);
 		line->setEndArrowhead(cFigure::ARROW_BARBED);
 		lines.push_back(line);
@@ -80,7 +83,7 @@ void Graphics::setContactOn(ContactMsg* contactMsg)
 
 void Graphics::setContactOff(ContactMsg* contactMsg)
 {
-	if (hasGUI())
+	if (hasGUI() && this->par("enable"))
 	{
 		string lineName = "line";
 		lineName.append(to_string(contactMsg->getId()));
@@ -91,11 +94,10 @@ void Graphics::setContactOff(ContactMsg* contactMsg)
 void Graphics::finish()
 {
 	// Remove and delete visualization lines
-	cCanvas *canvas = getParentModule()->getParentModule()->getCanvas();
 	for (vector<cLineFigure *>::iterator it = lines.begin(); it != lines.end(); ++it)
 	{
-		if (canvas->findFigure((*it)) != -1)
-			canvas->removeFigure((*it));
+		if (networkCanvas->findFigure((*it)) != -1)
+			networkCanvas->removeFigure((*it));
 		delete (*it);
 	}
 }

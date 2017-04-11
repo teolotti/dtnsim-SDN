@@ -46,6 +46,7 @@ INCLUDE_PATH = \
     -Iion/node4 \
     -Inode \
     -Inode/app \
+    -Inode/fault \
     -Inode/graphics \
     -Inode/mac \
     -Inode/net \
@@ -126,6 +127,7 @@ OBJS = \
     $O/ion/ici/sdr/sdrmgt.o \
     $O/ion/ici/utils/ionadmin.o \
     $O/node/app/App.o \
+    $O/node/fault/Fault.o \
     $O/node/graphics/Graphics.o \
     $O/node/mac/Mac.o \
     $O/node/net/SdrModel.o \
@@ -254,6 +256,7 @@ clean:
 	$(Q)-rm -f ion/node4/*_m.cc ion/node4/*_m.h ion/node4/*_sm.cc ion/node4/*_sm.h
 	$(Q)-rm -f node/*_m.cc node/*_m.h node/*_sm.cc node/*_sm.h
 	$(Q)-rm -f node/app/*_m.cc node/app/*_m.h node/app/*_sm.cc node/app/*_sm.h
+	$(Q)-rm -f node/fault/*_m.cc node/fault/*_m.h node/fault/*_sm.cc node/fault/*_sm.h
 	$(Q)-rm -f node/graphics/*_m.cc node/graphics/*_m.h node/graphics/*_sm.cc node/graphics/*_sm.h
 	$(Q)-rm -f node/mac/*_m.cc node/mac/*_m.h node/mac/*_sm.cc node/mac/*_sm.h
 	$(Q)-rm -f node/net/*_m.cc node/net/*_m.h node/net/*_sm.cc node/net/*_sm.h
@@ -265,7 +268,7 @@ cleanall: clean
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc ion/node1/*.cc ion/node2/*.cc ion/node3/*.cc ion/node4/*.cc node/*.cc node/app/*.cc node/graphics/*.cc node/mac/*.cc node/net/*.cc node/net/routing/*.cc results/*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc ion/node1/*.cc ion/node2/*.cc ion/node3/*.cc ion/node4/*.cc node/*.cc node/app/*.cc node/fault/*.cc node/graphics/*.cc node/mac/*.cc node/net/*.cc node/net/routing/*.cc results/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/dtnsim_m.o: dtnsim_m.cc \
@@ -1104,6 +1107,44 @@ $O/ion/ici/utils/ionadmin.o: ion/ici/utils/ionadmin.cc \
 $O/node/app/App.o: node/app/App.cc \
 	dtnsim_m.h \
 	node/app/App.h
+$O/node/fault/Fault.o: node/fault/Fault.cc \
+	dtnsim_m.h \
+	ion/Ion.h \
+	ion/bp/include/bp.h \
+	ion/bp/include/bpP.h \
+	ion/bp/include/bpadmin.h \
+	ion/bp/include/cgr.h \
+	ion/bp/include/crypto.h \
+	ion/config.h \
+	ion/ici/include/csi.h \
+	ion/ici/include/ion.h \
+	ion/ici/include/ionadmin.h \
+	ion/ici/include/ionsec.h \
+	ion/ici/include/lyst.h \
+	ion/ici/include/memmgr.h \
+	ion/ici/include/platform.h \
+	ion/ici/include/psm.h \
+	ion/ici/include/rfx.h \
+	ion/ici/include/sdr.h \
+	ion/ici/include/sdrlist.h \
+	ion/ici/include/sdrmgt.h \
+	ion/ici/include/sdrstring.h \
+	ion/ici/include/sdrxn.h \
+	ion/ici/include/smlist.h \
+	ion/ici/include/smrbt.h \
+	ion/ici/include/zco.h \
+	node/fault/Fault.h \
+	node/graphics/Graphics.h \
+	node/net/Contact.h \
+	node/net/ContactPlan.h \
+	node/net/Net.h \
+	node/net/SdrModel.h \
+	node/net/SdrStatus.h \
+	node/net/routing/Routing.h \
+	node/net/routing/RoutingCgrIon350.h \
+	node/net/routing/RoutingCgrModel350.h \
+	node/net/routing/RoutingCgrModelYen.h \
+	node/net/routing/RoutingDirect.h
 $O/node/graphics/Graphics.o: node/graphics/Graphics.cc \
 	dtnsim_m.h \
 	node/graphics/Graphics.h

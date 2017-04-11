@@ -24,14 +24,10 @@ public:
 
 protected:
 	virtual void initialize();
-
 	virtual void finish();
 
 	// Local endpoint id
 	int eid_;
-
-	// Number of neighbors
-	int neighbors_;
 
 	// Pointer to parent canvas
 	cCanvas *networkCanvas;

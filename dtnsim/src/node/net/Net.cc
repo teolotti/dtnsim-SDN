@@ -13,14 +13,17 @@ void Net::initialize(int stage)
 {
 	if (stage == 1)
 	{
+		// Store this node eid
 		this->eid_ = this->getParentModule()->getIndex() + 1;
-		this->onFault = false;
-		this->meanTTR = 60 * 5; // to retry if neigbor fails, and to poll new bundles in queue
-		this->saveBundleMap_ = par("saveBundleMap");
-		this->generateOutputGraph_ = par("generateOutputGraph");
 
 		// Get a pointer to graphics module
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
+
+		// Init parameters
+		this->onFault = false;
+		this->pollInterval = 30 * 5; // to retry if neigbor fails, and to poll new bundles in queue
+		this->saveBundleMap_ = par("saveBundleMap");
+		this->generateOutputGraph_ = par("generateOutputGraph");
 
 		if (saveBundleMap_)
 		{
@@ -67,15 +70,6 @@ void Net::initialize(int stage)
 			routing = new RoutingCgrIon350(eid_, &sdr_, &contactPlan_, nodesNumber);
 		}
 
-		// Initialize faults
-		if (this->getParentModule()->par("enableFaults").boolValue() == true)
-		{
-			meanTTF = this->getParentModule()->par("meanTTF").doubleValue();
-			meanTTR = this->getParentModule()->par("meanTTR").doubleValue();
-			cMessage *faultMsg = new ContactMsg("fault", FAULT_START_TIMER);
-			scheduleAt(exponential(meanTTF), faultMsg);
-		}
-
 		// Initialize stats
 		netTxBundles.setName("netTxBundle");
 		netRxBundles.setName("netRxBundle");
@@ -99,29 +93,6 @@ void Net::handleMessage(cMessage * msg)
 	{
 		BundlePkt* bundle = check_and_cast<BundlePkt *>(msg);
 		dispatchBundle(bundle);
-	}
-	///////////////////////////////////////////
-	// Fault Start and End Timers:
-	///////////////////////////////////////////
-	else if (msg->getKind() == FAULT_START_TIMER)
-	{
-		// Enable dault mode
-		graphicsModule->setFaultOn();
-		this->onFault = true;
-
-		// Schedule fault recovery
-		msg->setKind(FAULT_END_TIMER);
-		scheduleAt(simTime() + exponential(meanTTR), msg);
-	}
-	else if (msg->getKind() == FAULT_END_TIMER)
-	{
-		// Disable dault mode
-		graphicsModule->setFaultOff();
-		this->onFault = false;
-
-		// Schedule next fault
-		msg->setKind(FAULT_START_TIMER);
-		scheduleAt(simTime() + exponential(meanTTF), msg);
 	}
 	///////////////////////////////////////////
 	// Contact Start and End
@@ -195,8 +166,8 @@ void Net::handleMessage(cMessage * msg)
 			else
 			{
 				// If local/remote node unresponsive, then retry transmission later.
-				scheduleAt(simTime() + meanTTR / 2, freeChannelMsg);
-				effectiveFailureTime += meanTTR / 2;
+				scheduleAt(simTime() + pollInterval, freeChannelMsg);
+				effectiveFailureTime += pollInterval;
 				netEffectiveFailureTime.record(effectiveFailureTime);
 			}
 		}
@@ -204,7 +175,7 @@ void Net::handleMessage(cMessage * msg)
 		else
 		{
 			// Retry retransmission later // TODO: this needs to be changed.
-			scheduleAt(simTime() + meanTTR / 2, freeChannelMsg);
+			scheduleAt(simTime() + pollInterval, freeChannelMsg);
 			//freeChannelMsgs_[freeChannelMsg->getContactId()] = nullptr;
 			//delete freeChannelMsg;
 		}
@@ -260,6 +231,11 @@ double Net::transmitBundle(int neighborEid, int contactId)
 	return transmissionDuration;
 }
 
+void Net::setOnFault(bool onFault)
+{
+	this->onFault = onFault;
+}
+
 void Net::finish()
 {
 	// Delete all stored bundles
@@ -267,14 +243,10 @@ void Net::finish()
 
 	// BundleMap End
 	if (saveBundleMap_)
-	{
 		bundleMap_.close();
-	}
 
 	if (generateOutputGraph_)
-	{
 		outputGraph_.close();
-	}
 }
 
 Net::Net()
