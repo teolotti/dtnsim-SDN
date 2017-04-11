@@ -56,12 +56,12 @@ private:
 
 	// A data structure to track the forwarding process
 	map<int, FreeChannelMsg *> freeChannelMsgs_;
-	double pollInterval;
+	double pollInterval = 30;
 
 	Routing * routing;
 	ContactPlan contactPlan_;
 	SdrModel sdr_;
-	bool onFault;
+	bool onFault = false;
 
 	// Stats
 	cOutVector netTxBundles;

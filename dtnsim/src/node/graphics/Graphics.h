@@ -29,6 +29,9 @@ protected:
 	// Local endpoint id
 	int eid_;
 
+	// Number of nodes
+	int numNodes;
+
 	// Pointer to parent canvas
 	cCanvas *networkCanvas;
 

@@ -4,7 +4,8 @@ Define_Module(App);
 
 void App::initialize()
 {
-	this->eid_ = this->getParentModule()->getIndex() + 1;
+	// Store this node eid
+	this->eid_ = this->getParentModule()->getIndex();
 
 	// Configure Traffic Generator
 	if (par("enable"))

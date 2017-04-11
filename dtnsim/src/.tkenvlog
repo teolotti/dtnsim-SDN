@@ -83,3 +83,11 @@ Tcl error: moduleinspector.cc#652: ptr0x29f0d70 not found
 "ModuleInspector:drawNextEventMarker .network.c ptr0x29f0d70 1"
 
 
+---- 20170411-11:59:03 ---------------------------------------------------------
+
+
+Tcl error: moduleinspector.cc#232: tagOrId "f2" doesn't match any items
+    while executing
+".network.c raise submodext f2"
+
+

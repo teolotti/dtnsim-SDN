@@ -8,35 +8,47 @@ int marginY = 40;
 void Graphics::initialize()
 {
 	// Store this node eid
-	this->eid_ = this->getParentModule()->getIndex() + 1;
+	eid_ = this->getParentModule()->getIndex();
 
 	// Store a pointer to local node module
 	nodeModule = this->getParentModule();
+
+	// Store number of neighbors
+	numNodes = nodeModule->getVectorSize() - 1;
 
 	// Store a pointer to network canvas
 	networkCanvas = nodeModule->getParentModule()->getCanvas();
 
 	if (hasGUI())
 	{
-		// Arrange graphical stuff: icon
+		// Set icons
 		cDisplayString& dispStr = nodeModule->getDisplayString();
 		string icon_path = "device/";
 		string icon = nodeModule->par("icon");
 		icon_path.append(icon);
 		dispStr.setTagArg("i", 0, icon_path.c_str());
 
-		// Arrange graphical stuff: circular position
-		posRadius = nodeModule->getVectorSize() * 250 / (2 * (3.1415));
-		posAngle = 2 * (3.1415) / ((float) nodeModule->getVectorSize());
+		// Set circular position
+		posRadius = numNodes * 250 / (2 * (3.1415));
+		posAngle = 2 * (3.1415) / ((float) numNodes);
 		posX = marginX + posRadius * cos((eid_ - 1) * posAngle) + posRadius;
 		posY = marginY + posRadius * sin((eid_ - 1) * posAngle) + posRadius;
 		dispStr.setTagArg("p", 0, posX);
 		dispStr.setTagArg("p", 1, posY);
 
+		// Extend background area
 		nodeModule->getParentModule()->getDisplayString().setTagArg("bgb", 0, 2 * marginX + 2 * posRadius);
 		nodeModule->getParentModule()->getDisplayString().setTagArg("bgb", 1, 4 * marginY + 2 * posRadius);
+	}
 
-		//networkCanvas->setTagArg();
+	// Place node 0 away from the network
+	if (eid_ == 0)
+	{
+		nodeModule->getDisplayString().setTagArg("p", 0, 40);
+		nodeModule->getDisplayString().setTagArg("p", 1, 100);
+		nodeModule->getDisplayString().setTagArg("b", 0, 1);
+		nodeModule->getDisplayString().setTagArg("b", 0, 1);
+		nodeModule->getDisplayString().setTagArg("i", 0, "old/ball2_vs");
 	}
 }
 

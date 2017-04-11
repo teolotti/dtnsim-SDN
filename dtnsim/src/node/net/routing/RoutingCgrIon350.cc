@@ -13,6 +13,11 @@ static int getDirective(uvast nodeNbr, Object plans, Bundle *bundle, FwdDirectiv
 
 RoutingCgrIon350::RoutingCgrIon350(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodesNumber)
 {
+	// Do nothing for eid=0 (unnused in ion)
+	if(eid==0){
+		return;
+	}
+
 	eid_ = eid;
 	sdr_ = sdr;
 	contactPlan_ = contactPlan;

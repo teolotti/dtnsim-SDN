@@ -14,25 +14,14 @@ void Net::initialize(int stage)
 	if (stage == 1)
 	{
 		// Store this node eid
-		this->eid_ = this->getParentModule()->getIndex() + 1;
+		this->eid_ = this->getParentModule()->getIndex();
 
 		// Get a pointer to graphics module
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
 
 		// Init parameters
-		this->onFault = false;
-		this->pollInterval = 30 * 5; // to retry if neigbor fails, and to poll new bundles in queue
 		this->saveBundleMap_ = par("saveBundleMap");
 		this->generateOutputGraph_ = par("generateOutputGraph");
-
-		if (saveBundleMap_)
-		{
-			// BundleMap Init
-			char intStr[30];
-			sprintf(intStr, "results/BundleMap_Node%02d.csv", eid_);
-			bundleMap_.open(intStr);
-			bundleMap_ << "SimTime" << "," << "SRC" << "," << "DST" << "," << "TSRC" << "," << "TDST" << "," << "BitLenght" << "," << "DurationSec" << endl;
-		}
 
 		// Initialize contact plan
 		contactPlan_.parseContactPlanFile(par("contactsFile"));
@@ -60,14 +49,19 @@ void Net::initialize(int stage)
 		string routeString = par("routing");
 		if (routeString.compare("direct") == 0)
 			routing = new RoutingDirect(eid_, &sdr_, &contactPlan_);
-		if (routeString.compare("cgrModel") == 0)
+		else if (routeString.compare("cgrModel350") == 0)
 			routing = new RoutingCgrModel350(eid_, &sdr_, &contactPlan_);
-		if (routeString.compare("cgrModelYen") == 0)
+		else if (routeString.compare("cgrModelYen") == 0)
 			routing = new RoutingCgrModelYen(eid_, &sdr_, &contactPlan_);
-		if (routeString.compare("cgrIon350") == 0)
+		else if (routeString.compare("cgrIon350") == 0)
 		{
 			int nodesNumber = this->getParentModule()->getParentModule()->par("nodesNumber");
 			routing = new RoutingCgrIon350(eid_, &sdr_, &contactPlan_, nodesNumber);
+		}
+		else
+		{
+			cout << "dtnsim error: unknown routing type: " << routeString << endl;
+			exit(1);
 		}
 
 		// Initialize stats
@@ -81,6 +75,15 @@ void Net::initialize(int stage)
 		sdrBundlesInSdr.setName("sdrBundlesInSdr");
 		sdrBundleInLimbo.setName("sdrBundleInLimbo");
 		sdr_.setStatsHandle(&sdrBundlesInSdr, &sdrBundleInLimbo);
+
+		// Initialize BundleMap
+		if (saveBundleMap_)
+		{
+			char intStr[30];
+			sprintf(intStr, "results/BundleMap_Node%02d.csv", eid_);
+			bundleMap_.open(intStr);
+			bundleMap_ << "SimTime" << "," << "SRC" << "," << "DST" << "," << "TSRC" << "," << "TDST" << "," << "BitLenght" << "," << "DurationSec" << endl;
+		}
 	}
 }
 

@@ -10,7 +10,7 @@ network dtnsim
         @display("bgb=503,408");
         
     submodules:
-        node[nodesNumber]: Node {
+        node[nodesNumber+1]: Node {
             parameters:
                 @display("p=80,50");
         }
