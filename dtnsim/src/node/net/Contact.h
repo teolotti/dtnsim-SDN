@@ -36,8 +36,8 @@ private:
 	double end_;
 	int sourceEid_;
 	int destinationEid_;
-	double dataRate_;
-	double residualCapacity_;
+	double dataRate_; // In Bytes per seconds
+	double residualCapacity_; // In Bytes
 	float confidence_;
 };
 
