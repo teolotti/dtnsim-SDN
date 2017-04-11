@@ -1106,6 +1106,7 @@ $O/ion/ici/utils/ionadmin.o: ion/ici/utils/ionadmin.cc \
 	node/net/SdrStatus.h
 $O/node/app/App.o: node/app/App.cc \
 	dtnsim_m.h \
+	node/MsgTypes.h \
 	node/app/App.h
 $O/node/fault/Fault.o: node/fault/Fault.cc \
 	dtnsim_m.h \
@@ -1133,6 +1134,7 @@ $O/node/fault/Fault.o: node/fault/Fault.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
+	node/MsgTypes.h \
 	node/fault/Fault.h \
 	node/graphics/Graphics.h \
 	node/net/Contact.h \
@@ -1147,9 +1149,11 @@ $O/node/fault/Fault.o: node/fault/Fault.cc \
 	node/net/routing/RoutingDirect.h
 $O/node/graphics/Graphics.o: node/graphics/Graphics.cc \
 	dtnsim_m.h \
+	node/MsgTypes.h \
 	node/graphics/Graphics.h
 $O/node/mac/Mac.o: node/mac/Mac.cc \
 	dtnsim_m.h \
+	node/MsgTypes.h \
 	node/app/App.h \
 	node/mac/Mac.h
 $O/node/net/Contact.o: node/net/Contact.cc \
@@ -1183,6 +1187,7 @@ $O/node/net/Net.o: node/net/Net.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
+	node/MsgTypes.h \
 	node/app/App.h \
 	node/graphics/Graphics.h \
 	node/net/Contact.h \

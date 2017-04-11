@@ -31,7 +31,9 @@ void Net::initialize(int stage)
 		for (vector<Contact>::iterator it = localContacts.begin(); it != localContacts.end(); ++it)
 		{
 			ContactMsg *contactMsg = new ContactMsg("contactStart", CONTACT_START_TIMER);
-			contactMsg->setSchedulingPriority(4);
+
+			// Smaller numeric value are executed first
+			contactMsg->setSchedulingPriority(CONTACT_START_TIMER);
 			contactMsg->setId((*it).getId());
 			contactMsg->setStart((*it).getStart());
 			contactMsg->setEnd((*it).getEnd());
@@ -40,6 +42,7 @@ void Net::initialize(int stage)
 			contactMsg->setDestinationEid((*it).getDestinationEid());
 			contactMsg->setDataRate((*it).getDataRate());
 			scheduleAt((*it).getStart(), contactMsg);
+			EV << "node " << eid_ << ": " << "a contact +" << (*it).getStart() << " +" << (*it).getEnd() << " " << (*it).getSourceEid() << " " << (*it).getDestinationEid() << " " << (*it).getDataRate() << endl;
 		}
 
 		// Initialize routing
@@ -70,8 +73,6 @@ void Net::initialize(int stage)
 		netRxHopCount.setName("netRxHopCount");
 		netReRoutedBundles.setName("netReRoutedBundles");
 		reRoutedBundles = 0;
-		netEffectiveFailureTime.setName("netEffectiveFailureTime");
-		effectiveFailureTime = 0;
 		sdrBundlesInSdr.setName("sdrBundlesInSdr");
 		sdrBundleInLimbo.setName("sdrBundleInLimbo");
 		sdr_.setStatsHandle(&sdrBundlesInSdr, &sdrBundleInLimbo);
@@ -97,6 +98,7 @@ void Net::handleMessage(cMessage * msg)
 		BundlePkt* bundle = check_and_cast<BundlePkt *>(msg);
 		dispatchBundle(bundle);
 	}
+
 	///////////////////////////////////////////
 	// Contact Start and End
 	///////////////////////////////////////////
@@ -106,19 +108,19 @@ void Net::handleMessage(cMessage * msg)
 		ContactMsg* contactMsg = check_and_cast<ContactMsg *>(msg);
 		contactMsg->setKind(CONTACT_END_TIMER);
 		contactMsg->setName("ContactEnd");
-		contactMsg->setSchedulingPriority(3);
+		contactMsg->setSchedulingPriority(CONTACT_END_TIMER);
 		scheduleAt(simTime() + contactMsg->getDuration(), contactMsg);
 
 		// Visualize contact line on
 		graphicsModule->setContactOn(contactMsg);
 
 		// Schedule start of transmission
-		FreeChannelMsg* freeChannelMsg = new FreeChannelMsg("FreeChannelMsg", FREE_CHANNEL);
-		freeChannelMsg->setSchedulingPriority(1);
-		freeChannelMsg->setNeighborEid(contactMsg->getDestinationEid());
-		freeChannelMsg->setContactId(contactMsg->getId());
-		freeChannelMsgs_[contactMsg->getId()] = freeChannelMsg;
-		scheduleAt(simTime(), freeChannelMsg);
+		ForwardingMsg* forwardingMsg = new ForwardingMsg("forwardingMsg", FORWARDING_MSG);
+		forwardingMsg->setSchedulingPriority(FORWARDING_MSG);
+		forwardingMsg->setNeighborEid(contactMsg->getDestinationEid());
+		forwardingMsg->setContactId(contactMsg->getId());
+		forwardingMsgs_[contactMsg->getId()] = forwardingMsg;
+		scheduleAt(simTime(), forwardingMsg);
 	}
 	else if (msg->getKind() == CONTACT_END_TIMER)
 	{
@@ -141,20 +143,22 @@ void Net::handleMessage(cMessage * msg)
 		graphicsModule->setContactOff(contactMsg);
 
 		// Delete contactMsg
-		cancelAndDelete(freeChannelMsgs_[contactMsg->getId()]);
+		cancelAndDelete(forwardingMsgs_[contactMsg->getId()]);
+		forwardingMsgs_.erase(contactMsg->getId());
 		delete contactMsg;
 	}
+
 	///////////////////////////////////////////
 	// Forwarding Stage
 	///////////////////////////////////////////
-	else if (msg->getKind() == FREE_CHANNEL)
+	else if (msg->getKind() == FORWARDING_MSG)
 	{
-		FreeChannelMsg* freeChannelMsg = check_and_cast<FreeChannelMsg *>(msg);
-		int neighborEid = freeChannelMsg->getNeighborEid();
-		int contactId = freeChannelMsg->getContactId();
+		ForwardingMsg* forwardingMsg = check_and_cast<ForwardingMsg *>(msg);
+		int neighborEid = forwardingMsg->getNeighborEid();
+		int contactId = forwardingMsg->getContactId();
 
 		// save freeChannelMsg to cancel event if necessary
-		freeChannelMsgs_[freeChannelMsg->getContactId()] = freeChannelMsg;
+		forwardingMsgs_[forwardingMsg->getContactId()] = forwardingMsg;
 
 		// if there are messages in the queue for this contact
 		if (sdr_.isBundleForContact(contactId))
@@ -162,85 +166,110 @@ void Net::handleMessage(cMessage * msg)
 			Net * neighborNet = check_and_cast<Net *>(this->getParentModule()->getParentModule()->getSubmodule("node", neighborEid - 1)->getSubmodule("net"));
 			if ((!neighborNet->onFault) && (!this->onFault))
 			{
-				// If local/remote node are responsive, then transmit bundle normally.
-				double transmissionDuration = transmitBundle(neighborEid, contactId);
-				scheduleAt(simTime() + transmissionDuration, freeChannelMsg);
+				// If local/remote node are responsive, then transmit bundle
+
+				// Get bundle pointer from sdr
+				BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
+
+				// Calculate datarate and Tx duration
+				double dataRate = contactPlan_.getContactById(contactId)->getDataRate();
+				double txDuration = (double) bundle->getByteLength() / dataRate;
+
+				// Set bundle parameters that are udated on each hop:
+				bundle->setSenderEid(eid_);
+				bundle->setHopCount(bundle->getHopCount() + 1);
+				bundle->setDlvConfidence(0);
+				bundle->setXmitCopiesCount(0);
+				send(bundle, "gateToMac$o");
+
+				netTxBundles.record(simTime());
+
+				if (saveBundleMap_)
+					bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
+
+				sdr_.popNextBundleForContact(contactId);
+
+				scheduleAt(simTime() + txDuration, forwardingMsg);
 			}
 			else
 			{
-				// If local/remote node unresponsive, then retry transmission later.
-				scheduleAt(simTime() + pollInterval, freeChannelMsg);
-				effectiveFailureTime += pollInterval;
-				netEffectiveFailureTime.record(effectiveFailureTime);
+				// If local/remote node unresponsive, then do nothing.
+				// fault recovery will trigger a local and remote refreshForwarding
 			}
 		}
 		// if there are no messages in the queue for this contact
 		else
 		{
-			// Retry retransmission later // TODO: this needs to be changed.
-			scheduleAt(simTime() + pollInterval, freeChannelMsg);
-			//freeChannelMsgs_[freeChannelMsg->getContactId()] = nullptr;
-			//delete freeChannelMsg;
+			// Do nothing, if new data arrives, a refreshForwarding
+			// will wake up this forwarding thread
 		}
 	}
 }
 
 void Net::dispatchBundle(BundlePkt *bundle)
 {
-	int destinationEid = bundle->getDestinationEid();
-	int ownEid = this->eid_;
-
-	// if this node is the destination, send the bundle to Application Module
-	if (ownEid == destinationEid)
+	if (this->eid_ == bundle->getDestinationEid())
 	{
+		// We are the destination, send to App
 		netRxHopCount.record(bundle->getHopCount());
 		send(bundle, "gateToApp$o");
 	}
-	// else, route and enqueue bundle
 	else
 	{
+		// Route and enqueue bundle
 		netRxBundles.record(simTime());
 		routing->routeBundle(bundle, simTime().dbl());
-		// TODO: Wakeup contacts if asleep
+
+		// Wake-up un scheduled forwarding threads
+		this->refreshForwarding();
 	}
 }
 
-double Net::transmitBundle(int neighborEid, int contactId)
+void Net::refreshForwarding()
 {
-	double transmissionDuration = 0.0;
+	// Check all on-going forwardingMsgs threads
+	// (contacts) and wake up those not scheduled.
 
-	// There is a bundle waiting for this contact.
-	BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
-
-	// Calculate datarate and Tx duration
-	// TODO: In the future, this should be driven by the Mac layer.
-	double dataRate = this->contactPlan_.getContactById(contactId)->getDataRate();
-	transmissionDuration = (double) bundle->getBitLength() / dataRate;
-
-	// Set bundle parameters that are udated on each hop:
-	bundle->setSenderEid(eid_);
-	bundle->setHopCount(bundle->getHopCount() + 1);
-	bundle->setDlvConfidence(0);
-	bundle->setXmitCopiesCount(0);
-	send(bundle, "gateToMac$o");
-
-	netTxBundles.record(simTime());
-
-	if (saveBundleMap_)
-		bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << transmissionDuration << endl;
-
-	sdr_.popNextBundleForContact(contactId);
-
-	return transmissionDuration;
+	std::map<int, ForwardingMsg *>::iterator it;
+	for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
+	{
+		ForwardingMsg * forwardingMsg = it->second;
+		if (!forwardingMsg->isScheduled())
+			scheduleAt(simTime(), forwardingMsg);
+	}
 }
 
 void Net::setOnFault(bool onFault)
 {
 	this->onFault = onFault;
+
+	// Local and remote forwarding recovery
+	if (onFault == false)
+	{
+		// Wake-up local un-scheduled forwarding threads
+		this->refreshForwarding();
+
+		// Wake-up remote un-scheduled forwarding threads
+		std::map<int, ForwardingMsg *>::iterator it;
+		for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
+		{
+			ForwardingMsg * forwardingMsg = it->second;
+			Net * remoteNet = (Net *) this->getParentModule()->getParentModule()->getSubmodule("node", forwardingMsg->getNeighborEid())->getSubmodule("net");
+			remoteNet->refreshForwarding();
+		}
+	}
 }
 
 void Net::finish()
 {
+	// Delete scheduled forwardingMsg
+	std::map<int, ForwardingMsg *>::iterator it;
+	for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
+	{
+		ForwardingMsg * forwardingMsg = it->second;
+		cancelAndDelete(forwardingMsg);
+	}
+
 	// Delete all stored bundles
 	sdr_.freeSdr(eid_);
 

@@ -21,10 +21,8 @@
 #include "Graphics.h"
 #include "Net.h"
 
+#include "MsgTypes.h"
 #include "dtnsim_m.h"
-
-#define FAULT_START_TIMER 20
-#define FAULT_END_TIMER 21
 
 using namespace omnetpp;
 
@@ -35,6 +33,9 @@ protected:
 	virtual void handleMessage(cMessage *msg);
 
 private:
+
+	int eid_;
+
 	double meanTTF, meanTTR;
 
 	// Pointer to grahics module

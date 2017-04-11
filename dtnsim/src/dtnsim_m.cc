@@ -1396,24 +1396,24 @@ void *ContactMsgDescriptor::getFieldStructValuePointer(void *object, int field, 
     }
 }
 
-Register_Class(FreeChannelMsg);
+Register_Class(ForwardingMsg);
 
-FreeChannelMsg::FreeChannelMsg(const char *name, int kind) : ::omnetpp::cMessage(name,kind)
+ForwardingMsg::ForwardingMsg(const char *name, int kind) : ::omnetpp::cMessage(name,kind)
 {
     this->neighborEid = 0;
     this->contactId = 0;
 }
 
-FreeChannelMsg::FreeChannelMsg(const FreeChannelMsg& other) : ::omnetpp::cMessage(other)
+ForwardingMsg::ForwardingMsg(const ForwardingMsg& other) : ::omnetpp::cMessage(other)
 {
     copy(other);
 }
 
-FreeChannelMsg::~FreeChannelMsg()
+ForwardingMsg::~ForwardingMsg()
 {
 }
 
-FreeChannelMsg& FreeChannelMsg::operator=(const FreeChannelMsg& other)
+ForwardingMsg& ForwardingMsg::operator=(const ForwardingMsg& other)
 {
     if (this==&other) return *this;
     ::omnetpp::cMessage::operator=(other);
@@ -1421,53 +1421,53 @@ FreeChannelMsg& FreeChannelMsg::operator=(const FreeChannelMsg& other)
     return *this;
 }
 
-void FreeChannelMsg::copy(const FreeChannelMsg& other)
+void ForwardingMsg::copy(const ForwardingMsg& other)
 {
     this->neighborEid = other.neighborEid;
     this->contactId = other.contactId;
 }
 
-void FreeChannelMsg::parsimPack(omnetpp::cCommBuffer *b) const
+void ForwardingMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cMessage::parsimPack(b);
     doParsimPacking(b,this->neighborEid);
     doParsimPacking(b,this->contactId);
 }
 
-void FreeChannelMsg::parsimUnpack(omnetpp::cCommBuffer *b)
+void ForwardingMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->neighborEid);
     doParsimUnpacking(b,this->contactId);
 }
 
-int FreeChannelMsg::getNeighborEid() const
+int ForwardingMsg::getNeighborEid() const
 {
     return this->neighborEid;
 }
 
-void FreeChannelMsg::setNeighborEid(int neighborEid)
+void ForwardingMsg::setNeighborEid(int neighborEid)
 {
     this->neighborEid = neighborEid;
 }
 
-int FreeChannelMsg::getContactId() const
+int ForwardingMsg::getContactId() const
 {
     return this->contactId;
 }
 
-void FreeChannelMsg::setContactId(int contactId)
+void ForwardingMsg::setContactId(int contactId)
 {
     this->contactId = contactId;
 }
 
-class FreeChannelMsgDescriptor : public omnetpp::cClassDescriptor
+class ForwardingMsgDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    FreeChannelMsgDescriptor();
-    virtual ~FreeChannelMsgDescriptor();
+    ForwardingMsgDescriptor();
+    virtual ~ForwardingMsgDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -1488,24 +1488,24 @@ class FreeChannelMsgDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(FreeChannelMsgDescriptor);
+Register_ClassDescriptor(ForwardingMsgDescriptor);
 
-FreeChannelMsgDescriptor::FreeChannelMsgDescriptor() : omnetpp::cClassDescriptor("FreeChannelMsg", "omnetpp::cMessage")
+ForwardingMsgDescriptor::ForwardingMsgDescriptor() : omnetpp::cClassDescriptor("ForwardingMsg", "omnetpp::cMessage")
 {
     propertynames = nullptr;
 }
 
-FreeChannelMsgDescriptor::~FreeChannelMsgDescriptor()
+ForwardingMsgDescriptor::~ForwardingMsgDescriptor()
 {
     delete[] propertynames;
 }
 
-bool FreeChannelMsgDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool ForwardingMsgDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<FreeChannelMsg *>(obj)!=nullptr;
+    return dynamic_cast<ForwardingMsg *>(obj)!=nullptr;
 }
 
-const char **FreeChannelMsgDescriptor::getPropertyNames() const
+const char **ForwardingMsgDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -1516,19 +1516,19 @@ const char **FreeChannelMsgDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *FreeChannelMsgDescriptor::getProperty(const char *propertyname) const
+const char *ForwardingMsgDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int FreeChannelMsgDescriptor::getFieldCount() const
+int ForwardingMsgDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 2+basedesc->getFieldCount() : 2;
 }
 
-unsigned int FreeChannelMsgDescriptor::getFieldTypeFlags(int field) const
+unsigned int ForwardingMsgDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1543,7 +1543,7 @@ unsigned int FreeChannelMsgDescriptor::getFieldTypeFlags(int field) const
     return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
 }
 
-const char *FreeChannelMsgDescriptor::getFieldName(int field) const
+const char *ForwardingMsgDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1558,7 +1558,7 @@ const char *FreeChannelMsgDescriptor::getFieldName(int field) const
     return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
 
-int FreeChannelMsgDescriptor::findField(const char *fieldName) const
+int ForwardingMsgDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
@@ -1567,7 +1567,7 @@ int FreeChannelMsgDescriptor::findField(const char *fieldName) const
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *FreeChannelMsgDescriptor::getFieldTypeString(int field) const
+const char *ForwardingMsgDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1582,7 +1582,7 @@ const char *FreeChannelMsgDescriptor::getFieldTypeString(int field) const
     return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **FreeChannelMsgDescriptor::getFieldPropertyNames(int field) const
+const char **ForwardingMsgDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1595,7 +1595,7 @@ const char **FreeChannelMsgDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *FreeChannelMsgDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *ForwardingMsgDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1608,7 +1608,7 @@ const char *FreeChannelMsgDescriptor::getFieldProperty(int field, const char *pr
     }
 }
 
-int FreeChannelMsgDescriptor::getFieldArraySize(void *object, int field) const
+int ForwardingMsgDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1616,13 +1616,13 @@ int FreeChannelMsgDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    FreeChannelMsg *pp = (FreeChannelMsg *)object; (void)pp;
+    ForwardingMsg *pp = (ForwardingMsg *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-std::string FreeChannelMsgDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string ForwardingMsgDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1630,7 +1630,7 @@ std::string FreeChannelMsgDescriptor::getFieldValueAsString(void *object, int fi
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    FreeChannelMsg *pp = (FreeChannelMsg *)object; (void)pp;
+    ForwardingMsg *pp = (ForwardingMsg *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getNeighborEid());
         case 1: return long2string(pp->getContactId());
@@ -1638,7 +1638,7 @@ std::string FreeChannelMsgDescriptor::getFieldValueAsString(void *object, int fi
     }
 }
 
-bool FreeChannelMsgDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool ForwardingMsgDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1646,7 +1646,7 @@ bool FreeChannelMsgDescriptor::setFieldValueAsString(void *object, int field, in
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    FreeChannelMsg *pp = (FreeChannelMsg *)object; (void)pp;
+    ForwardingMsg *pp = (ForwardingMsg *)object; (void)pp;
     switch (field) {
         case 0: pp->setNeighborEid(string2long(value)); return true;
         case 1: pp->setContactId(string2long(value)); return true;
@@ -1654,7 +1654,7 @@ bool FreeChannelMsgDescriptor::setFieldValueAsString(void *object, int field, in
     }
 }
 
-const char *FreeChannelMsgDescriptor::getFieldStructName(int field) const
+const char *ForwardingMsgDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1667,7 +1667,7 @@ const char *FreeChannelMsgDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *FreeChannelMsgDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *ForwardingMsgDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1675,7 +1675,7 @@ void *FreeChannelMsgDescriptor::getFieldStructValuePointer(void *object, int fie
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    FreeChannelMsg *pp = (FreeChannelMsg *)object; (void)pp;
+    ForwardingMsg *pp = (ForwardingMsg *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }

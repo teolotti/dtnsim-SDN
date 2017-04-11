@@ -229,32 +229,32 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ContactMsg& obj) {obj.par
 /**
  * Class generated from <tt>dtnsim.msg:45</tt> by nedtool.
  * <pre>
- * message FreeChannelMsg
+ * message ForwardingMsg
  * {
  *     int neighborEid;
  *     int contactId;
  * }
  * </pre>
  */
-class FreeChannelMsg : public ::omnetpp::cMessage
+class ForwardingMsg : public ::omnetpp::cMessage
 {
   protected:
     int neighborEid;
     int contactId;
 
   private:
-    void copy(const FreeChannelMsg& other);
+    void copy(const ForwardingMsg& other);
 
   protected:
     // protected and unimplemented operator==(), to prevent accidental usage
-    bool operator==(const FreeChannelMsg&);
+    bool operator==(const ForwardingMsg&);
 
   public:
-    FreeChannelMsg(const char *name=nullptr, int kind=0);
-    FreeChannelMsg(const FreeChannelMsg& other);
-    virtual ~FreeChannelMsg();
-    FreeChannelMsg& operator=(const FreeChannelMsg& other);
-    virtual FreeChannelMsg *dup() const {return new FreeChannelMsg(*this);}
+    ForwardingMsg(const char *name=nullptr, int kind=0);
+    ForwardingMsg(const ForwardingMsg& other);
+    virtual ~ForwardingMsg();
+    ForwardingMsg& operator=(const ForwardingMsg& other);
+    virtual ForwardingMsg *dup() const {return new ForwardingMsg(*this);}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b);
 
@@ -265,8 +265,8 @@ class FreeChannelMsg : public ::omnetpp::cMessage
     virtual void setContactId(int contactId);
 };
 
-inline void doParsimPacking(omnetpp::cCommBuffer *b, const FreeChannelMsg& obj) {obj.parsimPack(b);}
-inline void doParsimUnpacking(omnetpp::cCommBuffer *b, FreeChannelMsg& obj) {obj.parsimUnpack(b);}
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const ForwardingMsg& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ForwardingMsg& obj) {obj.parsimUnpack(b);}
 
 
 #endif // ifndef __DTNSIM_M_H

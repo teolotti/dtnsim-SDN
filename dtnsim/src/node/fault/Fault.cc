@@ -4,6 +4,9 @@ Define_Module (Fault);
 
 void Fault::initialize()
 {
+	// Store this node eid
+	this->eid_ = this->getParentModule()->getIndex();
+
 	// Get a pointer to graphics module
 	graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
 
@@ -11,7 +14,7 @@ void Fault::initialize()
 	netModule = (Net *) this->getParentModule()->getSubmodule("net");
 
 	// Initialize faults
-	if (this->par("enable").boolValue() == true)
+	if ((this->par("enable").boolValue() == true) && eid_ != 0)
 	{
 		meanTTF = this->par("meanTTF").doubleValue();
 		meanTTR = this->par("meanTTR").doubleValue();
@@ -35,7 +38,7 @@ void Fault::handleMessage(cMessage *msg)
 	}
 	else if (msg->getKind() == FAULT_END_TIMER)
 	{
-		// Disable dault mode
+		// Disable fault mode
 		graphicsModule->setFaultOff();
 		netModule->setOnFault(false);
 

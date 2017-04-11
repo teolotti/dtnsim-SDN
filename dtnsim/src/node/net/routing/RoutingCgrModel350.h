@@ -18,7 +18,7 @@ public:
 	virtual ~RoutingCgrModel350();
 	virtual void routeBundle(BundlePkt *bundle, double simTime);
 private:
-	bool printDebug = true;
+	bool printDebug = false;
 	int eid_;
 	SdrModel * sdr_;
 	ContactPlan * contactPlan_;

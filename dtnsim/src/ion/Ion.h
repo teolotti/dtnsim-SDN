@@ -19,7 +19,6 @@ public:
 	virtual void handleMessage(cMessage *msg);
 	virtual void finish();
 
-
 private:
 
 	// specify if there are ion nodes in the simulation

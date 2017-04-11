@@ -47,7 +47,7 @@ void App::initialize()
 		for (unsigned int i = 0; i < bundlesNumberVec_.size(); i++)
 		{
 			TrafficGeneratorMsg * trafficGenMsg = new TrafficGeneratorMsg("trafGenMsg");
-			trafficGenMsg->setSchedulingPriority(0);
+			trafficGenMsg->setSchedulingPriority(TRAFFIC_TIMER);
 			trafficGenMsg->setKind(TRAFFIC_TIMER);
 			trafficGenMsg->setBundlesNumber(bundlesNumberVec_.at(i));
 			trafficGenMsg->setDestinationEid(destinationEidVec_.at(i));
@@ -67,8 +67,8 @@ void App::handleMessage(cMessage *msg)
 	if (msg->getKind() == TRAFFIC_TIMER)
 	{
 		TrafficGeneratorMsg* trafficGenMsg = check_and_cast<TrafficGeneratorMsg *>(msg);
-		BundlePkt* bundle = new BundlePkt("123", BUNDLE);
-		bundle->setSchedulingPriority(0);
+		BundlePkt* bundle = new BundlePkt("bundle", BUNDLE);
+		bundle->setSchedulingPriority(BUNDLE);
 
 		char bundleName[10];
 		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, trafficGenMsg->getDestinationEid(),(int)bundle->getId());

@@ -9,26 +9,24 @@
 #include <map>
 #include <queue>
 
+#include "MsgTypes.h"
 #include "dtnsim_m.h"
 
 #include "ContactPlan.h"
 #include "Graphics.h"
 #include "SdrModel.h"
+
 #include "Routing.h"
 #include "RoutingDirect.h"
 #include "RoutingCgrIon350.h"
 #include "RoutingCgrModelYen.h"
 #include "Ion.h"
-#include "routing/RoutingCgrModel350.h"
+#include "RoutingCgrModel350.h"
 
 using namespace omnetpp;
 using namespace std;
 
-#define TRAFFIC_TIMER 1
-#define CONTACT_START_TIMER 2
-#define CONTACT_END_TIMER 3
-#define FREE_CHANNEL 4
-#define BUNDLE 10
+
 
 class Net: public cSimpleModule
 {
@@ -37,6 +35,7 @@ public:
 	virtual ~Net();
 
 	virtual void setOnFault(bool onFault);
+	virtual void refreshForwarding();
 
 protected:
 	virtual void initialize(int stage);
@@ -45,23 +44,22 @@ protected:
 	virtual void finish();
 
 	virtual void dispatchBundle(BundlePkt *bundle);
-	virtual double transmitBundle(int neighborEid, int contactId);
 
 private:
 
 	int eid_;
+	bool onFault = false;
 
 	// Pointer to grahics module
 	Graphics *graphicsModule;
 
-	// A data structure to track the forwarding process
-	map<int, FreeChannelMsg *> freeChannelMsgs_;
-	double pollInterval = 30;
+	// Forwarding threads
+	map<int, ForwardingMsg *> forwardingMsgs_;
 
+	// Routing and storage
 	Routing * routing;
 	ContactPlan contactPlan_;
 	SdrModel sdr_;
-	bool onFault = false;
 
 	// Stats
 	cOutVector netTxBundles;
@@ -69,8 +67,6 @@ private:
 	cOutVector netRxHopCount;
 	cOutVector netReRoutedBundles;
 	unsigned int reRoutedBundles;
-	cOutVector netEffectiveFailureTime;
-	double effectiveFailureTime;
 	cOutVector sdrBundlesInSdr;
 	cOutVector sdrBundleInLimbo;
 

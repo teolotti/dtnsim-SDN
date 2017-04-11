@@ -56,13 +56,9 @@ void ContactPlan::parseContactPlanFile(string fileName)
 	this->finishContactPlan();
 }
 
-// todo fix in simulator: ion considers data rate in contact plan in bytes /second units
-// now the simulator considers bits / second
 void ContactPlan::addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
 {
-	// todo check older contact plans
-	// data rate is in bytes / second
-	Contact contact(id, start, end, sourceEid, destinationEid, dataRate * 8, confidence);
+	Contact contact(id, start, end, sourceEid, destinationEid, dataRate, confidence);
 
 	contacts_.push_back(contact);
 

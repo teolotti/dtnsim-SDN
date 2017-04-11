@@ -6,12 +6,12 @@
 #include <omnetpp.h>
 #include <fstream>
 #include <iomanip>
+
+#include "MsgTypes.h"
 #include "dtnsim_m.h"
 
 using namespace std;
 using namespace omnetpp;
-
-#define BUNDLE 10
 
 class Mac: public cSimpleModule
 {

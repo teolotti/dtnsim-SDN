@@ -42,7 +42,7 @@ message ContactMsg{
     int destinationEid;
 };
 
-message FreeChannelMsg{
+message ForwardingMsg{
     int neighborEid;
     int contactId;
 };

@@ -4,16 +4,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <omnetpp.h>
+
+#include "MsgTypes.h"
 #include "dtnsim_m.h"
 
 using namespace omnetpp;
 using namespace std;
-
-#define TRAFFIC_TIMER 1
-#define CONTACT_START_TIMER 2
-#define CONTACT_END_TIMER 3
-#define FREE_CHANNEL 4
-#define BUNDLE 10
 
 class App : public cSimpleModule
 {
