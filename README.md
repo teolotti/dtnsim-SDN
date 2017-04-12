@@ -20,4 +20,4 @@ Note: Nodes will remain static in the simulation visualization. Indeed, the dyna
 
 ### Contact Us ###
 
-If you have any comment, suggestion, or contribution you can reach us in madoerypablo@gmail.com and juanfraire@gmail.com.
+If you have any comment, suggestion, or contribution you can reach us at madoerypablo@gmail.com and juanfraire@gmail.com.
