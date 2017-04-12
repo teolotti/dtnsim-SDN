@@ -16,6 +16,8 @@ The simulator is still under development: this is a beta version. Nonetheless, f
 * Run the simulation. If using Omnet++ IDE, the Tkenv environment will be started. 
 * Results (scalar and vectorial statistics) will be stored in the results folder.
 
+Note: Nodes will remain static in the simulation visualization. Indeed, the dynamic of the network is captured in the "contact plans" which comprises a list of all time-bound communication opportunities between nodes. In other words, if simulating mobile network, the mobility should be captured in such contact plans and provided to DTNSIM as input.
+
 ### Contact Us ###
 
 If you have any comment, suggestion, or contribution you can reach us in madoerypablo@gmail.com and juanfraire@gmail.com.
