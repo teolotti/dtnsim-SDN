@@ -10,17 +10,54 @@
 
 #include "Routing.h"
 
+#define	MAX_SPEED_MPH	(150000)
+#define NO_ROUTE_FOUND (-1)
+#define EMPTY_ROUTE (-2)
+
 class RoutingCgrModelRev17: public Routing
 {
 public:
-	RoutingCgrModelRev17(int eid, SdrModel * sdr, ContactPlan * contactPlan);
+	RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * contactPlan);
 	virtual ~RoutingCgrModelRev17();
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 
+	bool printDebug = true;
+
 private:
+
 	int eid_;
+	int nodeNum_;
 	SdrModel * sdr_;
 	ContactPlan * contactPlan_;
+
+	typedef struct
+	{
+		int toNodeNbr; 				// Entry node
+		double fromTime; 			// Init time
+		double toTime;	 			// Due time (earliest contact end time among all)
+		float confidence;
+		double arrivalTime;
+		double maxVolume; 			// In Bytes
+		double residualVolume;		// In Bytes
+		vector<Contact *> hops;	 	// Contact list
+	} CgrRoute;
+
+	// Route Table: one entry per neighbour node
+	vector<CgrRoute> routeTable_;
+	double routeTableLastEditTime = -1;
+
+	typedef struct
+	{
+		Contact * contact;			// The owner contact of this Work
+		Contact * predecessor;		// Predecessor Contact
+		vector<int> visitedNodes;	// Dijkstra exploration: list of visited nodes
+		double arrivalTime;			// Dijkstra exploration: best arrival time so far
+		bool visited;				// Dijkstra exploration: visited
+		bool suppressed;			// Dijkstra exploration: suppressed
+	} Work;
+
+	void cgrForward(BundlePkt * bundle, double simTime);
+	void findNextBestRoute(int entryNode, int terminusNode, CgrRoute * route, double simTime);
 };
 
 #endif /* SRC_NODE_NET_ROUTING_ROUTINGCGRMODELREV17_H_ */

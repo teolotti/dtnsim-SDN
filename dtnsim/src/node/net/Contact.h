@@ -11,22 +11,26 @@ public:
 
 	Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence);
 	virtual ~Contact();
-	double getDataRate() const;
-	int getDestinationEid() const;
+
+	// A contact Id (unique)
 	int getId() const;
-	double getResidualCapacity() const;
-	int getSourceEid() const;
+
+	// Get basic parameters
 	double getStart() const;
 	double getEnd() const;
+	int getSourceEid() const;
+	int getDestinationEid() const;
+	double getDataRate() const;
+	double getVolume() const;
 	double getDuration() const;
 	float getConfidence() const;
 
-	void setResidualCapacity(double residualCapacity);
+	// Get and Set residual capacity (Bytes)
+	double getResidualVolume() const;
+	void setResidualVolume(double residualVolume);
 
-	// A pointer to any external data
-	// that might be required for the
-	// routing algorithm.
-
+	// A pointer to external structures
+	// (used by routing algorithms)
 	void * work;
 
 private:
@@ -37,7 +41,7 @@ private:
 	int sourceEid_;
 	int destinationEid_;
 	double dataRate_; // In Bytes per seconds
-	double residualCapacity_; // In Bytes
+	double residualVolume_; // In Bytes
 	float confidence_;
 };
 

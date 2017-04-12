@@ -9,7 +9,7 @@ Contact::Contact(int id, double start, double end, int sourceEid, int destinatio
 	this->destinationEid_ = destinationEid;
 	this->dataRate_ = dataRate;
 	this->confidence_ = confidence;
-	this->residualCapacity_ = (end-start)*dataRate;
+	this->residualVolume_ = (end - start) * dataRate;
 }
 
 Contact::~Contact()
@@ -32,14 +32,14 @@ int Contact::getId() const
 	return id_;
 }
 
-double Contact::getResidualCapacity() const
+double Contact::getResidualVolume() const
 {
-	return residualCapacity_;
+	return residualVolume_;
 }
 
-void Contact::setResidualCapacity(double residualCapacity)
+void Contact::setResidualVolume(double residualVolume)
 {
-	this->residualCapacity_ = residualCapacity;
+	this->residualVolume_ = residualVolume;
 }
 
 int Contact::getSourceEid() const
@@ -60,6 +60,11 @@ double Contact::getEnd() const
 double Contact::getDuration() const
 {
 	return (end_ - start_);
+}
+
+double Contact::getVolume() const
+{
+	return (end_ - start_) * dataRate_;
 }
 
 float Contact::getConfidence() const

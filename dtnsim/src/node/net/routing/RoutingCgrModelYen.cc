@@ -265,7 +265,7 @@ void RoutingCgrModelYen::tryRoute(BundlePkt * bundle, CgrRoute * route, vector<P
 	// time. We coud do this here also (TODO).
 	// We imitate this behaviour by measuring the
 	// residual capacity of the first contact.
-	if (route->hops[0]->getResidualCapacity() <= bundle->getBitLength())
+	if (route->hops[0]->getResidualVolume() <= bundle->getByteLength())
 	{
 		cout << " residual capacity of first contact in route depleted" << endl;
 		return;
@@ -923,7 +923,7 @@ void RoutingCgrModelYen::bpEnqueue(BundlePkt * bundle, ProximateNode * selectedN
 	if (selectedNeighbor->contactId != 0)
 	{
 		// Decrease first contact capacity:
-		selectedNeighbor->route->hops[0]->setResidualCapacity(selectedNeighbor->route->hops[0]->getResidualCapacity() - bundle->getBitLength());
+		selectedNeighbor->route->hops[0]->setResidualVolume(selectedNeighbor->route->hops[0]->getResidualVolume() - bundle->getByteLength());
 
 		// Decrease route capacity:
 		// It seems this does not happen in ION. In fact, the

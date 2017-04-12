@@ -228,7 +228,7 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 
 		// If bundle does not fit in route, ignore.
 		// With proactive fragmentation, this should not stay.
-		if (bundle->getBitLength() > (*it).maxCapacity)
+		if (bundle->getByteLength() > (*it).maxCapacity)
 		{
 			cout << " ignoring, maxCapacity cannot accomodate bundle" << endl;
 			continue;
@@ -264,7 +264,7 @@ void RoutingCgrModel350::tryRoute(BundlePkt * bundle, CgrRoute * route, vector<P
 	// time. We coud do this here also (TODO).
 	// We imitate this behaviour by measuring the
 	// residual capacity of the first contact.
-	if (route->hops[0]->getResidualCapacity() <= bundle->getByteLength())
+	if (route->hops[0]->getResidualVolume() <= bundle->getByteLength())
 	{
 		cout << " residual capacity of first contact in route depleted" << endl;
 		return;
@@ -652,7 +652,7 @@ void RoutingCgrModel350::bpEnqueue(BundlePkt * bundle, ProximateNode * selectedN
 	if (selectedNeighbor->contactId != 0)
 	{
 		// Decrease first contact capacity:
-		selectedNeighbor->route->hops[0]->setResidualCapacity(selectedNeighbor->route->hops[0]->getResidualCapacity() - bundle->getByteLength());
+		selectedNeighbor->route->hops[0]->setResidualVolume(selectedNeighbor->route->hops[0]->getResidualVolume() - bundle->getByteLength());
 
 		// Decrease route capacity:
 		// It seems this does not happen in ION. In fact, the
@@ -662,7 +662,7 @@ void RoutingCgrModel350::bpEnqueue(BundlePkt * bundle, ProximateNode * selectedN
 		// in PA-CGR. Furthermore, the combined effect of routeList
 		// and PA-CGR need to be investigated because an update from
 		// one route might impact other routes that uses the same contacts.
-		selectedNeighbor->route->maxCapacity -= bundle->getBitLength();
+		selectedNeighbor->route->maxCapacity -= bundle->getByteLength();
 
 		EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued in queueId: " << selectedNeighbor->contactId << " (next hop: " << selectedNeighbor->neighborNodeNbr << ")" << endl;
 	} else {

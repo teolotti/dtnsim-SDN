@@ -57,7 +57,7 @@ void Net::initialize(int stage)
 		else if (routeString.compare("cgrModelYen") == 0)
 			routing = new RoutingCgrModelYen(eid_, &sdr_, &contactPlan_);
 		else if (routeString.compare("cgrModelRev17") == 0)
-			routing = new RoutingCgrModelRev17(eid_, &sdr_, &contactPlan_);
+			routing = new RoutingCgrModelRev17(eid_, this->getParentModule()->getVectorSize(), &sdr_, &contactPlan_);
 		else if (routeString.compare("cgrIon350") == 0)
 		{
 			int nodesNumber = this->getParentModule()->getParentModule()->par("nodesNumber");
