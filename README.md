@@ -2,7 +2,7 @@
 
 This document describes DTNSIM, a simulator devoted to study different aspects of Delay/Disruption Tolerant Network (DTN) such as routing, forwarding, scheduling, planning, and others. The simulator is implemented on the [Omnet++ framework version 5.0](https://omnetpp.org/) and can be conveniently utilized using the Tkenv environment and modified or extended using the Omnet++ Eclipse-based IDE.
 
-The simulator is still under development: this is beta version. Nonetheless, feel free to use it and test it. Our contact information is below. 
+The simulator is still under development: this is a beta version. Nonetheless, feel free to use it and test it. Our contact information is below. 
 
 ### Installation ###
 
