@@ -18,7 +18,7 @@ RoutingCgrModel350::~RoutingCgrModel350()
 {
 }
 
-void RoutingCgrModel350::routeBundle(BundlePkt * bundle, double simTime)
+void RoutingCgrModel350::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
 	if (!printDebug) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);

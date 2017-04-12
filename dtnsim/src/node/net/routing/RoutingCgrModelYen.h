@@ -16,7 +16,7 @@ class RoutingCgrModelYen: public Routing
 public:
 	RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan);
 	virtual ~RoutingCgrModelYen();
-	virtual void routeBundle(BundlePkt *bundle, double simTime);
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 private:
 	bool printDebug = true;
 	int eid_;

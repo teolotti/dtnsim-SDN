@@ -31,7 +31,7 @@ public:
 
 	// This is a pure virtual method (all routing must ate least
 	// implement this function)
-	virtual void routeBundle(BundlePkt *bundle, double simTime) = 0;
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime) = 0;
 };
 
 #endif /* SRC_NODE_NET_ROUTING_H_ */

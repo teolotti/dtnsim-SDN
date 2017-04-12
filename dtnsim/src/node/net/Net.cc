@@ -56,6 +56,8 @@ void Net::initialize(int stage)
 			routing = new RoutingCgrModel350(eid_, &sdr_, &contactPlan_);
 		else if (routeString.compare("cgrModelYen") == 0)
 			routing = new RoutingCgrModelYen(eid_, &sdr_, &contactPlan_);
+		else if (routeString.compare("cgrModelRev17") == 0)
+			routing = new RoutingCgrModelRev17(eid_, &sdr_, &contactPlan_);
 		else if (routeString.compare("cgrIon350") == 0)
 		{
 			int nodesNumber = this->getParentModule()->getParentModule()->par("nodesNumber");
@@ -135,7 +137,7 @@ void Net::handleMessage(cMessage * msg)
 			bundle->setDlvConfidence(0);
 			//bundle->setXmitCopiesCount(0);
 
-			routing->routeBundle(bundle, simTime().dbl());
+			routing->routeAndQueueBundle(bundle, simTime().dbl());
 			netReRoutedBundles.record(reRoutedBundles++);
 		}
 
@@ -218,7 +220,7 @@ void Net::dispatchBundle(BundlePkt *bundle)
 	{
 		// Route and enqueue bundle
 		netRxBundles.record(simTime());
-		routing->routeBundle(bundle, simTime().dbl());
+		routing->routeAndQueueBundle(bundle, simTime().dbl());
 
 		// Wake-up un scheduled forwarding threads
 		this->refreshForwarding();

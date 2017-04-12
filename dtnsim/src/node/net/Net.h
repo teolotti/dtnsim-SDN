@@ -17,11 +17,12 @@
 #include "SdrModel.h"
 
 #include "Routing.h"
+#include "Ion.h"
 #include "RoutingDirect.h"
 #include "RoutingCgrIon350.h"
 #include "RoutingCgrModelYen.h"
-#include "Ion.h"
 #include "RoutingCgrModel350.h"
+#include "RoutingCgrModelRev17.h"
 
 using namespace omnetpp;
 using namespace std;

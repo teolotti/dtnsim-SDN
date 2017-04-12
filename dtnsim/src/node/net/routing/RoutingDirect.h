@@ -16,7 +16,7 @@ class RoutingDirect : public Routing
 public:
 	RoutingDirect(int eid, SdrModel * sdr, ContactPlan * contactPlan);
 	virtual ~RoutingDirect();
-	virtual void routeBundle(BundlePkt *bundle, double simTime);
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 private:
 	int eid_;
 	SdrModel * sdr_;

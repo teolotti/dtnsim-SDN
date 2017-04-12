@@ -19,7 +19,7 @@ RoutingDirect::~RoutingDirect()
 
 }
 
-void RoutingDirect::routeBundle(BundlePkt * bundle, double simTime)
+void RoutingDirect::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
 	int contactId=0; // contact 0 is the limbo
 

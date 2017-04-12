@@ -41,7 +41,7 @@ class RoutingCgrIon350 : public Routing
 public:
 	RoutingCgrIon350(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodesNumber);
 	virtual ~RoutingCgrIon350();
-	virtual void routeBundle(BundlePkt *bundle, double simTime);
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 	virtual void cgrEnqueue(BundlePkt * bundle, int neighborNodeNbr, int contactId);
 
 	virtual void initializeIonNode();

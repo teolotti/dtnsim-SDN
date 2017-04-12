@@ -138,6 +138,7 @@ OBJS = \
     $O/node/net/routing/RoutingCgrIon350.o \
     $O/node/net/routing/RoutingCgrModel350.o \
     $O/node/net/routing/RoutingCgrModelYen.o \
+    $O/node/net/routing/RoutingCgrModelRev17.o \
     $O/node/net/routing/RoutingDirect.o \
     $O/dtnsim_m.o
 
@@ -1145,6 +1146,7 @@ $O/node/fault/Fault.o: node/fault/Fault.cc \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingCgrIon350.h \
 	node/net/routing/RoutingCgrModel350.h \
+	node/net/routing/RoutingCgrModelRev17.h \
 	node/net/routing/RoutingCgrModelYen.h \
 	node/net/routing/RoutingDirect.h
 $O/node/graphics/Graphics.o: node/graphics/Graphics.cc \
@@ -1198,6 +1200,7 @@ $O/node/net/Net.o: node/net/Net.cc \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingCgrIon350.h \
 	node/net/routing/RoutingCgrModel350.h \
+	node/net/routing/RoutingCgrModelRev17.h \
 	node/net/routing/RoutingCgrModelYen.h \
 	node/net/routing/RoutingDirect.h
 $O/node/net/SdrModel.o: node/net/SdrModel.cc \
@@ -1246,6 +1249,14 @@ $O/node/net/routing/RoutingCgrModel350.o: node/net/routing/RoutingCgrModel350.cc
 	node/net/SdrStatus.h \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingCgrModel350.h
+$O/node/net/routing/RoutingCgrModelRev17.o: node/net/routing/RoutingCgrModelRev17.cc \
+	dtnsim_m.h \
+	node/net/Contact.h \
+	node/net/ContactPlan.h \
+	node/net/SdrModel.h \
+	node/net/SdrStatus.h \
+	node/net/routing/Routing.h \
+	node/net/routing/RoutingCgrModelRev17.h
 $O/node/net/routing/RoutingCgrModelYen.o: node/net/routing/RoutingCgrModelYen.cc \
 	dtnsim_m.h \
 	node/net/Contact.h \

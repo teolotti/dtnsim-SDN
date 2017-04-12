@@ -18,7 +18,7 @@ RoutingCgrModelYen::~RoutingCgrModelYen()
 {
 }
 
-void RoutingCgrModelYen::routeBundle(BundlePkt * bundle, double simTime)
+void RoutingCgrModelYen::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
 	if (!printDebug) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);

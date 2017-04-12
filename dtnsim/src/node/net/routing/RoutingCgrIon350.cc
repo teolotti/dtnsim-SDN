@@ -279,7 +279,7 @@ static int getDirective(uvast nodeNbr, Object plans, Bundle *bundle, FwdDirectiv
 	return 1;
 }
 
-void RoutingCgrIon350::routeBundle(BundlePkt * bundlePkt, double simTime)
+void RoutingCgrIon350::routeAndQueueBundle(BundlePkt * bundlePkt, double simTime)
 {
 	// sets global UTC time according to the simulation offset for CGR in ION
 	time_t simTimeUtc = getUtcSimulationTime(simTime);

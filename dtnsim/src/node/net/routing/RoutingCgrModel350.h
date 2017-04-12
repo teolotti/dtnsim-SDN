@@ -16,7 +16,7 @@ class RoutingCgrModel350: public Routing
 public:
 	RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan);
 	virtual ~RoutingCgrModel350();
-	virtual void routeBundle(BundlePkt *bundle, double simTime);
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 private:
 	bool printDebug = false;
 	int eid_;
