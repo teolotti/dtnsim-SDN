@@ -83,7 +83,20 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 	this->printRouteTable(terminusNode);
 
 	// Select best route
-	vector<CgrRoute>::iterator bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(), this->compareRoutes);
+	vector<CgrRoute>::iterator bestRoute;
+	if (bundle->getReturnToSender() == true)
+	{
+		// consider all routes in table
+		bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(), this->compareRoutes);
+	}
+	else
+	{
+		// do not consider route back to sender (temporaly set arrivalTime to infinite)
+		double arrivalTime = routeTable_.at(terminusNode).at(bundle->getSenderEid()).arrivalTime;
+		routeTable_.at(terminusNode).at(bundle->getSenderEid()).arrivalTime = numeric_limits<double>::max();
+		bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(), this->compareRoutes);
+		routeTable_.at(terminusNode).at(bundle->getSenderEid()).arrivalTime = arrivalTime;
+	}
 
 	// Enqueue bundle to route and update volumes
 	if ((*bestRoute).nextHop != NO_ROUTE_FOUND)
@@ -92,12 +105,26 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 		sdr_->enqueueBundleToContact(bundle, (*bestRoute).hops.at(0)->getId());
 
 		cout << "*BestRoute[" << terminusNode << "][" << (*bestRoute).nextHop << "]: nextHop: " << (*bestRoute).nextHop << ", frm " << (*bestRoute).fromTime << " to " << (*bestRoute).toTime << ", arrival time: " << (*bestRoute).arrivalTime << ", volume: " << (*bestRoute).residualVolume << "/"
-						<< (*bestRoute).maxVolume << endl;
+				<< (*bestRoute).maxVolume << endl;
 
-		if ((bundle->getReturnToSender() == false)&&((*bestRoute).nextHop==bundle->getSenderEid()))
-			cout << "Warning: returning bundle to sender although disabled!" << endl;
+		// Update residualVolume: this route hops
+		for (vector<Contact *>::iterator hop = (*bestRoute).hops.begin(); hop != (*bestRoute).hops.end(); ++hop)
+			(*hop)->setResidualVolume((*hop)->getResidualVolume() - bundle->getByteLength());
 
-		// TODO: Update route and contact residual volume:
+		this->printContactPlan();
+
+		// Update residualVolume: all routes that uses these hops
+		for (int n1 = 1; n1 < nodeNum_; n1++)
+			for (int n2 = 1; n2 < nodeNum_; n2++)
+				for (vector<Contact *>::iterator hop1 = routeTable_.at(n1).at(n2).hops.begin(); hop1 != routeTable_.at(n1).at(n2).hops.end(); ++hop1)
+					for (vector<Contact *>::iterator hop2 = (*bestRoute).hops.begin(); hop2 != (*bestRoute).hops.end(); ++hop2)
+						if ((*hop1)->getId() == (*hop2)->getId())
+							// Does the reduction of this contact volume requires a route volume update?
+							if (routeTable_.at(n1).at(n2).residualVolume > (*hop1)->getResidualVolume())
+							{
+								routeTable_.at(n1).at(n2).residualVolume = (*hop1)->getResidualVolume();
+								cout << "*route [" << n1 << "][" << n2 << "] volume updated to " << (*hop1)->getResidualVolume() << endl;
+							}
 
 	}
 	else
@@ -320,4 +347,11 @@ bool RoutingCgrModelRev17::compareRoutes(CgrRoute i, CgrRoute j)
 		else
 			return false;
 	}
+}
+
+void RoutingCgrModelRev17::printContactPlan()
+{
+	vector<Contact>::iterator it;
+	for (it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
+		cout << "a contact +" << (*it).getStart() << " +" << (*it).getEnd() << " " << (*it).getSourceEid() << " " << (*it).getDestinationEid() << " " << (*it).getResidualVolume() << "/" << (*it).getVolume() << endl;
 }

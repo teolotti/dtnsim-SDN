@@ -62,6 +62,7 @@ private:
 	void clearRouteTable();
 	void printRouteTable(int terminusNode);
 	static bool compareRoutes(CgrRoute i, CgrRoute j);
+	void printContactPlan();
 };
 
 #endif /* SRC_NODE_NET_ROUTING_ROUTINGCGRMODELREV17_H_ */
