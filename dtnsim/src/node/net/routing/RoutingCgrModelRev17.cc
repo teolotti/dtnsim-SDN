@@ -14,10 +14,11 @@ RoutingCgrModelRev17::RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr,
 	sdr_ = sdr;
 	contactPlan_ = contactPlan;
 
-	// Initialize routeTable_ size (toNodeNbr=-1 es empty route)
-	routeTable_.resize(nodeNum);
-	for (int nodeEID = 0; nodeEID < nodeNum_; nodeEID++)
-		routeTable_.at(nodeEID).toNodeNbr = EMPTY_ROUTE;
+	// Initialize routeTable_
+	routeTable_.resize(nodeNum_);
+	for (int n1 = 0; n1 < nodeNum_; n1++)
+		routeTable_.at(n1).resize(nodeNum_);
+	this->clearRouteTable();
 }
 
 RoutingCgrModelRev17::~RoutingCgrModelRev17()
@@ -47,51 +48,66 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 {
 	// If contact plan was changed, empty route list
 	if (contactPlan_->getLastEditTime() > routeTableLastEditTime)
-		for (int nodeEID = 0; nodeEID < nodeNum_; nodeEID++)
-			routeTable_.at(nodeEID).toNodeNbr = EMPTY_ROUTE;
+		this->clearRouteTable();
 
 	routeTableLastEditTime = simTime;
 
+	int terminusNode = bundle->getDestinationEid();
+
 	// Check route table and recalculate if necesary
-	for (int nodeEID = 0; nodeEID < nodeNum_; nodeEID++)
+	for (int nodeEID = 1; nodeEID < nodeNum_; nodeEID++)
 	{
 		bool needRecalculation = false;
 
-		// Empty route condition
-		if (routeTable_.at(nodeEID).toNodeNbr == EMPTY_ROUTE)
+		// Empty route condition (NO_ROUTE_FOUND does not trigger a recalculation)
+		if (routeTable_.at(terminusNode).at(nodeEID).nextHop == EMPTY_ROUTE)
 			needRecalculation = true;
 
 		// Due route condition
-		if (routeTable_.at(nodeEID).toTime < simTime)
+		if (routeTable_.at(terminusNode).at(nodeEID).toTime < simTime)
 			needRecalculation = true;
 
 		// Depleted route condition
-		if (routeTable_.at(nodeEID).residualVolume < bundle->getByteLength())
+		if (routeTable_.at(terminusNode).at(nodeEID).residualVolume < bundle->getByteLength())
 			needRecalculation = true;
 
 		if (needRecalculation)
 		{
 			CgrRoute route;
-			this->findNextBestRoute(nodeEID, bundle->getDestinationEid(), &route, simTime);
-			routeTable_.at(nodeEID) = route;
+			this->findNextBestRoute(nodeEID, terminusNode, &route, simTime);
+			routeTable_.at(terminusNode).at(nodeEID) = route;
 		}
 	}
 
-	// Print route
-	for (int nodeEID = 0; nodeEID < nodeNum_; nodeEID++)
+	// Print route table for this terminus
+	this->printRouteTable(terminusNode);
+
+	// Select best route
+	vector<CgrRoute>::iterator bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(), this->compareRoutes);
+
+	// Enqueue bundle to route and update volumes
+	if ((*bestRoute).nextHop != NO_ROUTE_FOUND)
 	{
-		CgrRoute route = routeTable_.at(nodeEID);
-		if (route.toNodeNbr == NO_ROUTE_FOUND)
-			cout << "routeTable[" << nodeEID << "]: No route found"<< endl;
-		else if (route.toNodeNbr == EMPTY_ROUTE) // should never happen
-			cout << "routeTable[" << nodeEID << "]: Need to recalculate route"<< endl;
-		else
-			cout << "routeTable[" << nodeEID << "]: toNode: " << route.toNodeNbr << ", frm " << route.fromTime << " to " << route.toTime << ", arrival time: " << route.arrivalTime << ", volume: " << route.residualVolume << "/" << route.maxVolume << endl;
+		bundle->setNextHopEid((*bestRoute).nextHop);
+		sdr_->enqueueBundleToContact(bundle, (*bestRoute).hops.at(0)->getId());
+
+		cout << "*BestRoute[" << terminusNode << "][" << (*bestRoute).nextHop << "]: nextHop: " << (*bestRoute).nextHop << ", frm " << (*bestRoute).fromTime << " to " << (*bestRoute).toTime << ", arrival time: " << (*bestRoute).arrivalTime << ", volume: " << (*bestRoute).residualVolume << "/"
+						<< (*bestRoute).maxVolume << endl;
+
+		if ((bundle->getReturnToSender() == false)&&((*bestRoute).nextHop==bundle->getSenderEid()))
+			cout << "Warning: returning bundle to sender although disabled!" << endl;
+
+		// TODO: Update route and contact residual volume:
+
 	}
+	else
+	{
+		// Enqueue to Limbo
+		bundle->setNextHopEid((*bestRoute).nextHop);
+		sdr_->enqueueBundleToContact(bundle, 0);
 
-	// TODO: Select route, enqueue, and update volumes
-
-	// if (bundle->getReturnToSender() == false)
+		cout << "*BestRoute not found (enqueing to limbo)" << endl;
+	}
 }
 
 void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, CgrRoute * route, double simTime)
@@ -107,7 +123,7 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 	// Create and initialize working area in each contact
 	// Supress next hop contacts though nodes different than entryNode
 	vector<Contact>::iterator it;
-	cout << "  suppressing initial contacts: ";
+	//cout << "  suppressing initial contacts: ";
 	for (it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
 	{
 		(*it).work = new Work;
@@ -121,20 +137,20 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 		if ((*it).getSourceEid() == eid_ && (*it).getDestinationEid() != entryNode)
 		{
 			((Work *) (*it).work)->suppressed = true;
-			cout << (*it).getId() << ", ";
+			//cout << (*it).getId() << ", ";
 		}
 	}
-	cout << endl;
+	//cout << endl;
 
 	// Start Dijkstra
 	Contact * currentContact = rootContact;
 	Contact * finalContact = NULL;
 	double earliestFinalArrivalTime = numeric_limits<double>::max();
 
-	cout << "  surfing contact-graph:";
+	//cout << "  surfing contact-graph:";
 	while (1)
 	{
-		cout << currentContact->getDestinationEid() << ",";
+		//cout << currentContact->getDestinationEid() << ",";
 
 		// Get local neighbor set and evaluate them
 		vector<Contact> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
@@ -215,7 +231,7 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 	}
 
 	// End contact graph exploration
-	cout << endl;
+	//cout << endl;
 
 	// If we got a final contact to destination
 	// then it is the best route and we need to
@@ -247,7 +263,7 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 			route->hops.insert(route->hops.begin(), contact);
 		}
 
-		route->toNodeNbr = route->hops[0]->getDestinationEid();
+		route->nextHop = route->hops[0]->getDestinationEid();
 		route->fromTime = route->hops[0]->getStart();
 		route->toTime = earliestEndTime;
 		route->maxVolume = maxVolume;
@@ -256,6 +272,52 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 	else
 	{
 		// No route found
-		route->toNodeNbr = NO_ROUTE_FOUND;
+		route->nextHop = NO_ROUTE_FOUND;
+		route->arrivalTime = numeric_limits<double>::max(); // never chosen as best route
+	}
+}
+
+void RoutingCgrModelRev17::clearRouteTable()
+{
+	for (int n1 = 0; n1 < nodeNum_; n1++)
+		for (int n2 = 0; n2 < nodeNum_; n2++)
+		{
+			CgrRoute route;
+			route.nextHop = EMPTY_ROUTE;
+			route.arrivalTime = numeric_limits<double>::max(); // never chosen as best route
+			routeTable_.at(n1).at(n2) = route;
+		}
+}
+
+void RoutingCgrModelRev17::printRouteTable(int terminusNode)
+{
+	// Print route table for this destination
+	for (int nodeEID = 1; nodeEID < nodeNum_; nodeEID++)
+	{
+		CgrRoute route = routeTable_.at(terminusNode).at(nodeEID);
+		if (route.nextHop == NO_ROUTE_FOUND)
+			cout << "routeTable[" << terminusNode << "][" << nodeEID << "]: No route found" << endl;
+		else if (route.nextHop == EMPTY_ROUTE) // should never happen
+			cout << "routeTable[" << terminusNode << "][" << nodeEID << "]: Need to recalculate route" << endl;
+		else
+			cout << "routeTable[" << terminusNode << "][" << nodeEID << "]: nextHop: " << route.nextHop << ", frm " << route.fromTime << " to " << route.toTime << ", arrival time: " << route.arrivalTime << ", volume: " << route.residualVolume << "/" << route.maxVolume << endl;
+	}
+}
+
+bool RoutingCgrModelRev17::compareRoutes(CgrRoute i, CgrRoute j)
+{
+	// Returns true if first argument is minor (better)
+
+	if (i.arrivalTime < j.arrivalTime)
+		return true;
+	else if (i.arrivalTime > j.arrivalTime)
+		return false;
+	else
+	{
+		// equal arrivalTime, choose the largest residual volume
+		if (i.residualVolume > j.residualVolume)
+			return true;
+		else
+			return false;
 	}
 }

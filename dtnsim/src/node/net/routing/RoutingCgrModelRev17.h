@@ -32,7 +32,7 @@ private:
 
 	typedef struct
 	{
-		int toNodeNbr; 				// Entry node
+		int nextHop; 				// Entry node
 		double fromTime; 			// Init time
 		double toTime;	 			// Due time (earliest contact end time among all)
 		float confidence;
@@ -42,8 +42,8 @@ private:
 		vector<Contact *> hops;	 	// Contact list
 	} CgrRoute;
 
-	// Route Table: one entry per neighbour node
-	vector<CgrRoute> routeTable_;
+	// Route Table: one table per destination, one entry per neighbour node
+	vector<vector<CgrRoute>> routeTable_;
 	double routeTableLastEditTime = -1;
 
 	typedef struct
@@ -58,6 +58,10 @@ private:
 
 	void cgrForward(BundlePkt * bundle, double simTime);
 	void findNextBestRoute(int entryNode, int terminusNode, CgrRoute * route, double simTime);
+
+	void clearRouteTable();
+	void printRouteTable(int terminusNode);
+	static bool compareRoutes(CgrRoute i, CgrRoute j);
 };
 
 #endif /* SRC_NODE_NET_ROUTING_ROUTINGCGRMODELREV17_H_ */
