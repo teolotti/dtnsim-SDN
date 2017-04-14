@@ -33,7 +33,8 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 	if (printDebug_ == false)
 		cout.setstate(std::ios_base::failbit);
 
-	cout << "node: " << eid_ << " at time: " << simTime << " routing bundle to dst: " << bundle->getDestinationEid() << endl;
+	cout << "NODE: " << eid_ << " at time: " << simTime << " routing bundle to dst: " << bundle->getDestinationEid() << endl;
+
 	this->cgrForward(bundle, simTime);
 
 	// Re-enable cout if degug disabled
@@ -70,7 +71,15 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 
 		// Depleted route condition
 		if (routeTable_.at(terminusNode).at(nodeEID).residualVolume < bundle->getByteLength())
+		{
+			// Make sure that the capacity-limiting contact is marked as depleted
+			vector<Contact *>::iterator hop;
+			for (hop = routeTable_.at(terminusNode).at(nodeEID).hops.begin(); hop != routeTable_.at(terminusNode).at(nodeEID).hops.end(); ++hop)
+				if (routeTable_.at(terminusNode).at(nodeEID).residualVolume == (*hop)->getResidualVolume())
+					(*hop)->setResidualVolume(0);
+
 			needRecalculation = true;
+		}
 
 		if (needRecalculation)
 		{
@@ -105,14 +114,14 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 		bundle->setNextHopEid((*bestRoute).nextHop);
 		sdr_->enqueueBundleToContact(bundle, (*bestRoute).hops.at(0)->getId());
 
-		cout << "*BestRoute[" << terminusNode << "][" << (*bestRoute).nextHop << "]: nextHop: " << (*bestRoute).nextHop << ", frm " << (*bestRoute).fromTime << " to " << (*bestRoute).toTime << ", arrival time: " << (*bestRoute).arrivalTime << ", volume: " << (*bestRoute).residualVolume << "/"
+		cout << "*BestRoute: routeTable[" << terminusNode << "][" << (*bestRoute).nextHop << "]: nextHop: " << (*bestRoute).nextHop << ", frm " << (*bestRoute).fromTime << " to " << (*bestRoute).toTime << ", arrival time: " << (*bestRoute).arrivalTime << ", volume: " << (*bestRoute).residualVolume << "/"
 				<< (*bestRoute).maxVolume << endl;
 
 		// Update residualVolume: this route hops
 		for (vector<Contact *>::iterator hop = (*bestRoute).hops.begin(); hop != (*bestRoute).hops.end(); ++hop)
 			(*hop)->setResidualVolume((*hop)->getResidualVolume() - bundle->getByteLength());
 
-		this->printContactPlan();
+		//this->printContactPlan();
 
 		// Update residualVolume: all routes that uses these hops
 		for (int n1 = 1; n1 < nodeNum_; n1++)
@@ -124,7 +133,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 							if (routeTable_.at(n1).at(n2).residualVolume > (*hop1)->getResidualVolume())
 							{
 								routeTable_.at(n1).at(n2).residualVolume = (*hop1)->getResidualVolume();
-								cout << "*route [" << n1 << "][" << n2 << "] volume updated to " << (*hop1)->getResidualVolume() << endl;
+								cout << "*ResVolume: routeTable[" << n1 << "][" << n2 << "]: updated to " << (*hop1)->getResidualVolume() << endl;
 							}
 
 	}
@@ -190,6 +199,10 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 
 			// If this contact is finished, ignore it.
 			if ((*it).getEnd() <= ((Work *) (currentContact->work))->arrivalTime)
+				continue;
+
+			// If the residual volume is 0, ignore it.
+			if ((*it).getResidualVolume() == 0)
 				continue;
 
 			// If this contact leads to visited node, ignore it.
@@ -334,19 +347,26 @@ void RoutingCgrModelRev17::printRouteTable(int terminusNode)
 
 bool RoutingCgrModelRev17::compareRoutes(CgrRoute i, CgrRoute j)
 {
-	// Returns true if first argument is minor (better)
-
+	// Returns true if first argument is minor (i.e., better)
 	if (i.arrivalTime < j.arrivalTime)
 		return true;
 	else if (i.arrivalTime > j.arrivalTime)
 		return false;
 	else
 	{
-		// equal arrivalTime, choose the largest residual volume
+		// equal arrivalTime, evaluate residual volume
 		if (i.residualVolume > j.residualVolume)
 			return true;
-		else
+		else if (i.residualVolume < j.residualVolume)
 			return false;
+		else
+		{
+			// equal residual volume, evaluate hop count
+			if (i.hops.size() < j.hops.size())
+				return true;
+			else
+				return false;
+		}
 	}
 }
 
