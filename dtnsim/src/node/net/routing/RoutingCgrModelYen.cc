@@ -7,11 +7,12 @@
 
 #include "RoutingCgrModelYen.h"
 
-RoutingCgrModelYen::RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan)
+RoutingCgrModelYen::RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug)
 {
 	eid_ = eid;
 	sdr_ = sdr;
 	contactPlan_ = contactPlan;
+	printDebug_ = printDebug;
 }
 
 RoutingCgrModelYen::~RoutingCgrModelYen()
@@ -20,7 +21,7 @@ RoutingCgrModelYen::~RoutingCgrModelYen()
 
 void RoutingCgrModelYen::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
-	if (!printDebug) // disable cout if degug disabled
+	if (!printDebug_) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);
 
 //	if (eid_==10 && bundle->getSourceEid()==8 && bundle->getDestinationEid()==48)
@@ -29,7 +30,7 @@ void RoutingCgrModelYen::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	// Call cgrForward from ion (route and forwarding)
 	cgrForward(bundle, simTime);
 
-	if (!printDebug)
+	if (!printDebug_)
 		cout.clear();
 
 }

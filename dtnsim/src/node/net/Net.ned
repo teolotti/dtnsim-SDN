@@ -8,6 +8,7 @@ simple Net
                 
         string contactsFile = default("contacts.txt");     
         string routing = default("direct");    
+        bool printRoutingDebug = default(false);
         
         bool saveBundleMap=default(false); 
         bool generateOutputGraph=default(false);        

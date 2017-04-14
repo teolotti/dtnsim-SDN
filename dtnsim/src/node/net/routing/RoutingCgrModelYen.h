@@ -14,11 +14,11 @@
 class RoutingCgrModelYen: public Routing
 {
 public:
-	RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan);
+	RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug);
 	virtual ~RoutingCgrModelYen();
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 private:
-	bool printDebug = true;
+	bool printDebug_ = true;
 	int eid_;
 	SdrModel * sdr_;
 	ContactPlan * contactPlan_;

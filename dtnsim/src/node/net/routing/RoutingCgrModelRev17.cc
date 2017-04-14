@@ -7,12 +7,13 @@
 
 #include "RoutingCgrModelRev17.h"
 
-RoutingCgrModelRev17::RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * contactPlan)
+RoutingCgrModelRev17::RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug)
 {
 	eid_ = eid;
 	nodeNum_ = nodeNum;
 	sdr_ = sdr;
 	contactPlan_ = contactPlan;
+	printDebug_ = printDebug;
 
 	// Initialize routeTable_
 	routeTable_.resize(nodeNum_);
@@ -29,14 +30,14 @@ RoutingCgrModelRev17::~RoutingCgrModelRev17()
 void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
 	// Disable cout if degug disabled
-	if (printDebug == false)
+	if (printDebug_ == false)
 		cout.setstate(std::ios_base::failbit);
 
 	cout << "node: " << eid_ << " at time: " << simTime << " routing bundle to dst: " << bundle->getDestinationEid() << endl;
 	this->cgrForward(bundle, simTime);
 
 	// Re-enable cout if degug disabled
-	if (printDebug == false)
+	if (printDebug_ == false)
 		cout.clear();
 }
 

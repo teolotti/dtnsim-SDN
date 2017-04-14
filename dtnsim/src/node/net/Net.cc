@@ -53,11 +53,11 @@ void Net::initialize(int stage)
 		if (routeString.compare("direct") == 0)
 			routing = new RoutingDirect(eid_, &sdr_, &contactPlan_);
 		else if (routeString.compare("cgrModel350") == 0)
-			routing = new RoutingCgrModel350(eid_, &sdr_, &contactPlan_);
+			routing = new RoutingCgrModel350(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"));
 		else if (routeString.compare("cgrModelYen") == 0)
-			routing = new RoutingCgrModelYen(eid_, &sdr_, &contactPlan_);
+			routing = new RoutingCgrModelYen(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"));
 		else if (routeString.compare("cgrModelRev17") == 0)
-			routing = new RoutingCgrModelRev17(eid_, this->getParentModule()->getVectorSize(), &sdr_, &contactPlan_);
+			routing = new RoutingCgrModelRev17(eid_, this->getParentModule()->getVectorSize(), &sdr_, &contactPlan_, par("printRoutingDebug"));
 		else if (routeString.compare("cgrIon350") == 0)
 		{
 			int nodesNumber = this->getParentModule()->getParentModule()->par("nodesNumber");

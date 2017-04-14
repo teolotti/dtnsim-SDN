@@ -14,11 +14,11 @@
 class RoutingCgrModel350: public Routing
 {
 public:
-	RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan);
+	RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug);
 	virtual ~RoutingCgrModel350();
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 private:
-	bool printDebug = false;
+	bool printDebug_ = false;
 	int eid_;
 	SdrModel * sdr_;
 	ContactPlan * contactPlan_;

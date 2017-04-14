@@ -91,3 +91,60 @@ Tcl error: moduleinspector.cc#232: tagOrId "f2" doesn't match any items
 ".network.c raise submodext f2"
 
 
+---- 20170414-18:03:44 ---------------------------------------------------------
+
+
+Tcl error: moduleinspector.cc#652: ptr0x26d36e0 not found
+    while executing
+"error "$tag not found""
+    (procedure "ModuleInspector:getSubmodCoords" line 4)
+    invoked from within
+"ModuleInspector:getSubmodCoords $c $modptr"
+    (procedure "ModuleInspector:drawNextEventMarker" line 2)
+    invoked from within
+"ModuleInspector:drawNextEventMarker .network.c ptr0x26d36e0 2"
+
+
+Tcl error: moduleinspector.cc#624: ptr0x26d36e0 not found
+    while executing
+"error "$tag not found""
+    (procedure "ModuleInspector:getSubmodCoords" line 4)
+    invoked from within
+"ModuleInspector:getSubmodCoords $c $modptr"
+    (procedure "ModuleInspector:drawMessageOnModule" line 4)
+    invoked from within
+"ModuleInspector:drawMessageOnModule .network.c ptr0x26d36e0 ptr0x278cf80"
+
+
+Tcl error: moduleinspector.cc#232: tagOrId "f2" doesn't match any items
+    while executing
+".network.c raise submodext f2"
+
+
+Tcl error: moduleinspector.cc#652: ptr0x26d36e0 not found
+    while executing
+"error "$tag not found""
+    (procedure "ModuleInspector:getSubmodCoords" line 4)
+    invoked from within
+"ModuleInspector:getSubmodCoords $c $modptr"
+    (procedure "ModuleInspector:drawNextEventMarker" line 2)
+    invoked from within
+"ModuleInspector:drawNextEventMarker .network.c ptr0x26d36e0 2"
+
+
+Tcl error: moduleinspector.cc#624: ptr0x26d36e0 not found
+    while executing
+"error "$tag not found""
+    (procedure "ModuleInspector:getSubmodCoords" line 4)
+    invoked from within
+"ModuleInspector:getSubmodCoords $c $modptr"
+    (procedure "ModuleInspector:drawMessageOnModule" line 4)
+    invoked from within
+"ModuleInspector:drawMessageOnModule .network.c ptr0x26d36e0 ptr0x278cf80"
+
+
+Tcl error: moduleinspector.cc#232: tagOrId "f2" doesn't match any items
+    while executing
+".network.c raise submodext f2"
+
+
