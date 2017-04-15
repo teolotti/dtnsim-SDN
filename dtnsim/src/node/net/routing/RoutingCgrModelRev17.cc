@@ -33,7 +33,7 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 	if (printDebug_ == false)
 		cout.setstate(std::ios_base::failbit);
 
-	cout << "NODE: " << eid_ << " at time: " << simTime << " routing bundle to dst: " << bundle->getDestinationEid() << endl;
+	cout << "TIME: " << simTime << "s, NODE: " << eid_ << ", routing bundle to dst: " << bundle->getDestinationEid() << " (" << bundle->getByteLength() << "Bytes)" << endl;
 
 	this->cgrForward(bundle, simTime);
 
@@ -114,8 +114,8 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 		bundle->setNextHopEid((*bestRoute).nextHop);
 		sdr_->enqueueBundleToContact(bundle, (*bestRoute).hops.at(0)->getId());
 
-		cout << "*BestRoute: routeTable[" << terminusNode << "][" << (*bestRoute).nextHop << "]: nextHop: " << (*bestRoute).nextHop << ", frm " << (*bestRoute).fromTime << " to " << (*bestRoute).toTime << ", arrival time: " << (*bestRoute).arrivalTime << ", volume: " << (*bestRoute).residualVolume << "/"
-				<< (*bestRoute).maxVolume << endl;
+		cout << "*Best: routeTable[" << terminusNode << "][" << (*bestRoute).nextHop << "]: nextHop: " << (*bestRoute).nextHop << ", frm " << (*bestRoute).fromTime << " to " << (*bestRoute).toTime << ", arrival time: " << (*bestRoute).arrivalTime << ", volume: " << (*bestRoute).residualVolume
+				<< "/" << (*bestRoute).maxVolume << "Bytes" << endl;
 
 		// Update residualVolume: this route hops
 		for (vector<Contact *>::iterator hop = (*bestRoute).hops.begin(); hop != (*bestRoute).hops.end(); ++hop)
@@ -133,7 +133,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 							if (routeTable_.at(n1).at(n2).residualVolume > (*hop1)->getResidualVolume())
 							{
 								routeTable_.at(n1).at(n2).residualVolume = (*hop1)->getResidualVolume();
-								cout << "*ResVolume: routeTable[" << n1 << "][" << n2 << "]: updated to " << (*hop1)->getResidualVolume() << endl;
+								cout << "*Rvol: routeTable[" << n1 << "][" << n2 << "]: updated to " << (*hop1)->getResidualVolume() << "Bytes" << endl;
 							}
 
 	}
@@ -341,7 +341,7 @@ void RoutingCgrModelRev17::printRouteTable(int terminusNode)
 		else if (route.nextHop == EMPTY_ROUTE) // should never happen
 			cout << "routeTable[" << terminusNode << "][" << nodeEID << "]: Need to recalculate route" << endl;
 		else
-			cout << "routeTable[" << terminusNode << "][" << nodeEID << "]: nextHop: " << route.nextHop << ", frm " << route.fromTime << " to " << route.toTime << ", arrival time: " << route.arrivalTime << ", volume: " << route.residualVolume << "/" << route.maxVolume << endl;
+			cout << "routeTable[" << terminusNode << "][" << nodeEID << "]: nextHop: " << route.nextHop << ", frm " << route.fromTime << " to " << route.toTime << ", arrival time: " << route.arrivalTime << ", volume: " << route.residualVolume << "/" << route.maxVolume << "Bytes" << endl;
 	}
 }
 
