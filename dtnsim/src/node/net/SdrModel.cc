@@ -41,6 +41,14 @@ void SdrModel::setContactPlan(ContactPlan *contactPlan)
 	this->contactPlan_ = contactPlan;
 }
 
+int SdrModel::getBundlesInSdr()
+{
+	int bundlesInSdr = 0;
+	for (map<int, deque<BundlePkt *> >::iterator it = bundlesQueue_.begin(); it != bundlesQueue_.end(); ++it)
+		bundlesInSdr += (*it).second.size();
+	return bundlesInSdr;
+}
+
 void SdrModel::updateStats()
 {
 //	// Only update limbo if it has changed

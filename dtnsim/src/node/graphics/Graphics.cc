@@ -103,6 +103,16 @@ void Graphics::setContactOff(ContactMsg* contactMsg)
 	}
 }
 
+void Graphics::setBundlesInSdr(int bundNum)
+{
+	if(eid_==0)
+		return;
+
+	stringstream str;
+	str << "sdr:" << bundNum;
+	nodeModule->getDisplayString().setTagArg("t", 0, str.str().c_str());
+}
+
 void Graphics::finish()
 {
 	// Remove and delete visualization lines

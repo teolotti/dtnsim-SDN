@@ -6,14 +6,15 @@
 // Higher scheduling priority (smaller
 // numeric value) are executed first.
 
-#define TRAFFIC_TIMER 0
+#define CONTACT_END_TIMER 0
+#define CONTACT_START_TIMER 1
 
-#define BUNDLE 1
+#define TRAFFIC_TIMER 2
 
-#define FORWARDING_MSG 2
+#define BUNDLE 3
 
-#define CONTACT_END_TIMER 4
-#define CONTACT_START_TIMER 5
+#define FORWARDING_MSG 4
+
 
 #define FAULT_END_TIMER 21
 #define FAULT_START_TIMER 20

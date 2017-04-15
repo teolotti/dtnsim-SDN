@@ -35,6 +35,8 @@ public:
 	virtual BundlePkt * getNextBundleForContact(int contactId);
 	virtual void popNextBundleForContact(int contactId);
 	virtual void freeSdr(int eid);
+
+	virtual int getBundlesInSdr();
 	virtual int getBundlesSizeEnqueuedToNeighbor(int eid);
 	virtual SdrStatus getSdrStatus();
 

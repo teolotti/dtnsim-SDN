@@ -22,6 +22,7 @@ public:
 	void setFaultOff();
 	void setContactOn(ContactMsg* contactMsg);
 	void setContactOff(ContactMsg* contactMsg);
+	void setBundlesInSdr(int bundNum);
 
 protected:
 	virtual void initialize();

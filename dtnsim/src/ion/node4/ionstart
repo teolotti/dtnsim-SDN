@@ -1,7 +1,7 @@
 # shell script to get node running
 #!/bin/bash
 ionadmin ionrc
-ionadmin ../../contactPlan/contacts_Ion_4nodes.txt
+ionadmin ../../contactPlan/totin_simple_loop.txt
 ionsecadmin ionsecrc
 ltpadmin ltprc
 bpadmin bprc

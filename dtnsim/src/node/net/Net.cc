@@ -18,6 +18,7 @@ void Net::initialize(int stage)
 
 		// Get a pointer to graphics module
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
+		graphicsModule->setBundlesInSdr(sdr_.getBundlesInSdr());
 
 		// Init parameters
 		this->saveBundleMap_ = par("saveBundleMap");
@@ -190,6 +191,7 @@ void Net::handleMessage(cMessage * msg)
 					bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
 
 				sdr_.popNextBundleForContact(contactId);
+				graphicsModule->setBundlesInSdr(sdr_.getBundlesInSdr());
 
 				scheduleAt(simTime() + txDuration, forwardingMsg);
 			}
@@ -221,6 +223,9 @@ void Net::dispatchBundle(BundlePkt *bundle)
 		// Route and enqueue bundle
 		netRxBundles.record(simTime());
 		routing->routeAndQueueBundle(bundle, simTime().dbl());
+
+		// update srd size text
+		graphicsModule->setBundlesInSdr(sdr_.getBundlesInSdr());
 
 		// Wake-up un scheduled forwarding threads
 		this->refreshForwarding();
