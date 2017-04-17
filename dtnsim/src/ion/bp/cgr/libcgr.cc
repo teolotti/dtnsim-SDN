@@ -568,7 +568,7 @@ static int findNextBestRoute(PsmPartition ionwm, IonCXref *rootContact, CgrConta
 	}
 	else
 	{
-		TRACE(CgrAcceptRoute, route->toNodeNbr, (unsigned int )(route->fromTime - _startUtcTime_), (unsigned int )(route->arrivalTime -_startUtcTime_), route->maxCapacity);
+		TRACE(CgrAcceptRoute, route->toNodeNbr, (unsigned int )(route->fromTime - _startUtcTime_), (unsigned int )(route->arrivalTime - _startUtcTime_), route->maxCapacity);
 
 		/*	Found best route, given current exclusions.	*/
 
@@ -1428,13 +1428,13 @@ Object bundleObj, Lyst excludedNodes, Object plans, CgrLookupFn getDirective, Cg
 		}
 	}
 
-	TRACE(CgrIdentifyProximateNodes, deadline - _startUtcTime_);
+	TRACE(CgrIdentifyProximateNodes, deadline - _startUtcTime_ - EPOCH_2000_SEC);
 	for (elt = sm_list_first(ionwm, routes); elt; elt = nextElt)
 	{
 		nextElt = sm_list_next(ionwm, elt);
 		addr = sm_list_data(ionwm, elt);
 		route = (CgrRoute *) psp(ionwm, addr);
-		TRACE(CgrCheckRoute, route->toNodeNbr, (unsigned int )(route->fromTime  - _startUtcTime_), (unsigned int )(route->arrivalTime - _startUtcTime_));
+		TRACE(CgrCheckRoute, route->toNodeNbr, (unsigned int )(route->fromTime - _startUtcTime_), (unsigned int )(route->arrivalTime - _startUtcTime_));
 		if (route->toTime < currentTime)
 		{
 			/*	This route includes a contact that
@@ -1670,7 +1670,6 @@ Object bundleObj, IonNode *terminusNode)
 	//
 	//		sdr_write(getIonsdr(), bundleObj, (char * ) bundle, sizeof(Bundle));
 	//	}
-
 	/*	In any event, we enqueue the bundle for transmission.
 	 *	Since we've already determined that the outduct to
 	 *	this neighbor is not blocked (else the neighbor would
@@ -2334,45 +2333,33 @@ void cgr_start()
 const char *cgr_tracepoint_text(CgrTraceType traceType)
 {
 	int i = traceType;
-	static const char *tracepointText[] =
-	{
-	/*[CgrBuildRoutes] = */"BUILD terminusNode:" UVAST_FIELDSPEC
-	" payloadLength:%u atTime:%u",
-	/*[CgrInvalidTerminusNode] = */"    INVALID terminus node",
+	static const char *tracepointText[CgrTraceTypeMax - 1] = {};
 
-	/*[CgrBeginRoute] = */"  ROUTE",
-	/*[CgrConsiderRoot] = */"    ROOT fromNode:" UVAST_FIELDSPEC
-	" toNode:" UVAST_FIELDSPEC,
-	/*[CgrConsiderContact] = */"      CONTACT fromNode:" UVAST_FIELDSPEC
-	" toNode:" UVAST_FIELDSPEC,
-	/*[CgrIgnoreContact] = */"        IGNORE",
-
-	/*[CgrCost] = */"        COST transmitTime:%u owlt:%u arrivalTime:%u",
-	/*[CgrHop] = */"    HOP fromNode:" UVAST_FIELDSPEC " toNode:"
-	UVAST_FIELDSPEC,
-
-	/*[CgrAcceptRoute] = */"    ACCEPT firstHop:" UVAST_FIELDSPEC
-	" fromTime:%u arrivalTime:%u maxCapacity:" UVAST_FIELDSPEC,
-	/*[CgrDiscardRoute] = */"    DISCARD route",
-
-	/*[CgrIdentifyProximateNodes] = */"IDENTIFY deadline:%u",
-	/*[CgrCheckRoute] = */"  CHECK firstHop:" UVAST_FIELDSPEC
-	" fromTime:%u arrivalTime:%u",
-	/*[CgrRecomputeRoute] = */"  RECOMPUTE",
-	/*[CgrIgnoreRoute] = */"    IGNORE",
-
-	/*[CgrAddProximateNode] = */"    ADD",
-	/*[CgrUpdateProximateNode] = */"    UPDATE",
-
-	/*[CgrSelectProximateNodes] = */"SELECT",
-	/*[CgrUseAllProximateNodes] = */"  USE all proximate nodes",
-	/*[CgrConsiderProximateNode] = */"  CONSIDER " UVAST_FIELDSPEC,
-	/*[CgrSelectProximateNode] = */"    SELECT",
-	/*[CgrIgnoreProximateNode] = */"    IGNORE",
-	/*[CgrUseProximateNode] = */"  USE " UVAST_FIELDSPEC,
-	/*[CgrNoProximateNode] = */"  NO proximate node",
-	/*[CgrFullOverbooking] = */"	Full OVERBOOKING (amount in bytes):%f",
-	/*[CgrPartialOverbooking] = */" Partial OVERBOOKING (amount in bytes):%f", };
+	tracepointText[CgrBuildRoutes] = "BUILD terminusNode:" UVAST_FIELDSPEC " payloadLength:%u atTime:%u";
+	tracepointText[CgrInvalidTerminusNode] = "    INVALID terminus node";
+	tracepointText[CgrBeginRoute] = "  ROUTE";
+	tracepointText[CgrConsiderRoot] = "    ROOT fromNode:" UVAST_FIELDSPEC " toNode:" UVAST_FIELDSPEC;
+	tracepointText[CgrConsiderContact] = "      CONTACT fromNode:" UVAST_FIELDSPEC " toNode:" UVAST_FIELDSPEC;
+	tracepointText[CgrIgnoreContact] = "        IGNORE";
+	tracepointText[CgrCost] = "        COST transmitTime:%u owlt:%u arrivalTime:%u";
+	tracepointText[CgrHop] = "    HOP fromNode:" UVAST_FIELDSPEC " toNode:" UVAST_FIELDSPEC;
+	tracepointText[CgrAcceptRoute] = "    ACCEPT firstHop:" UVAST_FIELDSPEC " fromTime:%u arrivalTime:%u maxCapacity:" UVAST_FIELDSPEC;
+	tracepointText[CgrDiscardRoute] = "    DISCARD route";
+	tracepointText[CgrIdentifyProximateNodes] = "IDENTIFY deadline:%u";
+	tracepointText[CgrCheckRoute] = "  CHECK firstHop:" UVAST_FIELDSPEC " fromTime:%u arrivalTime:%u";
+	tracepointText[CgrRecomputeRoute] = "  RECOMPUTE";
+	tracepointText[CgrIgnoreRoute] = "    IGNORE";
+	tracepointText[CgrAddProximateNode] = "    ADD";
+	tracepointText[CgrUpdateProximateNode] = "    UPDATE";
+	tracepointText[CgrSelectProximateNodes] = "SELECT";
+	tracepointText[CgrUseAllProximateNodes] = "  USE all proximate nodes";
+	tracepointText[CgrConsiderProximateNode] = "  CONSIDER " UVAST_FIELDSPEC;
+	tracepointText[CgrSelectProximateNode] = "    SELECT";
+	tracepointText[CgrIgnoreProximateNode] = "    IGNORE";
+	tracepointText[CgrUseProximateNode] = "  USE " UVAST_FIELDSPEC;
+	tracepointText[CgrNoProximateNode] = "  NO proximate node";
+	tracepointText[CgrFullOverbooking] = "	Full OVERBOOKING (amount in bytes):%f";
+	tracepointText[CgrPartialOverbooking] = " Partial OVERBOOKING (amount in bytes):%f";
 
 	if (i < 0 || i >= CgrTraceTypeMax)
 	{
@@ -2385,34 +2372,27 @@ const char *cgr_tracepoint_text(CgrTraceType traceType)
 const char *cgr_reason_text(CgrReason reason)
 {
 	int i = reason;
-	static const char *reasonText[] =
-	{
-	/*[CgrContactEndsEarly] = */"contact ends before data arrives",
-	/*[CgrSuppressed] = */"contact is suppressed",
-	/*[CgrVisited] = */"contact has been visited",
-	/*[CgrNoRange] = */"no range for contact",
+	static const char *reasonText[CgrReasonMax - 1] = { };
 
-	/*[CgrRouteViaSelf] = */"route is via self",
-	/*[CgrRouteCapacityTooSmall] = */"route includes a contact that's too \
-small for this bundle",
-	/*[CgrInitialContactExcluded] = */"first node on route is an excluded \
-neighbor",
-	/*[CgrRouteTooSlow] = */"route is too slow; radiation latency delays \
-arrival time too much",
-	/*[CgrNoApplicableDirective] = */"no applicable directive",
-	/*[CgrBlockedOutduct] = */"outduct is blocked",
-	/*[CgrMaxPayloadTooSmall] = */"max payload too small",
-	/*[CgrNoResidualCapacity] = */"contact with this neighbor is already \
-fully subscribed",
-	/*[CgrResidualCapacityTooSmall] = */"too little residual aggregate \
-capacity for this bundle",
-
-	/*[CgrMoreHops] = */"more hops",
-	/*[CgrIdentical] = */"identical to a previous route",
-	/*[CgrNoHelp] = */"insufficient delivery confidence improvement",
-	/*[CgrLowerConfidence] = */"lower delivery confidence",
-	/*[CgrLaterArrivalTime] = */"later arrival time",
-	/*[CgrLargerNodeNbr] = */"initial hop has larger node number", };
+	reasonText[CgrContactEndsEarly] = "contact ends before data arrives";
+	reasonText[CgrSuppressed] = "contact is suppressed";
+	reasonText[CgrVisited] = "contact has been visited";
+	reasonText[CgrNoRange] = "no range for contact";
+	reasonText[CgrRouteViaSelf] = "route is via self";
+	reasonText[CgrRouteCapacityTooSmall] = "route includes a contact that's too small for this bundle";
+	reasonText[CgrInitialContactExcluded] = "first node on route is an excluded neighbor";
+	reasonText[CgrRouteTooSlow] = "route is too slow; radiation latency delays arrival time too much";
+	reasonText[CgrNoApplicableDirective] = "no applicable directive";
+	reasonText[CgrBlockedOutduct] = "outduct is blocked";
+	reasonText[CgrMaxPayloadTooSmall] = "max payload too small";
+	reasonText[CgrNoResidualCapacity] = "contact with this neighbor is already fully subscribed";
+	reasonText[CgrResidualCapacityTooSmall] = "too little residual aggregate capacity for this bundle";
+	reasonText[CgrMoreHops] = "more hops";
+	reasonText[CgrIdentical] = "identical to a previous route";
+	reasonText[CgrNoHelp] = "insufficient delivery confidence improvement";
+	reasonText[CgrLowerConfidence] = "lower delivery confidence";
+	reasonText[CgrLaterArrivalTime] = "later arrival time";
+	reasonText[CgrLargerNodeNbr] = "initial hop has larger node number";
 
 	if (i < 0 || i >= CgrReasonMax)
 	{

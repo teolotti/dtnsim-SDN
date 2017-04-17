@@ -247,219 +247,227 @@ static void outputTraceMsg(void *data, unsigned int lineNbr, CgrTraceType traceT
 
 	switch (traceType)
 	{
-	case CgrUpdateProximateNode:
-		fputs("other route has", stdout);
-
 	case CgrIgnoreContact:
-	case CgrIgnoreRoute:
-	case CgrIgnoreProximateNode:
+	{
 		fputc(' ', stdout);
-		fputs(cgr_reason_text((CgrReason) va_arg(args, int)), stdout);
-	default:
-		break;
-	}
+	fputs(cgr_reason_text((CgrReason) (va_arg(args, int))), stdout);
+}
+case CgrIgnoreRoute:
+{
+	fputc(' ', stdout);
+fputs(cgr_reason_text((CgrReason) (va_arg(args, int))), stdout);
+}
+case CgrIgnoreProximateNode:
+{
+fputc(' ', stdout);
+fputs(cgr_reason_text((CgrReason) (va_arg(args, int))), stdout);
+}
 
-	fputc('\n', stdout);
+default:
+break;
+}
+
+fputc('\n', stdout);
 }
 
 static void handleTraceState(void *data, unsigned int lineNbr, CgrTraceType traceType, va_list args)
 {
-	TraceState *traceState = (TraceState *) data;
+TraceState *traceState = (TraceState *) data;
 
-	switch (traceType)
-	{
-	case CgrUseProximateNode:
-		traceState->selectedNode = va_arg(args, uvast);
-		traceState->hops = va_arg(args, PsmAddress);
-		break;
+switch (traceType)
+{
+case CgrUseProximateNode:
+traceState->selectedNode = va_arg(args, uvast);
+traceState->hops = va_arg(args, PsmAddress);
+break;
 
-	default:
-		break;
-	}
+default:
+break;
+}
 }
 
 static void traceFnDefault(void *data, unsigned int lineNbr, CgrTraceType traceType, ...)
 {
-	va_list args;
+va_list args;
+va_start(args, traceType);
+handleTraceState(data, lineNbr, traceType, args);
+va_end(args);
 
-	va_start(args, traceType);
-	handleTraceState(data, lineNbr, traceType, args);
-	va_end(args);
-
-	bool printDebug = true;
-	va_list argsAux;
-	if (printDebug)
-	{
-		va_start(argsAux, traceType);
-		outputTraceMsg(data, lineNbr, traceType, argsAux);
-		va_end(argsAux);
-	}
+if (CGR_DEBUG)
+{
+va_list argsAux;
+va_start(argsAux, traceType);
+outputTraceMsg(data, lineNbr, traceType, argsAux);
+va_end(argsAux);
+}
 }
 
 // Callback function used by cgr
 static int getDirective(uvast nodeNbr, Object plans, Bundle *bundle, FwdDirective *directive)
 {
-	char *outductProto = (char *) "ltp";
-	char *outductName = (char *) (to_string(nodeNbr)).c_str();
+char *outductProto = (char *) "ltp";
+char *outductName = (char *) (to_string(nodeNbr)).c_str();
 
-	PsmAddress vductElt;
-	VOutduct *vduct;
-	findOutduct(outductProto, outductName, &vduct, &vductElt);
+PsmAddress vductElt;
+VOutduct *vduct;
+findOutduct(outductProto, outductName, &vduct, &vductElt);
 
-	directive->outductElt = vduct->outductElt;
+directive->outductElt = vduct->outductElt;
 
-	return 1;
+return 1;
 }
 
 void RoutingCgrIon350::routeAndQueueBundle(BundlePkt * bundlePkt, double simTime)
 {
 	// sets global UTC time according to the simulation offset for CGR in ION
-	time_t simTimeUtc = getUtcSimulationTime(simTime);
-	_globalUtcTime_ = simTimeUtc;
+time_t simTimeUtc = getUtcSimulationTime(simTime);
+_globalUtcTime_ = simTimeUtc;
 	// sets sdrStatus so CGR can take into account previous forwardings
 	// it is used in computeArrivalTime() - computePriorClaims() methods
-	_sdrStatus_ = sdr_->getSdrStatus();
-	_startUtcTime_ = this->startUtcTime_;
+_sdrStatus_ = sdr_->getSdrStatus();
+_startUtcTime_ = this->startUtcTime_;
 
-	typedef struct
-	{
-		int neighborNode;
-		int contactId;
-	} CgrResult;
+typedef struct
+{
+int neighborNode;
+int contactId;
+} CgrResult;
 
-	int mem_id;
-	mem_id = shmget(IPC_PRIVATE, sizeof(CgrResult), SHM_R | SHM_W);
-	CgrResult *cgrResult;
+int mem_id;
+mem_id = shmget(IPC_PRIVATE, sizeof(CgrResult), SHM_R | SHM_W);
+CgrResult *cgrResult;
 
-	pid_t pid = fork();
-	switch (pid)
-	{
-	case -1:
-	{
-		perror("fork");
-		exit(1);
-	}
-	case 0:
-	{
-		//child
-		cgrResult = (CgrResult *) shmat(mem_id, NULL, 0);
-		if ((void *) -1 == (void *) cgrResult)
-		{
-			perror("Child cannot attach");
-			exit(1);
-		}
-		cgrResult->contactId = -1;
-		cgrResult->neighborNode = -1;
+pid_t pid = fork();
+switch (pid)
+{
+case -1:
+{
+perror("fork");
+exit(1);
+}
+case 0:
+{
+//child
+cgrResult = (CgrResult *) shmat(mem_id, NULL, 0);
+if ((void *) -1 == (void *) cgrResult)
+{
+	perror("Child cannot attach");
+	exit(1);
+}
+cgrResult->contactId = -1;
+cgrResult->neighborNode = -1;
 
-		string dir = string("ion/node") + to_string(this->eid_);
-		chdir(dir.c_str());
+string dir = string("ion/node") + to_string(this->eid_);
+chdir(dir.c_str());
 
-		char cwd[1024];
-		getcwd(cwd, sizeof(cwd));
+char cwd[1024];
+getcwd(cwd, sizeof(cwd));
 
-		if (bp_attach() < 0)
-		{
-			cout << "unable to attach to ion" << endl;
-			return;
-		}
+if (bp_attach() < 0)
+{
+	cout << "unable to attach to ion" << endl;
+	return;
+}
 
-		uvast localNode = getOwnNodeNbr();
-		uvast destNode;
-		char *end;
-		destNode = strtoul((to_string(bundlePkt->getDestinationEid())).c_str(), &end, 10);
+uvast localNode = getOwnNodeNbr();
+uvast destNode;
+char *end;
+destNode = strtoul((to_string(bundlePkt->getDestinationEid())).c_str(), &end, 10);
 
-		time_t dispatchOffset = 0;
-		time_t expirationOffset = 100000000;
-		time_t nowTime = simTimeUtc;
-		time_t expirationTime = nowTime + expirationOffset;
+time_t expirationOffset = 100000000;
+time_t nowTime = simTimeUtc;
+time_t expirationTime = nowTime + expirationOffset;
 
-		unsigned int bundleSize = bundlePkt->getByteLength();
+unsigned int bundleSize = bundlePkt->getByteLength();
 
-		Object plans;
+Object plans;
 
-		Bundle bundle =
-		{ };
-		bundle.extendedCOS.flags = BP_BEST_EFFORT;
-		bundle.payload.length = bundleSize;
-		bundle.returnToSender = 0;
-		bundle.clDossier.senderNodeNbr = localNode;
-		bundle.expirationTime = expirationTime;
-		bundle.dictionaryLength = 0;
-		bundle.extensionsLength[0] = 0;
-		bundle.extensionsLength[1] = 0;
-		bundle.id.source.c.nodeNbr = 0;
-		bundle.destination.c.nodeNbr = 0;
+Bundle bundle =
+{ };
+bundle.extendedCOS.flags = BP_BEST_EFFORT;
+bundle.payload.length = bundleSize;
+bundle.returnToSender = 0;
+bundle.clDossier.senderNodeNbr = localNode;
+bundle.expirationTime = expirationTime;
+bundle.dictionaryLength = 0;
+bundle.extensionsLength[0] = 0;
+bundle.extensionsLength[1] = 0;
+bundle.id.source.c.nodeNbr = 0;
+bundle.destination.c.nodeNbr = 0;
 
-		CgrTrace trace;
-		TraceState traceStateSt;
-		traceStateSt.selectedNode = -1;
-		CgrTraceFn traceFn = traceFnDefault;
-		trace.fn = traceFn;
-		trace.data = (void *) &traceStateSt;
+CgrTrace trace;
+TraceState traceStateSt;
+traceStateSt.selectedNode = -1;
+CgrTraceFn traceFn = traceFnDefault;
+trace.fn = traceFn;
+trace.data = (void *) &traceStateSt;
 
-		//cout<<"calling cgr_forward from node "<<localNode<<" to node "<<destNode<<endl;
-		if (cgr_forward(&bundle, (Object) (&bundle), destNode, (Object) (&plans), getDirective, &trace) < 0)
-		{
-			cout << "unable to simulate cgr" << endl;
-			return;
-		}
+if (CGR_DEBUG)
+{
+	cout << "!#####!   calling cgr_forward from node " << localNode << " to node " << destNode << "   !#####!" << endl;
+}
+if (cgr_forward(&bundle, (Object) (&bundle), destNode, (Object) (&plans), getDirective, &trace) < 0)
+{
+	cout << "unable to simulate cgr" << endl;
+	return;
+}
 
-		int neighborNodeNbr = traceStateSt.selectedNode;
-		if (neighborNodeNbr != -1)
-		{
-			PsmPartition ionwm = getIonwm();
-			IonCXref *firstContact = (IonCXref *) psp(ionwm, sm_list_data(ionwm, sm_list_first(ionwm, traceStateSt.hops)));
-			cgrResult->contactId = firstContact->id;
-			cgrResult->neighborNode = neighborNodeNbr;
-		}
+int neighborNodeNbr = traceStateSt.selectedNode;
+if (neighborNodeNbr != -1)
+{
+	PsmPartition ionwm = getIonwm();
+	IonCXref *firstContact = (IonCXref *) psp(ionwm, sm_list_data(ionwm, sm_list_first(ionwm, traceStateSt.hops)));
+	cgrResult->contactId = firstContact->id;
+	cgrResult->neighborNode = neighborNodeNbr;
+}
 
-		bp_detach();
-		shmdt(cgrResult);
-		chdir("../../");
-		exit(0);
-	}
-	default:
-	{
-		cgrResult = (CgrResult *) shmat(mem_id, NULL, 0);
-		if ((void *) cgrResult == (void *) -1)
-		{
-			perror("Child cannot attach");
-			exit(1);
-		}
+bp_detach();
+shmdt(cgrResult);
+chdir("../../");
+exit(0);
+}
+default:
+{
+cgrResult = (CgrResult *) shmat(mem_id, NULL, 0);
+if ((void *) cgrResult == (void *) -1)
+{
+	perror("Child cannot attach");
+	exit(1);
+}
 
-		// Parent process waits here for child to terminate.
-		int returnStatus;
-		waitpid(pid, &returnStatus, 0);
+// Parent process waits here for child to terminate.
+int returnStatus;
+waitpid(pid, &returnStatus, 0);
 
-		if ((cgrResult->neighborNode != -1) && (cgrResult->contactId != -1))
-		{
-			//cout << "cgr enqueue to " << cgrResult->neighborNode << " in contact " << cgrResult->contactId << endl;
-			cgrEnqueue(bundlePkt, cgrResult->neighborNode, cgrResult->contactId);
-		}
-		else
-		{
-			// enqueue to limbo
-			cgrEnqueue(bundlePkt, 0, 0);
-		}
+if ((cgrResult->neighborNode != -1) && (cgrResult->contactId != -1))
+{
+	//cout << "cgr enqueue to " << cgrResult->neighborNode << " in contact " << cgrResult->contactId << endl;
+	cgrEnqueue(bundlePkt, cgrResult->neighborNode, cgrResult->contactId);
+}
+else
+{
+	// enqueue to limbo
+	cgrEnqueue(bundlePkt, 0, 0);
+}
 
-		shmdt(cgrResult);
-		if (shmctl(mem_id, IPC_RMID, 0) < 0)
-		{
-			perror("cannot remove shared memory");
-			exit(1);
-		}
-	}
-	}
+shmdt(cgrResult);
+if (shmctl(mem_id, IPC_RMID, 0) < 0)
+{
+	perror("cannot remove shared memory");
+	exit(1);
+}
+}
+}
 }
 
 void RoutingCgrIon350::cgrEnqueue(BundlePkt * bundle, int neighborNodeNbr, int contactId)
 {
-	bundle->setNextHopEid(neighborNodeNbr);
-	sdr_->enqueueBundleToContact(bundle, contactId);
+bundle->setNextHopEid(neighborNodeNbr);
+sdr_->enqueueBundleToContact(bundle, contactId);
 }
 
 time_t RoutingCgrIon350::getUtcSimulationTime(double simTime)
 {
-	time_t utcSimTime = this->startUtcTime_ + simTime;
-	return utcSimTime;
+time_t utcSimTime = this->startUtcTime_ + simTime;
+return utcSimTime;
 }

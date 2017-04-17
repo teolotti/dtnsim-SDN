@@ -1,12 +1,8 @@
-/*
- * RoutingCgrIon350.h
- *
- *  Created on: Nov 8, 2016
- *      Author: juanfraire
- */
 
 #ifndef SRC_NODE_NET_ROUTINGCGRION350_H_
 #define SRC_NODE_NET_ROUTINGCGRION350_H_
+
+#define CGR_DEBUG 1
 
 #include "Routing.h"
 #include "bp/include/cgr.h"
