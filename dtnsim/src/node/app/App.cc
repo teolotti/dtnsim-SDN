@@ -70,6 +70,7 @@ void App::handleMessage(cMessage *msg)
 		BundlePkt* bundle = new BundlePkt("bundle", BUNDLE);
 		bundle->setSchedulingPriority(BUNDLE);
 
+
 		char bundleName[10];
 		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, trafficGenMsg->getDestinationEid(),(int)bundle->getId());
 		bundle->setName(bundleName);
