@@ -17,13 +17,15 @@
 class RoutingCgrModelRev17: public Routing
 {
 public:
-	RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug);
+	RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * contactPlan, string routingType, bool printDebug);
 	virtual ~RoutingCgrModelRev17();
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 
 	bool printDebug_ = true;
 
 private:
+
+	string routingType_;
 
 	int eid_;
 	int nodeNum_;

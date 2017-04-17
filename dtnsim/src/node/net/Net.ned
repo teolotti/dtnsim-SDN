@@ -6,8 +6,10 @@ simple Net
         
         @display("i=block/routing");   
                 
-        string contactsFile = default("contacts.txt");     
-        string routing = default("direct");    
+        string contactsFile = default("contacts.txt");
+             
+        string routing = default("direct");
+        string routingType = default("none");        
         bool printRoutingDebug = default(false);
         
         bool saveBundleMap=default(false); 

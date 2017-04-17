@@ -7,13 +7,25 @@
 
 #include "RoutingCgrModelRev17.h"
 
-RoutingCgrModelRev17::RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug)
+RoutingCgrModelRev17::RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * contactPlan, string routingType, bool printDebug)
 {
 	eid_ = eid;
 	nodeNum_ = nodeNum;
 	sdr_ = sdr;
 	contactPlan_ = contactPlan;
 	printDebug_ = printDebug;
+
+	routingType_ = routingType;
+	if (routingType_.compare("none") == 0)
+	{
+		routingType_ = "volumeAware:allContacts";
+	}
+
+	// "volumeAware:allContacts"
+	// "volumeAware:1stContact"
+	// "volumeAware:extensionBlock"
+
+	cout << routingType_ << endl;
 
 	// Initialize routeTable_
 	routeTable_.resize(nodeNum_);
@@ -114,8 +126,8 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 		bundle->setNextHopEid((*bestRoute).nextHop);
 		sdr_->enqueueBundleToContact(bundle, (*bestRoute).hops.at(0)->getId());
 
-		cout << "*Best: routeTable[" << terminusNode << "][" << (*bestRoute).nextHop << "]: nextHop: " << (*bestRoute).nextHop << ", frm " << (*bestRoute).fromTime << " to " << (*bestRoute).toTime << ", arrival time: " << (*bestRoute).arrivalTime << ", volume: " << (*bestRoute).residualVolume
-				<< "/" << (*bestRoute).maxVolume << "Bytes" << endl;
+		cout << "*Best: routeTable[" << terminusNode << "][" << (*bestRoute).nextHop << "]: nextHop: " << (*bestRoute).nextHop << ", frm " << (*bestRoute).fromTime << " to " << (*bestRoute).toTime << ", arrival time: " << (*bestRoute).arrivalTime << ", volume: " << (*bestRoute).residualVolume << "/"
+				<< (*bestRoute).maxVolume << "Bytes" << endl;
 
 		// Update residualVolume: this route hops
 		for (vector<Contact *>::iterator hop = (*bestRoute).hops.begin(); hop != (*bestRoute).hops.end(); ++hop)
@@ -124,17 +136,24 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 		//this->printContactPlan();
 
 		// Update residualVolume: all routes that uses these hops
-		for (int n1 = 1; n1 < nodeNum_; n1++)
-			for (int n2 = 1; n2 < nodeNum_; n2++)
-				for (vector<Contact *>::iterator hop1 = routeTable_.at(n1).at(n2).hops.begin(); hop1 != routeTable_.at(n1).at(n2).hops.end(); ++hop1)
-					for (vector<Contact *>::iterator hop2 = (*bestRoute).hops.begin(); hop2 != (*bestRoute).hops.end(); ++hop2)
-						if ((*hop1)->getId() == (*hop2)->getId())
-							// Does the reduction of this contact volume requires a route volume update?
-							if (routeTable_.at(n1).at(n2).residualVolume > (*hop1)->getResidualVolume())
-							{
-								routeTable_.at(n1).at(n2).residualVolume = (*hop1)->getResidualVolume();
-								cout << "*Rvol: routeTable[" << n1 << "][" << n2 << "]: updated to " << (*hop1)->getResidualVolume() << "Bytes" << endl;
-							}
+		if (routingType_.compare("volumeAware:allContacts") == 0)
+			for (int n1 = 1; n1 < nodeNum_; n1++)
+				for (int n2 = 1; n2 < nodeNum_; n2++)
+					for (vector<Contact *>::iterator hop1 = routeTable_.at(n1).at(n2).hops.begin(); hop1 != routeTable_.at(n1).at(n2).hops.end(); ++hop1)
+						for (vector<Contact *>::iterator hop2 = (*bestRoute).hops.begin(); hop2 != (*bestRoute).hops.end(); ++hop2)
+							if ((*hop1)->getId() == (*hop2)->getId())
+								// Does the reduction of this contact volume requires a route volume update?
+								if (routeTable_.at(n1).at(n2).residualVolume > (*hop1)->getResidualVolume())
+								{
+									routeTable_.at(n1).at(n2).residualVolume = (*hop1)->getResidualVolume();
+									cout << "*Rvol: routeTable[" << n1 << "][" << n2 << "]: updated to " << (*hop1)->getResidualVolume() << "Bytes" << endl;
+								}
+
+		// Update residualVolume: 1st contact
+		if (routingType_.compare("volumeAware:1stContact") == 0)
+		{
+			(*bestRoute).residualVolume = (*bestRoute).hops[0]->getResidualVolume();
+		}
 
 	}
 	else
