@@ -136,7 +136,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 		//this->printContactPlan();
 
 		// Update residualVolume: all routes that uses these hops
-		if (routingType_.compare("volumeAware:allContacts") == 0)
+		if (routingType_.compare("volumeAware:allContacts") == 0 || routingType_.compare("volumeAware:extensionBlock") == 0)
 			for (int n1 = 1; n1 < nodeNum_; n1++)
 				for (int n2 = 1; n2 < nodeNum_; n2++)
 					for (vector<Contact *>::iterator hop1 = routeTable_.at(n1).at(n2).hops.begin(); hop1 != routeTable_.at(n1).at(n2).hops.end(); ++hop1)
