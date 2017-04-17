@@ -13,7 +13,7 @@ simple Net
         bool printRoutingDebug = default(false);
         
         bool saveBundleMap=default(false); 
-        bool generateOutputGraph=default(false);        
+        bool generateTopologyOutput=default(false);        
         
     gates:
         inout gateToApp;

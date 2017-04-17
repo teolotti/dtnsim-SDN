@@ -22,7 +22,7 @@ void Net::initialize(int stage)
 
 		// Init parameters
 		this->saveBundleMap_ = par("saveBundleMap");
-		this->generateOutputGraph_ = par("generateOutputGraph");
+		this->generateTopologyOutput_ = par("generateTopologyOutput");
 
 		// Initialize contact plan
 		contactPlan_.parseContactPlanFile(par("contactsFile"));
@@ -282,10 +282,29 @@ void Net::finish()
 
 	// BundleMap End
 	if (saveBundleMap_)
+	{
 		bundleMap_.close();
+	}
 
-	if (generateOutputGraph_)
-		outputGraph_.close();
+	if (generateTopologyOutput_)
+	{
+#ifdef USE_BOOST_LIBRARIES
+
+		int nodesNumber = this->getParentModule()->getParentModule()->par("nodesNumber");
+		map<double, TopologyGraph *> topology = topologyUtils::computeTopology(&this->contactPlan_, nodesNumber);
+		topologyUtils::printGraphs(&topology, "results/topology_node" + to_string(this->eid_) + ".dot");
+
+		map<double, TopologyGraph* >::iterator it1 = topology.begin();
+		map<double, TopologyGraph* >::iterator it2 = topology.end();
+		for (; it1 != it2; ++it1)
+		{
+			delete it1->second;
+		}
+
+		topology.clear();
+
+#endif
+	}
 }
 
 Net::Net()
@@ -297,4 +316,5 @@ Net::~Net()
 {
 
 }
+
 
