@@ -7,8 +7,13 @@ The simulator is still under development: this is a beta version. Nonetheless, f
 ### Installation ###
 
 * Download [Omnet++](https://omnetpp.org/omnetpp). DTNSIM was tested on version 5.0, but should work in newer versions as well.
+* Download [Boost](http://www.boost.org/users/download) and extract it. DTNSIM was tested on version 1.63.0, but should work in newer versions as well.
 * Import the DTNSIM repository from the Omnet++ IDE (File->Import->Projects from Git->Clone URI).
+* Select DTNSIM project properties and include boost main folder (boost_1_63_0) in C/C++ General/Paths and Symbols .
+* Uncomment line "//#define USE_BOOST_LIBRARIES 1" in src/Config.h: 
 * Build DTNSIM project.
+
+Note: DTNSIM can be used without boost libraries but output topology graphs will not be generated.
 
 ### Utilization ###
 
