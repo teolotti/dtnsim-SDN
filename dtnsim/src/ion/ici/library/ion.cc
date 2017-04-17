@@ -16,6 +16,7 @@
 
 time_t _globalUtcTime_;
 SdrStatus _sdrStatus_;
+time_t _startUtcTime_;
 
 #ifndef NODE_LIST_SEMKEY
 #define NODE_LIST_SEMKEY	(0xeeee1)

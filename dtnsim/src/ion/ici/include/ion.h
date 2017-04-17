@@ -21,6 +21,7 @@
 
 extern time_t _globalUtcTime_;
 extern SdrStatus _sdrStatus_;
+extern time_t _startUtcTime_;
 
 #ifdef __cplusplus
 extern "C" {

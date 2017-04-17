@@ -56,6 +56,7 @@ public:
 
 
 private:
+
 	int eid_;
 	SdrModel * sdr_;
 	ContactPlan * contactPlan_;

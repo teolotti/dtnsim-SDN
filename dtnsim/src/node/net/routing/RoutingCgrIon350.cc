@@ -7,6 +7,7 @@
 
 #include "RoutingCgrIon350.h"
 
+static void outputTraceMsg(void *data, unsigned int lineNbr, CgrTraceType traceType, va_list args);
 static void handleTraceState(void *data, unsigned int lineNbr, CgrTraceType traceType, va_list args);
 static void traceFnDefault(void *data, unsigned int lineNbr, CgrTraceType traceType, ...);
 static int getDirective(uvast nodeNbr, Object plans, Bundle *bundle, FwdDirective *directive);
@@ -14,7 +15,8 @@ static int getDirective(uvast nodeNbr, Object plans, Bundle *bundle, FwdDirectiv
 RoutingCgrIon350::RoutingCgrIon350(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodesNumber)
 {
 	// Do nothing for eid=0 (unnused in ion)
-	if(eid==0){
+	if (eid == 0)
+	{
 		return;
 	}
 
@@ -239,6 +241,27 @@ void RoutingCgrIon350::createIonipnrcFile(ConfigInfo *configInfo)
 	file.close();
 }
 
+static void outputTraceMsg(void *data, unsigned int lineNbr, CgrTraceType traceType, va_list args)
+{
+	vfprintf(stdout, cgr_tracepoint_text(traceType), args);
+
+	switch (traceType)
+	{
+	case CgrUpdateProximateNode:
+		fputs("other route has", stdout);
+
+	case CgrIgnoreContact:
+	case CgrIgnoreRoute:
+	case CgrIgnoreProximateNode:
+		fputc(' ', stdout);
+		fputs(cgr_reason_text((CgrReason) va_arg(args, int)), stdout);
+	default:
+		break;
+	}
+
+	fputc('\n', stdout);
+}
+
 static void handleTraceState(void *data, unsigned int lineNbr, CgrTraceType traceType, va_list args)
 {
 	TraceState *traceState = (TraceState *) data;
@@ -262,6 +285,15 @@ static void traceFnDefault(void *data, unsigned int lineNbr, CgrTraceType traceT
 	va_start(args, traceType);
 	handleTraceState(data, lineNbr, traceType, args);
 	va_end(args);
+
+	bool printDebug = true;
+	va_list argsAux;
+	if (printDebug)
+	{
+		va_start(argsAux, traceType);
+		outputTraceMsg(data, lineNbr, traceType, argsAux);
+		va_end(argsAux);
+	}
 }
 
 // Callback function used by cgr
@@ -287,6 +319,7 @@ void RoutingCgrIon350::routeAndQueueBundle(BundlePkt * bundlePkt, double simTime
 	// sets sdrStatus so CGR can take into account previous forwardings
 	// it is used in computeArrivalTime() - computePriorClaims() methods
 	_sdrStatus_ = sdr_->getSdrStatus();
+	_startUtcTime_ = this->startUtcTime_;
 
 	typedef struct
 	{

@@ -408,7 +408,7 @@ static int computeDistanceToTerminus(IonCXref *rootContact, CgrContactNote *root
 			 *	transmit time and therefore a later
 			 *	arrival time.				*/
 
-			TRACE(CgrCost, (unsigned int )(transmitTime), owlt, (unsigned int )(arrivalTime));
+			TRACE(CgrCost, (unsigned int )(transmitTime - _startUtcTime_), owlt, (unsigned int )(arrivalTime - _startUtcTime_));
 
 			if (arrivalTime < work->arrivalTime)
 			{
@@ -568,7 +568,7 @@ static int findNextBestRoute(PsmPartition ionwm, IonCXref *rootContact, CgrConta
 	}
 	else
 	{
-		TRACE(CgrAcceptRoute, route->toNodeNbr, (unsigned int )(route->fromTime), (unsigned int )(route->arrivalTime), route->maxCapacity);
+		TRACE(CgrAcceptRoute, route->toNodeNbr, (unsigned int )(route->fromTime - _startUtcTime_), (unsigned int )(route->arrivalTime -_startUtcTime_), route->maxCapacity);
 
 		/*	Found best route, given current exclusions.	*/
 
@@ -802,8 +802,6 @@ static PsmAddress loadRouteList(IonNode *terminusNode, time_t currentTime, CgrTr
 
 static int recomputeRouteForContact(uvast contactToNodeNbr, time_t contactFromTime, IonNode *terminusNode, time_t currentTime, CgrTrace *trace)
 {
-	printf("recomputeRouteForContact\n");
-
 	PsmPartition ionwm = getIonwm();
 	IonVdb *vdb = getIonVdb();
 	PsmAddress routes;
@@ -1430,13 +1428,13 @@ Object bundleObj, Lyst excludedNodes, Object plans, CgrLookupFn getDirective, Cg
 		}
 	}
 
-	TRACE(CgrIdentifyProximateNodes, deadline);
+	TRACE(CgrIdentifyProximateNodes, deadline - _startUtcTime_);
 	for (elt = sm_list_first(ionwm, routes); elt; elt = nextElt)
 	{
 		nextElt = sm_list_next(ionwm, elt);
 		addr = sm_list_data(ionwm, elt);
 		route = (CgrRoute *) psp(ionwm, addr);
-		TRACE(CgrCheckRoute, route->toNodeNbr, (unsigned int )(route->fromTime), (unsigned int )(route->arrivalTime));
+		TRACE(CgrCheckRoute, route->toNodeNbr, (unsigned int )(route->fromTime  - _startUtcTime_), (unsigned int )(route->arrivalTime - _startUtcTime_));
 		if (route->toTime < currentTime)
 		{
 			/*	This route includes a contact that
@@ -2009,7 +2007,7 @@ static int cgrForward(Bundle *bundle, Object bundleObj, uvast terminusNodeNbr, O
 
 	CHKERR(bundle && bundleObj && terminusNodeNbr && plans && getDirective);
 
-	TRACE(CgrBuildRoutes, terminusNodeNbr, bundle->payload.length, (unsigned int )(atTime));
+	TRACE(CgrBuildRoutes, terminusNodeNbr, bundle->payload.length, (unsigned int )(atTime - _startUtcTime_));
 
 	if (ionvdb->lastEditTime.tv_sec > cgrvdb->lastLoadTime.tv_sec || (ionvdb->lastEditTime.tv_sec == cgrvdb->lastLoadTime.tv_sec && ionvdb->lastEditTime.tv_usec > cgrvdb->lastLoadTime.tv_usec))
 	{
