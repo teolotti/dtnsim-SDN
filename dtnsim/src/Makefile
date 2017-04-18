@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for dtnsim
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -lpthread
+#  opp_makemake -f --deep -I/home/juanfraire/boost_1_63_0 -lpthread
 #
 
 # Name of target to be created (-o option)
@@ -16,6 +16,7 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 
 # C++ include paths (with -I)
 INCLUDE_PATH = \
+    -I/home/juanfraire/boost_1_63_0 \
     -I. \
     -IcontactPlan \
     -Iion \
@@ -51,6 +52,7 @@ INCLUDE_PATH = \
     -Inode/mac \
     -Inode/net \
     -Inode/net/routing \
+    -Inode/net/topologyUtils \
     -Iresults
 
 # Additional object and library files to link with
@@ -140,6 +142,7 @@ OBJS = \
     $O/node/net/routing/RoutingCgrModelYen.o \
     $O/node/net/routing/RoutingCgrModelRev17.o \
     $O/node/net/routing/RoutingDirect.o \
+    $O/node/net/topologyUtils/TopologyUtils.o \
     $O/dtnsim_m.o
 
 # Message files
@@ -262,6 +265,7 @@ clean:
 	$(Q)-rm -f node/mac/*_m.cc node/mac/*_m.h node/mac/*_sm.cc node/mac/*_sm.h
 	$(Q)-rm -f node/net/*_m.cc node/net/*_m.h node/net/*_sm.cc node/net/*_sm.h
 	$(Q)-rm -f node/net/routing/*_m.cc node/net/routing/*_m.h node/net/routing/*_sm.cc node/net/routing/*_sm.h
+	$(Q)-rm -f node/net/topologyUtils/*_m.cc node/net/topologyUtils/*_m.h node/net/topologyUtils/*_sm.cc node/net/topologyUtils/*_sm.h
 	$(Q)-rm -f results/*_m.cc results/*_m.h results/*_sm.cc results/*_sm.h
 
 cleanall: clean
@@ -269,7 +273,7 @@ cleanall: clean
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc ion/node1/*.cc ion/node2/*.cc ion/node3/*.cc ion/node4/*.cc node/*.cc node/app/*.cc node/fault/*.cc node/graphics/*.cc node/mac/*.cc node/net/*.cc node/net/routing/*.cc results/*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc ion/node1/*.cc ion/node2/*.cc ion/node3/*.cc ion/node4/*.cc node/*.cc node/app/*.cc node/fault/*.cc node/graphics/*.cc node/mac/*.cc node/net/*.cc node/net/routing/*.cc node/net/topologyUtils/*.cc results/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/dtnsim_m.o: dtnsim_m.cc \
@@ -1110,6 +1114,7 @@ $O/node/app/App.o: node/app/App.cc \
 	node/MsgTypes.h \
 	node/app/App.h
 $O/node/fault/Fault.o: node/fault/Fault.cc \
+	Config.h \
 	dtnsim_m.h \
 	ion/Ion.h \
 	ion/bp/include/bp.h \
@@ -1148,7 +1153,8 @@ $O/node/fault/Fault.o: node/fault/Fault.cc \
 	node/net/routing/RoutingCgrModel350.h \
 	node/net/routing/RoutingCgrModelRev17.h \
 	node/net/routing/RoutingCgrModelYen.h \
-	node/net/routing/RoutingDirect.h
+	node/net/routing/RoutingDirect.h \
+	node/net/topologyUtils/TopologyUtils.h
 $O/node/graphics/Graphics.o: node/graphics/Graphics.cc \
 	dtnsim_m.h \
 	node/MsgTypes.h \
@@ -1164,6 +1170,7 @@ $O/node/net/ContactPlan.o: node/net/ContactPlan.cc \
 	node/net/Contact.h \
 	node/net/ContactPlan.h
 $O/node/net/Net.o: node/net/Net.cc \
+	Config.h \
 	dtnsim_m.h \
 	ion/Ion.h \
 	ion/bp/include/bp.h \
@@ -1202,7 +1209,8 @@ $O/node/net/Net.o: node/net/Net.cc \
 	node/net/routing/RoutingCgrModel350.h \
 	node/net/routing/RoutingCgrModelRev17.h \
 	node/net/routing/RoutingCgrModelYen.h \
-	node/net/routing/RoutingDirect.h
+	node/net/routing/RoutingDirect.h \
+	node/net/topologyUtils/TopologyUtils.h
 $O/node/net/SdrModel.o: node/net/SdrModel.cc \
 	dtnsim_m.h \
 	node/net/Contact.h \
@@ -1273,4 +1281,7 @@ $O/node/net/routing/RoutingDirect.o: node/net/routing/RoutingDirect.cc \
 	node/net/SdrStatus.h \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingDirect.h
+$O/node/net/topologyUtils/TopologyUtils.o: node/net/topologyUtils/TopologyUtils.cc \
+	Config.h \
+	node/net/topologyUtils/TopologyUtils.h
 

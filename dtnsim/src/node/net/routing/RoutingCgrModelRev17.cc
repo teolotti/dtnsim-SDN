@@ -25,8 +25,6 @@ RoutingCgrModelRev17::RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr,
 	// "volumeAware:1stContact"
 	// "volumeAware:extensionBlock"
 
-	cout << routingType_ << endl;
-
 	// Initialize routeTable_
 	routeTable_.resize(nodeNum_);
 	for (int n1 = 0; n1 < nodeNum_; n1++)

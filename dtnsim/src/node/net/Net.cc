@@ -20,10 +20,6 @@ void Net::initialize(int stage)
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
 		graphicsModule->setBundlesInSdr(sdr_.getBundlesInSdr());
 
-		// Init parameters
-		this->saveBundleMap_ = par("saveBundleMap");
-		this->generateTopologyOutput_ = par("generateTopologyOutput");
-
 		// Initialize contact plan
 		contactPlan_.parseContactPlanFile(par("contactsFile"));
 
@@ -80,7 +76,9 @@ void Net::initialize(int stage)
 		sdrBundleInLimbo.setName("sdrBundleInLimbo");
 		sdr_.setStatsHandle(&sdrBundlesInSdr, &sdrBundleInLimbo);
 
-		// Initialize BundleMap
+		// Initialize BundleMap and TopologyOutputs
+		this->saveBundleMap_ = par("saveBundleMap");
+		this->generateTopologyOutput_ = par("generateTopologyOutput");
 		if (saveBundleMap_)
 		{
 			char intStr[30];
@@ -282,9 +280,7 @@ void Net::finish()
 
 	// BundleMap End
 	if (saveBundleMap_)
-	{
 		bundleMap_.close();
-	}
 
 	if (generateTopologyOutput_)
 	{
@@ -294,8 +290,8 @@ void Net::finish()
 		map<double, TopologyGraph *> topology = topologyUtils::computeTopology(&this->contactPlan_, nodesNumber);
 		topologyUtils::printGraphs(&topology, "results/topology_node" + to_string(this->eid_) + ".dot");
 
-		map<double, TopologyGraph* >::iterator it1 = topology.begin();
-		map<double, TopologyGraph* >::iterator it2 = topology.end();
+		map<double, TopologyGraph*>::iterator it1 = topology.begin();
+		map<double, TopologyGraph*>::iterator it2 = topology.end();
 		for (; it1 != it2; ++it1)
 		{
 			delete it1->second;
@@ -316,5 +312,4 @@ Net::~Net()
 {
 
 }
-
 
