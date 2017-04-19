@@ -12,8 +12,7 @@ simple Net
         string routingType = default("none");        
         bool printRoutingDebug = default(false);
         
-        bool saveBundleMap=default(false); 
-        bool generateTopologyOutput=default(false);        
+        bool saveBundleMap=default(false);        
         
     gates:
         inout gateToApp;
