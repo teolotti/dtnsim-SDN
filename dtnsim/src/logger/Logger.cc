@@ -16,24 +16,26 @@ Logger::~Logger()
 
 void Logger::initialize()
 {
-    string contactsFile = par("contactsFile");
-    contactPlan_.parseContactPlanFile(contactsFile);
-    nodesNumber_ = this->getParentModule()->par("nodesNumber");
-
-    // check that contactPlan passed to Logger be the same as the one passed to the other nodes
-    for (int i = 1; i <= nodesNumber_; i++)
+    if (par("saveTopology") || par("saveFlows"))
     {
-        Net *net = check_and_cast<Net *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("net"));
-        string contactsFileNi = net->par("contactsFile");
+        string contactsFile = par("contactsFile");
+        contactPlan_.parseContactPlanFile(contactsFile);
+        nodesNumber_ = this->getParentModule()->par("nodesNumber");
 
-        if(contactsFile != contactsFileNi)
+        // check that contactPlan passed to Logger be the same as the one passed to the other nodes
+        for (int i = 1; i <= nodesNumber_; i++)
         {
-            string str1 = "Contacts File passed to Logger: " + contactsFile;
-            string str2 = "is different from Contacts File passed to node " + to_string(i) + ": " + contactsFileNi;
-            throw cException(("Error: " + str1 +" "+ str2).c_str());
+            Net *net = check_and_cast<Net *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("net"));
+            string contactsFileNi = net->par("contactsFile");
+
+            if (contactsFile != contactsFileNi)
+            {
+                string str1 = "Contacts File passed to Logger: " + contactsFile;
+                string str2 = "is different from Contacts File passed to node " + to_string(i) + ": " + contactsFileNi;
+                throw cException(("Error: " + str1 + " " + str2).c_str());
+            }
         }
     }
-
 }
 
 void Logger::finish()
