@@ -25,7 +25,9 @@
 #include "RoutingCgrModelRev17.h"
 
 #include "Config.h"
-#include "TopologyUtils.h"
+#include "RouterUtils.h"
+#include "utils/TopologyUtils.h"
+#include "utils/RouterUtils.h"
 
 using namespace omnetpp;
 using namespace std;
@@ -77,9 +79,6 @@ private:
 	// BundlesMap
 	bool saveBundleMap_;
 	ofstream bundleMap_;
-
-	// TopologyOutput
-	bool generateTopologyOutput_;
 };
 
 #endif /* NET_H_ */

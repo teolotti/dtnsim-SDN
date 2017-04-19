@@ -78,12 +78,10 @@ void Net::initialize(int stage)
 
 		// Initialize BundleMap and TopologyOutputs
 		this->saveBundleMap_ = par("saveBundleMap");
-		this->generateTopologyOutput_ = par("generateTopologyOutput");
 		if (saveBundleMap_)
 		{
-			char intStr[30];
-			sprintf(intStr, "results/BundleMap_Node%02d.csv", eid_);
-			bundleMap_.open(intStr);
+			string fileStr = "results/BundleMap_Node" + to_string(eid_) + ".csv";
+			bundleMap_.open(fileStr);
 			bundleMap_ << "SimTime" << "," << "SRC" << "," << "DST" << "," << "TSRC" << "," << "TDST" << "," << "BitLenght" << "," << "DurationSec" << endl;
 		}
 	}
@@ -164,7 +162,7 @@ void Net::handleMessage(cMessage * msg)
 		// if there are messages in the queue for this contact
 		if (sdr_.isBundleForContact(contactId))
 		{
-			Net * neighborNet = check_and_cast<Net *>(this->getParentModule()->getParentModule()->getSubmodule("node", neighborEid - 1)->getSubmodule("net"));
+			Net * neighborNet = check_and_cast<Net *>(this->getParentModule()->getParentModule()->getSubmodule("node", neighborEid)->getSubmodule("net"));
 			if ((!neighborNet->onFault) && (!this->onFault))
 			{
 				// If local/remote node are responsive, then transmit bundle
@@ -281,26 +279,6 @@ void Net::finish()
 	// BundleMap End
 	if (saveBundleMap_)
 		bundleMap_.close();
-
-	if (generateTopologyOutput_)
-	{
-#ifdef USE_BOOST_LIBRARIES
-
-		int nodesNumber = this->getParentModule()->getParentModule()->par("nodesNumber");
-		map<double, TopologyGraph *> topology = topologyUtils::computeTopology(&this->contactPlan_, nodesNumber);
-		topologyUtils::printGraphs(&topology, "results/topology_node" + to_string(this->eid_) + ".dot");
-
-		map<double, TopologyGraph*>::iterator it1 = topology.begin();
-		map<double, TopologyGraph*>::iterator it2 = topology.end();
-		for (; it1 != it2; ++it1)
-		{
-			delete it1->second;
-		}
-
-		topology.clear();
-
-#endif
-	}
 }
 
 Net::Net()
