@@ -5,10 +5,9 @@
 #ifndef TOPOLOGYUTILS_H_
 #define TOPOLOGYUTILS_H_
 
-#include "../topologyUtils/TopologyUtils.h"
 #include "ContactPlan.h"
 #include <boost/graph/adjacency_list.hpp>
-#include "../topologyUtils/TopologyGraphInfo.h"
+#include "utils/TopologyGraphInfo.h"
 #include <fstream>
 #include <sstream>
 #include <string>

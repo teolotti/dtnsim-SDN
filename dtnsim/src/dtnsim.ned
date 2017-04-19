@@ -2,6 +2,7 @@ package dtnsim;
 
 import dtnsim.ion.Ion;
 import dtnsim.node.Node;
+import dtnsim.logger.Logger;
 
 network dtnsim
 {
@@ -18,6 +19,11 @@ network dtnsim
         ion: Ion {
             parameters:
                 @display("p=40,50");
+        }
+        
+        logger: Logger {
+            parameters:
+                @display("p=677,431");
         }
 
     connections:

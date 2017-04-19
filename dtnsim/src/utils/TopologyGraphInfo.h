@@ -5,13 +5,18 @@
 
 struct TopologyVertexInfo
 {
+    // vertex id
 	int eid;
 };
 
 
 struct TopologyEdgeInfo
 {
+    // edge id
 	int id;
+
+	// state capacity in bytes
+	double stateCapacity;
 };
 
 #endif /* TOPOLOGYGRAPHINFO_H_ */
