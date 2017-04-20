@@ -1,28 +1,41 @@
 
 
 cplusplus {{
-    typedef std::list<int> List;
+    // Include Contact and CgrRoute structures
+    #include "CgrRoute.h"
+    
+    typedef std::list<int> intList;
+    typedef std::list<CgrRoute> cgrRouteList;
 }}
-class noncobject List;
+
+struct CgrRoute;
+class noncobject intList;
+class noncobject cgrRouteList;
 
 packet BundlePkt{
-    	// Set by source node
+		////////////////////////////////////////////////    
+    	// Bundle Protocol fields (set by source node)
+    	////////////////////////////////////////////////
     	int sourceEid;
         int destinationEid;
-        bool returnToSender;
         bool critical;
         simtime_t creationTimestamp;
         simtime_t ttl;
+        bool returnToSender;
         
-        // Set by intermediate nodes
+        // Source routing path
+        CgrRoute cgrRoute;
+        
+        ////////////////////////////////////////////////
+        // Bundle meta-data (set by intermediate nodes)
+        ////////////////////////////////////////////////
         int senderEid;
         int nextHopEid;
         int hopCount;
         
+        // Probabilistic routing meta-data
         int xmitCopiesCount;
         double dlvConfidence;
-        List originalRoute;
-        List takenRoute;
 };
 
 message TrafficGeneratorMsg{
