@@ -80,6 +80,12 @@ void Net::initialize(int stage)
 		this->saveBundleMap_ = par("saveBundleMap");
 		if (saveBundleMap_)
 		{
+			// create result folder if it doesn't exist
+			struct stat st = {0};
+			if (stat("results", &st) == -1) {
+			    mkdir("results", 0700);
+			}
+
 			string fileStr = "results/BundleMap_Node" + to_string(eid_) + ".csv";
 			bundleMap_.open(fileStr);
 			bundleMap_ << "SimTime" << "," << "SRC" << "," << "DST" << "," << "TSRC" << "," << "TDST" << "," << "BitLenght" << "," << "DurationSec" << endl;
