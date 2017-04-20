@@ -21,9 +21,9 @@ RoutingCgrModelRev17::RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr,
 		routingType_ = "volumeAware:allContacts";
 	}
 
-	// "volumeAware:allContacts"
 	// "volumeAware:1stContact"
-	// "volumeAware:extensionBlock"
+	// "volumeAware:allContacts"
+	// "volumeAware:allContacts-extensionBlock"
 
 	// Initialize routeTable_
 	routeTable_.resize(nodeNum_);
@@ -45,7 +45,21 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 
 	cout << "TIME: " << simTime << "s, NODE: " << eid_ << ", routing bundle to dst: " << bundle->getDestinationEid() << " (" << bundle->getByteLength() << "Bytes)" << endl;
 
-	this->cgrForward(bundle, simTime);
+	// If no extensionBlock, run cgr each time a bundle is dispatched
+	if (routingType_.compare("volumeAware:allContacts") == 0 || routingType_.compare("volumeAware:1stContact") == 0)
+		this->cgrForward(bundle, simTime);
+
+	// If extensionBlock, check header and decide
+	if (routingType_.compare("volumeAware:allContacts-extensionBlock") == 0)
+	{
+		// If bundle has the EB,
+		//   If enconded path is valid (volume available)
+		//      enqueue
+		//   If not valid,
+		//      discard and calculate a new EB
+		// If no extension block present
+		//    calculate a new EB
+	}
 
 	// Re-enable cout if degug disabled
 	if (printDebug_ == false)
@@ -119,45 +133,51 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 	}
 
 	// Enqueue bundle to route and update volumes
-	if ((*bestRoute).nextHop != NO_ROUTE_FOUND)
-	{
-		bundle->setNextHopEid((*bestRoute).nextHop);
-		sdr_->enqueueBundleToContact(bundle, (*bestRoute).hops.at(0)->getId());
+	this->cgrEnqueue(bundle, &(*bestRoute));
 
-		cout << "*Best: routeTable[" << terminusNode << "][" << (*bestRoute).nextHop << "]: nextHop: " << (*bestRoute).nextHop << ", frm " << (*bestRoute).fromTime << " to " << (*bestRoute).toTime << ", arrival time: " << (*bestRoute).arrivalTime << ", volume: " << (*bestRoute).residualVolume << "/"
-				<< (*bestRoute).maxVolume << "Bytes" << endl;
+}
+
+void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute)
+{
+	if (bestRoute->nextHop != NO_ROUTE_FOUND)
+	{
+		bundle->setNextHopEid(bestRoute->nextHop);
+		sdr_->enqueueBundleToContact(bundle, bestRoute->hops.at(0)->getId());
+
+		cout << "*Best: routeTable[" << bestRoute->terminusNode << "][" << bestRoute->nextHop << "]: nextHop: " << bestRoute->nextHop << ", frm " << bestRoute->fromTime << " to " << bestRoute->toTime << ", arrival time: " << bestRoute->arrivalTime << ", volume: " << bestRoute->residualVolume << "/"
+				<< bestRoute->maxVolume << "Bytes" << endl;
 
 		// Update residualVolume: this route hops
-		for (vector<Contact *>::iterator hop = (*bestRoute).hops.begin(); hop != (*bestRoute).hops.end(); ++hop)
+		for (vector<Contact *>::iterator hop = bestRoute->hops.begin(); hop != bestRoute->hops.end(); ++hop)
 			(*hop)->setResidualVolume((*hop)->getResidualVolume() - bundle->getByteLength());
 
 		//this->printContactPlan();
 
 		// Update residualVolume: all routes that uses these hops
-		if (routingType_.compare("volumeAware:allContacts") == 0 || routingType_.compare("volumeAware:extensionBlock") == 0)
+		if (routingType_.compare("volumeAware:allContacts") == 0 || routingType_.compare("volumeAware:allContacts-extensionBlock") == 0)
 			for (int n1 = 1; n1 < nodeNum_; n1++)
 				for (int n2 = 1; n2 < nodeNum_; n2++)
 					for (vector<Contact *>::iterator hop1 = routeTable_.at(n1).at(n2).hops.begin(); hop1 != routeTable_.at(n1).at(n2).hops.end(); ++hop1)
-						for (vector<Contact *>::iterator hop2 = (*bestRoute).hops.begin(); hop2 != (*bestRoute).hops.end(); ++hop2)
+						for (vector<Contact *>::iterator hop2 = bestRoute->hops.begin(); hop2 != bestRoute->hops.end(); ++hop2)
 							if ((*hop1)->getId() == (*hop2)->getId())
 								// Does the reduction of this contact volume requires a route volume update?
 								if (routeTable_.at(n1).at(n2).residualVolume > (*hop1)->getResidualVolume())
 								{
 									routeTable_.at(n1).at(n2).residualVolume = (*hop1)->getResidualVolume();
-									cout << "*Rvol: routeTable[" << n1 << "][" << n2 << "]: updated to " << (*hop1)->getResidualVolume() << "Bytes" << endl;
+									cout << "*Rvol: routeTable[" << n1 << "][" << n2 << "]: updated to " << (*hop1)->getResidualVolume() << "Bytes (all contacts)" << endl;
 								}
 
 		// Update residualVolume: 1st contact
 		if (routingType_.compare("volumeAware:1stContact") == 0)
 		{
-			(*bestRoute).residualVolume = (*bestRoute).hops[0]->getResidualVolume();
+			bestRoute->residualVolume = bestRoute->hops[0]->getResidualVolume();
+			cout << "*Rvol: routeTable[" << bestRoute->terminusNode << "][" << bestRoute->nextHop << "]: updated to " << bestRoute->hops[0]->getResidualVolume() << "Bytes (1st contact)" << endl;
 		}
-
 	}
 	else
 	{
 		// Enqueue to Limbo
-		bundle->setNextHopEid((*bestRoute).nextHop);
+		bundle->setNextHopEid(bestRoute->nextHop);
 		sdr_->enqueueBundleToContact(bundle, 0);
 
 		cout << "*BestRoute not found (enqueing to limbo)" << endl;
@@ -321,6 +341,7 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 			route->hops.insert(route->hops.begin(), contact);
 		}
 
+		route->terminusNode = terminusNode;
 		route->nextHop = route->hops[0]->getDestinationEid();
 		route->fromTime = route->hops[0]->getStart();
 		route->toTime = earliestEndTime;
@@ -330,6 +351,7 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 	else
 	{
 		// No route found
+		route->terminusNode = NO_ROUTE_FOUND;
 		route->nextHop = NO_ROUTE_FOUND;
 		route->arrivalTime = numeric_limits<double>::max(); // never chosen as best route
 	}

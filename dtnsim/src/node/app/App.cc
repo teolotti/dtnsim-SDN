@@ -82,7 +82,6 @@ void App::handleMessage(cMessage *msg)
 		bundle->setTtl(trafficGenMsg->getTtl());
 		bundle->setCreationTimestamp(simTime());
 		bundle->setHopCount(0);
-		bundle->setDlvConfidence(0);
 		bundle->setReturnToSender(par("returnToSender"));
 		bundle->setCritical(par("critical"));
 		bundle->getOriginalRoute().clear();

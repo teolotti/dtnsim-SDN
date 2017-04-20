@@ -130,10 +130,6 @@ void Net::handleMessage(cMessage * msg)
 			BundlePkt* bundle = sdr_.getNextBundleForContact(contactMsg->getId());
 			sdr_.popNextBundleForContact(contactMsg->getId());
 
-			// Reset bundle values
-			bundle->setDlvConfidence(0);
-			//bundle->setXmitCopiesCount(0);
-
 			routing->routeAndQueueBundle(bundle, simTime().dbl());
 			netReRoutedBundles.record(reRoutedBundles++);
 		}
@@ -177,8 +173,6 @@ void Net::handleMessage(cMessage * msg)
 				// Set bundle parameters that are udated on each hop:
 				bundle->setSenderEid(eid_);
 				bundle->setHopCount(bundle->getHopCount() + 1);
-				bundle->setDlvConfidence(0);
-				bundle->setXmitCopiesCount(0);
 				send(bundle, "gateToMac$o");
 
 				netTxBundles.record(simTime());

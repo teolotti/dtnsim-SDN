@@ -39,16 +39,16 @@ void Graphics::initialize()
 		// Extend background area
 		nodeModule->getParentModule()->getDisplayString().setTagArg("bgb", 0, 2 * marginX + 2 * posRadius);
 		nodeModule->getParentModule()->getDisplayString().setTagArg("bgb", 1, 4 * marginY + 2 * posRadius);
-	}
 
-	// Place node 0 away from the network
-	if (eid_ == 0)
-	{
-		nodeModule->getDisplayString().setTagArg("p", 0, 40);
-		nodeModule->getDisplayString().setTagArg("p", 1, 100);
-		nodeModule->getDisplayString().setTagArg("b", 0, 1);
-		nodeModule->getDisplayString().setTagArg("b", 0, 1);
-		nodeModule->getDisplayString().setTagArg("i", 0, "old/ball2_vs");
+		// Place node 0 away from the network
+		if (eid_ == 0)
+		{
+			nodeModule->getDisplayString().setTagArg("p", 0, 40);
+			nodeModule->getDisplayString().setTagArg("p", 1, 100);
+			nodeModule->getDisplayString().setTagArg("b", 0, 1);
+			nodeModule->getDisplayString().setTagArg("b", 0, 1);
+			nodeModule->getDisplayString().setTagArg("i", 0, "old/ball2_vs");
+		}
 	}
 }
 
@@ -105,7 +105,7 @@ void Graphics::setContactOff(ContactMsg* contactMsg)
 
 void Graphics::setBundlesInSdr(int bundNum)
 {
-	if(eid_==0)
+	if (eid_ == 0)
 		return;
 
 	stringstream str;

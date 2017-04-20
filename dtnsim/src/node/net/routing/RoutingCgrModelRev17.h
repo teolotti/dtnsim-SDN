@@ -34,6 +34,7 @@ private:
 
 	typedef struct
 	{
+		int terminusNode;			// Destination node
 		int nextHop; 				// Entry node
 		double fromTime; 			// Init time
 		double toTime;	 			// Due time (earliest contact end time among all)
@@ -59,6 +60,8 @@ private:
 	} Work;
 
 	void cgrForward(BundlePkt * bundle, double simTime);
+	void cgrEnqueue(BundlePkt * bundle, CgrRoute * bestRoute);
+
 	void findNextBestRoute(int entryNode, int terminusNode, CgrRoute * route, double simTime);
 
 	void clearRouteTable();

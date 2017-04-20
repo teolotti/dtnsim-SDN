@@ -23,7 +23,7 @@ network dtnsim
         
         logger: Logger {
             parameters:
-                @display("p=677,431");
+                @display("p=40,150");
         }
 
     connections:

@@ -24,7 +24,7 @@
  * <pre>
  * packet BundlePkt
  * {
- *     // Things that are set once
+ *     // Set by source node
  *     int sourceEid;
  *     int destinationEid;
  *     bool returnToSender;
@@ -32,10 +32,11 @@
  *     simtime_t creationTimestamp;
  *     simtime_t ttl;
  * 
- *     // Things that changes on each hop
+ *     // Set by intermediate nodes
  *     int senderEid;
  *     int nextHopEid;
  *     int hopCount;
+ * 
  *     int xmitCopiesCount;
  *     double dlvConfidence;
  *     List originalRoute;
@@ -111,7 +112,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const BundlePkt& obj) {obj.
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BundlePkt& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:27</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:28</tt> by nedtool.
  * <pre>
  * message TrafficGeneratorMsg
  * {
@@ -165,7 +166,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const TrafficGeneratorMsg& 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, TrafficGeneratorMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:35</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:36</tt> by nedtool.
  * <pre>
  * message ContactMsg
  * {
@@ -227,7 +228,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ContactMsg& obj) {obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ContactMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:45</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:46</tt> by nedtool.
  * <pre>
  * message ForwardingMsg
  * {

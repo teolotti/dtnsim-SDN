@@ -6,7 +6,7 @@ cplusplus {{
 class noncobject List;
 
 packet BundlePkt{
-    	// Things that are set once
+    	// Set by source node
     	int sourceEid;
         int destinationEid;
         bool returnToSender;
@@ -14,10 +14,11 @@ packet BundlePkt{
         simtime_t creationTimestamp;
         simtime_t ttl;
         
-        // Things that changes on each hop
+        // Set by intermediate nodes
         int senderEid;
         int nextHopEid;
         int hopCount;
+        
         int xmitCopiesCount;
         double dlvConfidence;
         List originalRoute;
