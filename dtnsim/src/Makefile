@@ -280,7 +280,9 @@ depend:
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/dtnsim_m.o: dtnsim_m.cc \
-	dtnsim_m.h
+	dtnsim_m.h \
+	node/net/Contact.h \
+	node/net/routing/CgrRoute.h
 $O/ion/Ion.o: ion/Ion.cc \
 	ion/Ion.h
 $O/ion/bp/cgr/libcgr.o: ion/bp/cgr/libcgr.cc \
@@ -1148,6 +1150,7 @@ $O/logger/Logger.o: logger/Logger.cc \
 	node/net/Net.h \
 	node/net/SdrModel.h \
 	node/net/SdrStatus.h \
+	node/net/routing/CgrRoute.h \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingCgrIon350.h \
 	node/net/routing/RoutingCgrModel350.h \
@@ -1159,7 +1162,9 @@ $O/logger/Logger.o: logger/Logger.cc \
 $O/node/app/App.o: node/app/App.cc \
 	dtnsim_m.h \
 	node/MsgTypes.h \
-	node/app/App.h
+	node/app/App.h \
+	node/net/Contact.h \
+	node/net/routing/CgrRoute.h
 $O/node/fault/Fault.o: node/fault/Fault.cc \
 	Config.h \
 	dtnsim_m.h \
@@ -1195,6 +1200,7 @@ $O/node/fault/Fault.o: node/fault/Fault.cc \
 	node/net/Net.h \
 	node/net/SdrModel.h \
 	node/net/SdrStatus.h \
+	node/net/routing/CgrRoute.h \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingCgrIon350.h \
 	node/net/routing/RoutingCgrModel350.h \
@@ -1206,12 +1212,16 @@ $O/node/fault/Fault.o: node/fault/Fault.cc \
 $O/node/graphics/Graphics.o: node/graphics/Graphics.cc \
 	dtnsim_m.h \
 	node/MsgTypes.h \
-	node/graphics/Graphics.h
+	node/graphics/Graphics.h \
+	node/net/Contact.h \
+	node/net/routing/CgrRoute.h
 $O/node/mac/Mac.o: node/mac/Mac.cc \
 	dtnsim_m.h \
 	node/MsgTypes.h \
 	node/app/App.h \
-	node/mac/Mac.h
+	node/mac/Mac.h \
+	node/net/Contact.h \
+	node/net/routing/CgrRoute.h
 $O/node/net/Contact.o: node/net/Contact.cc \
 	node/net/Contact.h
 $O/node/net/ContactPlan.o: node/net/ContactPlan.cc \
@@ -1252,6 +1262,7 @@ $O/node/net/Net.o: node/net/Net.cc \
 	node/net/Net.h \
 	node/net/SdrModel.h \
 	node/net/SdrStatus.h \
+	node/net/routing/CgrRoute.h \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingCgrIon350.h \
 	node/net/routing/RoutingCgrModel350.h \
@@ -1265,7 +1276,8 @@ $O/node/net/SdrModel.o: node/net/SdrModel.cc \
 	node/net/Contact.h \
 	node/net/ContactPlan.h \
 	node/net/SdrModel.h \
-	node/net/SdrStatus.h
+	node/net/SdrStatus.h \
+	node/net/routing/CgrRoute.h
 $O/node/net/SdrStatus.o: node/net/SdrStatus.cc
 $O/node/net/routing/RoutingCgrIon350.o: node/net/routing/RoutingCgrIon350.cc \
 	dtnsim_m.h \
@@ -1296,6 +1308,7 @@ $O/node/net/routing/RoutingCgrIon350.o: node/net/routing/RoutingCgrIon350.cc \
 	node/net/ContactPlan.h \
 	node/net/SdrModel.h \
 	node/net/SdrStatus.h \
+	node/net/routing/CgrRoute.h \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingCgrIon350.h
 $O/node/net/routing/RoutingCgrModel350.o: node/net/routing/RoutingCgrModel350.cc \
@@ -1304,6 +1317,7 @@ $O/node/net/routing/RoutingCgrModel350.o: node/net/routing/RoutingCgrModel350.cc
 	node/net/ContactPlan.h \
 	node/net/SdrModel.h \
 	node/net/SdrStatus.h \
+	node/net/routing/CgrRoute.h \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingCgrModel350.h
 $O/node/net/routing/RoutingCgrModelRev17.o: node/net/routing/RoutingCgrModelRev17.cc \
@@ -1312,6 +1326,7 @@ $O/node/net/routing/RoutingCgrModelRev17.o: node/net/routing/RoutingCgrModelRev1
 	node/net/ContactPlan.h \
 	node/net/SdrModel.h \
 	node/net/SdrStatus.h \
+	node/net/routing/CgrRoute.h \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingCgrModelRev17.h
 $O/node/net/routing/RoutingCgrModelYen.o: node/net/routing/RoutingCgrModelYen.cc \
@@ -1320,6 +1335,7 @@ $O/node/net/routing/RoutingCgrModelYen.o: node/net/routing/RoutingCgrModelYen.cc
 	node/net/ContactPlan.h \
 	node/net/SdrModel.h \
 	node/net/SdrStatus.h \
+	node/net/routing/CgrRoute.h \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingCgrModelYen.h
 $O/node/net/routing/RoutingDirect.o: node/net/routing/RoutingDirect.cc \
@@ -1328,6 +1344,7 @@ $O/node/net/routing/RoutingDirect.o: node/net/routing/RoutingDirect.cc \
 	node/net/ContactPlan.h \
 	node/net/SdrModel.h \
 	node/net/SdrStatus.h \
+	node/net/routing/CgrRoute.h \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingDirect.h
 $O/utils/RouterUtils.o: utils/RouterUtils.cc \

@@ -9,10 +9,9 @@
 #define SRC_NODE_NET_ROUTING_ROUTINGCGRMODELREV17_H_
 
 #include "Routing.h"
+#include "CgrRoute.h"
 
 #define	MAX_SPEED_MPH	(150000)
-#define NO_ROUTE_FOUND (-1)
-#define EMPTY_ROUTE (-2)
 
 class RoutingCgrModelRev17: public Routing
 {
@@ -32,18 +31,18 @@ private:
 	SdrModel * sdr_;
 	ContactPlan * contactPlan_;
 
-	typedef struct
-	{
-		int terminusNode;			// Destination node
-		int nextHop; 				// Entry node
-		double fromTime; 			// Init time
-		double toTime;	 			// Due time (earliest contact end time among all)
-		float confidence;
-		double arrivalTime;
-		double maxVolume; 			// In Bytes
-		double residualVolume;		// In Bytes
-		vector<Contact *> hops;	 	// Contact list
-	} CgrRoute;
+//	typedef struct
+//	{
+//		int terminusNode;			// Destination node
+//		int nextHop; 				// Entry node
+//		double fromTime; 			// Init time
+//		double toTime;	 			// Due time (earliest contact end time among all)
+//		float confidence;
+//		double arrivalTime;
+//		double maxVolume; 			// In Bytes
+//		double residualVolume;		// In Bytes
+//		vector<Contact *> hops;	 	// Contact list
+//	} CgrRoute;
 
 	// Route Table: one table per destination, one entry per neighbour node
 	vector<vector<CgrRoute>> routeTable_;

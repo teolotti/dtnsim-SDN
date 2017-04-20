@@ -16,31 +16,40 @@
 
 
 // cplusplus {{
-    typedef std::list<int> List;
+    // Include Contact and CgrRoute structures
+    #include "CgrRoute.h"
+    
+    typedef std::list<int> intList;
+    typedef std::list<CgrRoute> cgrRouteList;
 // }}
 
 /**
- * Class generated from <tt>dtnsim.msg:8</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:15</tt> by nedtool.
  * <pre>
  * packet BundlePkt
  * {
- *     // Set by source node
+ *     // Bundle Protocol fields (set by source node)
+ *     ////////////////////////////////////////////////
  *     int sourceEid;
  *     int destinationEid;
- *     bool returnToSender;
  *     bool critical;
  *     simtime_t creationTimestamp;
  *     simtime_t ttl;
+ *     bool returnToSender;
  * 
- *     // Set by intermediate nodes
+ *     // Source routing path
+ *     CgrRoute cgrRoute;
+ * 
+ *     ////////////////////////////////////////////////
+ *     // Bundle meta-data (set by intermediate nodes)
+ *     ////////////////////////////////////////////////
  *     int senderEid;
  *     int nextHopEid;
  *     int hopCount;
  * 
+ *     // Probabilistic routing meta-data
  *     int xmitCopiesCount;
  *     double dlvConfidence;
- *     List originalRoute;
- *     List takenRoute;
  * }
  * </pre>
  */
@@ -49,17 +58,16 @@ class BundlePkt : public ::omnetpp::cPacket
   protected:
     int sourceEid;
     int destinationEid;
-    bool returnToSender;
     bool critical;
     ::omnetpp::simtime_t creationTimestamp;
     ::omnetpp::simtime_t ttl;
+    bool returnToSender;
+    CgrRoute cgrRoute;
     int senderEid;
     int nextHopEid;
     int hopCount;
     int xmitCopiesCount;
     double dlvConfidence;
-    List originalRoute;
-    List takenRoute;
 
   private:
     void copy(const BundlePkt& other);
@@ -82,14 +90,17 @@ class BundlePkt : public ::omnetpp::cPacket
     virtual void setSourceEid(int sourceEid);
     virtual int getDestinationEid() const;
     virtual void setDestinationEid(int destinationEid);
-    virtual bool getReturnToSender() const;
-    virtual void setReturnToSender(bool returnToSender);
     virtual bool getCritical() const;
     virtual void setCritical(bool critical);
     virtual ::omnetpp::simtime_t getCreationTimestamp() const;
     virtual void setCreationTimestamp(::omnetpp::simtime_t creationTimestamp);
     virtual ::omnetpp::simtime_t getTtl() const;
     virtual void setTtl(::omnetpp::simtime_t ttl);
+    virtual bool getReturnToSender() const;
+    virtual void setReturnToSender(bool returnToSender);
+    virtual CgrRoute& getCgrRoute();
+    virtual const CgrRoute& getCgrRoute() const {return const_cast<BundlePkt*>(this)->getCgrRoute();}
+    virtual void setCgrRoute(const CgrRoute& cgrRoute);
     virtual int getSenderEid() const;
     virtual void setSenderEid(int senderEid);
     virtual int getNextHopEid() const;
@@ -100,19 +111,13 @@ class BundlePkt : public ::omnetpp::cPacket
     virtual void setXmitCopiesCount(int xmitCopiesCount);
     virtual double getDlvConfidence() const;
     virtual void setDlvConfidence(double dlvConfidence);
-    virtual List& getOriginalRoute();
-    virtual const List& getOriginalRoute() const {return const_cast<BundlePkt*>(this)->getOriginalRoute();}
-    virtual void setOriginalRoute(const List& originalRoute);
-    virtual List& getTakenRoute();
-    virtual const List& getTakenRoute() const {return const_cast<BundlePkt*>(this)->getTakenRoute();}
-    virtual void setTakenRoute(const List& takenRoute);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const BundlePkt& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BundlePkt& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:28</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:41</tt> by nedtool.
  * <pre>
  * message TrafficGeneratorMsg
  * {
@@ -166,7 +171,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const TrafficGeneratorMsg& 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, TrafficGeneratorMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:36</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:49</tt> by nedtool.
  * <pre>
  * message ContactMsg
  * {
@@ -228,7 +233,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ContactMsg& obj) {obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ContactMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:46</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:59</tt> by nedtool.
  * <pre>
  * message ForwardingMsg
  * {

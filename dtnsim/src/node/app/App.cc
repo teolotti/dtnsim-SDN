@@ -1,6 +1,6 @@
 #include "App.h"
 
-Define_Module(App);
+Define_Module (App);
 
 void App::initialize()
 {
@@ -70,22 +70,29 @@ void App::handleMessage(cMessage *msg)
 		BundlePkt* bundle = new BundlePkt("bundle", BUNDLE);
 		bundle->setSchedulingPriority(BUNDLE);
 
-
 		char bundleName[10];
-		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, trafficGenMsg->getDestinationEid(),(int)bundle->getId());
+		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, trafficGenMsg->getDestinationEid(), (int) bundle->getId());
+
+		// Bundle properties
 		bundle->setName(bundleName);
-		bundle->setSourceEid(this->eid_);
-		bundle->setSenderEid(this->eid_);
-		bundle->setDestinationEid(trafficGenMsg->getDestinationEid());
 		bundle->setBitLength(trafficGenMsg->getSize() * 8);
 		bundle->setByteLength(trafficGenMsg->getSize());
-		bundle->setTtl(trafficGenMsg->getTtl());
-		bundle->setCreationTimestamp(simTime());
-		bundle->setHopCount(0);
+
+		// Bundle fields (set by source node)
+		bundle->setSourceEid(this->eid_);
+		bundle->setDestinationEid(trafficGenMsg->getDestinationEid());
 		bundle->setReturnToSender(par("returnToSender"));
 		bundle->setCritical(par("critical"));
-		bundle->getOriginalRoute().clear();
-		bundle->getTakenRoute().clear();
+		bundle->setTtl(trafficGenMsg->getTtl());
+		bundle->setCreationTimestamp(simTime());
+
+		// Bundle meta-data init (set by intermediate nodes)
+		bundle->setHopCount(0);
+		bundle->setNextHopEid(0);
+		bundle->setSenderEid(0);
+		CgrRoute emptyRoute;
+		emptyRoute.nextHop = EMPTY_ROUTE;
+		bundle->setCgrRoute(emptyRoute);
 
 		trafficGenMsg->setBundlesNumber((trafficGenMsg->getBundlesNumber() - 1));
 		if (trafficGenMsg->getBundlesNumber() == 0)

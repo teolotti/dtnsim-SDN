@@ -170,11 +170,11 @@ void Net::handleMessage(cMessage * msg)
 				double dataRate = contactPlan_.getContactById(contactId)->getDataRate();
 				double txDuration = (double) bundle->getByteLength() / dataRate;
 
-				// Set bundle parameters that are udated on each hop:
+				// Set bundle metadata (set by intermediate nodes)
 				bundle->setSenderEid(eid_);
 				bundle->setHopCount(bundle->getHopCount() + 1);
-				send(bundle, "gateToMac$o");
 
+				send(bundle, "gateToMac$o");
 				netTxBundles.record(simTime());
 
 				if (saveBundleMap_)
