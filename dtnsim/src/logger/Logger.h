@@ -31,17 +31,26 @@ public:
 
 private:
 
-	// fill flowIds_ structure with App data generators
+	/// @brief Fill flowIds_ structure with App traffic data generators
 	void computeFlowIds();
-	void saveTopology();
-	void saveFlows();
-	vector<string> getDotColors();
 
+	/// @brief Compute Topology from  contactPlan_ and save it
+	/// in dot and pdf files inside "results" folder
+	void saveTopology();
+
+	/// @brief Compute Flows from BundleMaps files and save them
+	/// in dot and pdf files inside "results" folder
+	void saveFlows();
+
+	// Contact Plan passed to the nodes
 	ContactPlan contactPlan_;
 
+	// Nodes Number in the network
 	int nodesNumber_;
 
-	// (src,dst) -> flowId
+	// flowIds map: (src,dst) -> flowId
+	// save flow ids corresponding to traffic data
+	// generated in App layer
 	map<pair<int, int>, unsigned int> flowIds_;
 
 };

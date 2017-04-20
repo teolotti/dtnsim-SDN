@@ -19,6 +19,15 @@ struct TopologyEdgeInfo
 	double stateCapacity;
 };
 
+struct TopologyGraphInfo
+{
+	// state start
+	double stateStart;
+
+	// state end
+	double stateEnd;
+};
+
 #endif /* TOPOLOGYGRAPHINFO_H_ */
 
 #endif /* USE_BOOST_LIBRARIES */

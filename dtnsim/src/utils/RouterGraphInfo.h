@@ -32,6 +32,15 @@ struct RouterEdgeInfo
 	}
 };
 
+struct RouterGraphInfo
+{
+	// state start
+	double stateStart;
+
+	// state end
+	double stateEnd;
+};
+
 #endif /* ROUTERGRAPHINFO_H_ */
 
 #endif /* USE_BOOST_LIBRARIES */

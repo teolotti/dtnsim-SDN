@@ -18,10 +18,14 @@ typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS, T
 namespace topologyUtils
 {
 
+/// @brief Compute Topology from the Contact Plan.
+/// @return map that associate one TopologyGraph per state
 map<double, TopologyGraph*> computeTopology(ContactPlan *contactPlan, int nodesNumber);
 
+/// @brief Print Topology to dot and pdf files located in outFileLocation
 void printGraphs(map<double, TopologyGraph*> *topology, std::string outFileLocation);
 
+/// @brief Print a Topology State on screen
 void printGraph(TopologyGraph topologyGraph);
 
 } /* namespace topologyUtils */

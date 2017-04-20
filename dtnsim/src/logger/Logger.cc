@@ -99,37 +99,10 @@ void Logger::saveFlows()
 {
 #ifdef USE_BOOST_LIBRARIES
     this->computeFlowIds();
-    vector < string > dotColors = this->getDotColors();
+    vector < string > dotColors = routerUtils::getDotColors();
     map<double, RouterGraph *> flows = routerUtils::computeFlows(&this->contactPlan_, nodesNumber_, "results");
     routerUtils::printGraphs(&flows, dotColors, flowIds_, "results/flows.dot");
 #endif
-}
-
-vector<string> Logger::getDotColors()
-{
-    vector < string > dotColors(20);
-    dotColors.at(0) = "darkgreen";
-    dotColors.at(1) = "chartreuse2";
-    dotColors.at(2) = "darkgoldenrod1";
-    dotColors.at(3) = "crimson";
-    dotColors.at(4) = "navyblue";
-    dotColors.at(5) = "burlywood3";
-    dotColors.at(6) = "brown1";
-    dotColors.at(7) = "darkorchid3";
-    dotColors.at(8) = "darkslategrey";
-    dotColors.at(9) = "dodgerblue";
-    dotColors.at(10) = "red";
-    dotColors.at(11) = "purple3";
-    dotColors.at(12) = "yellow2";
-    dotColors.at(13) = "turquoise2";
-    dotColors.at(14) = "seagreen3";
-    dotColors.at(15) = "orange";
-    dotColors.at(16) = "thistle3";
-    dotColors.at(17) = "indigo";
-    dotColors.at(18) = "gray9";
-    dotColors.at(19) = "palegreen4";
-
-    return dotColors;
 }
 
 }

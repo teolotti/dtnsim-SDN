@@ -244,8 +244,9 @@ void printGraphs(map<double, RouterGraph*> *flows, vector<string> dotColors, map
         double state = it1->first;
         RouterGraph graph = *(it1->second);
 
-        ofs << "// k = " << state << endl;
+        ofs << "// k = " << k << ", state start = "<< state << "s" << endl;
 
+        // write all vertices labels
         typename RouterGraph::vertex_iterator vi, vi_end, vi2, vi2_end;
         for (tie(vi, vi_end) = vertices(graph); vi != vi_end; ++vi)
         {
@@ -253,11 +254,15 @@ void printGraphs(map<double, RouterGraph*> *flows, vector<string> dotColors, map
             ofs << vertexId << "." << state << " [label=L" << vertexId << "];" << endl;
         }
 
+        // write last dummy vertex that will contain state data
         int vertexId = verticesNumber + 1;
         int stateInt = (int) state;
         string labelString = string("\"") + string("k: ") + to_string(k++) + string("\\n") + string("t: ") + to_string(stateInt) + string("\"");
         ofs << vertexId << "." << stateInt << "[shape=box,fontsize=16,label=" << labelString << "];" << endl;
 
+
+		// write invisible edges between consecutive edges
+		// in order to get a nicer graph disposition
         for (tie(vi, vi_end) = vertices(graph); vi != vi_end; ++vi)
         {
             for (tie(vi2, vi2_end) = vertices(graph); vi2 != vi2_end; ++vi2)
@@ -271,18 +276,21 @@ void printGraphs(map<double, RouterGraph*> *flows, vector<string> dotColors, map
                 }
             }
         }
-
         int lastVertexId = verticesNumber;
         ofs << lastVertexId << "." << stateInt << edgeString << vertexId << "." << stateInt << "[style=\"invis\"];" << endl;
 
+        // write real topology and flow edges
         RouterGraph::edge_iterator ei, ei_end;
         for (tie(ei, ei_end) = edges(graph); ei != ei_end; ++ei)
         {
+        	// topology edges
+
             int v1Id = graph[source(*ei, graph)].eid;
             int v2Id = graph[target(*ei, graph)].eid;
-            string weight = string("id:") + to_string(graph[*ei].id) + string("\n") + to_string((int) graph[*ei].stateCapacity);
-            ofs << v1Id << "." << stateInt << edgeString << v2Id << "." << stateInt << "[color=grey,fontcolor=grey,label=\"" << weight << "\",penwidth=2];" << endl;
+            string weight = string("id:") + to_string(graph[*ei].id) + string("\\n") + to_string((int) graph[*ei].stateCapacity);
+            ofs << v1Id << "." << stateInt << edgeString << v2Id << "." << stateInt << "[color=grey,fontcolor=grey, style=\"dotted\", label=\"" << weight << "\",penwidth=2];" << endl;
 
+            // flow edges
             for (int k1 = 1; k1 <= verticesNumber; k1++)
             {
                 for (int k2 = 1; k2 <= verticesNumber; k2++)
@@ -302,24 +310,47 @@ void printGraphs(map<double, RouterGraph*> *flows, vector<string> dotColors, map
 
             ofs << "\n";
         }
-
     }
 
+    ofs << "\n";
+    ofs << "// Ranks" << endl;
+
+	// write ranks to same nodes in different states
+	// in order to get a nicer graph distribution
     RouterGraph graphAux = *(flows->begin())->second;
     RouterGraph::vertex_iterator vii, vii_end;
-    for (tie(vii, vii_end) = vertices(graphAux); vii != vii_end; ++vii)
-    {
-        ofs << "{ rank = same; ";
-        int vertexId = graphAux[*vii].eid;
+	tie(vii, vii_end) = vertices(graphAux);
+	while (true)
+	{
+		ofs << "{ rank = same; ";
 
-        map<double, RouterGraph *>::iterator iit1 = flows->begin();
-        map<double, RouterGraph *>::iterator iit2 = flows->end();
-        for (; iit1 != iit2; ++iit1)
-        {
-            ofs << vertexId << "." << iit1->first << "; ";
-        }
-        ofs << "}\n";
-    }
+		int vertexId = 0;
+		if (vii != vii_end)
+		{
+			vertexId = graphAux[*vii].eid;
+
+		}
+		else
+		{
+			vertexId = verticesNumber + 1;
+		}
+
+		map<double, RouterGraph *>::iterator iit1 = flows->begin();
+		map<double, RouterGraph *>::iterator iit2 = flows->end();
+		for (; iit1 != iit2; ++iit1)
+		{
+			ofs << vertexId << "." << iit1->first << "; ";
+		}
+
+		ofs << "}\n";
+
+		if(vii == vii_end)
+		{
+			break;
+		}
+
+		++vii;
+	}
 
     ofs << "\n\n";
     ofs << "}" << endl;
@@ -354,6 +385,33 @@ void printGraph(RouterGraph routerGraph)
         }
         cout << endl;
     }
+}
+
+vector<string> getDotColors()
+{
+    vector < string > dotColors(20);
+    dotColors.at(0) = "darkgreen";
+    dotColors.at(1) = "chartreuse2";
+    dotColors.at(2) = "darkgoldenrod1";
+    dotColors.at(3) = "crimson";
+    dotColors.at(4) = "navyblue";
+    dotColors.at(5) = "burlywood3";
+    dotColors.at(6) = "brown1";
+    dotColors.at(7) = "darkorchid3";
+    dotColors.at(8) = "darkslategrey";
+    dotColors.at(9) = "dodgerblue";
+    dotColors.at(10) = "red";
+    dotColors.at(11) = "purple3";
+    dotColors.at(12) = "yellow2";
+    dotColors.at(13) = "turquoise2";
+    dotColors.at(14) = "seagreen3";
+    dotColors.at(15) = "orange";
+    dotColors.at(16) = "thistle3";
+    dotColors.at(17) = "indigo";
+    dotColors.at(18) = "gray9";
+    dotColors.at(19) = "palegreen4";
+
+    return dotColors;
 }
 
 }
