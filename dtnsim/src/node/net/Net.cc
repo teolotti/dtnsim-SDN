@@ -193,6 +193,7 @@ void Net::handleMessage(cMessage * msg)
 				bundle->setSenderEid(eid_);
 				bundle->setHopCount(bundle->getHopCount() + 1);
 				bundle->getVisitedNodes().push_back(eid_);
+				bundle->setXmitCopiesCount(0);
 
 				send(bundle, "gateToMac$o");
 
