@@ -26,38 +26,35 @@ class SdrModel
 public:
 	SdrModel();
 	virtual ~SdrModel();
-	virtual void setStatsHandle(cOutVector * sdrBundlesInSdr, cOutVector * sdrBundleInLimbo);
+
+	// Init sdr
 	virtual void setEid(int eid);
 	virtual void setNodesNumber(int nodesNumber);
 	virtual void setContactPlan(ContactPlan *contactPlan);
+
+	// Enqueue and dequeue
 	virtual void enqueueBundleToContact(BundlePkt * bundle, int contactId);
 	virtual bool isBundleForContact(int contactId);
 	virtual BundlePkt * getNextBundleForContact(int contactId);
 	virtual void popNextBundleForContact(int contactId);
-	virtual void freeSdr(int eid);
 
-	virtual int getBundlesInSdr();
-	virtual int getBundlesSizeEnqueuedToNeighbor(int eid);
+	// Get information
+	virtual int getBundlesStoredInSdr();
+	virtual int getBundlesStoredInLimbo();
+	virtual int getBytesStoredInSdr();
+	virtual int getBytesStoredToNeighbor(int eid);
 	virtual SdrStatus getSdrStatus();
+
+	// Erase memory
+	virtual void freeSdr(int eid);
 
 private:
 
-	void updateStats();
-
 	int eid_;
-
 	int nodesNumber_;
 
 	ContactPlan *contactPlan_;
-
 	map<int, deque<BundlePkt *> > bundlesQueue_;
-
-	// Stats
-	double lastUdateTime;
-	double bundlesInSdrPerTime;
-	cOutVector * sdrBundlesInSdr_;
-	cOutVector * sdrBundleInLimbo_;
-	unsigned int sdrBundleInLimbo;
 };
 
 

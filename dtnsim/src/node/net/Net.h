@@ -71,18 +71,20 @@ private:
 	ContactPlan contactPlan_;
 	SdrModel sdr_;
 
-	// Stats
-	cOutVector netTxBundles;
-	cOutVector netRxBundles;
-	cOutVector netRxHopCount;
-	cOutVector netReRoutedBundles;
-	unsigned int reRoutedBundles;
-	cOutVector sdrBundlesInSdr;
-	cOutVector sdrBundleInLimbo;
-
 	// BundlesMap
 	bool saveBundleMap_;
 	ofstream bundleMap_;
+
+	// Signals
+	simsignal_t netBundleSentToMac;
+	simsignal_t netBundleSentToApp;
+	simsignal_t netBundleSentToAppHopCount;
+	simsignal_t netBundleSentToAppRevisitedHops;
+	simsignal_t netBundleReceivedFromMac;
+	simsignal_t netBundleReceivedFromApp;
+	simsignal_t netBundleReRouted;
+	simsignal_t sdrBundleStored;
+	simsignal_t sdrBytesStored;
 };
 
 #endif /* NET_H_ */

@@ -207,6 +207,7 @@ void BundlePkt::copy(const BundlePkt& other)
     this->senderEid = other.senderEid;
     this->nextHopEid = other.nextHopEid;
     this->hopCount = other.hopCount;
+    this->visitedNodes = other.visitedNodes;
     this->xmitCopiesCount = other.xmitCopiesCount;
     this->dlvConfidence = other.dlvConfidence;
 }
@@ -224,6 +225,7 @@ void BundlePkt::parsimPack(omnetpp::cCommBuffer *b) const
     doParsimPacking(b,this->senderEid);
     doParsimPacking(b,this->nextHopEid);
     doParsimPacking(b,this->hopCount);
+    doParsimPacking(b,this->visitedNodes);
     doParsimPacking(b,this->xmitCopiesCount);
     doParsimPacking(b,this->dlvConfidence);
 }
@@ -241,6 +243,7 @@ void BundlePkt::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->senderEid);
     doParsimUnpacking(b,this->nextHopEid);
     doParsimUnpacking(b,this->hopCount);
+    doParsimUnpacking(b,this->visitedNodes);
     doParsimUnpacking(b,this->xmitCopiesCount);
     doParsimUnpacking(b,this->dlvConfidence);
 }
@@ -345,6 +348,16 @@ void BundlePkt::setHopCount(int hopCount)
     this->hopCount = hopCount;
 }
 
+intList& BundlePkt::getVisitedNodes()
+{
+    return this->visitedNodes;
+}
+
+void BundlePkt::setVisitedNodes(const intList& visitedNodes)
+{
+    this->visitedNodes = visitedNodes;
+}
+
 int BundlePkt::getXmitCopiesCount() const
 {
     return this->xmitCopiesCount;
@@ -429,7 +442,7 @@ const char *BundlePktDescriptor::getProperty(const char *propertyname) const
 int BundlePktDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 12+basedesc->getFieldCount() : 12;
+    return basedesc ? 13+basedesc->getFieldCount() : 13;
 }
 
 unsigned int BundlePktDescriptor::getFieldTypeFlags(int field) const
@@ -451,10 +464,11 @@ unsigned int BundlePktDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISCOMPOUND,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
     };
-    return (field>=0 && field<12) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<13) ? fieldTypeFlags[field] : 0;
 }
 
 const char *BundlePktDescriptor::getFieldName(int field) const
@@ -476,10 +490,11 @@ const char *BundlePktDescriptor::getFieldName(int field) const
         "senderEid",
         "nextHopEid",
         "hopCount",
+        "visitedNodes",
         "xmitCopiesCount",
         "dlvConfidence",
     };
-    return (field>=0 && field<12) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<13) ? fieldNames[field] : nullptr;
 }
 
 int BundlePktDescriptor::findField(const char *fieldName) const
@@ -496,8 +511,9 @@ int BundlePktDescriptor::findField(const char *fieldName) const
     if (fieldName[0]=='s' && strcmp(fieldName, "senderEid")==0) return base+7;
     if (fieldName[0]=='n' && strcmp(fieldName, "nextHopEid")==0) return base+8;
     if (fieldName[0]=='h' && strcmp(fieldName, "hopCount")==0) return base+9;
-    if (fieldName[0]=='x' && strcmp(fieldName, "xmitCopiesCount")==0) return base+10;
-    if (fieldName[0]=='d' && strcmp(fieldName, "dlvConfidence")==0) return base+11;
+    if (fieldName[0]=='v' && strcmp(fieldName, "visitedNodes")==0) return base+10;
+    if (fieldName[0]=='x' && strcmp(fieldName, "xmitCopiesCount")==0) return base+11;
+    if (fieldName[0]=='d' && strcmp(fieldName, "dlvConfidence")==0) return base+12;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -520,10 +536,11 @@ const char *BundlePktDescriptor::getFieldTypeString(int field) const
         "int",
         "int",
         "int",
+        "intList",
         "int",
         "double",
     };
-    return (field>=0 && field<12) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<13) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **BundlePktDescriptor::getFieldPropertyNames(int field) const
@@ -586,8 +603,9 @@ std::string BundlePktDescriptor::getFieldValueAsString(void *object, int field, 
         case 7: return long2string(pp->getSenderEid());
         case 8: return long2string(pp->getNextHopEid());
         case 9: return long2string(pp->getHopCount());
-        case 10: return long2string(pp->getXmitCopiesCount());
-        case 11: return double2string(pp->getDlvConfidence());
+        case 10: {std::stringstream out; out << pp->getVisitedNodes(); return out.str();}
+        case 11: return long2string(pp->getXmitCopiesCount());
+        case 12: return double2string(pp->getDlvConfidence());
         default: return "";
     }
 }
@@ -611,8 +629,8 @@ bool BundlePktDescriptor::setFieldValueAsString(void *object, int field, int i, 
         case 7: pp->setSenderEid(string2long(value)); return true;
         case 8: pp->setNextHopEid(string2long(value)); return true;
         case 9: pp->setHopCount(string2long(value)); return true;
-        case 10: pp->setXmitCopiesCount(string2long(value)); return true;
-        case 11: pp->setDlvConfidence(string2double(value)); return true;
+        case 11: pp->setXmitCopiesCount(string2long(value)); return true;
+        case 12: pp->setDlvConfidence(string2double(value)); return true;
         default: return false;
     }
 }
@@ -627,6 +645,7 @@ const char *BundlePktDescriptor::getFieldStructName(int field) const
     }
     switch (field) {
         case 6: return omnetpp::opp_typename(typeid(CgrRoute));
+        case 10: return omnetpp::opp_typename(typeid(intList));
         default: return nullptr;
     };
 }
@@ -642,6 +661,7 @@ void *BundlePktDescriptor::getFieldStructValuePointer(void *object, int field, i
     BundlePkt *pp = (BundlePkt *)object; (void)pp;
     switch (field) {
         case 6: return (void *)(&pp->getCgrRoute()); break;
+        case 10: return (void *)(&pp->getVisitedNodes()); break;
         default: return nullptr;
     }
 }

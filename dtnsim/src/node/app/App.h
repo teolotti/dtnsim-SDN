@@ -35,8 +35,11 @@ class App : public cSimpleModule
         std::vector<int> sizeVec_;
         std::vector<double> startVec_;
 
-        // Stats
-        cOutVector appRxBundleDelayTime;
+        // Signal
+        simsignal_t appBundleSent;
+        simsignal_t appBundleReceived;
+        simsignal_t appBundleReceivedDelay;
+
 };
 
 #endif /* APP_H_ */

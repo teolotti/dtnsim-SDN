@@ -58,8 +58,11 @@ void App::initialize()
 		}
 	}
 
-	// Init stats
-	appRxBundleDelayTime.setName("appRxBundleDelayTime");
+	// Register signals
+	appBundleSent = registerSignal("appBundleSent");
+	appBundleReceived = registerSignal("appBundleReceived");
+	appBundleReceivedDelay = registerSignal("appBundleReceivedDelay");
+
 }
 
 void App::handleMessage(cMessage *msg)
@@ -70,10 +73,9 @@ void App::handleMessage(cMessage *msg)
 		BundlePkt* bundle = new BundlePkt("bundle", BUNDLE);
 		bundle->setSchedulingPriority(BUNDLE);
 
+		// Bundle properties
 		char bundleName[10];
 		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, trafficGenMsg->getDestinationEid(), (int) bundle->getId());
-
-		// Bundle properties
 		bundle->setName(bundleName);
 		bundle->setBitLength(trafficGenMsg->getSize() * 8);
 		bundle->setByteLength(trafficGenMsg->getSize());
@@ -90,29 +92,33 @@ void App::handleMessage(cMessage *msg)
 		bundle->setHopCount(0);
 		bundle->setNextHopEid(0);
 		bundle->setSenderEid(0);
+		bundle->getVisitedNodes().clear();
 		CgrRoute emptyRoute;
 		emptyRoute.nextHop = EMPTY_ROUTE;
 		bundle->setCgrRoute(emptyRoute);
 
+		// Keep generating traffic
 		trafficGenMsg->setBundlesNumber((trafficGenMsg->getBundlesNumber() - 1));
 		if (trafficGenMsg->getBundlesNumber() == 0)
 			delete msg;
 		else
 			scheduleAt(simTime() + trafficGenMsg->getInterval(), msg);
 
+		// Send bundle to Net
 		send(bundle, "gateToNet$o");
+		emit(appBundleSent, true);
+
 		return;
 	}
 	else if (msg->getKind() == BUNDLE)
 	{
 		BundlePkt* bundle = check_and_cast<BundlePkt *>(msg);
-
 		int destinationEid = bundle->getDestinationEid();
 
 		if (this->eid_ == destinationEid)
 		{
-			appRxBundleDelayTime.record(simTime() - bundle->getCreationTimestamp());
-			EV << "Bundle Received" << endl;
+			emit(appBundleReceived, true);
+			emit(appBundleReceivedDelay, simTime() - bundle->getCreationTimestamp());
 			delete msg;
 		}
 		else

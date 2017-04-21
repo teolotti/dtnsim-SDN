@@ -32,6 +32,7 @@ packet BundlePkt{
         int senderEid;
         int nextHopEid;
         int hopCount;
+        intList visitedNodes;
         
         // Probabilistic routing meta-data
         int xmitCopiesCount;

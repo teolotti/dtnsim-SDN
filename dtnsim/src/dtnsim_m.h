@@ -46,6 +46,7 @@
  *     int senderEid;
  *     int nextHopEid;
  *     int hopCount;
+ *     intList visitedNodes;
  * 
  *     // Probabilistic routing meta-data
  *     int xmitCopiesCount;
@@ -66,6 +67,7 @@ class BundlePkt : public ::omnetpp::cPacket
     int senderEid;
     int nextHopEid;
     int hopCount;
+    intList visitedNodes;
     int xmitCopiesCount;
     double dlvConfidence;
 
@@ -107,6 +109,9 @@ class BundlePkt : public ::omnetpp::cPacket
     virtual void setNextHopEid(int nextHopEid);
     virtual int getHopCount() const;
     virtual void setHopCount(int hopCount);
+    virtual intList& getVisitedNodes();
+    virtual const intList& getVisitedNodes() const {return const_cast<BundlePkt*>(this)->getVisitedNodes();}
+    virtual void setVisitedNodes(const intList& visitedNodes);
     virtual int getXmitCopiesCount() const;
     virtual void setXmitCopiesCount(int xmitCopiesCount);
     virtual double getDlvConfidence() const;
@@ -117,7 +122,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const BundlePkt& obj) {obj.
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BundlePkt& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:41</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:42</tt> by nedtool.
  * <pre>
  * message TrafficGeneratorMsg
  * {
@@ -171,7 +176,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const TrafficGeneratorMsg& 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, TrafficGeneratorMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:49</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:50</tt> by nedtool.
  * <pre>
  * message ContactMsg
  * {
@@ -233,7 +238,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ContactMsg& obj) {obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ContactMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:59</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:60</tt> by nedtool.
  * <pre>
  * message ForwardingMsg
  * {

@@ -18,7 +18,7 @@ void Net::initialize(int stage)
 
 		// Get a pointer to graphics module
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
-		graphicsModule->setBundlesInSdr(sdr_.getBundlesInSdr());
+		graphicsModule->setBundlesInSdr(sdr_.getBundlesStoredInSdr());
 
 		// Initialize contact plan
 		contactPlan_.parseContactPlanFile(par("contactsFile"));
@@ -46,6 +46,7 @@ void Net::initialize(int stage)
 		this->sdr_.setEid(eid_);
 		this->sdr_.setNodesNumber(this->getParentModule()->getParentModule()->par("nodesNumber"));
 		this->sdr_.setContactPlan(&contactPlan_);
+
 		string routeString = par("routing");
 		if (routeString.compare("direct") == 0)
 			routing = new RoutingDirect(eid_, &sdr_, &contactPlan_);
@@ -66,24 +67,29 @@ void Net::initialize(int stage)
 			exit(1);
 		}
 
-		// Initialize stats
-		netTxBundles.setName("netTxBundle");
-		netRxBundles.setName("netRxBundle");
-		netRxHopCount.setName("netRxHopCount");
-		netReRoutedBundles.setName("netReRoutedBundles");
-		reRoutedBundles = 0;
-		sdrBundlesInSdr.setName("sdrBundlesInSdr");
-		sdrBundleInLimbo.setName("sdrBundleInLimbo");
-		sdr_.setStatsHandle(&sdrBundlesInSdr, &sdrBundleInLimbo);
+		// Register signals
+		netBundleSentToMac = registerSignal("netBundleSentToMac");
+		netBundleSentToApp = registerSignal("netBundleSentToApp");
+		netBundleSentToAppHopCount = registerSignal("netBundleSentToAppHopCount");
+		netBundleSentToAppRevisitedHops = registerSignal("netBundleSentToAppRevisitedHops");
+		netBundleReceivedFromMac = registerSignal("netBundleReceivedFromMac");
+		netBundleReceivedFromApp = registerSignal("netBundleReceivedFromApp");
+		netBundleReRouted = registerSignal("netBundleReRouted");
+		sdrBundleStored = registerSignal("sdrBundleStored");
+		emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
+		sdrBytesStored = registerSignal("sdrBytesStored");
+		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
 
-		// Initialize BundleMap and TopologyOutputs
+		// Initialize BundleMap
 		this->saveBundleMap_ = par("saveBundleMap");
 		if (saveBundleMap_)
 		{
 			// create result folder if it doesn't exist
-			struct stat st = {0};
-			if (stat("results", &st) == -1) {
-			    mkdir("results", 0700);
+			struct stat st =
+			{ 0 };
+			if (stat("results", &st) == -1)
+			{
+				mkdir("results", 0700);
 			}
 
 			string fileStr = "results/BundleMap_Node" + to_string(eid_) + ".csv";
@@ -100,6 +106,11 @@ void Net::handleMessage(cMessage * msg)
 	///////////////////////////////////////////
 	if (msg->getKind() == BUNDLE)
 	{
+		if (msg->arrivedOn("gateToMac$i"))
+			emit(netBundleReceivedFromMac, true);
+		if (msg->arrivedOn("gateToApp$i"))
+			emit(netBundleReceivedFromApp, true);
+
 		BundlePkt* bundle = check_and_cast<BundlePkt *>(msg);
 		dispatchBundle(bundle);
 	}
@@ -136,8 +147,8 @@ void Net::handleMessage(cMessage * msg)
 			BundlePkt* bundle = sdr_.getNextBundleForContact(contactMsg->getId());
 			sdr_.popNextBundleForContact(contactMsg->getId());
 
+			emit(netBundleReRouted, true);
 			routing->routeAndQueueBundle(bundle, simTime().dbl());
-			netReRoutedBundles.record(reRoutedBundles++);
 		}
 
 		// Visualize contact line off
@@ -164,11 +175,10 @@ void Net::handleMessage(cMessage * msg)
 		// if there are messages in the queue for this contact
 		if (sdr_.isBundleForContact(contactId))
 		{
+			// If local/remote node are responsive, then transmit bundle
 			Net * neighborNet = check_and_cast<Net *>(this->getParentModule()->getParentModule()->getSubmodule("node", neighborEid)->getSubmodule("net"));
 			if ((!neighborNet->onFault) && (!this->onFault))
 			{
-				// If local/remote node are responsive, then transmit bundle
-
 				// Get bundle pointer from sdr
 				BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
 
@@ -179,15 +189,19 @@ void Net::handleMessage(cMessage * msg)
 				// Set bundle metadata (set by intermediate nodes)
 				bundle->setSenderEid(eid_);
 				bundle->setHopCount(bundle->getHopCount() + 1);
+				bundle->getVisitedNodes().push_back(eid_);
 
 				send(bundle, "gateToMac$o");
-				netTxBundles.record(simTime());
 
 				if (saveBundleMap_)
 					bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
 
 				sdr_.popNextBundleForContact(contactId);
-				graphicsModule->setBundlesInSdr(sdr_.getBundlesInSdr());
+
+				graphicsModule->setBundlesInSdr(sdr_.getBundlesStoredInSdr());
+				emit(netBundleSentToMac, true);
+				emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
+				emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
 
 				scheduleAt(simTime() + txDuration, forwardingMsg);
 			}
@@ -211,17 +225,24 @@ void Net::dispatchBundle(BundlePkt *bundle)
 	if (this->eid_ == bundle->getDestinationEid())
 	{
 		// We are the destination, send to App
-		netRxHopCount.record(bundle->getHopCount());
+		emit(netBundleSentToApp, true);
+		emit(netBundleSentToAppHopCount, bundle->getHopCount());
+		bundle->getVisitedNodes().sort();
+		bundle->getVisitedNodes().unique();
+		emit(netBundleSentToAppRevisitedHops, bundle->getHopCount() - bundle->getVisitedNodes().size());
+
 		send(bundle, "gateToApp$o");
 	}
 	else
 	{
 		// Route and enqueue bundle
-		netRxBundles.record(simTime());
 		routing->routeAndQueueBundle(bundle, simTime().dbl());
 
+		emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
+		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+
 		// update srd size text
-		graphicsModule->setBundlesInSdr(sdr_.getBundlesInSdr());
+		graphicsModule->setBundlesInSdr(sdr_.getBundlesStoredInSdr());
 
 		// Wake-up un scheduled forwarding threads
 		this->refreshForwarding();
@@ -265,6 +286,10 @@ void Net::setOnFault(bool onFault)
 
 void Net::finish()
 {
+
+	emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
+	emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+
 	// Delete scheduled forwardingMsg
 	std::map<int, ForwardingMsg *>::iterator it;
 	for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
