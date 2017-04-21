@@ -24,6 +24,9 @@ simple Net
         @signal[netBundleReRouted]; // how many times was a bundle rerouted in a same node (contact end with bundles in queue)
         @signal[sdrBundleStored];
         @signal[sdrBytesStored];
+        @signal[routeCgrDijkstraCalls];
+        @signal[routeCgrDijkstraLoops];
+        @signal[routeCgrRouteTableEntriesExplored];
 
         @statistic[netBundleSentToMac](title="netBundleSentToMac"; source="netBundleSentToMac"; record=count; interpolationmode=none);
         @statistic[netBundleSentToApp](title="netBundleSentToApp"; source="netBundleSentToApp"; record=count; interpolationmode=none);
@@ -34,6 +37,9 @@ simple Net
         @statistic[netBundleReRouted](title="netBundleReRouted"; source="netBundleReRouted"; record=count; interpolationmode=none);
         @statistic[sdrBundleStored](title="sdrBundleStored"; source="sdrBundleStored"; record=timeavg,max,vector; interpolationmode=none);
         @statistic[sdrBytesStored](title="sdrBytesStored"; source="sdrBytesStored"; record=timeavg,max,vector; interpolationmode=none);
+        @statistic[routeCgrDijkstraCalls](title="routeCgrDijkstraCalls"; source="routeCgrDijkstraCalls"; record=sum,vector; interpolationmode=none);
+        @statistic[routeCgrDijkstraLoops](title="routeCgrDijkstraLoops"; source="routeCgrDijkstraLoops"; record=sum,vector; interpolationmode=none);
+        @statistic[routeCgrRouteTableEntriesExplored](title="routeCgrRouteTableEntriesExplored"; source="routeCgrRouteTableEntriesExplored"; record=max,vector; interpolationmode=none);
 
     gates:
         inout gateToApp;

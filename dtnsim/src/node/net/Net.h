@@ -85,6 +85,9 @@ private:
 	simsignal_t netBundleReRouted;
 	simsignal_t sdrBundleStored;
 	simsignal_t sdrBytesStored;
+	simsignal_t routeCgrDijkstraCalls;
+	simsignal_t routeCgrDijkstraLoops;
+	simsignal_t routeCgrRouteTableEntriesExplored;
 };
 
 #endif /* NET_H_ */

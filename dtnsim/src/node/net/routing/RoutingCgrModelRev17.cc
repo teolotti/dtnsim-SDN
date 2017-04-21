@@ -43,6 +43,11 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 	if (printDebug_ == false)
 		cout.setstate(std::ios_base::failbit);
 
+	// Reset counters
+	dijkstraCalls = 0;
+	dijkstraLoops = 0;
+	tableEntriesExplored = 0;
+
 	cout << "TIME: " << simTime << "s, NODE: " << eid_ << ", routing bundle to dst: " << bundle->getDestinationEid() << " (" << bundle->getByteLength() << "Bytes)" << endl;
 
 	// If no extensionBlock, run cgr each time a bundle is dispatched
@@ -135,9 +140,13 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 	// Check route table and recalculate if necesary
 	for (int nodeEID = 1; nodeEID < nodeNum_; nodeEID++)
 	{
+		// NO_ROUTE_FOUND does not trigger a recalculation
+		if (routeTable_.at(terminusNode).at(nodeEID).nextHop == NO_ROUTE_FOUND)
+			continue;
+
 		bool needRecalculation = false;
 
-		// Empty route condition (NO_ROUTE_FOUND does not trigger a recalculation)
+		// Empty route condition
 		if (routeTable_.at(terminusNode).at(nodeEID).nextHop == EMPTY_ROUTE)
 			needRecalculation = true;
 
@@ -163,6 +172,8 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 			this->findNextBestRoute(nodeEID, terminusNode, &route, simTime);
 			routeTable_.at(terminusNode).at(nodeEID) = route;
 		}
+
+		tableEntriesExplored++;
 	}
 
 	// Print route table for this terminus
@@ -244,6 +255,9 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute)
 
 void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, CgrRoute * route, double simTime)
 {
+	// increment counter
+	dijkstraCalls++;
+
 	// Create rootContact and its corresponding rootWork
 	// id=0, start=0, end=inf, src=me, dst=me, rate=0, conf=1
 	Contact * rootContact = new Contact(0, 0, numeric_limits<double>::max(), eid_, eid_, 0, 1.0);
@@ -282,6 +296,9 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 	//cout << "  surfing contact-graph:";
 	while (1)
 	{
+		// increment counter
+		dijkstraLoops++;
+
 		//cout << currentContact->getDestinationEid() << ",";
 
 		// Get local neighbor set and evaluate them
@@ -472,4 +489,23 @@ void RoutingCgrModelRev17::printContactPlan()
 	vector<Contact>::iterator it;
 	for (it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it)
 		cout << "a contact +" << (*it).getStart() << " +" << (*it).getEnd() << " " << (*it).getSourceEid() << " " << (*it).getDestinationEid() << " " << (*it).getResidualVolume() << "/" << (*it).getVolume() << endl;
+}
+
+//////////////////////
+// Stats recollection
+//////////////////////
+
+int RoutingCgrModelRev17::getDijkstraCalls()
+{
+	return dijkstraCalls;
+}
+
+int RoutingCgrModelRev17::getDijkstraLoops()
+{
+	return dijkstraLoops;
+}
+
+int RoutingCgrModelRev17::getRouteTableEntriesExplored()
+{
+	return tableEntriesExplored;
 }

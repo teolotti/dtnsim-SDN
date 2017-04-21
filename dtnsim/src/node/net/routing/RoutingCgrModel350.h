@@ -18,7 +18,18 @@ public:
 	RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug);
 	virtual ~RoutingCgrModel350();
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
+
+	// stats recollection
+	int getDijkstraCalls();
+	int getDijkstraLoops();
+	int getRouteTableEntriesExplored();
+
 private:
+
+	int dijkstraCalls;
+	int dijkstraLoops;
+	int tableEntriesExplored;
+
 	bool printDebug_ = false;
 	int eid_;
 	SdrModel * sdr_;

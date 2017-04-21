@@ -20,11 +20,20 @@ public:
 	virtual ~RoutingCgrModelRev17();
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 
+	// stats recollection
+	int getDijkstraCalls();
+	int getDijkstraLoops();
+	int getRouteTableEntriesExplored();
+
 	bool printDebug_ = true;
 
 private:
 
 	string routingType_;
+
+	int dijkstraCalls;
+	int dijkstraLoops;
+	int tableEntriesExplored;
 
 	int eid_;
 	int nodeNum_;

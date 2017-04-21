@@ -79,6 +79,9 @@ void Net::initialize(int stage)
 		emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
 		sdrBytesStored = registerSignal("sdrBytesStored");
 		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+		routeCgrDijkstraCalls = registerSignal("routeCgrDijkstraCalls");
+		routeCgrDijkstraLoops = registerSignal("routeCgrDijkstraLoops");
+		routeCgrRouteTableEntriesExplored = registerSignal("routeCgrRouteTableEntriesExplored");
 
 		// Initialize BundleMap
 		this->saveBundleMap_ = par("saveBundleMap");
@@ -238,6 +241,20 @@ void Net::dispatchBundle(BundlePkt *bundle)
 		// Route and enqueue bundle
 		routing->routeAndQueueBundle(bundle, simTime().dbl());
 
+		// Emit routing specific stats
+		string routeString = par("routing");
+		if (routeString.compare("cgrModel350") == 0)
+		{
+			emit(routeCgrDijkstraCalls, ((RoutingCgrModel350*) routing)->getDijkstraCalls());
+			emit(routeCgrDijkstraLoops, ((RoutingCgrModel350*) routing)->getDijkstraLoops());
+			emit(routeCgrRouteTableEntriesExplored, ((RoutingCgrModel350*) routing)->getRouteTableEntriesExplored());
+		}
+		if (routeString.compare("cgrModelRev17") == 0)
+		{
+			emit(routeCgrDijkstraCalls, ((RoutingCgrModelRev17*) routing)->getDijkstraCalls());
+			emit(routeCgrDijkstraLoops, ((RoutingCgrModelRev17*) routing)->getDijkstraLoops());
+			emit(routeCgrRouteTableEntriesExplored, ((RoutingCgrModelRev17*) routing)->getRouteTableEntriesExplored());
+		}
 		emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
 		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
 
@@ -287,6 +304,7 @@ void Net::setOnFault(bool onFault)
 void Net::finish()
 {
 
+	// Last call to sample-hold type metrics
 	emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
 	emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
 

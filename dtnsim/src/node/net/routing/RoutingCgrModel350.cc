@@ -27,6 +27,11 @@ void RoutingCgrModel350::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 //	if (eid_==10 && bundle->getSourceEid()==8 && bundle->getDestinationEid()==48)
 //		cout.clear();
 
+	// Reset counters
+	dijkstraCalls = 0;
+	dijkstraLoops = 0;
+	tableEntriesExplored = 0;
+
 	// Call cgrForward from ion (route and forwarding)
 	cgrForward(bundle, simTime);
 
@@ -138,8 +143,9 @@ void RoutingCgrModel350::cgrForward(BundlePkt * bundle, double simTime)
 	{
 		// enqueueToNeighbor() function in ion
 		// cout << "  enqueueing to chosen Neighbor" << endl;
-		cout << "Best: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighbor->neighborNodeNbr << "]: nextHop: " << selectedNeighbor->neighborNodeNbr << " (cId:" << selectedNeighbor->contactId << ", resCap:" << contactPlan_->getContactById(selectedNeighbor->contactId)->getResidualVolume() << "Bytes) arrivalConf:" << selectedNeighbor->confidence << " arrivalT:"
-				<< selectedNeighbor->arrivalTime << " hopCnt:" << selectedNeighbor->hopCount << " forfT:" << selectedNeighbor->forfeitTime << endl;
+		cout << "Best: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighbor->neighborNodeNbr << "]: nextHop: " << selectedNeighbor->neighborNodeNbr << " (cId:" << selectedNeighbor->contactId << ", resCap:"
+				<< contactPlan_->getContactById(selectedNeighbor->contactId)->getResidualVolume() << "Bytes) arrivalConf:" << selectedNeighbor->confidence << " arrivalT:" << selectedNeighbor->arrivalTime << " hopCnt:" << selectedNeighbor->hopCount << " forfT:" << selectedNeighbor->forfeitTime
+				<< endl;
 		enqueueToNeighbor(bundle, selectedNeighbor);
 
 		// TODO: manageOverbooking() function
@@ -193,6 +199,8 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 
 	for (vector<CgrRoute>::iterator it = routeList_[terminusNode].begin(); it != routeList_[terminusNode].end(); ++it)
 	{
+		tableEntriesExplored++;
+
 		cout << "*route through node:" << (*it).nextHop << ", arrivalConf:" << (*it).confidence << ", arrivalT:" << (*it).arrivalTime << ", txWin:(" << (*it).fromTime << "-" << (*it).toTime << "), maxCap:" << (*it).maxVolume << "Bytes:" << endl;
 
 		if ((*it).toTime <= simTime)
@@ -470,6 +478,9 @@ void RoutingCgrModel350::loadRouteList(int terminusNode, double simTime)
 
 void RoutingCgrModel350::findNextBestRoute(Contact * rootContact, int terminusNode, CgrRoute * route)
 {
+	// increment counter
+	dijkstraCalls++;
+
 	// If toNodeNbr remains equal to 0, it means no
 	// route was found by this function. In ion this
 	// is signaled by a null psm address.
@@ -484,6 +495,9 @@ void RoutingCgrModel350::findNextBestRoute(Contact * rootContact, int terminusNo
 
 	while (1)
 	{
+		// increment counter
+		dijkstraLoops++;
+
 		// Go thorugh all next hop neighbors in the
 		// contact plan (all contacts which source
 		// node is the currentWork destination node)
@@ -683,5 +697,24 @@ void RoutingCgrModel350::bpEnqueue(BundlePkt * bundle, ProximateNode * selectedN
 	{
 		EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued to limbo!" << endl;
 	}
+}
+
+//////////////////////
+// Stats recollection
+//////////////////////
+
+int RoutingCgrModel350::getDijkstraCalls()
+{
+	return dijkstraCalls;
+}
+
+int RoutingCgrModel350::getDijkstraLoops()
+{
+	return dijkstraLoops;
+}
+
+int RoutingCgrModel350::getRouteTableEntriesExplored()
+{
+	return tableEntriesExplored;
 }
 

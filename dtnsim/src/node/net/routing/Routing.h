@@ -29,7 +29,7 @@ public:
 	{
 	}
 
-	// This is a pure virtual method (all routing must ate least
+	// This is a pure virtual method (all routing must at least
 	// implement this function)
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime) = 0;
 };
