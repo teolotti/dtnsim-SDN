@@ -455,7 +455,14 @@ void RoutingCgrModelRev17::printRouteTable(int terminusNode)
 		else if (route.nextHop == EMPTY_ROUTE) // should never happen
 			cout << "routeTable[" << terminusNode << "][" << nodeEID << "]: Need to recalculate route" << endl;
 		else
-			cout << "routeTable[" << terminusNode << "][" << nodeEID << "]: nextHop: " << route.nextHop << ", frm " << route.fromTime << " to " << route.toTime << ", arrival time: " << route.arrivalTime << ", volume: " << route.residualVolume << "/" << route.maxVolume << "Bytes" << endl;
+		{
+			cout << "routeTable[" << terminusNode << "][" << nodeEID << "]: nextHop: " << route.nextHop << ", frm " << route.fromTime << " to " << route.toTime << ", arrival time: " << route.arrivalTime << ", volume: " << route.residualVolume << "/" << route.maxVolume << "Bytes: ";
+
+			// print route:
+			for (vector<Contact *>::iterator ith = route.hops.begin(); ith != route.hops.end(); ++ith)
+				cout << "(+" << (*ith)->getStart() << "+" << (*ith)->getEnd() << " " << (*ith)->getSourceEid() << " " << (*ith)->getDestinationEid() << ")";
+			cout << endl;
+		}
 	}
 }
 
