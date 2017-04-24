@@ -41,7 +41,7 @@ void App::initialize()
 		if ((bundlesNumberVec_.size() != destinationEidVec_.size()) || (bundlesNumberVec_.size() != sizeVec_.size() || (bundlesNumberVec_.size() != startVec_.size())))
 		{
             string str1 = "Error in App Traffic: Node[" + to_string(this->getParentModule()->getIndex()) + "]" + ", bundlesNumberVec, destinationEidVec, sizeVec, startVec: Sizes Missmatch!";
-            throw cException(("Error: " + str1).c_str());
+            throw cException((str1).c_str());
 		}
 
 		for (unsigned int i = 0; i < bundlesNumberVec_.size(); i++)
