@@ -22,6 +22,7 @@ void Net::initialize(int stage)
 
 		// Initialize contact plan
 		contactPlan_.parseContactPlanFile(par("contactsFile"));
+		contactPlan_.printContactPlan();
 
 		// Schedule local contact messages
 		vector<Contact> localContacts = contactPlan_.getContactsBySrc(this->eid_);
@@ -76,16 +77,20 @@ void Net::initialize(int stage)
 		netBundleReceivedFromApp = registerSignal("netBundleReceivedFromApp");
 		netBundleReRouted = registerSignal("netBundleReRouted");
 		sdrBundleStored = registerSignal("sdrBundleStored");
-		emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
 		sdrBytesStored = registerSignal("sdrBytesStored");
-		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
 		routeCgrDijkstraCalls = registerSignal("routeCgrDijkstraCalls");
 		routeCgrDijkstraLoops = registerSignal("routeCgrDijkstraLoops");
 		routeCgrRouteTableEntriesExplored = registerSignal("routeCgrRouteTableEntriesExplored");
 
+		if (eid_ != 0)
+		{
+			emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
+			emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+		}
+
 		// Initialize BundleMap
 		this->saveBundleMap_ = par("saveBundleMap");
-		if (saveBundleMap_)
+		if (saveBundleMap_ && eid_ != 0)
 		{
 			// create result folder if it doesn't exist
 			struct stat st =
@@ -304,10 +309,12 @@ void Net::setOnFault(bool onFault)
 
 void Net::finish()
 {
-
 	// Last call to sample-hold type metrics
-	emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
-	emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+	if (eid_ != 0)
+	{
+		emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
+		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+	}
 
 	// Delete scheduled forwardingMsg
 	std::map<int, ForwardingMsg *>::iterator it;

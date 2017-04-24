@@ -36,6 +36,9 @@ public:
 	const string& getContactsFile() const;
 	simtime_t getLastEditTime();
 
+	// debug function
+	void printContactPlan();
+
 private:
 
 	vector<Contact> contacts_;

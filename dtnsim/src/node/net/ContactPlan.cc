@@ -19,36 +19,56 @@ void ContactPlan::parseContactPlanFile(string fileName)
 	int destinationEid = 0;
 	double dataRate = 0.0;
 
-	string aux = "#";
+	string fileLine = "#";
 	string a;
 	string command;
 	ifstream file;
+
 	file.open(fileName.c_str());
 
 	if (!file.is_open())
 		throw cException(("Error: wrong path to contacts file " + string(fileName)).c_str());
 
-	while (true)
+	while (getline(file, fileLine))
 	{
-		if (aux.empty())
-			getline(file, aux, '\n');
-		else if (aux.at(0) == '#')
-			getline(file, aux, '\n');
-		else
-			break;
-	}
+		if (fileLine.empty())
+			continue;
 
-	stringstream ss(aux);
-	ss >> a >> command >> start >> end >> sourceEid >> destinationEid >> dataRate;
+		if (fileLine.at(0) == '#')
+			continue;
 
-	do
-	{
+		// This seems to be a valid command line, parse it
+		stringstream stringLine(fileLine);
+		stringLine >> a >> command >> start >> end >> sourceEid >> destinationEid >> dataRate;
+
 		if ((command.compare("contact") == 0))
 		{
 			this->addContact(id, start, end, sourceEid, destinationEid, dataRate, (float) 1.0);
 			id++;
 		}
-	} while (file >> a >> command >> start >> end >> sourceEid >> destinationEid >> dataRate);
+		else if ((command.compare("range") == 0))
+		{
+			// this->addRange
+		}
+		else
+		{
+			// Unknown command (print warning?)
+		}
+	}
+
+	if (cin.bad())
+	{
+		// IO error
+	}
+	else if (!cin.eof())
+	{
+		// format error (not possible with getline but possible with operator>>)
+	}
+	else
+	{
+		// format error (not possible with getline but possible with operator>>)
+		// or end of file (can't make the difference)
+	}
 
 	file.close();
 
@@ -192,4 +212,12 @@ void ContactPlan::setContactsFile(string contactsFile)
 const string& ContactPlan::getContactsFile() const
 {
 	return contactsFile_;
+}
+
+void ContactPlan::printContactPlan()
+{
+	vector<Contact>::iterator it;
+	for (it = this->getContacts()->begin(); it != this->getContacts()->end(); ++it)
+		cout << "a contact +" << (*it).getStart() << " +" << (*it).getEnd() << " " << (*it).getSourceEid() << " " << (*it).getDestinationEid() << " " << (*it).getResidualVolume() << "/" << (*it).getVolume() << endl;
+	cout << endl;
 }

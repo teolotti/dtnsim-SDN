@@ -203,6 +203,11 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 
 		cout << "*route through node:" << (*it).nextHop << ", arrivalConf:" << (*it).confidence << ", arrivalT:" << (*it).arrivalTime << ", txWin:(" << (*it).fromTime << "-" << (*it).toTime << "), maxCap:" << (*it).maxVolume << "Bytes:" << endl;
 
+		// print route:
+		for (vector<Contact *>::iterator ith = (*it).hops.begin(); ith != (*it).hops.end(); ++ith)
+			cout << "(+" << (*ith)->getStart() << " +" << (*ith)->getEnd() << " " << (*ith)->getSourceEid() << " " << (*ith)->getDestinationEid() << ")";
+		cout << endl;
+
 		if ((*it).toTime <= simTime)
 		{
 			//cout << " ignoring, route due, recompute route for contact (not implemented yet!)" << endl;
