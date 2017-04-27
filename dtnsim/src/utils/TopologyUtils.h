@@ -13,17 +13,17 @@
 #include <string>
 #include <map>
 
-typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS, TopologyVertexInfo, TopologyEdgeInfo> TopologyGraph;
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS, TopologyVertexInfo, TopologyEdgeInfo, TopologyGraphInfo> TopologyGraph;
 
 namespace topologyUtils
 {
 
 /// @brief Compute Topology from the Contact Plan.
 /// @return map that associate one TopologyGraph per state
-map<double, TopologyGraph*> computeTopology(ContactPlan *contactPlan, int nodesNumber);
+map<double, TopologyGraph> computeTopology(ContactPlan *contactPlan, int nodesNumber);
 
-/// @brief Print Topology to dot and pdf files located in outFileLocation
-void printGraphs(map<double, TopologyGraph*> *topology, std::string outFileLocation);
+/// @brief Save Topology in dot and pdf files located in outFileLocation
+void saveGraphs(map<double, TopologyGraph> *topology, std::string outFileLocation);
 
 /// @brief Print a Topology State on screen
 void printGraph(TopologyGraph topologyGraph);

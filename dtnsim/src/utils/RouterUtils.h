@@ -12,16 +12,17 @@
 #include <string>
 #include <fstream>
 
-typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS, RouterVertexInfo, RouterEdgeInfo> RouterGraph;
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS, RouterVertexInfo, RouterEdgeInfo, RouterGraphInfo> RouterGraph;
 
 namespace routerUtils
 {
+
 	/// @brief Compute Flows of traffic from the BundleMaps files.
 	/// @return map that associate one RouterGraph per state
-	map<double, RouterGraph*> computeFlows(ContactPlan *contactPlan, int nodesNumber, string bundleMapsLocation);
+	map<double, RouterGraph> computeFlows(ContactPlan *contactPlan, int nodesNumber, string bundleMapsLocation);
 
-	/// @brief Print Flows to dot and pdf files located in outFileLocation
-	void printGraphs(map<double, RouterGraph*> *flows, vector<string> dotColors, map<pair<int, int>, unsigned int> flowIds, std::string outFileLocation);
+	/// @brief Save Flows in dot and pdf files located in outFileLocation
+	void saveGraphs(map<double, RouterGraph> *flows, vector<string> dotColors, map<pair<int, int>, unsigned int> flowIds, std::string outFileLocation);
 
 	/// @brief Print a RoterGraph with the flows per State on screen
 	void printGraph(RouterGraph routerGraph);

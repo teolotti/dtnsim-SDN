@@ -9,6 +9,7 @@ simple Logger
         
         bool saveTopology = default(false);
         bool saveFlows = default(false);
+        bool saveLpFlows = default(false);
         string contactsFile = default("contacts.txt");
         
         @display("i=device/terminal");

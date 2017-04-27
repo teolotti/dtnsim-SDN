@@ -8,28 +8,32 @@ using namespace boost;
 namespace routerUtils
 {
 
-map<double, RouterGraph*> computeFlows(ContactPlan *contactPlan, int nodesNumber, string bundleMapsLocation)
+map<double, RouterGraph> computeFlows(ContactPlan *contactPlan, int nodesNumber, string bundleMapsLocation)
 {
-    map<double, RouterGraph *> flows;
+    map<double, RouterGraph> flows;
 
     // compute topology
-    map<double, TopologyGraph*> topology = topologyUtils::computeTopology(contactPlan, nodesNumber);
+    map<double, TopologyGraph> topology = topologyUtils::computeTopology(contactPlan, nodesNumber);
 
     // create empty flows as a copy of topology
-    map<double, TopologyGraph*>::iterator it1 = topology.begin();
-    map<double, TopologyGraph*>::iterator it2 = topology.end();
+    map<double, TopologyGraph>::iterator it1 = topology.begin();
+    map<double, TopologyGraph>::iterator it2 = topology.end();
     for (; it1 != it2; ++it1)
     {
         // create routeGraph and add vertices
-        RouterGraph *routerGraph = new RouterGraph();
+        RouterGraph routerGraph;
         for (int i = 1; i <= nodesNumber; i++)
         {
-            RouterGraph::vertex_descriptor vertex = add_vertex(*routerGraph);
-            routerGraph->operator[](vertex).eid = i;
+            RouterGraph::vertex_descriptor vertex = add_vertex(routerGraph);
+            routerGraph[vertex].eid = i;
+            routerGraph[vertex].bufferCapacity = numeric_limits<double>::max();
         }
 
         double stateTime = it1->first;
-        TopologyGraph topologyGraph = *(it1->second);
+        TopologyGraph topologyGraph = it1->second;
+
+        routerGraph[graph_bundle].stateStart = topologyGraph[graph_bundle].stateStart;
+        routerGraph[graph_bundle].stateEnd = topologyGraph[graph_bundle].stateEnd;
 
         // fill routerGraph starting from topologyGraph
         TopologyGraph::edge_iterator ei, ei_end;
@@ -43,18 +47,18 @@ map<double, RouterGraph*> computeFlows(ContactPlan *contactPlan, int nodesNumber
             // in vertexSource and vertexDestination
             int foundVertices = 0;
             RouterGraph::vertex_iterator vi1, vi2;
-            tie(vi1, vi2) = vertices(*routerGraph);
+            tie(vi1, vi2) = vertices(routerGraph);
             RouterGraph::vertex_descriptor vertexSource;
             RouterGraph::vertex_descriptor vertexDestination;
             for (; vi1 != vi2; ++vi1)
             {
                 RouterGraph::vertex_descriptor vertex = *vi1;
-                if (routerGraph->operator [](vertex).eid == v1Id)
+                if (routerGraph[vertex].eid == v1Id)
                 {
                     vertexSource = vertex;
                     ++foundVertices;
                 }
-                else if (routerGraph->operator [](vertex).eid == v2Id)
+                else if (routerGraph[vertex].eid == v2Id)
                 {
                     vertexDestination = vertex;
                     ++foundVertices;
@@ -65,10 +69,10 @@ map<double, RouterGraph*> computeFlows(ContactPlan *contactPlan, int nodesNumber
                 }
             }
 
-            // add edge to found vertices in RouterGraph
-            RouterGraph::edge_descriptor edge = (add_edge(vertexSource, vertexDestination, *routerGraph)).first;
-            routerGraph->operator [](edge).id = edgeId;
-            routerGraph->operator [](edge).stateCapacity = topologyGraph[*ei].stateCapacity;
+            // add edge between the found vertices in RouterGraph
+            RouterGraph::edge_descriptor edge = (add_edge(vertexSource, vertexDestination, routerGraph)).first;
+            routerGraph[edge].id = edgeId;
+            routerGraph[edge].stateCapacity = topologyGraph[*ei].stateCapacity;
         }
 
         flows[stateTime] = routerGraph;
@@ -142,8 +146,8 @@ map<double, RouterGraph*> computeFlows(ContactPlan *contactPlan, int nodesNumber
 
             // get state
             double state = 0;
-            map<double, TopologyGraph*>::iterator iit1 = topology.begin();
-            map<double, TopologyGraph*>::iterator iit2 = topology.end();
+            map<double, TopologyGraph>::iterator iit1 = topology.begin();
+            map<double, TopologyGraph>::iterator iit2 = topology.end();
             for (; iit1 != iit2; ++iit1)
             {
                 double stateStart = iit1->first;
@@ -163,24 +167,24 @@ map<double, RouterGraph*> computeFlows(ContactPlan *contactPlan, int nodesNumber
             }
 
             // get Router graph in state
-            RouterGraph *rGraph = flows[state];
+            RouterGraph rGraph = flows[state];
 
             // find vertices corresponding to tsrc and tdst in RouterGraph and save them
             // in vertexSourceAux and vertexDestinationAux
             int foundVerticesAux = 0;
             RouterGraph::vertex_iterator vii1, vii2;
-            tie(vii1, vii2) = vertices(*rGraph);
+            tie(vii1, vii2) = vertices(rGraph);
             RouterGraph::vertex_descriptor vertexSourceAux;
             RouterGraph::vertex_descriptor vertexDestinationAux;
             for (; vii1 != vii2; ++vii1)
             {
                 RouterGraph::vertex_descriptor vertex = *vii1;
-                if (rGraph->operator [](vertex).eid == src)
+                if (rGraph[vertex].eid == src)
                 {
                     vertexSourceAux = vertex;
                     ++foundVerticesAux;
                 }
-                else if (rGraph->operator [](vertex).eid == dst)
+                else if (rGraph[vertex].eid == dst)
                 {
                     vertexDestinationAux = vertex;
                     ++foundVerticesAux;
@@ -192,7 +196,7 @@ map<double, RouterGraph*> computeFlows(ContactPlan *contactPlan, int nodesNumber
             }
 
             // find corresponding edge and add flow into flows structure
-            pair<RouterGraph::edge_descriptor, int> edgePair = boost::edge(vertexSourceAux, vertexDestinationAux, *rGraph);
+            pair<RouterGraph::edge_descriptor, int> edgePair = boost::edge(vertexSourceAux, vertexDestinationAux, rGraph);
             if (!edgePair.second)
             {
                 cout << "edge not found !" << endl;
@@ -202,31 +206,24 @@ map<double, RouterGraph*> computeFlows(ContactPlan *contactPlan, int nodesNumber
             {
                 //cout<<"edge found"<<endl;
                 RouterGraph::edge_descriptor ed = edgePair.first;
-                rGraph->operator [](ed).flows[tsrc][tdst] += ((double) bitLength / (double) 8);
+                rGraph[ed].flows[tsrc][tdst] += ((double) bitLength / (double) 8);
             }
+
+            flows[state] = rGraph;
         }
         file.close();
     }
 
-    // delete topology
-    map<double, TopologyGraph*>::iterator itt1 = topology.begin();
-    map<double, TopologyGraph*>::iterator itt2 = topology.end();
-    for (; itt1 != itt2; ++itt1)
-    {
-        delete itt1->second;
-    }
-    topology.clear();
-
     return flows;
 }
 
-void printGraphs(map<double, RouterGraph*> *flows, vector<string> dotColors, map<pair<int, int>, unsigned int> flowIds, std::string outFileLocation)
+void saveGraphs(map<double, RouterGraph> *flows, vector<string> dotColors, map<pair<int, int>, unsigned int> flowIds, std::string outFileLocation)
 {
-    RouterGraph initialGraph = *(flows->begin())->second;
+    RouterGraph initialGraph = (flows->begin())->second;
     int verticesNumber = num_vertices(initialGraph);
 
-    map<double, RouterGraph *>::iterator it1 = flows->begin();
-    map<double, RouterGraph *>::iterator it2 = flows->end();
+    map<double, RouterGraph>::iterator it1 = flows->begin();
+    map<double, RouterGraph>::iterator it2 = flows->end();
 
     ofstream ofs(outFileLocation.c_str());
 
@@ -242,7 +239,7 @@ void printGraphs(map<double, RouterGraph*> *flows, vector<string> dotColors, map
     for (; it1 != it2; ++it1)
     {
         double state = it1->first;
-        RouterGraph graph = *(it1->second);
+        RouterGraph graph = (it1->second);
 
         ofs << "// k = " << k << ", state start = "<< state << "s" << endl;
 
@@ -257,7 +254,10 @@ void printGraphs(map<double, RouterGraph*> *flows, vector<string> dotColors, map
         // write last dummy vertex that will contain state data
         int vertexId = verticesNumber + 1;
         int stateInt = (int) state;
-        string labelString = string("\"") + string("k: ") + to_string(k++) + string("\\n") + string("t: ") + to_string(stateInt) + string("\"");
+		string stateStart = to_string((int) graph[graph_bundle].stateStart);
+		string stateEnd = to_string((int) graph[graph_bundle].stateEnd);
+		string st = string("\\n") + "start: " + stateStart + string("\\n") + "end: " + stateEnd + string("\\n");
+        string labelString = string("\"") + string("k: ") + to_string(k++) + st + string("\"");
         ofs << vertexId << "." << stateInt << "[shape=box,fontsize=16,label=" << labelString << "];" << endl;
 
 
@@ -317,7 +317,7 @@ void printGraphs(map<double, RouterGraph*> *flows, vector<string> dotColors, map
 
 	// write ranks to same nodes in different states
 	// in order to get a nicer graph distribution
-    RouterGraph graphAux = *(flows->begin())->second;
+    RouterGraph graphAux = (flows->begin())->second;
     RouterGraph::vertex_iterator vii, vii_end;
 	tie(vii, vii_end) = vertices(graphAux);
 	while (true)
@@ -335,8 +335,8 @@ void printGraphs(map<double, RouterGraph*> *flows, vector<string> dotColors, map
 			vertexId = verticesNumber + 1;
 		}
 
-		map<double, RouterGraph *>::iterator iit1 = flows->begin();
-		map<double, RouterGraph *>::iterator iit2 = flows->end();
+		map<double, RouterGraph>::iterator iit1 = flows->begin();
+		map<double, RouterGraph>::iterator iit2 = flows->end();
 		for (; iit1 != iit2; ++iit1)
 		{
 			ofs << vertexId << "." << iit1->first << "; ";

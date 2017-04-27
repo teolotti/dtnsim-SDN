@@ -11,6 +11,22 @@ struct RouterVertexInfo
 {
     // vertex id
 	int eid;
+
+	// buffer capacity in bytes
+	double bufferCapacity;
+
+	// initial buffer occupancy
+	multi_array<double, 2> initialBufferOccupancy;
+
+	// finalBuffer occupancy
+	multi_array<double, 2> finalBufferOccupancy;
+
+	RouterVertexInfo()
+	{
+		bufferCapacity = 0;
+		initialBufferOccupancy.resize(extents[20][20]);
+		finalBufferOccupancy.resize(extents[20][20]);
+	}
 };
 
 

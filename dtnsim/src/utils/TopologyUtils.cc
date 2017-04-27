@@ -3,17 +3,18 @@
 #ifdef USE_BOOST_LIBRARIES
 
 using namespace std;
+using namespace boost;
 
 namespace topologyUtils
 {
-map<double, TopologyGraph*> computeTopology(ContactPlan *contactPlan, int nodesNumber)
+map<double, TopologyGraph> computeTopology(ContactPlan *contactPlan, int nodesNumber)
 {
-	map<double, TopologyGraph*> topology;
+	map<double, TopologyGraph> topology;
 
 	//  vector with the start times of each topology state
 	vector<double> stateTimes;
 	stateTimes.push_back(0);
-	TopologyGraph *topologyGraph = new TopologyGraph();
+	TopologyGraph topologyGraph;
 	topology[0] = topologyGraph;
 
 	vector<Contact> *contacts = contactPlan->getContacts();
@@ -31,19 +32,24 @@ map<double, TopologyGraph*> computeTopology(ContactPlan *contactPlan, int nodesN
 	}
 
 	// fill topology with empty topologyGraphs (with vertices, without edges)
-	vector<double>::iterator i1 = stateTimes.begin();
-	vector<double>::iterator i2 = stateTimes.end();
-	for (; i1 != i2; ++i1)
+	for (size_t i = 0; i<stateTimes.size() -1; i++)
 	{
-		TopologyGraph *topologyGraph = new TopologyGraph();
+		TopologyGraph topGraph;
 		for (int i = 1; i <= nodesNumber; i++)
 		{
-			TopologyGraph::vertex_descriptor vertex = add_vertex(*topologyGraph);
-			topologyGraph->operator[](vertex).eid = i;
+			TopologyGraph::vertex_descriptor vertex = add_vertex(topGraph);
+			topGraph[vertex].eid = i;
 		}
 
-		double stateStart = *i1;
-		topology[stateStart] = topologyGraph;
+		double stateStart = stateTimes.at(i);
+		double stateEnd = 0.0;
+		++i;
+		stateEnd = stateTimes.at(i);
+		--i;
+
+		topGraph[graph_bundle].stateStart = stateStart;
+		topGraph[graph_bundle].stateEnd = stateEnd;
+		topology[stateStart] = topGraph;
 	}
 
 	// traversing contacts to add corresponding edges in topology graphs
@@ -58,42 +64,34 @@ map<double, TopologyGraph*> computeTopology(ContactPlan *contactPlan, int nodesN
 		int contactDestination = contact.getDestinationEid();
 		int contactId = contact.getId();
 
-		vector<double>::iterator ii1 = stateTimes.begin();
-		vector<double>::iterator ii2 = stateTimes.end();
-		for (; ii1 != ii2; ++ii1)
+
+		for (size_t ii1 = 0; ii1<stateTimes.size()-1; ++ii1)
 		{
-			double stateStart = *ii1;
+			double stateStart = stateTimes.at(ii1);
 			double stateEnd = 0.0;
 			++ii1;
-			if (ii1 == ii2)
-			{
-				stateEnd = contactEnd;
-			}
-			else
-			{
-				stateEnd = *ii1;
-			}
+			stateEnd = stateTimes.at(ii1);
 			--ii1;
 
 			if (stateStart >= contactStart && stateStart < contactEnd)
 			{
-				TopologyGraph *topologyGraph = topology[stateStart];
+				TopologyGraph topGraph = topology[stateStart];
 
 				// find vertices corresponding to source and destination contact nodes
 				int foundVertices = 0;
 				TopologyGraph::vertex_iterator vi1, vi2;
-				tie(vi1, vi2) = vertices(*topologyGraph);
+				tie(vi1, vi2) = vertices(topGraph);
 				TopologyGraph::vertex_descriptor vertexSource;
 				TopologyGraph::vertex_descriptor vertexDestination;
 				for (; vi1 != vi2; ++vi1)
 				{
 					TopologyGraph::vertex_descriptor vertex = *vi1;
-					if (topologyGraph->operator [](vertex).eid == contactSource)
+					if (topGraph[vertex].eid == contactSource)
 					{
 						vertexSource = vertex;
 						++foundVertices;
 					}
-					else if (topologyGraph->operator [](vertex).eid == contactDestination)
+					else if (topGraph[vertex].eid == contactDestination)
 					{
 						vertexDestination = vertex;
 						++foundVertices;
@@ -105,10 +103,12 @@ map<double, TopologyGraph*> computeTopology(ContactPlan *contactPlan, int nodesN
 				}
 
 				// adding edge to found vertices
-				TopologyGraph::edge_descriptor edge = (add_edge(vertexSource, vertexDestination, *topologyGraph)).first;
-				topologyGraph->operator [](edge).id = contactId;
+				TopologyGraph::edge_descriptor edge = (add_edge(vertexSource, vertexDestination, topGraph)).first;
+				topGraph[edge].id = contactId;
 				double stateCapacity = (stateEnd - stateStart) * contact.getDataRate();
-				topologyGraph->operator [](edge).stateCapacity = stateCapacity;
+				topGraph[edge].stateCapacity = stateCapacity;
+
+				topology[stateStart] = topGraph;
 			}
 		}
 	}
@@ -116,13 +116,13 @@ map<double, TopologyGraph*> computeTopology(ContactPlan *contactPlan, int nodesN
 	return topology;
 }
 
-void printGraphs(map<double, TopologyGraph*> *topology, std::string outFileLocation)
+void saveGraphs(map<double, TopologyGraph> *topology, std::string outFileLocation)
 {
-	TopologyGraph initialGraph = *(topology->begin())->second;
+	TopologyGraph initialGraph = (topology->begin())->second;
 	int verticesNumber = num_vertices(initialGraph);
 
-	map<double, TopologyGraph *>::iterator it1 = topology->begin();
-	map<double, TopologyGraph *>::iterator it2 = topology->end();
+	map<double, TopologyGraph>::iterator it1 = topology->begin();
+	map<double, TopologyGraph>::iterator it2 = topology->end();
 
 	ofstream ofs(outFileLocation.c_str());
 
@@ -138,7 +138,7 @@ void printGraphs(map<double, TopologyGraph*> *topology, std::string outFileLocat
 	for (; it1 != it2; ++it1)
 	{
 		double state = it1->first;
-		TopologyGraph graph = *(it1->second);
+		TopologyGraph graph = it1->second;
 
 		ofs << "// k = " << k << ", state start = " << state << "s" << endl;
 
@@ -152,8 +152,10 @@ void printGraphs(map<double, TopologyGraph*> *topology, std::string outFileLocat
 
 		// write last dummy vertex that will contain state data
 		int vertexId = verticesNumber + 1;
-		int stateInt = (int) state;
-		string labelString = string("\"") + string("k: ") + to_string(k++) + string("\\n") + string("t: ") + to_string(stateInt) + string("\"");
+		string stateStart = to_string((int) graph[graph_bundle].stateStart);
+		string stateEnd = to_string((int) graph[graph_bundle].stateEnd);
+		string st = string("\\n") + "start: " + stateStart + string("\\n") + "end: " + stateEnd + string("\\n");
+		string labelString = string("\"") + string("k: ") + to_string(k++) + st + string("\"");
 		ofs << vertexId << "." << state << " [shape=box,fontsize=16,label=" << labelString << "];" << endl;
 
 		// write invisible edges between consecutive edges
@@ -191,7 +193,7 @@ void printGraphs(map<double, TopologyGraph*> *topology, std::string outFileLocat
 
 	// write ranks to same nodes in different states
 	// in order to get a nicer graph distribution
-	TopologyGraph graph = *(topology->begin())->second;
+	TopologyGraph graph = (topology->begin())->second;
 	TopologyGraph::vertex_iterator vi, vi_end;
 	tie(vi, vi_end) = vertices(graph);
 	while (true)
@@ -209,8 +211,8 @@ void printGraphs(map<double, TopologyGraph*> *topology, std::string outFileLocat
 			vertexId = verticesNumber + 1;
 		}
 
-		map<double, TopologyGraph *>::iterator iit1 = topology->begin();
-		map<double, TopologyGraph *>::iterator iit2 = topology->end();
+		map<double, TopologyGraph>::iterator iit1 = topology->begin();
+		map<double, TopologyGraph>::iterator iit2 = topology->end();
 		for (; iit1 != iit2; ++iit1)
 		{
 			ofs << vertexId << "." << iit1->first << "; ";

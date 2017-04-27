@@ -9,8 +9,11 @@
 #include <utility>
 #include <limits>
 #include <vector>
+
+#include "../utils/Lp.h"
 #include "utils/TopologyUtils.h"
 #include "utils/RouterUtils.h"
+#include "utils/LpUtils.h"
 #include "App.h"
 #include "Net.h"
 
@@ -41,6 +44,12 @@ private:
 	/// @brief Compute Flows from BundleMaps files and save them
 	/// in dot and pdf files inside "results" folder
 	void saveFlows();
+
+	void saveLpFlows();
+
+	map<int, map<int, map<int, double > > > getTraffics();
+
+	double getState(double trafficStart);
 
 	// Contact Plan passed to the nodes
 	ContactPlan contactPlan_;
