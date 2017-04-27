@@ -97,7 +97,7 @@ void Logger::saveFlows()
 	this->computeFlowIds();
 	vector < string > dotColors = routerUtils::getDotColors();
 	map<double, RouterGraph> flows = routerUtils::computeFlows(&this->contactPlan_, nodesNumber_, "results");
-	routerUtils::saveGraphs(&flows, dotColors, flowIds_, "results/flows.dot");
+	routerUtils::saveGraphs(&this->contactPlan_, &flows, dotColors, flowIds_, "results/flows.dot");
 #endif
 }
 
@@ -119,7 +119,7 @@ void Logger::saveLpFlows()
 	if (solved)
 	{
 		map<double, RouterGraph> flows = lpUtils::computeFlows(&this->contactPlan_, nodesNumber_, &lp);
-		routerUtils::saveGraphs(&flows, dotColors, flowIds_, "results/lpFlows.dot");
+		routerUtils::saveGraphs(&this->contactPlan_, &flows, dotColors, flowIds_, "results/lpFlows.dot");
 	}
 
 #endif

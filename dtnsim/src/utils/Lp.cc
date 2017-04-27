@@ -13,72 +13,72 @@ Lp::Lp(ContactPlan *contactPlan, int nodesNumber, map<int, map<int, map<int, dou
 
 	// fill states with RouterGraphs with empty flows
 
-    // compute topology
-    map<double, TopologyGraph> topology = topologyUtils::computeTopology(contactPlan, nodesNumber);
-    // create empty router graphs as a copy of topology
-    map<double, TopologyGraph>::iterator it1 = topology.begin();
-    map<double, TopologyGraph>::iterator it2 = topology.end();
-    for (; it1 != it2; ++it1)
-    {
-        // create routeGraph and add vertices
-        RouterGraph routerGraph;
-        for (int i = 1; i <= nodesNumber; i++)
-        {
-            RouterGraph::vertex_descriptor vertex = add_vertex(routerGraph);
-            routerGraph[vertex].eid = i;
+	// compute topology
+	map<double, TopologyGraph> topology = topologyUtils::computeTopology(contactPlan, nodesNumber);
+	// create empty router graphs as a copy of topology
+	map<double, TopologyGraph>::iterator it1 = topology.begin();
+	map<double, TopologyGraph>::iterator it2 = topology.end();
+	for (; it1 != it2; ++it1)
+	{
+		// create routeGraph and add vertices
+		RouterGraph routerGraph;
+		for (int i = 1; i <= nodesNumber; i++)
+		{
+			RouterGraph::vertex_descriptor vertex = add_vertex(routerGraph);
+			routerGraph[vertex].eid = i;
 
-            // todo set the real buffer capacities (sdr size)
-            routerGraph[vertex].bufferCapacity = numeric_limits<double>::max();
-        }
+			// todo set the real buffer capacities (sdr size)
+			routerGraph[vertex].bufferCapacity = numeric_limits<double>::max();
+		}
 
-        //double stateTime = it1->first;
-        TopologyGraph topologyGraph = (it1->second);
+		//double stateTime = it1->first;
+		TopologyGraph topologyGraph = (it1->second);
 
-        routerGraph[graph_bundle].stateStart = topologyGraph[graph_bundle].stateStart;
-        routerGraph[graph_bundle].stateEnd = topologyGraph[graph_bundle].stateEnd;
+		routerGraph[graph_bundle].stateStart = topologyGraph[graph_bundle].stateStart;
+		routerGraph[graph_bundle].stateEnd = topologyGraph[graph_bundle].stateEnd;
 
-        // fill routerGraph starting from topologyGraph
-        TopologyGraph::edge_iterator ei, ei_end;
-        for (tie(ei, ei_end) = edges(topologyGraph); ei != ei_end; ++ei)
-        {
-            int edgeId = topologyGraph[*ei].id;
-            int v1Id = topologyGraph[source(*ei, topologyGraph)].eid;
-            int v2Id = topologyGraph[target(*ei, topologyGraph)].eid;
+		// fill routerGraph starting from topologyGraph
+		TopologyGraph::edge_iterator ei, ei_end;
+		for (tie(ei, ei_end) = edges(topologyGraph); ei != ei_end; ++ei)
+		{
+			int edgeId = topologyGraph[*ei].id;
+			int v1Id = topologyGraph[source(*ei, topologyGraph)].eid;
+			int v2Id = topologyGraph[target(*ei, topologyGraph)].eid;
 
-            // find vertices corresponding to v1Id and v2Id in RouterGraph and save them
-            // in vertexSource and vertexDestination
-            int foundVertices = 0;
-            RouterGraph::vertex_iterator vi1, vi2;
-            tie(vi1, vi2) = vertices(routerGraph);
-            RouterGraph::vertex_descriptor vertexSource;
-            RouterGraph::vertex_descriptor vertexDestination;
-            for (; vi1 != vi2; ++vi1)
-            {
-                RouterGraph::vertex_descriptor vertex = *vi1;
-                if (routerGraph[vertex].eid == v1Id)
-                {
-                    vertexSource = vertex;
-                    ++foundVertices;
-                }
-                else if (routerGraph[vertex].eid == v2Id)
-                {
-                    vertexDestination = vertex;
-                    ++foundVertices;
-                }
-                if (foundVertices == 2)
-                {
-                    break;
-                }
-            }
+			// find vertices corresponding to v1Id and v2Id in RouterGraph and save them
+			// in vertexSource and vertexDestination
+			int foundVertices = 0;
+			RouterGraph::vertex_iterator vi1, vi2;
+			tie(vi1, vi2) = vertices(routerGraph);
+			RouterGraph::vertex_descriptor vertexSource;
+			RouterGraph::vertex_descriptor vertexDestination;
+			for (; vi1 != vi2; ++vi1)
+			{
+				RouterGraph::vertex_descriptor vertex = *vi1;
+				if (routerGraph[vertex].eid == v1Id)
+				{
+					vertexSource = vertex;
+					++foundVertices;
+				}
+				else if (routerGraph[vertex].eid == v2Id)
+				{
+					vertexDestination = vertex;
+					++foundVertices;
+				}
+				if (foundVertices == 2)
+				{
+					break;
+				}
+			}
 
-            // add edge to found vertices in RouterGraph
-            RouterGraph::edge_descriptor edge = (add_edge(vertexSource, vertexDestination, routerGraph)).first;
-            routerGraph[edge].id = edgeId;
-            routerGraph[edge].stateCapacity = topologyGraph[*ei].stateCapacity;
-        }
+			// add edge to found vertices in RouterGraph
+			RouterGraph::edge_descriptor edge = (add_edge(vertexSource, vertexDestination, routerGraph)).first;
+			routerGraph[edge].id = edgeId;
+			routerGraph[edge].stateCapacity = topologyGraph[*ei].stateCapacity;
+		}
 
-        states_.push_back(routerGraph);
-    }
+		states_.push_back(routerGraph);
+	}
 
 	// fill intervals with the state intervals
 	for (size_t i = 0; i < states_.size(); i++)
@@ -99,8 +99,6 @@ Lp::Lp(ContactPlan *contactPlan, int nodesNumber, map<int, map<int, map<int, dou
 	populateCplex();
 }
 
-
-
 Lp::~Lp()
 {
 	env_.end();
@@ -111,7 +109,7 @@ void Lp::populateCommodities()
 	map<int, map<int, map<int, double> > >::iterator it1 = traffic_.begin();
 	map<int, map<int, map<int, double> > >::iterator it2 = traffic_.end();
 
-	for(; it1 != it2; ++it1)
+	for (; it1 != it2; ++it1)
 	{
 		//int state = it1->first;
 		map<int, map<int, double> > m1 = it1->second;
@@ -119,13 +117,13 @@ void Lp::populateCommodities()
 		map<int, map<int, double> >::iterator it3 = m1.begin();
 		map<int, map<int, double> >::iterator it4 = m1.end();
 
-		for(; it3 != it4; ++it3)
+		for (; it3 != it4; ++it3)
 		{
 			int src = it3->first;
 			map<int, double> m2 = it3->second;
 			map<int, double>::iterator it5 = m2.begin();
 			map<int, double>::iterator it6 = m2.end();
-			for(; it5 != it6; ++it5)
+			for (; it5 != it6; ++it5)
 			{
 				double dst = it5->first;
 				commodities_.insert(make_pair(src, dst));
@@ -181,8 +179,7 @@ void Lp::populateModel()
 				RouterGraph::vertex_descriptor v = target(*ei, graph);
 
 				// x_s.u.v.k1.k2 = cantidad del commodity (k1,k2) que es transmitido en el arco u->v en el estado s
-				string xName = "x_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph[u].eid) + "." + lexical_cast<string>(graph[v].eid) + "."
-						+ lexical_cast<string>(k1) + "." + lexical_cast<string>(k2);
+				string xName = "x_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (graph[v].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 				dVars_.add(IloNumVar(env_, 0, IloInfinity, IloNumVar::Int, xName.c_str()));
 				variables_.insert(bimapElement(xName, dVars_.getSize() - 1));
@@ -202,15 +199,14 @@ void Lp::populateModel()
 
 				int t = s;
 				// n_t.v.k1.k2 = cantidad del commodity (k1,k2) que ocupa el buffer del nodo v en el tiempo t
-				string nName = "n_" + lexical_cast<string>(t) + "." + lexical_cast<string>(graph[*vi].eid) + "." + lexical_cast<string>(k1) + "."
-						+ lexical_cast<string>(k2);
+				string nName = "n_" + lexical_cast < string > (t) + "." + lexical_cast < string > (graph[*vi].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 				dVars_.add(IloNumVar(env_, 0, IloInfinity, IloNumVar::Int, nName.c_str()));
 				variables_.insert(bimapElement(nName, dVars_.getSize() - 1));
 
 				if (graph[*vi].eid == k2)
 				{
-					fObj.operator -=(pow(tq,3) * dVars_[dVars_.getSize() - 1]);
+					fObj.operator -=(pow(tq, 3) * dVars_[dVars_.getSize() - 1]);
 				}
 			}
 		}
@@ -233,8 +229,7 @@ void Lp::populateModel()
 					int k2 = it1->second;
 
 					// n_t.v.k1.k2 = cantidad del commodity (k1,k2) que ocupa el buffer del nodo v en el tiempo t
-					string nName = "n_" + lexical_cast<string>(s + 1) + "." + lexical_cast<string>(graph[*vi].eid) + "." + lexical_cast<string>(k1) + "."
-							+ lexical_cast<string>(k2);
+					string nName = "n_" + lexical_cast < string > (s + 1) + "." + lexical_cast < string > (graph[*vi].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 					dVars_.add(IloNumVar(env_, 0, IloInfinity, IloNumVar::Int, nName.c_str()));
 					variables_.insert(bimapElement(nName, dVars_.getSize() - 1));
@@ -269,8 +264,7 @@ void Lp::populateModel()
 					RouterGraph::vertex_descriptor u = source(*iei, graph);
 					RouterGraph::vertex_descriptor v = target(*iei, graph);
 
-					string rVarName = "x_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph[u].eid) + "." + lexical_cast<string>(graph[v].eid) + "."
-							+ lexical_cast<string>(k1) + "." + lexical_cast<string>(k2);
+					string rVarName = "x_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (graph[v].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 					int xVarIndex = variables_.left.at(rVarName);
 
@@ -283,23 +277,20 @@ void Lp::populateModel()
 					RouterGraph::vertex_descriptor u = source(*oei, graph);
 					RouterGraph::vertex_descriptor v = target(*oei, graph);
 
-					string xVarName = "x_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph[u].eid) + "." + lexical_cast<string>(graph[v].eid) + "."
-							+ lexical_cast<string>(k1) + "." + lexical_cast<string>(k2);
+					string xVarName = "x_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (graph[v].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 					int xVarIndex = variables_.left.at(xVarName);
 					expr.operator -=(dVars_[xVarIndex]);
 				}
 
 				// n(tk+1)
-				string t2VarName = "n_" + lexical_cast<string>(s + 1) + "." + lexical_cast<string>(graph[*vi].eid) + "." + lexical_cast<string>(k1) + "."
-						+ lexical_cast<string>(k2);
+				string t2VarName = "n_" + lexical_cast < string > (s + 1) + "." + lexical_cast < string > (graph[*vi].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 				int t2VarIndex = variables_.left.at(t2VarName);
 				expr.operator -=(dVars_[t2VarIndex]);
 
 				// n(tk)
-				string t1VarName = "n_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph[*vi].eid) + "." + lexical_cast<string>(k1) + "."
-						+ lexical_cast<string>(k2);
+				string t1VarName = "n_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[*vi].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 				int t1VarIndex = variables_.left.at(t1VarName);
 				expr.operator +=(dVars_[t1VarIndex]);
@@ -315,7 +306,7 @@ void Lp::populateModel()
 				}
 
 				IloRange c(expr == 0);
-				c.setName((string("FlowConservationConstraint_n") + lexical_cast<string>(graph[*vi].eid) + string("_t") + lexical_cast<string>(s)).c_str());
+				c.setName((string("FlowConservationConstraint_n") + lexical_cast < string > (graph[*vi].eid) + string("_t") + lexical_cast < string > (s)).c_str());
 
 				constraints_.add(c);
 				expr.end();
@@ -341,15 +332,14 @@ void Lp::populateModel()
 				int k1 = it1->first;
 				int k2 = it1->second;
 
-				string nVarName = "n_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph[*vi].eid) + "." + lexical_cast<string>(k1) + "."
-						+ lexical_cast<string>(k2);
+				string nVarName = "n_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[*vi].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 				int nVarIndex = variables_.left.at(nVarName);
 				expr.operator +=(dVars_[nVarIndex]);
 			}
 
 			IloRange c(expr <= bufferCapacity);
-			c.setName((string("BufferCapacityConstraint_n") + lexical_cast<string>(graph[*vi].eid)).c_str());
+			c.setName((string("BufferCapacityConstraint_n") + lexical_cast < string > (graph[*vi].eid)).c_str());
 
 			constraints_.add(c);
 			expr.end();
@@ -372,15 +362,14 @@ void Lp::populateModel()
 					int k1 = it1->first;
 					int k2 = it1->second;
 
-					string nVarName = "n_" + lexical_cast<string>(s + 1) + "." + lexical_cast<string>(graph[*viAux].eid) + "." + lexical_cast<string>(k1) + "."
-							+ lexical_cast<string>(k2);
+					string nVarName = "n_" + lexical_cast < string > (s + 1) + "." + lexical_cast < string > (graph[*viAux].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 					int nVarIndex = variables_.left.at(nVarName);
 					expr.operator +=(dVars_[nVarIndex]);
 				}
 
 				IloRange c(expr <= bufferCapacity);
-				c.setName((string("BufferCapacityConstraint_n") + lexical_cast<string>(graph[*vi].eid)).c_str());
+				c.setName((string("BufferCapacityConstraint_n") + lexical_cast < string > (graph[*vi].eid)).c_str());
 
 				constraints_.add(c);
 				expr.end();
@@ -409,15 +398,14 @@ void Lp::populateModel()
 				int k1 = it1->first;
 				int k2 = it1->second;
 
-				string xVarName = "x_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph[u].eid) + "." + lexical_cast<string>(graph[v].eid) + "."
-						+ lexical_cast<string>(k1) + "." + lexical_cast<string>(k2);
+				string xVarName = "x_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (graph[v].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 				int xVarIndex = variables_.left.at(xVarName);
 				expr.operator +=(dVars_[xVarIndex]);
 			}
 
 			IloRange c(expr <= (stateCapacity));
-			c.setName((string("ArcCapacityConstraint_e") + lexical_cast<string>(graph[u].eid) + "." + lexical_cast<string>(graph[v].eid)).c_str());
+			c.setName((string("ArcCapacityConstraint_e") + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (graph[v].eid)).c_str());
 
 			constraints_.add(c);
 			expr.end();
@@ -438,8 +426,7 @@ void Lp::populateModel()
 			IloExpr expr(env_);
 
 			int t = 0;
-			string nVarName = "n_" + lexical_cast<string>(t) + "." + lexical_cast<string>(graph1[*vi].eid) + "." + lexical_cast<string>(k1) + "."
-					+ lexical_cast<string>(k2);
+			string nVarName = "n_" + lexical_cast < string > (t) + "." + lexical_cast < string > (graph1[*vi].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 			int nVarIndex = variables_.left.at(nVarName);
 
@@ -448,13 +435,13 @@ void Lp::populateModel()
 			if (graph1[*vi].eid == k1)
 			{
 				IloRange c(expr == this->getTraffic(0, k1, k2));
-				c.setName((string("InitialConditionConstraint_n") + lexical_cast<string>(graph1[*vi].eid)).c_str());
+				c.setName((string("InitialConditionConstraint_n") + lexical_cast < string > (graph1[*vi].eid)).c_str());
 				constraints_.add(c);
 			}
 			else
 			{
 				IloRange c(expr == 0);
-				c.setName((string("InitialConditionConstraint_n") + lexical_cast<string>(graph1[*vi].eid)).c_str());
+				c.setName((string("InitialConditionConstraint_n") + lexical_cast < string > (graph1[*vi].eid)).c_str());
 				constraints_.add(c);
 			}
 
@@ -482,15 +469,14 @@ void Lp::populateModel()
 					{
 						IloExpr expr(env_);
 
-						string nVarName = "n_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph3[*vi].eid) + "." + lexical_cast<string>(k1) + "."
-								+ lexical_cast<string>(k2);
+						string nVarName = "n_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph3[*vi].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 						int nVarIndex = variables_.left.at(nVarName);
 
 						expr.operator +=(dVars_[nVarIndex]);
 
 						IloRange c(expr >= traffic);
-						c.setName((string("InitialConditionConstraint_n") + lexical_cast<string>(graph3[*vi].eid)).c_str());
+						c.setName((string("InitialConditionConstraint_n") + lexical_cast < string > (graph3[*vi].eid)).c_str());
 						constraints_.add(c);
 
 						expr.end();
@@ -513,8 +499,7 @@ void Lp::populateModel()
 
 			if (graph2[*vi].eid == k2)
 			{
-				string nVarName = "n_" + lexical_cast<string>(states_.size()) + "." + lexical_cast<string>(graph2[*vi].eid) + "." + lexical_cast<string>(k1) + "."
-						+ lexical_cast<string>(k2);
+				string nVarName = "n_" + lexical_cast < string > (states_.size()) + "." + lexical_cast < string > (graph2[*vi].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 
 				int nVarIndex = variables_.left.at(nVarName);
 
@@ -523,7 +508,7 @@ void Lp::populateModel()
 		}
 
 		IloRange c(expr == this->getTrafficForDestination(graph2[*vi].eid));
-		c.setName((string("FinalConditionConstraint_n") + lexical_cast<string>(graph2[*vi].eid)).c_str());
+		c.setName((string("FinalConditionConstraint_n") + lexical_cast < string > (graph2[*vi].eid)).c_str());
 		constraints_.add(c);
 		expr.end();
 	}
@@ -546,10 +531,8 @@ void Lp::populateModel()
 					int k1 = it1->first;
 					int k2 = it1->second;
 
-					string xVarNameUV = "x_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph[u].eid) + "." + lexical_cast<string>(graph[v].eid) + "."
-							+ lexical_cast<string>(k1) + "." + lexical_cast<string>(k2);
-					string xVarNameVU = "x_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph[v].eid) + "." + lexical_cast<string>(graph[u].eid) + "."
-							+ lexical_cast<string>(k1) + "." + lexical_cast<string>(k2);
+					string xVarNameUV = "x_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (graph[v].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
+					string xVarNameVU = "x_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[v].eid) + "." + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 					int xVarIndexUV = variables_.left.at(xVarNameUV);
 					int xVarIndexVU = variables_.left.at(xVarNameVU);
 					constraints_.add((dVars_[xVarIndexUV] != 0) + (dVars_[xVarIndexVU] != 0) <= 1);
@@ -596,7 +579,7 @@ vector<RouterGraph> Lp::getSolvedStates(int nSolution)
 	int numsol = cplex_.getSolnPoolNsolns();
 	if (nSolution >= numsol)
 	{
-		cout<<"Error: nSolution = " + lexical_cast<string>(nSolution) + " debe ser menor a " + lexical_cast<string>(numsol)<<endl;
+		cout << "Error: nSolution = " + lexical_cast < string > (nSolution) + " debe ser menor a " + lexical_cast < string > (numsol) << endl;
 	}
 	IloNumArray vals(env_);
 	cplex_.getValues(vals, dVars_, nSolution);
@@ -622,8 +605,7 @@ vector<RouterGraph> Lp::getSolvedStates(IloNumArray vals)
 				RouterGraph::vertex_descriptor u = source(*ei, graph);
 				RouterGraph::vertex_descriptor v = target(*ei, graph);
 				// x_s.u.v.k1.k2 = cantidad del commodity (k1,k2) que es transmitido en el arco u->v en el estado s
-				string xName = "x_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph[u].eid) + "." + lexical_cast<string>(graph[v].eid) + "."
-						+ lexical_cast<string>(k1) + "." + lexical_cast<string>(k2);
+				string xName = "x_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (graph[v].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 				double xValue = vals[variables_.left.at(xName)];
 				graph[*ei].flows[k1][k2] = xValue;
 			}
@@ -639,14 +621,12 @@ vector<RouterGraph> Lp::getSolvedStates(IloNumArray vals)
 				int k2 = it1->second;
 
 				// n_t.v.k1.k2 = cantidad del commodity (k1,k2) que ocupa el buffer del nodo v en el tiempo t inicial
-				string nInitialName = "n_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph[*vi].eid) + "." + lexical_cast<string>(k1) + "."
-						+ lexical_cast<string>(k2);
+				string nInitialName = "n_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[*vi].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 				double nInitialValue = vals[variables_.left.at(nInitialName)];
 				graph[*vi].initialBufferOccupancy[k1][k2] = nInitialValue;
 
 				// n_t.v.k1.k2 = cantidad del commodity (k1,k2) que ocupa el buffer del nodo v en el tiempo t inicial
-				string nFinalName = "n_" + lexical_cast<string>(s + 1) + "." + lexical_cast<string>(graph[*vi].eid) + "." + lexical_cast<string>(k1) + "."
-						+ lexical_cast<string>(k2);
+				string nFinalName = "n_" + lexical_cast < string > (s + 1) + "." + lexical_cast < string > (graph[*vi].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 				double nFinalValue = vals[variables_.left.at(nFinalName)];
 				graph[*vi].finalBufferOccupancy[k1][k2] = nFinalValue;
 			}
@@ -712,11 +692,11 @@ void Lp::printSolutions()
 	}
 }
 
-map<int, map<pair<int, int>, double > > Lp::getRoutedTraffic(int nodeNumber, int solutionNumber)
+map<int, map<pair<int, int>, double> > Lp::getRoutedTraffic(int nodeNumber, int solutionNumber)
 {
-	// traffic_[windowId][pair<k1, k2>] = traffic
+	// traffic_[contactId][pair<k1, k2>] = traffic
 
-	map < int, map<pair<int, int>, double > > winTraffic;
+	map<int, map<pair<int, int>, double> > winTraffic;
 	IloNumArray vals(env_);
 	cplex_.getValues(vals, dVars_, solutionNumber);
 	for (size_t s = 0; s < states_.size(); s++)
@@ -741,8 +721,7 @@ map<int, map<pair<int, int>, double > > Lp::getRoutedTraffic(int nodeNumber, int
 				if (k1 == nodeNumber)
 				{
 					// x_s.u.v.k1.k2 = cantidad del commodity (k1,k2) que es transmitido en el arco u->v en el estado s
-					string xName = "x_" + lexical_cast<string>(s) + "." + lexical_cast<string>(graph[u].eid) + "." + lexical_cast<string>(graph[v].eid) + "."
-							+ lexical_cast<string>(k1) + "." + lexical_cast<string>(k2);
+					string xName = "x_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (graph[v].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
 					double xValue = vals[variables_.left.at(xName)];
 
 					if (xValue != 0)
@@ -812,6 +791,50 @@ double Lp::getTrafficForDestination(int k2)
 	return k2Traffic;
 }
 
+map<int, double> Lp::getUsedContacts(int solutionNumber)
+{
+	map<int, double> contactsTraffic;
+	IloNumArray vals(env_);
+	cplex_.getValues(vals, dVars_, solutionNumber);
+	for (size_t s = 0; s < states_.size(); s++)
+	{
+		RouterGraph graph = states_.at(s);
+		RouterGraph::edge_iterator ei, ei_end;
+		for (tie(ei, ei_end) = edges(graph); ei != ei_end; ++ei)
+		{
+			RouterGraph::vertex_descriptor u = source(*ei, graph);
+			RouterGraph::vertex_descriptor v = target(*ei, graph);
+			int contactId = graph[*ei].id;
+			Contact contact = *contactPlan_->getContactById(contactId);
+			int src = contact.getSourceEid();
+			int dst = contact.getDestinationEid();
+			double totalContactTraffic = 0;
+
+			set<pair<int, int> >::iterator it1 = commodities_.begin();
+			for (; it1 != commodities_.end(); ++it1)
+			{
+				int k1 = it1->first;
+				int k2 = it1->second;
+
+				// x_s.u.v.k1.k2 = cantidad del commodity (k1,k2) que es transmitido en el arco u->v en el estado s
+				string xName = "x_" + lexical_cast < string > (s) + "." + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (graph[v].eid) + "." + lexical_cast < string > (k1) + "." + lexical_cast < string > (k2);
+				double xValue = vals[variables_.left.at(xName)];
+				totalContactTraffic += xValue;
+			}
+
+			if (totalContactTraffic != 0)
+			{
+				if ((src == graph[u].eid) && (dst == graph[v].eid))
+				{
+					contactsTraffic[contactId] = totalContactTraffic;
+				}
+			}
+		}
+	}
+
+	return contactsTraffic;
+}
+
 vector<pair<int, int> > Lp::getIntervals() const
 {
 	return intervals_;
@@ -819,12 +842,12 @@ vector<pair<int, int> > Lp::getIntervals() const
 
 void Lp::printTraffic()
 {
-	cout<<"printing traffics"<<endl;
+	cout << "printing traffics" << endl;
 
 	map<int, map<int, map<int, double> > >::iterator it1 = traffic_.begin();
 	map<int, map<int, map<int, double> > >::iterator it2 = traffic_.end();
 
-	for(; it1 != it2; ++it1)
+	for (; it1 != it2; ++it1)
 	{
 		int state = it1->first;
 		map<int, map<int, double> > m1 = it1->second;
@@ -832,18 +855,18 @@ void Lp::printTraffic()
 		map<int, map<int, double> >::iterator it3 = m1.begin();
 		map<int, map<int, double> >::iterator it4 = m1.end();
 
-		for(; it3 != it4; ++it3)
+		for (; it3 != it4; ++it3)
 		{
 			int src = it3->first;
 			map<int, double> m2 = it3->second;
 			map<int, double>::iterator it5 = m2.begin();
 			map<int, double>::iterator it6 = m2.end();
-			for(; it5 != it6; ++it5)
+			for (; it5 != it6; ++it5)
 			{
 				int dst = it5->first;
 				double size = it5->second;
 
-				cout<<"traffic: state="<<state<<", src="<<src<<", dst="<<dst<< ", size = "<<size<<endl;
+				cout << "traffic: state=" << state << ", src=" << src << ", dst=" << dst << ", size = " << size << endl;
 			}
 		}
 	}
@@ -851,17 +874,22 @@ void Lp::printTraffic()
 
 void Lp::printCommodities()
 {
-	cout<<"printing commodities"<<endl;
+	cout << "printing commodities" << endl;
 
 	set<pair<int, int> >::iterator it1 = commodities_.begin();
 	set<pair<int, int> >::iterator it2 = commodities_.end();
 
-	for(; it1 != it2; ++it1)
+	for (; it1 != it2; ++it1)
 	{
 		pair<int, int> p = *it1;
 
-		cout<<p.first<<" - "<<p.second<<endl;
+		cout << p.first << " - " << p.second << endl;
 	}
+}
+
+ContactPlan* Lp::getContactPlan()
+{
+	return contactPlan_;
 }
 
 #endif /* USE_BOOST_LIBRARIES */

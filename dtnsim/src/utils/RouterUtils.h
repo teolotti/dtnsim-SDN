@@ -22,7 +22,7 @@ namespace routerUtils
 	map<double, RouterGraph> computeFlows(ContactPlan *contactPlan, int nodesNumber, string bundleMapsLocation);
 
 	/// @brief Save Flows in dot and pdf files located in outFileLocation
-	void saveGraphs(map<double, RouterGraph> *flows, vector<string> dotColors, map<pair<int, int>, unsigned int> flowIds, std::string outFileLocation);
+	void saveGraphs(ContactPlan *contactPlan, map<double, RouterGraph> *flows, vector<string> dotColors, map<pair<int, int>, unsigned int> flowIds, std::string outFileLocation);
 
 	/// @brief Print a RoterGraph with the flows per State on screen
 	void printGraph(RouterGraph routerGraph);
@@ -30,6 +30,16 @@ namespace routerUtils
 	/// @brief Gets a vector with string corresponding to colors
 	/// usable to write files in dot format
 	vector<string> getDotColors();
+
+	/// @brief return used Contacts capacities in bytes
+	/// map[contactId, txBytes]
+	map<int, double> getUsedContacts(ContactPlan *contactPlan, map<double, RouterGraph> *flows);
+
+	/// @brief Gets delivery time of the last delivered traffic
+	double getMaxDeliveryTime(ContactPlan *contactPlan, map<double, RouterGraph> *flows);
+
+	/// @brief Gets total transmissions in bytes
+	double getTotalTxBytes(ContactPlan *contactPlan, map<double, RouterGraph> *flows);
 
 } /* namespace routerUtils */
 

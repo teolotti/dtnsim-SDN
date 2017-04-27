@@ -23,6 +23,12 @@ namespace lpUtils
 /// @return map that associate one RouterGraph per state
 map<double, RouterGraph> computeFlows(ContactPlan *contactPlan, int nodesNumber, Lp *lp);
 
+/// @brief Gets delivery time of the last delivered traffic
+double getMaxDeliveryTime(Lp *lp, int solutionNumber);
+
+/// @brief Gets total transmissions in bytes
+double getTotalTxBytes(Lp *lp, int solutionNumber);
+
 } /* namespace lpUtils */
 
 #endif /* LPUTILS_H_ */

@@ -66,8 +66,13 @@ public:
 	/// @brief Obtiene un vector de estados resueltos por el lp
 	vector<RouterGraph> getSolvedStates(IloNumArray vals);
 
-	/// traffic_[windowId][GeneratorId] = trafficAB, trafficBA)
+	/// @brief Gets Routed Traffic
+	// traffic_[contactId][pair<k1, k2>] = traffic
 	map<int, map<pair<int, int>, double > > getRoutedTraffic(int nodeNumber, int solutionNumber);
+
+
+	/// @brief Gets Used Contacts in a map that associates capacity used in bytes to a contact id
+	map<int, double> getUsedContacts(int solutionNumber);
 
 	/// @brief Gets states intervals
 	vector<pair<int, int> > getIntervals() const;
@@ -77,6 +82,9 @@ public:
 
 	/// @brief Print on screen the commodities
 	void printCommodities();
+
+	/// @brief Gets Contact Plan
+	ContactPlan* getContactPlan();
 
 private:
 

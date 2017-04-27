@@ -30,6 +30,52 @@ map<double, RouterGraph> computeFlows(ContactPlan *contactPlan, int nodesNumber,
 	return flows;
 }
 
+double getMaxDeliveryTime(Lp *lp, int solutionNumber)
+{
+	map < int, double> usedContacts = lp->getUsedContacts(solutionNumber);
+
+	double maxDeliveryTime = 0.0;
+
+	map<int, double>::const_iterator it = usedContacts.begin();
+	for (; it != usedContacts.end(); ++it)
+	{
+		int contactId = it->first;
+		double traffic = it->second;
+
+		if (traffic != 0)
+		{
+			Contact contact = *(lp->getContactPlan()->getContactById(contactId));
+			double start = contact.getStart();
+			double byteRate = contact.getDataRate();
+			double txTime = (traffic) / (byteRate);
+			double endTime = start + txTime;
+
+			if (endTime> maxDeliveryTime)
+			{
+				maxDeliveryTime = endTime;
+			}
+		}
+	}
+
+	return maxDeliveryTime;
+}
+
+double getTotalTxBytes(Lp *lp, int solutionNumber)
+{
+	map <int, double> usedContacts = lp->getUsedContacts(solutionNumber);
+
+	double totalTxBytes = 0.0;
+
+	map<int, double>::const_iterator it = usedContacts.begin();
+	for (; it != usedContacts.end(); ++it)
+	{
+		double traffic = it->second;
+		totalTxBytes += traffic;
+	}
+
+	return totalTxBytes;
+}
+
 }
 
 #endif /* USE_BOOST_LIBRARIES */
