@@ -15,11 +15,20 @@ The simulator is still under development: this is a beta version. Nonetheless, f
 ### Topology Outputs (optional) ###
 
 * Download [Boost](http://www.boost.org/users/download) and extract it. DTNSIM was tested on version 1.63.0, but should work in newer versions as well.
-* Select DTNSIM project properties and include boost main folder (boost_1_63_0) in C/C++ General/Paths and Symbols .
+* Uncomment Boost corresponding line (INCLUDE_PATH) in src/makefrag file and edit according to your installation path.
 * Uncomment line "//#define USE_BOOST_LIBRARIES 1" in src/Config.h: 
 * Build DTNSIM project.
 
 Note: DTNSIM can be used without boost libraries but output topology graphs will not be generated.
+
+### Linear Programming Model (optional) ###
+
+* Download [IBM ILOG CPLEX Optimization Studio](https://www.ibm.com/developerworks/downloads/ws/ilogcplex/) and install it.
+* Uncomment cplex and concert corresponding lines (INCLUDE_PATH, LIBS, LDFLAGS and COPTS) in src/makefrag file and edit according to your installation path.
+* Uncomment line "//#define USE_CPLEX_LIBRARY 1" in src/Config.h: 
+* Build DTNSIM project.
+
+Note: DTNSIM can be used without Cplex library but the linear programming model output will not be available.
 
 ## Utilization ##
 
