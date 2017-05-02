@@ -26,6 +26,7 @@ void RoutingDirect::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	// Search for the target contact to send the bundle
 	int neighborEid = bundle->getDestinationEid();
 	double earliestStart = numeric_limits<double>::max();
+
 	vector<Contact> contacts = contactPlan_->getContactsBySrcDst(eid_,neighborEid);
 	for(size_t i = 0; i<contacts.size(); i++){
 		if((contacts.at(i).getEnd()>simTime)&&(contacts.at(i).getStart()<earliestStart))
@@ -33,7 +34,10 @@ void RoutingDirect::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	}
 
 	// Enqueue the bundle
-	bundle->setNextHopEid(contactPlan_->getContactById(contactId)->getDestinationEid());
+	if(contactId != 0)
+	{
+		bundle->setNextHopEid(contactPlan_->getContactById(contactId)->getDestinationEid());
+	}
 	sdr_->enqueueBundleToContact(bundle, contactId);
 }
 
