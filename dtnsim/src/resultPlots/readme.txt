@@ -18,4 +18,8 @@ pdf files are generated in results folder also.
 Modifications to files location can be done in the bash script, while modifications to the
 plots can be done in the python script.
 
+Note:
+The following python libraries are needed: 
+matplotlib, math 
+
 
