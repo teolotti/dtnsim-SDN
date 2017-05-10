@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for dtnsim
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -lpthread
+#  opp_makemake -f --deep -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/include -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/ici/include -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/utils -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/app -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/fault -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/graphics -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/mac -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/net -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/acs -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/bae -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/bpsec -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/bsp -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/cteb -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/ecos -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/meb -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/phn -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/snid -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/logger -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/net/routing
 #
 
 # Name of target to be created (-o option)
@@ -16,6 +16,29 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 
 # C++ include paths (with -I)
 INCLUDE_PATH = \
+    -Iion/bp/include \
+    -Iion/ici/include \
+    -Iutils \
+    -Inode/app \
+    -Inode/fault \
+    -Inode/graphics \
+    -Inode/mac \
+    -Inode/net \
+    -I. \
+    -Iion \
+    -Iion/bp/library/acs \
+    -Iion/bp/library/ext/bae \
+    -Iion/bp/library/ext/bpsec \
+    -Iion/bp/library/ext/bsp \
+    -Iion/bp/library/ext/cteb \
+    -Iion/bp/library/ext/ecos \
+    -Iion/bp/library/ext/meb \
+    -Iion/bp/library/ext/phn \
+    -Iion/bp/library/ext/snid \
+    -Iion/bp/library/ext \
+    -Inode \
+    -Ilogger \
+    -Inode/net/routing \
     -I. \
     -IcontactPlan \
     -Iion \
@@ -44,6 +67,7 @@ INCLUDE_PATH = \
     -Iion/node2 \
     -Iion/node3 \
     -Iion/node4 \
+    -Iion/node5 \
     -Ilogger \
     -Inode \
     -Inode/app \
@@ -52,6 +76,7 @@ INCLUDE_PATH = \
     -Inode/mac \
     -Inode/net \
     -Inode/net/routing \
+    -IresultPlots \
     -Iresults \
     -Iutils
 
@@ -59,7 +84,7 @@ INCLUDE_PATH = \
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS =  -lpthread
+LIBS =
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -144,6 +169,8 @@ OBJS = \
     $O/node/net/routing/RoutingCgrModelRev17.o \
     $O/node/net/routing/RoutingDirect.o \
     $O/utils/TopologyUtils.o \
+    $O/utils/Lp.o \
+    $O/utils/LpUtils.o \
     $O/utils/RouterUtils.o \
     $O/dtnsim_m.o
 
@@ -195,6 +222,19 @@ endif
 #------------------------------------------------------------------------------
 # User-supplied makefile fragment(s)
 # >>>
+# inserted from file 'makefrag':
+#INCLUDE_PATH += -I"/home/madoery/boost_1_63_0"
+#INCLUDE_PATH += -I"/home/madoery/cplex/cplex/include"
+#INCLUDE_PATH += -I"/home/madoery/cplex/concert/include"
+
+LIBS +=  -lpthread
+#LIBS +=  -lconcert -lilocplex -lcplex -lm
+
+#LDFLAGS += -L"/home/madoery/cplex/cplex/lib/x86-64_sles10_4.1/static_pic"
+#LDFLAGS += -L"/home/madoery/cplex/concert/lib/x86-64_sles10_4.1/static_pic"
+
+#COPTS += -DIL_STD=1
+
 # <<<
 #------------------------------------------------------------------------------
 
@@ -260,6 +300,7 @@ clean:
 	$(Q)-rm -f ion/node2/*_m.cc ion/node2/*_m.h ion/node2/*_sm.cc ion/node2/*_sm.h
 	$(Q)-rm -f ion/node3/*_m.cc ion/node3/*_m.h ion/node3/*_sm.cc ion/node3/*_sm.h
 	$(Q)-rm -f ion/node4/*_m.cc ion/node4/*_m.h ion/node4/*_sm.cc ion/node4/*_sm.h
+	$(Q)-rm -f ion/node5/*_m.cc ion/node5/*_m.h ion/node5/*_sm.cc ion/node5/*_sm.h
 	$(Q)-rm -f logger/*_m.cc logger/*_m.h logger/*_sm.cc logger/*_sm.h
 	$(Q)-rm -f node/*_m.cc node/*_m.h node/*_sm.cc node/*_sm.h
 	$(Q)-rm -f node/app/*_m.cc node/app/*_m.h node/app/*_sm.cc node/app/*_sm.h
@@ -268,6 +309,7 @@ clean:
 	$(Q)-rm -f node/mac/*_m.cc node/mac/*_m.h node/mac/*_sm.cc node/mac/*_sm.h
 	$(Q)-rm -f node/net/*_m.cc node/net/*_m.h node/net/*_sm.cc node/net/*_sm.h
 	$(Q)-rm -f node/net/routing/*_m.cc node/net/routing/*_m.h node/net/routing/*_sm.cc node/net/routing/*_sm.h
+	$(Q)-rm -f resultPlots/*_m.cc resultPlots/*_m.h resultPlots/*_sm.cc resultPlots/*_sm.h
 	$(Q)-rm -f results/*_m.cc results/*_m.h results/*_sm.cc results/*_sm.h
 	$(Q)-rm -f utils/*_m.cc utils/*_m.h utils/*_sm.cc utils/*_sm.h
 
@@ -276,7 +318,7 @@ cleanall: clean
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc ion/node1/*.cc ion/node2/*.cc ion/node3/*.cc ion/node4/*.cc logger/*.cc node/*.cc node/app/*.cc node/fault/*.cc node/graphics/*.cc node/mac/*.cc node/net/*.cc node/net/routing/*.cc results/*.cc utils/*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc ion/node1/*.cc ion/node2/*.cc ion/node3/*.cc ion/node4/*.cc ion/node5/*.cc logger/*.cc node/*.cc node/app/*.cc node/fault/*.cc node/graphics/*.cc node/mac/*.cc node/net/*.cc node/net/routing/*.cc resultPlots/*.cc results/*.cc utils/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/dtnsim_m.o: dtnsim_m.cc \
@@ -1157,6 +1199,8 @@ $O/logger/Logger.o: logger/Logger.cc \
 	node/net/routing/RoutingCgrModelRev17.h \
 	node/net/routing/RoutingCgrModelYen.h \
 	node/net/routing/RoutingDirect.h \
+	utils/Lp.h \
+	utils/LpUtils.h \
 	utils/RouterUtils.h \
 	utils/TopologyUtils.h
 $O/node/app/App.o: node/app/App.cc \
@@ -1347,6 +1391,12 @@ $O/node/net/routing/RoutingDirect.o: node/net/routing/RoutingDirect.cc \
 	node/net/routing/CgrRoute.h \
 	node/net/routing/Routing.h \
 	node/net/routing/RoutingDirect.h
+$O/utils/Lp.o: utils/Lp.cc \
+	Config.h \
+	utils/Lp.h
+$O/utils/LpUtils.o: utils/LpUtils.cc \
+	Config.h \
+	utils/LpUtils.h
 $O/utils/RouterUtils.o: utils/RouterUtils.cc \
 	Config.h \
 	utils/RouterUtils.h
