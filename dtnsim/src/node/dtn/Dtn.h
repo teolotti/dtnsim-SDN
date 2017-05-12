@@ -1,6 +1,14 @@
-#ifndef _NET_H_
-#define _NET_H_
+#ifndef _DTN_H_
+#define _DTN_H_
 
+#include <dtn/ContactPlan.h>
+#include <dtn/routing/Routing.h>
+#include <dtn/routing/RoutingCgrIon350.h>
+#include <dtn/routing/RoutingCgrModel350.h>
+#include <dtn/routing/RoutingCgrModelRev17.h>
+#include <dtn/routing/RoutingCgrModelYen.h>
+#include <dtn/routing/RoutingDirect.h>
+#include <dtn/SdrModel.h>
 #include <cstdio>
 #include <string>
 #include <omnetpp.h>
@@ -12,18 +20,9 @@
 #include "MsgTypes.h"
 #include "dtnsim_m.h"
 
-#include "ContactPlan.h"
 #include "Graphics.h"
-#include "SdrModel.h"
-
 #include "Routing.h"
 #include "Ion.h"
-#include "RoutingDirect.h"
-#include "RoutingCgrIon350.h"
-#include "RoutingCgrModelYen.h"
-#include "RoutingCgrModel350.h"
-#include "RoutingCgrModelRev17.h"
-
 #include "Config.h"
 #include "RouterUtils.h"
 #include "utils/TopologyUtils.h"
@@ -38,11 +37,11 @@ using namespace std;
 
 
 
-class Net: public cSimpleModule
+class Dtn: public cSimpleModule
 {
 public:
-	Net();
-	virtual ~Net();
+	Dtn();
+	virtual ~Dtn();
 
 	virtual void setOnFault(bool onFault);
 	virtual void refreshForwarding();
@@ -76,13 +75,13 @@ private:
 	ofstream bundleMap_;
 
 	// Signals
-	simsignal_t netBundleSentToMac;
-	simsignal_t netBundleSentToApp;
-	simsignal_t netBundleSentToAppHopCount;
-	simsignal_t netBundleSentToAppRevisitedHops;
-	simsignal_t netBundleReceivedFromMac;
-	simsignal_t netBundleReceivedFromApp;
-	simsignal_t netBundleReRouted;
+	simsignal_t dtnBundleSentToCom;
+	simsignal_t dtnBundleSentToApp;
+	simsignal_t dtnBundleSentToAppHopCount;
+	simsignal_t dtnBundleSentToAppRevisitedHops;
+	simsignal_t dtnBundleReceivedFromCom;
+	simsignal_t dtnBundleReceivedFromApp;
+	simsignal_t dtnBundleReRouted;
 	simsignal_t sdrBundleStored;
 	simsignal_t sdrBytesStored;
 	simsignal_t routeCgrDijkstraCalls;
@@ -90,5 +89,5 @@ private:
 	simsignal_t routeCgrRouteTableEntriesExplored;
 };
 
-#endif /* NET_H_ */
+#endif /* DTN_H_ */
 

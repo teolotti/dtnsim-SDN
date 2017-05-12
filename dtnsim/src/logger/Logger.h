@@ -1,10 +1,11 @@
 #ifndef __LOGGER_H_
 #define __LOGGER_H_
 
+#include <dtn/ContactPlan.h>
+#include <dtn/Dtn.h>
 #include <omnetpp.h>
 #include <string>
 #include <iostream>
-#include <ContactPlan.h>
 #include <map>
 #include <utility>
 #include <limits>
@@ -15,7 +16,6 @@
 #include "utils/RouterUtils.h"
 #include "utils/LpUtils.h"
 #include "App.h"
-#include "Net.h"
 
 using namespace omnetpp;
 using namespace std;

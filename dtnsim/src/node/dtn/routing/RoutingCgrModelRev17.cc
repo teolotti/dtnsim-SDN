@@ -1,11 +1,5 @@
-/*
- * RoutingCgrModelRev17.cc
- *
- *  Created on: Apr 12, 2017
- *      Author: juanfraire
- */
 
-#include "RoutingCgrModelRev17.h"
+#include <dtn/routing/RoutingCgrModelRev17.h>
 
 RoutingCgrModelRev17::RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * contactPlan, string routingType, bool printDebug)
 {

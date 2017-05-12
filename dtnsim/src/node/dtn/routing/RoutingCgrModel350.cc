@@ -1,11 +1,5 @@
-/*
- * RoutingCgr.cpp
- *
- *  Created on: Nov 8, 2016
- *      Author: juanfraire
- */
 
-#include "RoutingCgrModel350.h"
+#include <dtn/routing/RoutingCgrModel350.h>
 
 RoutingCgrModel350::RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug)
 {
@@ -154,7 +148,7 @@ void RoutingCgrModel350::cgrForward(BundlePkt * bundle, double simTime)
 	}
 
 	// if the expected confidence level is reached, done
-	if (bundle->getDlvConfidence() >= MIN_NET_DELIVERY_CONFIDENCE)
+	if (bundle->getDlvConfidence() >= MIN_DTN_DELIVERY_CONFIDENCE)
 	{
 		cout << "  delivery confidence reached, end cgrForward" << endl;
 		// TODO: delete bundle if not forwarded!

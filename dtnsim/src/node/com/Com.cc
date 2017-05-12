@@ -1,15 +1,15 @@
-#include "Mac.h"
+#include <com/Com.h>
 #include "App.h"
 
-Define_Module (Mac);
+Define_Module (Com);
 
-void Mac::initialize()
+void Com::initialize()
 {
 	// Store this node eid
 	this->eid_ = this->getParentModule()->getIndex();
 }
 
-void Mac::handleMessage(cMessage *msg)
+void Com::handleMessage(cMessage *msg)
 {
 	if (msg->getKind() == BUNDLE)
 	{
@@ -17,29 +17,29 @@ void Mac::handleMessage(cMessage *msg)
 
 		if (eid_ == bundle->getNextHopEid())
 		{
-			send(msg, "gateToNet$o");
+			send(msg, "gateToDtn$o");
 		}
 		else
 		{
 			// Get a pointer to the next hop mac module
-			cModule *destinationModule = this->getParentModule()->getParentModule()->getSubmodule("node", bundle->getNextHopEid())->getSubmodule("mac");
+			cModule *destinationModule = this->getParentModule()->getParentModule()->getSubmodule("node", bundle->getNextHopEid())->getSubmodule("com");
 
 			sendDirect(msg, destinationModule, "gateToAir");
 		}
 	}
 }
 
-void Mac::finish()
+void Com::finish()
 {
 
 }
 
-Mac::Mac()
+Com::Com()
 {
 
 }
 
-Mac::~Mac()
+Com::~Com()
 {
 
 }

@@ -1,11 +1,5 @@
-/*
- * RoutingCgrIon350.cpp
- *
- *  Created on: Nov 8, 2016
- *      Author: juanfraire
- */
 
-#include "RoutingCgrIon350.h"
+#include <dtn/routing/RoutingCgrIon350.h>
 
 static void outputTraceMsg(void *data, unsigned int lineNbr, CgrTraceType traceType, va_list args);
 static void handleTraceState(void *data, unsigned int lineNbr, CgrTraceType traceType, va_list args);

@@ -3,8 +3,8 @@ package dtnsim.node;
 import dtnsim.node.fault.Fault;
 import dtnsim.node.graphics.Graphics;
 import dtnsim.node.app.App;
-import dtnsim.node.net.Net;
-import dtnsim.node.mac.Mac;
+import dtnsim.node.dtn.Dtn;
+import dtnsim.node.com.Com;
 
 module Node
 {
@@ -17,11 +17,11 @@ module Node
             parameters:
                 @display("p=75,50");
         }
-        net: Net {
+        dtn: Dtn {
             parameters:
                 @display("p=75,120");
         }
-        mac: Mac {
+        com: Com {
             parameters:
                 @display("p=75,190");
         }
@@ -35,6 +35,6 @@ module Node
         }
 
     connections:
-        app.gateToNet <--> net.gateToApp;
-        net.gateToMac <--> mac.gateToNet;
+        app.gateToDtn <--> dtn.gateToApp;
+        dtn.gateToCom <--> com.gateToDtn;
 }

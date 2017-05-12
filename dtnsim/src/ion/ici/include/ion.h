@@ -10,6 +10,7 @@
 #ifndef _ION_H_
 #define _ION_H_
 
+#include <dtn/SdrStatus.h>
 #include "platform.h"
 #include "memmgr.h"
 #include "sdr.h"
@@ -17,7 +18,6 @@
 #include "smrbt.h"
 #include "zco.h"
 #include "sys/param.h"
-#include "SdrStatus.h"
 
 extern time_t _globalUtcTime_;
 extern SdrStatus _sdrStatus_;

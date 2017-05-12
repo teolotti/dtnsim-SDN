@@ -19,7 +19,7 @@ void Ion::initialize()
 	ionNodes_ = false;
 	for (int i = 0; i < nodesNumber; i++)
 	{
-		string routing = this->getParentModule()->getSubmodule("node", i)->getSubmodule("net")->par("routing");
+		string routing = this->getParentModule()->getSubmodule("node", i)->getSubmodule("dtn")->par("routing");
 		if (routing == "cgrIon350")
 		{
 			ionNodes_ = true;

@@ -1,4 +1,4 @@
-#include "ContactPlan.h"
+#include <dtn/ContactPlan.h>
 
 ContactPlan::~ContactPlan()
 {

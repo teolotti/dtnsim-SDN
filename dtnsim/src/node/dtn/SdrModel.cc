@@ -5,7 +5,7 @@
  *      Author: juanfraire
  */
 
-#include "SdrModel.h"
+#include <dtn/SdrModel.h>
 
 SdrModel::SdrModel()
 {

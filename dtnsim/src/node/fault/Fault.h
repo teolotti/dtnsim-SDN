@@ -16,11 +16,10 @@
 #ifndef __DTNSIM_FAULT_H_
 #define __DTNSIM_FAULT_H_
 
+#include <dtn/Dtn.h>
 #include <omnetpp.h>
 
 #include "Graphics.h"
-#include "Net.h"
-
 #include "MsgTypes.h"
 #include "dtnsim_m.h"
 
@@ -42,7 +41,7 @@ private:
 	Graphics *graphicsModule;
 
 	// Pointer to net module
-	Net *netModule;
+	Dtn *dtnModule;
 };
 
 #endif

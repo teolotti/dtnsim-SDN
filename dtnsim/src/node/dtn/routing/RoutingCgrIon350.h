@@ -1,10 +1,10 @@
 
-#ifndef SRC_NODE_NET_ROUTINGCGRION350_H_
-#define SRC_NODE_NET_ROUTINGCGRION350_H_
+#ifndef SRC_NODE_DTN_ROUTINGCGRION350_H_
+#define SRC_NODE_DTN_ROUTINGCGRION350_H_
 
 #define CGR_DEBUG 1
 
-#include "Routing.h"
+#include <dtn/routing/Routing.h>
 #include "bp/include/cgr.h"
 #include "ici/include/psm.h"
 #include "ici/include/ion.h"
@@ -14,7 +14,7 @@
 #include "dtnsim_m.h"
 #include "ionadmin.h"
 #include "bpadmin.h"
-#include "SdrStatus.h"
+#include <dtn/SdrStatus.h>
 
 
 typedef struct
@@ -62,4 +62,4 @@ private:
 };
 
 
-#endif /* SRC_NODE_NET_ROUTINGCGRION350_H_ */
+#endif /* SRC_NODE_DTN_ROUTINGCGRION350_H_ */

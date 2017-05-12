@@ -1,14 +1,9 @@
-/*
- * CgrRoute.h
- *
- *  Created on: Apr 20, 2017
- *      Author: juanfraire
- */
 
-#ifndef SRC_NODE_NET_ROUTING_CGRROUTE_H_
-#define SRC_NODE_NET_ROUTING_CGRROUTE_H_
+#ifndef SRC_NODE_DTN_ROUTING_CGRROUTE_H_
+#define SRC_NODE_DTN_ROUTING_CGRROUTE_H_
 
-#include "Contact.h"
+#include <dtn/Contact.h>
+#include <vector>
 
 using namespace std;
 
@@ -28,4 +23,4 @@ typedef struct
 	vector<Contact *> hops;	 	// Contact list
 } CgrRoute;
 
-#endif /* SRC_NODE_NET_ROUTING_CGRROUTE_H_ */
+#endif /* SRC_NODE_DTN_ROUTING_CGRROUTE_H_ */

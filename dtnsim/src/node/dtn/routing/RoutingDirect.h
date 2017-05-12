@@ -1,15 +1,9 @@
-/*
- * RoutingDirect.h
- *
- *  Created on: Nov 8, 2016
- *      Author: juanfraire
- */
 
-#ifndef SRC_NODE_NET_ROUTINGDIRECT_H_
-#define SRC_NODE_NET_ROUTINGDIRECT_H_
+#ifndef SRC_NODE_DTN_ROUTINGDIRECT_H_
+#define SRC_NODE_DTN_ROUTINGDIRECT_H_
 
-#include "Routing.h"
-#include "SdrModel.h"
+#include <dtn/routing/Routing.h>
+#include <dtn/SdrModel.h>
 
 class RoutingDirect : public Routing
 {
@@ -23,4 +17,4 @@ private:
 	ContactPlan * contactPlan_;
 };
 
-#endif /* SRC_NODE_NET_ROUTINGDIRECT_H_ */
+#endif /* SRC_NODE_DTN_ROUTINGDIRECT_H_ */

@@ -5,7 +5,7 @@
  *      Author: juanfraire
  */
 
-#include "RoutingDirect.h"
+#include <dtn/routing/RoutingDirect.h>
 
 RoutingDirect::RoutingDirect(int eid, SdrModel * sdr, ContactPlan * contactPlan)
 {

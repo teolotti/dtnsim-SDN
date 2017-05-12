@@ -104,8 +104,8 @@ void App::handleMessage(cMessage *msg)
 		else
 			scheduleAt(simTime() + trafficGenMsg->getInterval(), msg);
 
-		// Send bundle to Net
-		send(bundle, "gateToNet$o");
+		// Send bundle to Dtn
+		send(bundle, "gateToDtn$o");
 		emit(appBundleSent, true);
 
 		return;

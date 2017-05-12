@@ -5,11 +5,11 @@
  *      Author: juanfraire
  */
 
-#ifndef SRC_NODE_NET_ROUTINGCGRMODELYEN_H_
-#define SRC_NODE_NET_ROUTINGCGRMODELYEN_H_
+#ifndef SRC_NODE_DTN_ROUTINGCGRMODELYEN_H_
+#define SRC_NODE_DTN_ROUTINGCGRMODELYEN_H_
 
-#include "Routing.h"
-#include "SdrModel.h"
+#include <dtn/routing/Routing.h>
+#include <dtn/SdrModel.h>
 
 class RoutingCgrModelYen: public Routing
 {
@@ -83,4 +83,4 @@ private:
 	void bpEnqueue(BundlePkt * bundle, ProximateNode * selectedNeighbor);
 };
 
-#endif /* SRC_NODE_NET_ROUTINGCGRMODELYEN_H_ */
+#endif /* SRC_NODE_DTN_ROUTINGCGRMODELYEN_H_ */

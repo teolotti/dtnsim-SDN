@@ -1,11 +1,11 @@
-package dtnsim.node.mac;
+package dtnsim.node.com;
 
-simple Mac
+simple Com
 {
     parameters:
         @display("i=block/wtx");
                       
     gates:
-        inout gateToNet;
+        inout gateToDtn;
         input gateToAir @directIn;
 }

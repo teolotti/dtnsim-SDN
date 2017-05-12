@@ -1,4 +1,4 @@
-#include <Contact.h>
+#include <dtn/Contact.h>
 
 Contact::Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
 {

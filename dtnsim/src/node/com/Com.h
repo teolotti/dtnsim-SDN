@@ -1,5 +1,5 @@
-#ifndef MAC_H_
-#define MAC_H_
+#ifndef COM_H_
+#define COM_H_
 
 #include <stdio.h>
 #include <string.h>
@@ -13,11 +13,11 @@
 using namespace std;
 using namespace omnetpp;
 
-class Mac: public cSimpleModule
+class Com: public cSimpleModule
 {
 public:
-	Mac();
-	virtual ~Mac();
+	Com();
+	virtual ~Com();
 
 protected:
 	virtual void initialize();
@@ -30,4 +30,4 @@ private:
 
 };
 
-#endif /* MAC_H_ */
+#endif /* COM_H_ */

@@ -1,15 +1,9 @@
-/*
- * RoutingCgrModelRev17.h
- *
- *  Created on: Apr 12, 2017
- *      Author: juanfraire
- */
 
-#ifndef SRC_NODE_NET_ROUTING_ROUTINGCGRMODELREV17_H_
-#define SRC_NODE_NET_ROUTING_ROUTINGCGRMODELREV17_H_
+#ifndef SRC_NODE_DTN_ROUTING_ROUTINGCGRMODELREV17_H_
+#define SRC_NODE_DTN_ROUTING_ROUTINGCGRMODELREV17_H_
 
-#include "Routing.h"
-#include "CgrRoute.h"
+#include <dtn/routing/CgrRoute.h>
+#include <dtn/routing/Routing.h>
 
 #define	MAX_SPEED_MPH	(150000)
 
@@ -78,4 +72,4 @@ private:
 	void printContactPlan();
 };
 
-#endif /* SRC_NODE_NET_ROUTING_ROUTINGCGRMODELREV17_H_ */
+#endif /* SRC_NODE_DTN_ROUTING_ROUTINGCGRMODELREV17_H_ */

@@ -10,8 +10,8 @@ void Fault::initialize()
 	// Get a pointer to graphics module
 	graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
 
-	// Get a pointer to net module
-	netModule = (Net *) this->getParentModule()->getSubmodule("net");
+	// Get a pointer to dtn module
+	dtnModule = (Dtn *) this->getParentModule()->getSubmodule("dtn");
 
 	// Initialize faults
 	if ((this->par("enable").boolValue() == true) && eid_ != 0)
@@ -30,7 +30,7 @@ void Fault::handleMessage(cMessage *msg)
 	{
 		// Enable fault mode
 		graphicsModule->setFaultOn();
-		netModule->setOnFault(true);
+		dtnModule->setOnFault(true);
 
 		// Schedule fault recovery
 		msg->setKind(FAULT_END_TIMER);
@@ -40,7 +40,7 @@ void Fault::handleMessage(cMessage *msg)
 	{
 		// Disable fault mode
 		graphicsModule->setFaultOff();
-		netModule->setOnFault(false);
+		dtnModule->setOnFault(false);
 
 		// Schedule next fault
 		msg->setKind(FAULT_START_TIMER);

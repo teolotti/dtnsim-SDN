@@ -1,20 +1,14 @@
-/*
- * Routing.h
- *
- *  Created on: Nov 8, 2016
- *      Author: juanfraire
- */
 
 #ifndef SRC_NODE_NET_ROUTING_H_
 #define SRC_NODE_NET_ROUTING_H_
 
+#include <dtn/ContactPlan.h>
+#include <dtn/SdrModel.h>
 #include <map>
 #include <queue>
 #include <limits>
 #include <algorithm>
-#include "ContactPlan.h"
 #include "dtnsim_m.h"
-#include "SdrModel.h"
 
 using namespace omnetpp;
 using namespace std;

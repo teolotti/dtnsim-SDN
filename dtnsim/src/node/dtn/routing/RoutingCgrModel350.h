@@ -1,16 +1,10 @@
-/*
- * RoutingCgr.h
- *
- *  Created on: Nov 8, 2016
- *      Author: juanfraire
- */
 
-#ifndef SRC_NODE_NET_ROUTINGCGRMODEL_H_
-#define SRC_NODE_NET_ROUTINGCGRMODEL_H_
+#ifndef SRC_NODE_DTN_ROUTINGCGRMODEL_H_
+#define SRC_NODE_DTN_ROUTINGCGRMODEL_H_
 
-#include "Routing.h"
-#include "CgrRoute.h"
-#include "SdrModel.h"
+#include <dtn/routing/CgrRoute.h>
+#include <dtn/routing/Routing.h>
+#include <dtn/SdrModel.h>
 
 class RoutingCgrModel350: public Routing
 {
@@ -39,7 +33,7 @@ private:
 	// Ion Cgr Functions based in libcgr.c (v 3.5.0):
 	/////////////////////////////////////////////////
 #define	MIN_CONFIDENCE_IMPROVEMENT	(.05)
-#define MIN_NET_DELIVERY_CONFIDENCE	(.80)
+#define MIN_DTN_DELIVERY_CONFIDENCE	(.80)
 #define MAX_XMIT_COPIES (20)
 #define	MAX_SPEED_MPH	(150000)
 
@@ -81,4 +75,4 @@ private:
 	void bpEnqueue(BundlePkt * bundle, ProximateNode * selectedNeighbor);
 };
 
-#endif /* SRC_NODE_NET_ROUTINGCGRMODEL_H_ */
+#endif /* SRC_NODE_DTN_ROUTINGCGRMODEL_H_ */

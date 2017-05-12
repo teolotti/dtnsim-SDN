@@ -1,15 +1,15 @@
-#include "Net.h"
+#include <dtn/Dtn.h>
 #include "App.h"
 
-Define_Module (Net);
+Define_Module (Dtn);
 
-int Net::numInitStages() const
+int Dtn::numInitStages() const
 {
 	int stages = 2;
 	return stages;
 }
 
-void Net::initialize(int stage)
+void Dtn::initialize(int stage)
 {
 	if (stage == 1)
 	{
@@ -69,13 +69,13 @@ void Net::initialize(int stage)
 		}
 
 		// Register signals
-		netBundleSentToMac = registerSignal("netBundleSentToMac");
-		netBundleSentToApp = registerSignal("netBundleSentToApp");
-		netBundleSentToAppHopCount = registerSignal("netBundleSentToAppHopCount");
-		netBundleSentToAppRevisitedHops = registerSignal("netBundleSentToAppRevisitedHops");
-		netBundleReceivedFromMac = registerSignal("netBundleReceivedFromMac");
-		netBundleReceivedFromApp = registerSignal("netBundleReceivedFromApp");
-		netBundleReRouted = registerSignal("netBundleReRouted");
+		dtnBundleSentToCom = registerSignal("dtnBundleSentToCom");
+		dtnBundleSentToApp = registerSignal("dtnBundleSentToApp");
+		dtnBundleSentToAppHopCount = registerSignal("dtnBundleSentToAppHopCount");
+		dtnBundleSentToAppRevisitedHops = registerSignal("dtnBundleSentToAppRevisitedHops");
+		dtnBundleReceivedFromCom = registerSignal("dtnBundleReceivedFromCom");
+		dtnBundleReceivedFromApp = registerSignal("dtnBundleReceivedFromApp");
+		dtnBundleReRouted = registerSignal("dtnBundleReRouted");
 		sdrBundleStored = registerSignal("sdrBundleStored");
 		sdrBytesStored = registerSignal("sdrBytesStored");
 		routeCgrDijkstraCalls = registerSignal("routeCgrDijkstraCalls");
@@ -107,17 +107,17 @@ void Net::initialize(int stage)
 	}
 }
 
-void Net::handleMessage(cMessage * msg)
+void Dtn::handleMessage(cMessage * msg)
 {
 	///////////////////////////////////////////
-	// New Bundle (from App or Mac):
+	// New Bundle (from App or Com):
 	///////////////////////////////////////////
 	if (msg->getKind() == BUNDLE)
 	{
-		if (msg->arrivedOn("gateToMac$i"))
-			emit(netBundleReceivedFromMac, true);
+		if (msg->arrivedOn("gateToCom$i"))
+			emit(dtnBundleReceivedFromCom, true);
 		if (msg->arrivedOn("gateToApp$i"))
-			emit(netBundleReceivedFromApp, true);
+			emit(dtnBundleReceivedFromApp, true);
 
 		BundlePkt* bundle = check_and_cast<BundlePkt *>(msg);
 		dispatchBundle(bundle);
@@ -155,7 +155,7 @@ void Net::handleMessage(cMessage * msg)
 			BundlePkt* bundle = sdr_.getNextBundleForContact(contactMsg->getId());
 			sdr_.popNextBundleForContact(contactMsg->getId());
 
-			emit(netBundleReRouted, true);
+			emit(dtnBundleReRouted, true);
 			routing->routeAndQueueBundle(bundle, simTime().dbl());
 		}
 
@@ -184,8 +184,8 @@ void Net::handleMessage(cMessage * msg)
 		if (sdr_.isBundleForContact(contactId))
 		{
 			// If local/remote node are responsive, then transmit bundle
-			Net * neighborNet = check_and_cast<Net *>(this->getParentModule()->getParentModule()->getSubmodule("node", neighborEid)->getSubmodule("net"));
-			if ((!neighborNet->onFault) && (!this->onFault))
+			Dtn * neighborDtn = check_and_cast<Dtn *>(this->getParentModule()->getParentModule()->getSubmodule("node", neighborEid)->getSubmodule("dtn"));
+			if ((!neighborDtn->onFault) && (!this->onFault))
 			{
 				// Get bundle pointer from sdr
 				BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
@@ -200,7 +200,7 @@ void Net::handleMessage(cMessage * msg)
 				bundle->getVisitedNodes().push_back(eid_);
 				bundle->setXmitCopiesCount(0);
 
-				send(bundle, "gateToMac$o");
+				send(bundle, "gateToCom$o");
 
 				if (saveBundleMap_)
 					bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
@@ -208,7 +208,7 @@ void Net::handleMessage(cMessage * msg)
 				sdr_.popNextBundleForContact(contactId);
 
 				graphicsModule->setBundlesInSdr(sdr_.getBundlesStoredInSdr());
-				emit(netBundleSentToMac, true);
+				emit(dtnBundleSentToCom, true);
 				emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
 				emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
 
@@ -229,16 +229,16 @@ void Net::handleMessage(cMessage * msg)
 	}
 }
 
-void Net::dispatchBundle(BundlePkt *bundle)
+void Dtn::dispatchBundle(BundlePkt *bundle)
 {
 	if (this->eid_ == bundle->getDestinationEid())
 	{
 		// We are the destination, send to App
-		emit(netBundleSentToApp, true);
-		emit(netBundleSentToAppHopCount, bundle->getHopCount());
+		emit(dtnBundleSentToApp, true);
+		emit(dtnBundleSentToAppHopCount, bundle->getHopCount());
 		bundle->getVisitedNodes().sort();
 		bundle->getVisitedNodes().unique();
-		emit(netBundleSentToAppRevisitedHops, bundle->getHopCount() - bundle->getVisitedNodes().size());
+		emit(dtnBundleSentToAppRevisitedHops, bundle->getHopCount() - bundle->getVisitedNodes().size());
 
 		send(bundle, "gateToApp$o");
 	}
@@ -272,7 +272,7 @@ void Net::dispatchBundle(BundlePkt *bundle)
 	}
 }
 
-void Net::refreshForwarding()
+void Dtn::refreshForwarding()
 {
 	// Check all on-going forwardingMsgs threads
 	// (contacts) and wake up those not scheduled.
@@ -286,7 +286,7 @@ void Net::refreshForwarding()
 	}
 }
 
-void Net::setOnFault(bool onFault)
+void Dtn::setOnFault(bool onFault)
 {
 	this->onFault = onFault;
 
@@ -301,13 +301,13 @@ void Net::setOnFault(bool onFault)
 		for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
 		{
 			ForwardingMsg * forwardingMsg = it->second;
-			Net * remoteNet = (Net *) this->getParentModule()->getParentModule()->getSubmodule("node", forwardingMsg->getNeighborEid())->getSubmodule("net");
-			remoteNet->refreshForwarding();
+			Dtn * remoteDtn = (Dtn *) this->getParentModule()->getParentModule()->getSubmodule("node", forwardingMsg->getNeighborEid())->getSubmodule("dtn");
+			remoteDtn->refreshForwarding();
 		}
 	}
 }
 
-void Net::finish()
+void Dtn::finish()
 {
 	// Last call to sample-hold type metrics
 	if (eid_ != 0)
@@ -332,12 +332,12 @@ void Net::finish()
 		bundleMap_.close();
 }
 
-Net::Net()
+Dtn::Dtn()
 {
 
 }
 
-Net::~Net()
+Dtn::~Dtn()
 {
 
 }

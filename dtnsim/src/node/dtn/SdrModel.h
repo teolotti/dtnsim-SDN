@@ -5,17 +5,17 @@
  *      Author: juanfraire
  */
 
-#ifndef SRC_NODE_NET_SDRMODEL_H_
-#define SRC_NODE_NET_SDRMODEL_H_
+#ifndef SRC_NODE_DTN_SDRMODEL_H_
+#define SRC_NODE_DTN_SDRMODEL_H_
 
+#include <dtn/ContactPlan.h>
+#include <dtn/SdrStatus.h>
 #include <map>
 #include <queue>
 #include <deque>
 #include <omnetpp.h>
 
 #include "dtnsim_m.h"
-#include "SdrStatus.h"
-#include "ContactPlan.h"
 #include "assert.h"
 
 using namespace omnetpp;
@@ -58,4 +58,4 @@ private:
 };
 
 
-#endif /* SRC_NODE_NET_SDRMODEL_H_ */
+#endif /* SRC_NODE_DTN_SDRMODEL_H_ */

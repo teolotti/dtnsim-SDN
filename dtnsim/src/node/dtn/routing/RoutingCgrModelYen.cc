@@ -5,7 +5,7 @@
  *      Author: juanfraire
  */
 
-#include "RoutingCgrModelYen.h"
+#include <dtn/routing/RoutingCgrModelYen.h>
 
 RoutingCgrModelYen::RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug)
 {

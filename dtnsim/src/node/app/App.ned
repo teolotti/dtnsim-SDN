@@ -25,5 +25,5 @@ simple App
         @statistic[appBundleReceivedDelay](title="appBundleReceivedDelay"; source="appBundleReceivedDelay"; record=mean,max,min,histogram; interpolationmode=none);
                       
     gates:
-        inout gateToNet;
+        inout gateToDtn;
 }

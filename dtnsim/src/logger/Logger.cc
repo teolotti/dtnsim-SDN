@@ -25,8 +25,8 @@ void Logger::initialize()
 		// check that contactPlan passed to Logger be the same as the one passed to the other nodes
 		for (int i = 1; i <= nodesNumber_; i++)
 		{
-			Net *net = check_and_cast<Net *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("net"));
-			string contactsFileNi = net->par("contactsFile");
+			Dtn *dtn = check_and_cast<Dtn *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("dtn"));
+			string contactsFileNi = dtn->par("contactsFile");
 
 			if (contactsFile != contactsFileNi)
 			{
