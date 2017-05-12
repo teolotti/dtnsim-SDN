@@ -33,9 +33,9 @@ def main():
 
     # save stats in dictionaries
     # statsApp[statName][nodeNum] = [min, max, mean, std deviation]
-    # statsNet[statName][nodeNum] = [min, max, mean, std deviation]
+    # statsDtn[statName][nodeNum] = [min, max, mean, std deviation]
     statsApp = {}
-    statsNet = {}
+    statsDtn = {}
 
     cur.execute("SELECT * FROM statistic")
     rows = cur.fetchall()
@@ -66,15 +66,15 @@ def main():
                     d[nodeNum] = values
                     statsApp[statNames[i]] = d
 
-            if(moduleName.find(".net") != -1):
-                if(statNames[i] in statsNet.keys()):
-                    d = statsNet[statNames[i]]
+            if(moduleName.find(".dtn") != -1):
+                if(statNames[i] in statsDtn.keys()):
+                    d = statsDtn[statNames[i]]
                     d[nodeNum] = values
-                    statsNet[statNames[i]] = d
+                    statsDtn[statNames[i]] = d
                 else:
                     d = {}
                     d[nodeNum] = values
-                    statsNet[statNames[i]] = d
+                    statsDtn[statNames[i]] = d
 
     cols = 2
     rows = int(math.ceil(len(statsApp) / cols))
@@ -106,13 +106,13 @@ def main():
     plt.savefig(fileStr, format='pdf')
 
     cols = 2
-    rows = int(math.ceil(len(statsNet) / cols))
+    rows = int(math.ceil(len(statsDtn) / cols))
     gs = gridspec.GridSpec(rows, cols)
     fig = plt.figure()
 
     k = 0
-    for key in statsNet:
-        d = statsNet[key]
+    for key in statsDtn:
+        d = statsDtn[key]
         ax = fig.add_subplot(gs[k])
         k = k+1
 
@@ -131,7 +131,7 @@ def main():
             plt.errorbar(key2, mean, xerr=0.0, yerr=std, fmt='o')
 
     fig.tight_layout()
-    fileStr = str(outputFileLocation) + str("/") + str("dtnsim.ScalarStats.Net") + str(".pdf")
+    fileStr = str(outputFileLocation) + str("/") + str("dtnsim.ScalarStats.Dtn") + str(".pdf")
     plt.savefig(fileStr, format='pdf')
 
     print("End Python Scalar Plot.")

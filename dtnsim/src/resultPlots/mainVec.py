@@ -31,7 +31,7 @@ def main():
     # plot stats for each node
     for n in range(1, (int(nodesNumber) + 1)):
 
-        nodesNumberStr = 'dtnsim.node[%s].net' % str(n)
+        nodesNumberStr = 'dtnsim.node[%s].dtn' % str(n)
 
         # get moduleNames, vectorNames and vectorIds of each vectorial stat
         cur.execute("SELECT * FROM vector WHERE moduleName='%s'" % nodesNumberStr)
