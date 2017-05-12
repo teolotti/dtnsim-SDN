@@ -32,8 +32,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/node/app}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/node/fault}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/node/graphics}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/node/mac}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/node/net}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/ion}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/ion/bp/library/acs}&quot;"/>
@@ -49,6 +47,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/node}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/logger}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/node/dtn/routing}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/node/com}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dtnsim/src/node/dtn}&quot;"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.532008845" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
