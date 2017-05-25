@@ -1,6 +1,8 @@
-
 #include <dtn/routing/RoutingCgrModelRev17.h>
 
+// This function initializes the routing class:
+// To this end, local eid_, the total number of nodes nodeNum_,
+// a pointer to local storage sdr_, and a contact plan are set.
 RoutingCgrModelRev17::RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * contactPlan, string routingType, bool printDebug)
 {
 	eid_ = eid;
@@ -15,11 +17,17 @@ RoutingCgrModelRev17::RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr,
 		routingType_ = "volumeAware:allContacts";
 	}
 
-	// "volumeAware:1stContact"
-	// "volumeAware:allContacts"
-	// "volumeAware:allContacts-extensionBlock"
+	// Type of routing variants currently implemented in DtnSim:
+	// "volumeAware:1stContact": Only volume of first contact in the path is considered
+	// "volumeAware:allContacts": All contacts in the path are considered
+	// "volumeAware:allContacts-extensionBlock": The extension block with the path is honored
 
-	// Initialize routeTable_
+	// Initialize routeTable_:
+	// This CGR implementation has a route table composed on nodeNum_ entries.
+	// This means that for each possible neighbour node there is one best path
+	// stored all the time (if any). This diminishes old-CGR calculation efforts
+	// where a route table comprising all possible paths (possible thousands in
+	// very large networks).
 	routeTable_.resize(nodeNum_);
 	for (int n1 = 0; n1 < nodeNum_; n1++)
 		routeTable_.at(n1).resize(nodeNum_);
@@ -31,13 +39,20 @@ RoutingCgrModelRev17::~RoutingCgrModelRev17()
 
 }
 
+// This function is called every time a new bundle (local or
+// in transit) need to be routed.The outcome of the function
+// is to enqueue the bundle in the SDR memory which is organized
+// by a set of queues addressed by queueIds. In current DtnSim
+// version Ids corresponds with the contact Id where the bundle
+// is expected to be forwarded. This mimic ION behaviour. Other
+// implementations do enqueue bundles on a per neighbour-node basis.
 void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
 	// Disable cout if degug disabled
 	if (printDebug_ == false)
 		cout.setstate(std::ios_base::failbit);
 
-	// Reset counters
+	// Reset counters (metrics)
 	dijkstraCalls = 0;
 	dijkstraLoops = 0;
 	tableEntriesExplored = 0;
@@ -75,7 +90,7 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 			{
 				// TODO: Fuse this information with local contact graph
 				// But beware that this hop points to the actual contact
-				// in the remote node contact graph.
+				// in the remote node contact graph. This need to be reviewed
 				// if ((*hop)->getResidualVolume() < contactPlan_->getContactById((*hop)->getId())->getResidualVolume())
 
 				if ((*hop)->getDestinationEid() == eid_)
@@ -121,6 +136,10 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 // Functions based Ion architecture
 /////////////////////////////////////////////////
 
+// This function tries to find the best path for the current bundle.
+// Initially it checks if the route table is up-to-date and update it
+// if it is outdated (by running a new Dijkstra search for the
+// corresponding neighbor).
 void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 {
 	// If contact plan was changed, empty route list
@@ -182,7 +201,13 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 	}
 	else
 	{
-		// do not consider route back to sender (temporaly set arrivalTime to infinite)
+		// Do not consider route back to sender (achieved bytemporaly set arrivalTime to infinite)
+		// This variant disables the forwarding back to sender node. This a feature currently
+		// operating in ION which mitigates the formation routing loops. However, it is well-known
+		// this does not completly avoid the issue as the route loop can still be formed by a
+		// third node that can reach the sender node instead. This situations are generally provoked
+		// by congestion and are very hard to solve via in-band protocols.
+		// See paper http://onlinelibrary.wiley.com/doi/10.1002/sat.1210/abstract for a more general discussion.
 		double arrivalTime = routeTable_.at(terminusNode).at(bundle->getSenderEid()).arrivalTime;
 		routeTable_.at(terminusNode).at(bundle->getSenderEid()).arrivalTime = numeric_limits<double>::max();
 		bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(), this->compareRoutes);
@@ -193,6 +218,9 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime)
 	this->cgrEnqueue(bundle, &(*bestRoute));
 }
 
+// This function enqueues the bundle in the best found path.
+// To this end, it updates contacts volume depending on the volume-awareness
+// type configured for the routing routine.
 void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute)
 {
 	if (bestRoute->nextHop != NO_ROUTE_FOUND)
@@ -247,6 +275,13 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute)
 	}
 }
 
+// This function is the Dijkstra search over the contact-graph.
+// It is based on current implementation in ION but adds a few corrections
+// such as visited nodes list to avoid topological loops. From the implementation
+// perspective it needs severe improvements as it currently overutilizes pointer
+// operations which render the code very difficult to read and to debug.
+// In general, each contact has a work pointer where temporal information only
+// valid and related to the current Dijstra search is stored.
 void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, CgrRoute * route, double simTime)
 {
 	// increment counter
@@ -399,7 +434,7 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 				earliestEndTime = contact->getEnd();
 
 			// Get the minimal capacity
-			// (TODO: this calculation assumes non-overlapped contacts, can be improved)
+			// (TODO: this calculation assumes non-overlapped contacts, can be made more accurate)
 			if (contact->getVolume() < maxVolume)
 				maxVolume = contact->getVolume();
 
@@ -425,6 +460,10 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 		route->arrivalTime = numeric_limits<double>::max(); // never chosen as best route
 	}
 }
+
+/////////////////////////////////////////////////
+// Auxiliary Functions
+/////////////////////////////////////////////////
 
 void RoutingCgrModelRev17::clearRouteTable()
 {

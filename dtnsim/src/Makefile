@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for dtnsim
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/include -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/ici/include -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/utils -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/app -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/fault -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/graphics -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/mac -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/net -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/acs -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/bae -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/bpsec -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/bsp -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/cteb -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/ecos -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/meb -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/phn -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/snid -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/logger -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/net/routing
+#  opp_makemake -f --deep -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/include -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/ici/include -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/utils -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/app -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/fault -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/graphics -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/acs -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/bae -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/bpsec -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/bsp -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/cteb -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/ecos -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/meb -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/phn -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext/snid -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/ion/bp/library/ext -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/logger -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/dtn/routing -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/com -I/home/juanfraire/omnetpp-5.0/samples/dtnsim/dtnsim/src/node/dtn
 #
 
 # Name of target to be created (-o option)
@@ -22,8 +22,6 @@ INCLUDE_PATH = \
     -Inode/app \
     -Inode/fault \
     -Inode/graphics \
-    -Inode/mac \
-    -Inode/net \
     -I. \
     -Iion \
     -Iion/bp/library/acs \
@@ -38,7 +36,9 @@ INCLUDE_PATH = \
     -Iion/bp/library/ext \
     -Inode \
     -Ilogger \
-    -Inode/net/routing \
+    -Inode/dtn/routing \
+    -Inode/com \
+    -Inode/dtn \
     -I. \
     -IcontactPlan \
     -Iion \
@@ -67,14 +67,15 @@ INCLUDE_PATH = \
     -Iion/node2 \
     -Iion/node3 \
     -Iion/node4 \
+    -Iion/node5 \
     -Ilogger \
     -Inode \
     -Inode/app \
+    -Inode/com \
+    -Inode/dtn \
+    -Inode/dtn/routing \
     -Inode/fault \
     -Inode/graphics \
-    -Inode/mac \
-    -Inode/net \
-    -Inode/net/routing \
     -IresultPlots \
     -Iresults \
     -Iutils
@@ -154,19 +155,19 @@ OBJS = \
     $O/ion/ici/utils/ionadmin.o \
     $O/logger/Logger.o \
     $O/node/app/App.o \
+    $O/node/com/Com.o \
+    $O/node/dtn/SdrModel.o \
+    $O/node/dtn/Dtn.o \
+    $O/node/dtn/SdrStatus.o \
+    $O/node/dtn/Contact.o \
+    $O/node/dtn/ContactPlan.o \
+    $O/node/dtn/routing/RoutingCgrIon350.o \
+    $O/node/dtn/routing/RoutingCgrModel350.o \
+    $O/node/dtn/routing/RoutingCgrModelYen.o \
+    $O/node/dtn/routing/RoutingCgrModelRev17.o \
+    $O/node/dtn/routing/RoutingDirect.o \
     $O/node/fault/Fault.o \
     $O/node/graphics/Graphics.o \
-    $O/node/mac/Mac.o \
-    $O/node/net/SdrModel.o \
-    $O/node/net/SdrStatus.o \
-    $O/node/net/Net.o \
-    $O/node/net/Contact.o \
-    $O/node/net/ContactPlan.o \
-    $O/node/net/routing/RoutingCgrIon350.o \
-    $O/node/net/routing/RoutingCgrModel350.o \
-    $O/node/net/routing/RoutingCgrModelYen.o \
-    $O/node/net/routing/RoutingCgrModelRev17.o \
-    $O/node/net/routing/RoutingDirect.o \
     $O/utils/TopologyUtils.o \
     $O/utils/Lp.o \
     $O/utils/LpUtils.o \
@@ -299,14 +300,15 @@ clean:
 	$(Q)-rm -f ion/node2/*_m.cc ion/node2/*_m.h ion/node2/*_sm.cc ion/node2/*_sm.h
 	$(Q)-rm -f ion/node3/*_m.cc ion/node3/*_m.h ion/node3/*_sm.cc ion/node3/*_sm.h
 	$(Q)-rm -f ion/node4/*_m.cc ion/node4/*_m.h ion/node4/*_sm.cc ion/node4/*_sm.h
+	$(Q)-rm -f ion/node5/*_m.cc ion/node5/*_m.h ion/node5/*_sm.cc ion/node5/*_sm.h
 	$(Q)-rm -f logger/*_m.cc logger/*_m.h logger/*_sm.cc logger/*_sm.h
 	$(Q)-rm -f node/*_m.cc node/*_m.h node/*_sm.cc node/*_sm.h
 	$(Q)-rm -f node/app/*_m.cc node/app/*_m.h node/app/*_sm.cc node/app/*_sm.h
+	$(Q)-rm -f node/com/*_m.cc node/com/*_m.h node/com/*_sm.cc node/com/*_sm.h
+	$(Q)-rm -f node/dtn/*_m.cc node/dtn/*_m.h node/dtn/*_sm.cc node/dtn/*_sm.h
+	$(Q)-rm -f node/dtn/routing/*_m.cc node/dtn/routing/*_m.h node/dtn/routing/*_sm.cc node/dtn/routing/*_sm.h
 	$(Q)-rm -f node/fault/*_m.cc node/fault/*_m.h node/fault/*_sm.cc node/fault/*_sm.h
 	$(Q)-rm -f node/graphics/*_m.cc node/graphics/*_m.h node/graphics/*_sm.cc node/graphics/*_sm.h
-	$(Q)-rm -f node/mac/*_m.cc node/mac/*_m.h node/mac/*_sm.cc node/mac/*_sm.h
-	$(Q)-rm -f node/net/*_m.cc node/net/*_m.h node/net/*_sm.cc node/net/*_sm.h
-	$(Q)-rm -f node/net/routing/*_m.cc node/net/routing/*_m.h node/net/routing/*_sm.cc node/net/routing/*_sm.h
 	$(Q)-rm -f resultPlots/*_m.cc resultPlots/*_m.h resultPlots/*_sm.cc resultPlots/*_sm.h
 	$(Q)-rm -f results/*_m.cc results/*_m.h results/*_sm.cc results/*_sm.h
 	$(Q)-rm -f utils/*_m.cc utils/*_m.h utils/*_sm.cc utils/*_sm.h
@@ -316,13 +318,13 @@ cleanall: clean
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc ion/node1/*.cc ion/node2/*.cc ion/node3/*.cc ion/node4/*.cc logger/*.cc node/*.cc node/app/*.cc node/fault/*.cc node/graphics/*.cc node/mac/*.cc node/net/*.cc node/net/routing/*.cc resultPlots/*.cc results/*.cc utils/*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contactPlan/*.cc ion/*.cc ion/bp/*.cc ion/bp/cgr/*.cc ion/bp/include/*.cc ion/bp/library/*.cc ion/bp/library/acs/*.cc ion/bp/library/ext/*.cc ion/bp/library/ext/bae/*.cc ion/bp/library/ext/bpsec/*.cc ion/bp/library/ext/bsp/*.cc ion/bp/library/ext/bsp/ciphersuites/*.cc ion/bp/library/ext/cteb/*.cc ion/bp/library/ext/ecos/*.cc ion/bp/library/ext/meb/*.cc ion/bp/library/ext/phn/*.cc ion/bp/library/ext/snid/*.cc ion/bp/utils/*.cc ion/ici/*.cc ion/ici/include/*.cc ion/ici/library/*.cc ion/ici/sdr/*.cc ion/ici/utils/*.cc ion/node1/*.cc ion/node2/*.cc ion/node3/*.cc ion/node4/*.cc ion/node5/*.cc logger/*.cc node/*.cc node/app/*.cc node/com/*.cc node/dtn/*.cc node/dtn/routing/*.cc node/fault/*.cc node/graphics/*.cc resultPlots/*.cc results/*.cc utils/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/dtnsim_m.o: dtnsim_m.cc \
 	dtnsim_m.h \
-	node/net/Contact.h \
-	node/net/routing/CgrRoute.h
+	node/dtn/Contact.h \
+	node/dtn/routing/CgrRoute.h
 $O/ion/Ion.o: ion/Ion.cc \
 	ion/Ion.h
 $O/ion/bp/cgr/libcgr.o: ion/bp/cgr/libcgr.cc \
@@ -345,7 +347,7 @@ $O/ion/bp/cgr/libcgr.o: ion/bp/cgr/libcgr.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/bei.o: ion/bp/library/bei.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -371,7 +373,7 @@ $O/ion/bp/library/bei.o: ion/bp/library/bei.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/dtn2fw.o: ion/bp/library/dtn2fw.cc \
 	ion/bp/include/bp.h \
 	ion/bp/include/bpP.h \
@@ -392,7 +394,7 @@ $O/ion/bp/library/dtn2fw.o: ion/bp/library/dtn2fw.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/eureka.o: ion/bp/library/eureka.cc \
 	ion/bp/include/bp.h \
 	ion/bp/include/bpP.h \
@@ -416,7 +418,7 @@ $O/ion/bp/library/eureka.o: ion/bp/library/eureka.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/libbp.o: ion/bp/library/libbp.cc \
 	ion/bp/include/bp.h \
 	ion/bp/include/bpP.h \
@@ -436,7 +438,7 @@ $O/ion/bp/library/libbp.o: ion/bp/library/libbp.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/libbpP.o: ion/bp/library/libbpP.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -462,7 +464,7 @@ $O/ion/bp/library/libbpP.o: ion/bp/library/libbpP.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/libbpnm.o: ion/bp/library/libbpnm.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -484,7 +486,7 @@ $O/ion/bp/library/libbpnm.o: ion/bp/library/libbpnm.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/libdtn2fw.o: ion/bp/library/libdtn2fw.cc \
 	ion/bp/include/bp.h \
 	ion/bp/include/bpP.h \
@@ -505,7 +507,7 @@ $O/ion/bp/library/libdtn2fw.o: ion/bp/library/libdtn2fw.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/libipnfw.o: ion/bp/library/libipnfw.cc \
 	ion/bp/include/bp.h \
 	ion/bp/include/bpP.h \
@@ -527,7 +529,7 @@ $O/ion/bp/library/libipnfw.o: ion/bp/library/libipnfw.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/acs/acsappend.o: ion/bp/library/acs/acsappend.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -551,7 +553,7 @@ $O/ion/bp/library/acs/acsappend.o: ion/bp/library/acs/acsappend.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/acs/acsid.o: ion/bp/library/acs/acsid.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -576,7 +578,7 @@ $O/ion/bp/library/acs/acsid.o: ion/bp/library/acs/acsid.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/acs/acsrx.o: ion/bp/library/acs/acsrx.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -600,7 +602,7 @@ $O/ion/bp/library/acs/acsrx.o: ion/bp/library/acs/acsrx.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/acs/acsserialize.o: ion/bp/library/acs/acsserialize.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -624,7 +626,7 @@ $O/ion/bp/library/acs/acsserialize.o: ion/bp/library/acs/acsserialize.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/acs/acstx.o: ion/bp/library/acs/acstx.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -649,7 +651,7 @@ $O/ion/bp/library/acs/acstx.o: ion/bp/library/acs/acstx.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/ext/bpextensions.o: ion/bp/library/ext/bpextensions.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -674,7 +676,7 @@ $O/ion/bp/library/ext/bpextensions.o: ion/bp/library/ext/bpextensions.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/ext/bae/bae.o: ion/bp/library/ext/bae/bae.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -696,7 +698,7 @@ $O/ion/bp/library/ext/bae/bae.o: ion/bp/library/ext/bae/bae.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/ext/bpsec/bpsec_bcb.o: ion/bp/library/ext/bpsec/bpsec_bcb.cc
 $O/ion/bp/library/ext/bpsec/bpsec_bib.o: ion/bp/library/ext/bpsec/bpsec_bib.cc
 $O/ion/bp/library/ext/bpsec/bpsec_instr.o: ion/bp/library/ext/bpsec/bpsec_instr.cc
@@ -730,7 +732,7 @@ $O/ion/bp/library/ext/bsp/extbspbab.o: ion/bp/library/ext/bsp/extbspbab.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/ext/bsp/extbsppcb.o: ion/bp/library/ext/bsp/extbsppcb.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -754,7 +756,7 @@ $O/ion/bp/library/ext/bsp/extbsppcb.o: ion/bp/library/ext/bsp/extbsppcb.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/ext/bsp/extbsppib.o: ion/bp/library/ext/bsp/extbsppib.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -778,7 +780,7 @@ $O/ion/bp/library/ext/bsp/extbsppib.o: ion/bp/library/ext/bsp/extbsppib.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/ext/bsp/extbsputil.o: ion/bp/library/ext/bsp/extbsputil.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -800,7 +802,7 @@ $O/ion/bp/library/ext/bsp/extbsputil.o: ion/bp/library/ext/bsp/extbsputil.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/ext/bsp/ciphersuites/bab_hmac_sha1.o: ion/bp/library/ext/bsp/ciphersuites/bab_hmac_sha1.cc
 $O/ion/bp/library/ext/bsp/ciphersuites/bcb_arc4.o: ion/bp/library/ext/bsp/ciphersuites/bcb_arc4.cc
 $O/ion/bp/library/ext/bsp/ciphersuites/bib_hmac_sha256.o: ion/bp/library/ext/bsp/ciphersuites/bib_hmac_sha256.cc
@@ -827,7 +829,7 @@ $O/ion/bp/library/ext/cteb/cteb.o: ion/bp/library/ext/cteb/cteb.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/ext/ecos/ecos.o: ion/bp/library/ext/ecos/ecos.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -849,7 +851,7 @@ $O/ion/bp/library/ext/ecos/ecos.o: ion/bp/library/ext/ecos/ecos.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/ext/meb/meb.o: ion/bp/library/ext/meb/meb.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -871,7 +873,7 @@ $O/ion/bp/library/ext/meb/meb.o: ion/bp/library/ext/meb/meb.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/ext/phn/phn.o: ion/bp/library/ext/phn/phn.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -893,7 +895,7 @@ $O/ion/bp/library/ext/phn/phn.o: ion/bp/library/ext/phn/phn.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/library/ext/snid/snid.o: ion/bp/library/ext/snid/snid.cc \
 	ion/bp/include/bei.h \
 	ion/bp/include/bp.h \
@@ -915,7 +917,7 @@ $O/ion/bp/library/ext/snid/snid.o: ion/bp/library/ext/snid/snid.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/bp/utils/bpadmin.o: ion/bp/utils/bpadmin.cc \
 	ion/bp/include/bp.h \
 	ion/bp/include/bpP.h \
@@ -938,7 +940,7 @@ $O/ion/bp/utils/bpadmin.o: ion/bp/utils/bpadmin.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/ici/library/bulk.o: ion/ici/library/bulk.cc \
 	ion/config.h \
 	ion/ici/include/bulk.h \
@@ -954,7 +956,7 @@ $O/ion/ici/library/bulk.o: ion/ici/library/bulk.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/ici/library/ion.o: ion/ici/library/ion.cc \
 	ion/config.h \
 	ion/ici/include/ion.h \
@@ -970,7 +972,7 @@ $O/ion/ici/library/ion.o: ion/ici/library/ion.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/ici/library/ionsec.o: ion/ici/library/ionsec.cc \
 	ion/config.h \
 	ion/ici/include/ion.h \
@@ -986,7 +988,7 @@ $O/ion/ici/library/ionsec.o: ion/ici/library/ionsec.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/ici/library/lyst.o: ion/ici/library/lyst.cc \
 	ion/config.h \
 	ion/ici/include/lyst.h \
@@ -1024,7 +1026,7 @@ $O/ion/ici/library/rfx.o: ion/ici/library/rfx.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/ion/ici/library/smlist.o: ion/ici/library/smlist.cc \
 	ion/config.h \
 	ion/ici/include/platform.h \
@@ -1153,7 +1155,7 @@ $O/ion/ici/utils/ionadmin.o: ion/ici/utils/ionadmin.cc \
 	ion/ici/include/smlist.h \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
-	node/net/SdrStatus.h
+	node/dtn/SdrStatus.h
 $O/logger/Logger.o: logger/Logger.cc \
 	Config.h \
 	dtnsim_m.h \
@@ -1184,19 +1186,19 @@ $O/logger/Logger.o: logger/Logger.cc \
 	logger/Logger.h \
 	node/MsgTypes.h \
 	node/app/App.h \
+	node/dtn/Contact.h \
+	node/dtn/ContactPlan.h \
+	node/dtn/Dtn.h \
+	node/dtn/SdrModel.h \
+	node/dtn/SdrStatus.h \
+	node/dtn/routing/CgrRoute.h \
+	node/dtn/routing/Routing.h \
+	node/dtn/routing/RoutingCgrIon350.h \
+	node/dtn/routing/RoutingCgrModel350.h \
+	node/dtn/routing/RoutingCgrModelRev17.h \
+	node/dtn/routing/RoutingCgrModelYen.h \
+	node/dtn/routing/RoutingDirect.h \
 	node/graphics/Graphics.h \
-	node/net/Contact.h \
-	node/net/ContactPlan.h \
-	node/net/Net.h \
-	node/net/SdrModel.h \
-	node/net/SdrStatus.h \
-	node/net/routing/CgrRoute.h \
-	node/net/routing/Routing.h \
-	node/net/routing/RoutingCgrIon350.h \
-	node/net/routing/RoutingCgrModel350.h \
-	node/net/routing/RoutingCgrModelRev17.h \
-	node/net/routing/RoutingCgrModelYen.h \
-	node/net/routing/RoutingDirect.h \
 	utils/Lp.h \
 	utils/LpUtils.h \
 	utils/RouterUtils.h \
@@ -1205,8 +1207,140 @@ $O/node/app/App.o: node/app/App.cc \
 	dtnsim_m.h \
 	node/MsgTypes.h \
 	node/app/App.h \
-	node/net/Contact.h \
-	node/net/routing/CgrRoute.h
+	node/dtn/Contact.h \
+	node/dtn/routing/CgrRoute.h
+$O/node/com/Com.o: node/com/Com.cc \
+	dtnsim_m.h \
+	node/MsgTypes.h \
+	node/app/App.h \
+	node/com/Com.h \
+	node/dtn/Contact.h \
+	node/dtn/routing/CgrRoute.h
+$O/node/dtn/Contact.o: node/dtn/Contact.cc \
+	node/dtn/Contact.h
+$O/node/dtn/ContactPlan.o: node/dtn/ContactPlan.cc \
+	node/dtn/Contact.h \
+	node/dtn/ContactPlan.h
+$O/node/dtn/Dtn.o: node/dtn/Dtn.cc \
+	Config.h \
+	dtnsim_m.h \
+	ion/Ion.h \
+	ion/bp/include/bp.h \
+	ion/bp/include/bpP.h \
+	ion/bp/include/bpadmin.h \
+	ion/bp/include/cgr.h \
+	ion/bp/include/crypto.h \
+	ion/config.h \
+	ion/ici/include/csi.h \
+	ion/ici/include/ion.h \
+	ion/ici/include/ionadmin.h \
+	ion/ici/include/ionsec.h \
+	ion/ici/include/lyst.h \
+	ion/ici/include/memmgr.h \
+	ion/ici/include/platform.h \
+	ion/ici/include/psm.h \
+	ion/ici/include/rfx.h \
+	ion/ici/include/sdr.h \
+	ion/ici/include/sdrlist.h \
+	ion/ici/include/sdrmgt.h \
+	ion/ici/include/sdrstring.h \
+	ion/ici/include/sdrxn.h \
+	ion/ici/include/smlist.h \
+	ion/ici/include/smrbt.h \
+	ion/ici/include/zco.h \
+	node/MsgTypes.h \
+	node/app/App.h \
+	node/dtn/Contact.h \
+	node/dtn/ContactPlan.h \
+	node/dtn/Dtn.h \
+	node/dtn/SdrModel.h \
+	node/dtn/SdrStatus.h \
+	node/dtn/routing/CgrRoute.h \
+	node/dtn/routing/Routing.h \
+	node/dtn/routing/RoutingCgrIon350.h \
+	node/dtn/routing/RoutingCgrModel350.h \
+	node/dtn/routing/RoutingCgrModelRev17.h \
+	node/dtn/routing/RoutingCgrModelYen.h \
+	node/dtn/routing/RoutingDirect.h \
+	node/graphics/Graphics.h \
+	utils/RouterUtils.h \
+	utils/TopologyUtils.h
+$O/node/dtn/SdrModel.o: node/dtn/SdrModel.cc \
+	dtnsim_m.h \
+	node/dtn/Contact.h \
+	node/dtn/ContactPlan.h \
+	node/dtn/SdrModel.h \
+	node/dtn/SdrStatus.h \
+	node/dtn/routing/CgrRoute.h
+$O/node/dtn/SdrStatus.o: node/dtn/SdrStatus.cc
+$O/node/dtn/routing/RoutingCgrIon350.o: node/dtn/routing/RoutingCgrIon350.cc \
+	dtnsim_m.h \
+	ion/bp/include/bp.h \
+	ion/bp/include/bpP.h \
+	ion/bp/include/bpadmin.h \
+	ion/bp/include/cgr.h \
+	ion/bp/include/crypto.h \
+	ion/config.h \
+	ion/ici/include/csi.h \
+	ion/ici/include/ion.h \
+	ion/ici/include/ionadmin.h \
+	ion/ici/include/ionsec.h \
+	ion/ici/include/lyst.h \
+	ion/ici/include/memmgr.h \
+	ion/ici/include/platform.h \
+	ion/ici/include/psm.h \
+	ion/ici/include/rfx.h \
+	ion/ici/include/sdr.h \
+	ion/ici/include/sdrlist.h \
+	ion/ici/include/sdrmgt.h \
+	ion/ici/include/sdrstring.h \
+	ion/ici/include/sdrxn.h \
+	ion/ici/include/smlist.h \
+	ion/ici/include/smrbt.h \
+	ion/ici/include/zco.h \
+	node/dtn/Contact.h \
+	node/dtn/ContactPlan.h \
+	node/dtn/SdrModel.h \
+	node/dtn/SdrStatus.h \
+	node/dtn/routing/CgrRoute.h \
+	node/dtn/routing/Routing.h \
+	node/dtn/routing/RoutingCgrIon350.h
+$O/node/dtn/routing/RoutingCgrModel350.o: node/dtn/routing/RoutingCgrModel350.cc \
+	dtnsim_m.h \
+	node/dtn/Contact.h \
+	node/dtn/ContactPlan.h \
+	node/dtn/SdrModel.h \
+	node/dtn/SdrStatus.h \
+	node/dtn/routing/CgrRoute.h \
+	node/dtn/routing/Routing.h \
+	node/dtn/routing/RoutingCgrModel350.h
+$O/node/dtn/routing/RoutingCgrModelRev17.o: node/dtn/routing/RoutingCgrModelRev17.cc \
+	dtnsim_m.h \
+	node/dtn/Contact.h \
+	node/dtn/ContactPlan.h \
+	node/dtn/SdrModel.h \
+	node/dtn/SdrStatus.h \
+	node/dtn/routing/CgrRoute.h \
+	node/dtn/routing/Routing.h \
+	node/dtn/routing/RoutingCgrModelRev17.h
+$O/node/dtn/routing/RoutingCgrModelYen.o: node/dtn/routing/RoutingCgrModelYen.cc \
+	dtnsim_m.h \
+	node/dtn/Contact.h \
+	node/dtn/ContactPlan.h \
+	node/dtn/SdrModel.h \
+	node/dtn/SdrStatus.h \
+	node/dtn/routing/CgrRoute.h \
+	node/dtn/routing/Routing.h \
+	node/dtn/routing/RoutingCgrModelYen.h
+$O/node/dtn/routing/RoutingDirect.o: node/dtn/routing/RoutingDirect.cc \
+	dtnsim_m.h \
+	node/dtn/Contact.h \
+	node/dtn/ContactPlan.h \
+	node/dtn/SdrModel.h \
+	node/dtn/SdrStatus.h \
+	node/dtn/routing/CgrRoute.h \
+	node/dtn/routing/Routing.h \
+	node/dtn/routing/RoutingDirect.h
 $O/node/fault/Fault.o: node/fault/Fault.cc \
 	Config.h \
 	dtnsim_m.h \
@@ -1235,160 +1369,28 @@ $O/node/fault/Fault.o: node/fault/Fault.cc \
 	ion/ici/include/smrbt.h \
 	ion/ici/include/zco.h \
 	node/MsgTypes.h \
+	node/dtn/Contact.h \
+	node/dtn/ContactPlan.h \
+	node/dtn/Dtn.h \
+	node/dtn/SdrModel.h \
+	node/dtn/SdrStatus.h \
+	node/dtn/routing/CgrRoute.h \
+	node/dtn/routing/Routing.h \
+	node/dtn/routing/RoutingCgrIon350.h \
+	node/dtn/routing/RoutingCgrModel350.h \
+	node/dtn/routing/RoutingCgrModelRev17.h \
+	node/dtn/routing/RoutingCgrModelYen.h \
+	node/dtn/routing/RoutingDirect.h \
 	node/fault/Fault.h \
 	node/graphics/Graphics.h \
-	node/net/Contact.h \
-	node/net/ContactPlan.h \
-	node/net/Net.h \
-	node/net/SdrModel.h \
-	node/net/SdrStatus.h \
-	node/net/routing/CgrRoute.h \
-	node/net/routing/Routing.h \
-	node/net/routing/RoutingCgrIon350.h \
-	node/net/routing/RoutingCgrModel350.h \
-	node/net/routing/RoutingCgrModelRev17.h \
-	node/net/routing/RoutingCgrModelYen.h \
-	node/net/routing/RoutingDirect.h \
 	utils/RouterUtils.h \
 	utils/TopologyUtils.h
 $O/node/graphics/Graphics.o: node/graphics/Graphics.cc \
 	dtnsim_m.h \
 	node/MsgTypes.h \
-	node/graphics/Graphics.h \
-	node/net/Contact.h \
-	node/net/routing/CgrRoute.h
-$O/node/mac/Mac.o: node/mac/Mac.cc \
-	dtnsim_m.h \
-	node/MsgTypes.h \
-	node/app/App.h \
-	node/mac/Mac.h \
-	node/net/Contact.h \
-	node/net/routing/CgrRoute.h
-$O/node/net/Contact.o: node/net/Contact.cc \
-	node/net/Contact.h
-$O/node/net/ContactPlan.o: node/net/ContactPlan.cc \
-	node/net/Contact.h \
-	node/net/ContactPlan.h
-$O/node/net/Net.o: node/net/Net.cc \
-	Config.h \
-	dtnsim_m.h \
-	ion/Ion.h \
-	ion/bp/include/bp.h \
-	ion/bp/include/bpP.h \
-	ion/bp/include/bpadmin.h \
-	ion/bp/include/cgr.h \
-	ion/bp/include/crypto.h \
-	ion/config.h \
-	ion/ici/include/csi.h \
-	ion/ici/include/ion.h \
-	ion/ici/include/ionadmin.h \
-	ion/ici/include/ionsec.h \
-	ion/ici/include/lyst.h \
-	ion/ici/include/memmgr.h \
-	ion/ici/include/platform.h \
-	ion/ici/include/psm.h \
-	ion/ici/include/rfx.h \
-	ion/ici/include/sdr.h \
-	ion/ici/include/sdrlist.h \
-	ion/ici/include/sdrmgt.h \
-	ion/ici/include/sdrstring.h \
-	ion/ici/include/sdrxn.h \
-	ion/ici/include/smlist.h \
-	ion/ici/include/smrbt.h \
-	ion/ici/include/zco.h \
-	node/MsgTypes.h \
-	node/app/App.h \
-	node/graphics/Graphics.h \
-	node/net/Contact.h \
-	node/net/ContactPlan.h \
-	node/net/Net.h \
-	node/net/SdrModel.h \
-	node/net/SdrStatus.h \
-	node/net/routing/CgrRoute.h \
-	node/net/routing/Routing.h \
-	node/net/routing/RoutingCgrIon350.h \
-	node/net/routing/RoutingCgrModel350.h \
-	node/net/routing/RoutingCgrModelRev17.h \
-	node/net/routing/RoutingCgrModelYen.h \
-	node/net/routing/RoutingDirect.h \
-	utils/RouterUtils.h \
-	utils/TopologyUtils.h
-$O/node/net/SdrModel.o: node/net/SdrModel.cc \
-	dtnsim_m.h \
-	node/net/Contact.h \
-	node/net/ContactPlan.h \
-	node/net/SdrModel.h \
-	node/net/SdrStatus.h \
-	node/net/routing/CgrRoute.h
-$O/node/net/SdrStatus.o: node/net/SdrStatus.cc
-$O/node/net/routing/RoutingCgrIon350.o: node/net/routing/RoutingCgrIon350.cc \
-	dtnsim_m.h \
-	ion/bp/include/bp.h \
-	ion/bp/include/bpP.h \
-	ion/bp/include/bpadmin.h \
-	ion/bp/include/cgr.h \
-	ion/bp/include/crypto.h \
-	ion/config.h \
-	ion/ici/include/csi.h \
-	ion/ici/include/ion.h \
-	ion/ici/include/ionadmin.h \
-	ion/ici/include/ionsec.h \
-	ion/ici/include/lyst.h \
-	ion/ici/include/memmgr.h \
-	ion/ici/include/platform.h \
-	ion/ici/include/psm.h \
-	ion/ici/include/rfx.h \
-	ion/ici/include/sdr.h \
-	ion/ici/include/sdrlist.h \
-	ion/ici/include/sdrmgt.h \
-	ion/ici/include/sdrstring.h \
-	ion/ici/include/sdrxn.h \
-	ion/ici/include/smlist.h \
-	ion/ici/include/smrbt.h \
-	ion/ici/include/zco.h \
-	node/net/Contact.h \
-	node/net/ContactPlan.h \
-	node/net/SdrModel.h \
-	node/net/SdrStatus.h \
-	node/net/routing/CgrRoute.h \
-	node/net/routing/Routing.h \
-	node/net/routing/RoutingCgrIon350.h
-$O/node/net/routing/RoutingCgrModel350.o: node/net/routing/RoutingCgrModel350.cc \
-	dtnsim_m.h \
-	node/net/Contact.h \
-	node/net/ContactPlan.h \
-	node/net/SdrModel.h \
-	node/net/SdrStatus.h \
-	node/net/routing/CgrRoute.h \
-	node/net/routing/Routing.h \
-	node/net/routing/RoutingCgrModel350.h
-$O/node/net/routing/RoutingCgrModelRev17.o: node/net/routing/RoutingCgrModelRev17.cc \
-	dtnsim_m.h \
-	node/net/Contact.h \
-	node/net/ContactPlan.h \
-	node/net/SdrModel.h \
-	node/net/SdrStatus.h \
-	node/net/routing/CgrRoute.h \
-	node/net/routing/Routing.h \
-	node/net/routing/RoutingCgrModelRev17.h
-$O/node/net/routing/RoutingCgrModelYen.o: node/net/routing/RoutingCgrModelYen.cc \
-	dtnsim_m.h \
-	node/net/Contact.h \
-	node/net/ContactPlan.h \
-	node/net/SdrModel.h \
-	node/net/SdrStatus.h \
-	node/net/routing/CgrRoute.h \
-	node/net/routing/Routing.h \
-	node/net/routing/RoutingCgrModelYen.h
-$O/node/net/routing/RoutingDirect.o: node/net/routing/RoutingDirect.cc \
-	dtnsim_m.h \
-	node/net/Contact.h \
-	node/net/ContactPlan.h \
-	node/net/SdrModel.h \
-	node/net/SdrStatus.h \
-	node/net/routing/CgrRoute.h \
-	node/net/routing/Routing.h \
-	node/net/routing/RoutingDirect.h
+	node/dtn/Contact.h \
+	node/dtn/routing/CgrRoute.h \
+	node/graphics/Graphics.h
 $O/utils/Lp.o: utils/Lp.cc \
 	Config.h \
 	utils/Lp.h
