@@ -1,4 +1,3 @@
-
 #ifndef SRC_NODE_DTN_ROUTING_ROUTINGCGRMODELREV17_H_
 #define SRC_NODE_DTN_ROUTING_ROUTINGCGRMODELREV17_H_
 
@@ -10,7 +9,7 @@
 class RoutingCgrModelRev17: public Routing
 {
 public:
-	RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * contactPlan, string routingType, bool printDebug);
+	RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * localContactPlan, ContactPlan * globalContactPlan, string routingType, bool printDebug);
 	virtual ~RoutingCgrModelRev17();
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 
@@ -23,31 +22,21 @@ public:
 
 private:
 
-	string routingType_;
-
+	// Stats collection
 	int dijkstraCalls;
 	int dijkstraLoops;
 	int tableEntriesExplored;
 
+	// Basic variables
+	string routingType_;
 	int eid_;
 	int nodeNum_;
 	SdrModel * sdr_;
 	ContactPlan * contactPlan_;
 
-//	typedef struct
-//	{
-//		int terminusNode;			// Destination node
-//		int nextHop; 				// Entry node
-//		double fromTime; 			// Init time
-//		double toTime;	 			// Due time (earliest contact end time among all)
-//		float confidence;
-//		double arrivalTime;
-//		double maxVolume; 			// In Bytes
-//		double residualVolume;		// In Bytes
-//		vector<Contact *> hops;	 	// Contact list
-//	} CgrRoute;
+	void checkRoutingTypeString(void);
 
-	// Route Table: one table per destination, one entry per neighbour node
+	// Route Table: one table per destination
 	vector<vector<CgrRoute>> routeTable_;
 	double routeTableLastEditTime = -1;
 

@@ -45,6 +45,7 @@ public:
 
 	virtual void setOnFault(bool onFault);
 	virtual void refreshForwarding();
+	ContactPlan * getContactPlanPointer();
 
 protected:
 	virtual void initialize(int stage);

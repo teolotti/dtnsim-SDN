@@ -22,7 +22,7 @@ void Dtn::initialize(int stage)
 
 		// Initialize contact plan
 		contactPlan_.parseContactPlanFile(par("contactsFile"));
-		contactPlan_.printContactPlan();
+		//contactPlan_.printContactPlan();
 
 		// Schedule local contact messages
 		vector<Contact> localContacts = contactPlan_.getContactsBySrc(this->eid_);
@@ -56,7 +56,10 @@ void Dtn::initialize(int stage)
 		else if (routeString.compare("cgrModelYen") == 0)
 			routing = new RoutingCgrModelYen(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"));
 		else if (routeString.compare("cgrModelRev17") == 0)
-			routing = new RoutingCgrModelRev17(eid_, this->getParentModule()->getVectorSize(), &sdr_, &contactPlan_, par("routingType"), par("printRoutingDebug"));
+		{
+			ContactPlan * globalContactPlan = ((Dtn *) this->getParentModule()->getParentModule()->getSubmodule("node", 0)->getSubmodule("dtn"))->getContactPlanPointer();
+			routing = new RoutingCgrModelRev17(eid_, this->getParentModule()->getVectorSize(), &sdr_, &contactPlan_, globalContactPlan, par("routingType"), par("printRoutingDebug"));
+		}
 		else if (routeString.compare("cgrIon350") == 0)
 		{
 			int nodesNumber = this->getParentModule()->getParentModule()->par("nodesNumber");
@@ -305,6 +308,11 @@ void Dtn::setOnFault(bool onFault)
 			remoteDtn->refreshForwarding();
 		}
 	}
+}
+
+ContactPlan* Dtn::getContactPlanPointer(void)
+{
+	return &this->contactPlan_;
 }
 
 void Dtn::finish()
