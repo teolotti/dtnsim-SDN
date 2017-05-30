@@ -357,11 +357,12 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		// If this is the route list to this terminus is empty,
 		// create a single entry place to hold the route
 		if (routeTable_.at(terminusNode).empty()) {
-			routeTable_.at(terminusNode).resize(1);
+			routeTable_.at(terminusNode).resize(2);
 			CgrRoute route;
 			route.nextHop = EMPTY_ROUTE;
 			route.arrivalTime = numeric_limits<double>::max(); // never chosen as best route
 			routeTable_.at(terminusNode).at(0) = route;
+			routeTable_.at(terminusNode).at(1) = route;
 		}
 
 		// Explore list and recalculate if necesary
@@ -392,6 +393,23 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 			CgrRoute route;
 			this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
 			routeTable_.at(terminusNode).at(0) = route;
+
+			// Also create a secondary route thorugh a different entry node
+			// in order to have an alternative when return to sender is forbidden
+			// through this entry node. set not found if not primary route found.
+
+			if (route.nextHop != NO_ROUTE_FOUND) {
+				// Suppress all contacts which connect this node with the entry node of
+				// the route found. All other neighbours should be considered
+				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
+						it != contactPlan_->getContacts()->end(); ++it)
+					if ((*it).getSourceEid() == eid_ && (*it).getDestinationEid() == route.nextHop)
+						suppressedContactIds.push_back((*it).getId());
+				this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
+				routeTable_.at(terminusNode).at(1) = route;
+			} else {
+				routeTable_.at(terminusNode).at(1).nextHop = NO_ROUTE_FOUND;
+			}
 
 			tableEntriesCreated++;
 		}

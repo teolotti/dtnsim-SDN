@@ -1,11 +1,27 @@
 //
-// Generated file, do not edit! Created by nedtool 5.0 from dtnsim.msg.
+// Generated file, do not edit! Created by nedtool 5.1 from dtnsim.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
 #ifdef _MSC_VER
 #  pragma warning(disable:4101)
 #  pragma warning(disable:4065)
+#endif
+
+#if defined(__clang__)
+#  pragma clang diagnostic ignored "-Wshadow"
+#  pragma clang diagnostic ignored "-Wconversion"
+#  pragma clang diagnostic ignored "-Wunused-parameter"
+#  pragma clang diagnostic ignored "-Wc++98-compat"
+#  pragma clang diagnostic ignored "-Wunreachable-code-break"
+#  pragma clang diagnostic ignored "-Wold-style-cast"
+#elif defined(__GNUC__)
+#  pragma GCC diagnostic ignored "-Wshadow"
+#  pragma GCC diagnostic ignored "-Wconversion"
+#  pragma GCC diagnostic ignored "-Wunused-parameter"
+#  pragma GCC diagnostic ignored "-Wold-style-cast"
+#  pragma GCC diagnostic ignored "-Wsuggest-attribute=noreturn"
+#  pragma GCC diagnostic ignored "-Wfloat-conversion"
 #endif
 
 #include <iostream>
@@ -121,13 +137,13 @@ void doParsimArrayUnpacking(omnetpp::cCommBuffer *b, T *t, int n)
 template<typename T>
 void doParsimPacking(omnetpp::cCommBuffer *, const T& t)
 {
-    throw omnetpp::cRuntimeError("Parsim error: no doParsimPacking() function for type %s", omnetpp::opp_typename(typeid(t)));
+    throw omnetpp::cRuntimeError("Parsim error: No doParsimPacking() function for type %s", omnetpp::opp_typename(typeid(t)));
 }
 
 template<typename T>
 void doParsimUnpacking(omnetpp::cCommBuffer *, T& t)
 {
-    throw omnetpp::cRuntimeError("Parsim error: no doParsimUnpacking() function for type %s", omnetpp::opp_typename(typeid(t)));
+    throw omnetpp::cRuntimeError("Parsim error: No doParsimUnpacking() function for type %s", omnetpp::opp_typename(typeid(t)));
 }
 
 }  // namespace omnetpp
@@ -161,9 +177,9 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
     return out;
 }
 
-Register_Class(BundlePkt);
+Register_Class(BundlePkt)
 
-BundlePkt::BundlePkt(const char *name, int kind) : ::omnetpp::cPacket(name,kind)
+BundlePkt::BundlePkt(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
     this->sourceEid = 0;
     this->destinationEid = 0;
@@ -398,6 +414,7 @@ class BundlePktDescriptor : public omnetpp::cClassDescriptor
     virtual const char *getFieldProperty(int field, const char *propertyname) const override;
     virtual int getFieldArraySize(void *object, int field) const override;
 
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
     virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
     virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
 
@@ -405,7 +422,7 @@ class BundlePktDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(BundlePktDescriptor);
+Register_ClassDescriptor(BundlePktDescriptor)
 
 BundlePktDescriptor::BundlePktDescriptor() : omnetpp::cClassDescriptor("BundlePkt", "omnetpp::cPacket")
 {
@@ -583,6 +600,20 @@ int BundlePktDescriptor::getFieldArraySize(void *object, int field) const
     }
 }
 
+const char *BundlePktDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    BundlePkt *pp = (BundlePkt *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
 std::string BundlePktDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
@@ -666,9 +697,9 @@ void *BundlePktDescriptor::getFieldStructValuePointer(void *object, int field, i
     }
 }
 
-Register_Class(TrafficGeneratorMsg);
+Register_Class(TrafficGeneratorMsg)
 
-TrafficGeneratorMsg::TrafficGeneratorMsg(const char *name, int kind) : ::omnetpp::cMessage(name,kind)
+TrafficGeneratorMsg::TrafficGeneratorMsg(const char *name, short kind) : ::omnetpp::cMessage(name,kind)
 {
     this->bundlesNumber = 0;
     this->destinationEid = 0;
@@ -793,6 +824,7 @@ class TrafficGeneratorMsgDescriptor : public omnetpp::cClassDescriptor
     virtual const char *getFieldProperty(int field, const char *propertyname) const override;
     virtual int getFieldArraySize(void *object, int field) const override;
 
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
     virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
     virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
 
@@ -800,7 +832,7 @@ class TrafficGeneratorMsgDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(TrafficGeneratorMsgDescriptor);
+Register_ClassDescriptor(TrafficGeneratorMsgDescriptor)
 
 TrafficGeneratorMsgDescriptor::TrafficGeneratorMsgDescriptor() : omnetpp::cClassDescriptor("TrafficGeneratorMsg", "omnetpp::cMessage")
 {
@@ -946,6 +978,20 @@ int TrafficGeneratorMsgDescriptor::getFieldArraySize(void *object, int field) co
     }
 }
 
+const char *TrafficGeneratorMsgDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    TrafficGeneratorMsg *pp = (TrafficGeneratorMsg *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
 std::string TrafficGeneratorMsgDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
@@ -1011,9 +1057,9 @@ void *TrafficGeneratorMsgDescriptor::getFieldStructValuePointer(void *object, in
     }
 }
 
-Register_Class(ContactMsg);
+Register_Class(ContactMsg)
 
-ContactMsg::ContactMsg(const char *name, int kind) : ::omnetpp::cMessage(name,kind)
+ContactMsg::ContactMsg(const char *name, short kind) : ::omnetpp::cMessage(name,kind)
 {
     this->id = 0;
     this->dataRate = 0;
@@ -1166,6 +1212,7 @@ class ContactMsgDescriptor : public omnetpp::cClassDescriptor
     virtual const char *getFieldProperty(int field, const char *propertyname) const override;
     virtual int getFieldArraySize(void *object, int field) const override;
 
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
     virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
     virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
 
@@ -1173,7 +1220,7 @@ class ContactMsgDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(ContactMsgDescriptor);
+Register_ClassDescriptor(ContactMsgDescriptor)
 
 ContactMsgDescriptor::ContactMsgDescriptor() : omnetpp::cClassDescriptor("ContactMsg", "omnetpp::cMessage")
 {
@@ -1327,6 +1374,20 @@ int ContactMsgDescriptor::getFieldArraySize(void *object, int field) const
     }
 }
 
+const char *ContactMsgDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    ContactMsg *pp = (ContactMsg *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
 std::string ContactMsgDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
@@ -1396,9 +1457,9 @@ void *ContactMsgDescriptor::getFieldStructValuePointer(void *object, int field, 
     }
 }
 
-Register_Class(ForwardingMsg);
+Register_Class(ForwardingMsg)
 
-ForwardingMsg::ForwardingMsg(const char *name, int kind) : ::omnetpp::cMessage(name,kind)
+ForwardingMsg::ForwardingMsg(const char *name, short kind) : ::omnetpp::cMessage(name,kind)
 {
     this->neighborEid = 0;
     this->contactId = 0;
@@ -1481,6 +1542,7 @@ class ForwardingMsgDescriptor : public omnetpp::cClassDescriptor
     virtual const char *getFieldProperty(int field, const char *propertyname) const override;
     virtual int getFieldArraySize(void *object, int field) const override;
 
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
     virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
     virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
 
@@ -1488,7 +1550,7 @@ class ForwardingMsgDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(ForwardingMsgDescriptor);
+Register_ClassDescriptor(ForwardingMsgDescriptor)
 
 ForwardingMsgDescriptor::ForwardingMsgDescriptor() : omnetpp::cClassDescriptor("ForwardingMsg", "omnetpp::cMessage")
 {
@@ -1619,6 +1681,20 @@ int ForwardingMsgDescriptor::getFieldArraySize(void *object, int field) const
     ForwardingMsg *pp = (ForwardingMsg *)object; (void)pp;
     switch (field) {
         default: return 0;
+    }
+}
+
+const char *ForwardingMsgDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    ForwardingMsg *pp = (ForwardingMsg *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
     }
 }
 
