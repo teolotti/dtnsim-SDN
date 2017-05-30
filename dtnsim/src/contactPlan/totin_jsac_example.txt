@@ -33,8 +33,8 @@ a contact +10 +20 1 5 1
 a contact +10 +20 5 1 1
 
 # Contacts E-D (3 ISLs)
-a contact +0 +10 5 5 1
-a contact +0 +10 4 4 1
+a contact +0 +10 4 5 1
+a contact +0 +10 5 4 1
 a contact +30 +40 4 5 1
 a contact +30 +40 5 5 1
 a contact +40 +50 4 5 1

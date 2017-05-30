@@ -42,23 +42,27 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 	if (printDebug_ == false)
 		cout.setstate(std::ios_base::failbit);
 
+	// Set local time
+	simTime_ = simTime;
+
 	// Reset counters (metrics)
 	dijkstraCalls = 0;
 	dijkstraLoops = 0;
+	tableEntriesCreated = 0;
 	tableEntriesExplored = 0;
 
-	cout << "TIME: " << simTime << "s, NODE: " << eid_ << ", routing bundle to dst: " << bundle->getDestinationEid()
+	cout << "TIME: " << simTime_ << "s, NODE: " << eid_ << ", routing bundle to dst: " << bundle->getDestinationEid()
 			<< " (" << bundle->getByteLength() << "Bytes)" << endl;
 
 	// If no extensionBlock, run cgr each time a bundle is dispatched
 	if (routingType_.find("extensionBlock:off") != std::string::npos)
-		this->cgrForward(bundle, simTime);
+		this->cgrForward(bundle);
 
 	// If extensionBlock, check header
 	if (routingType_.find("extensionBlock:on") != std::string::npos) {
 		if (bundle->getCgrRoute().nextHop == EMPTY_ROUTE) {
 			// Empty extension block: Calculate, encode a new path and enqueue
-			this->cgrForward(bundle, simTime);
+			this->cgrForward(bundle);
 		} else {
 			// Non-empty EB: Use EB Route to route bundle
 			CgrRoute ebRoute = bundle->getCgrRoute();
@@ -119,7 +123,7 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 			} else {
 				// Discard old extension block, calculate and encode a new path and enqueue
 				cout << "EB Route in header not valid, generating a new one" << endl;
-				this->cgrForward(bundle, simTime);
+				this->cgrForward(bundle);
 			}
 		}
 	}
@@ -137,11 +141,11 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 // Initially it checks if the route table is up-to-date and update it
 // if it is outdated (by running a new Dijkstra search for the
 // corresponding neighbor).
-void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime) {
+void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 	// If contact plan was changed, empty route list
 	if (contactPlan_->getLastEditTime() > routeTableLastEditTime)
 		this->clearRouteTable();
-	routeTableLastEditTime = simTime;
+	routeTableLastEditTime = simTime_;
 
 	int terminusNode = bundle->getDestinationEid();
 
@@ -153,8 +157,24 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime) {
 		// when the contact plan changes. The route list
 		// is completed using yen algorithm.
 		//////////////////////////////////////////////////
+
 		cout << "dtnsim error: routeListType:allPaths-yen not implemented yet" << endl;
 		exit(1);
+
+		// If this is the route list to this terminus is empty,
+		// populate it with all paths to the destination. This
+		// should only happen once per contact plan update.
+		if (routeTable_.at(terminusNode).empty()) {
+
+			vector<int> suppressedContactIds;
+
+			// Determine the shortest path and add it to routeList
+			CgrRoute route;
+			this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
+
+			// Work on-going here...
+
+		}
 	}
 	if (routingType_.find("routeListType:allPaths-initial+anchor") != std::string::npos) {
 		//////////////////////////////////////////////////
@@ -163,8 +183,88 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime) {
 		// list is completed using remove initial + anchor
 		// algorithm currently used in ION 3.6.0.
 		//////////////////////////////////////////////////
-		cout << "dtnsim error: routeListType:allPaths-initial+anchor not implemented yet" << endl;
-		exit(1);
+
+		// If this is the route list to this terminus is empty,
+		// populate it with all paths to the destination. This
+		// should only happen once per contact plan update.
+		if (routeTable_.at(terminusNode).empty()) {
+
+			vector<int> suppressedContactIds;
+			Contact * anchorContact = NULL;
+
+			while (1) {
+				CgrRoute route;
+				this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
+
+				// If no more routes were found, stop search loop
+				if (route.nextHop == NO_ROUTE_FOUND)
+					break;
+
+				Contact * firstContact = route.hops.at(0);
+
+				// If anchor search on-going
+				if (anchorContact != NULL)
+					// And the first contact is no longer anchor
+					if (firstContact != anchorContact) {
+						// End anchor search: [endAnchoredSearch() function in ion]
+
+						cout << "-anchored search ends in contactId: " << anchorContact->getId() << " (src:"
+								<< anchorContact->getSourceEid() << "-dst:" << anchorContact->getDestinationEid()
+								<< ", " << anchorContact->getStart() << "s to " << anchorContact->getEnd() << "s)"
+								<< endl;
+
+						// Unsupress all remote contacts (suppressed local contacts dont change)
+						for (vector<int>::iterator it = suppressedContactIds.begin(); it != suppressedContactIds.end();)
+							if ((contactPlan_->getContactById((*it)))->getSourceEid() != eid_)
+								it = suppressedContactIds.erase(it);
+							else
+								++it;
+
+						// Suppress anchorContact from further searches.
+						suppressedContactIds.push_back(anchorContact->getId());
+						anchorContact = NULL;
+
+						// Ignore the latest route and continue with next iteration
+						continue;
+					}
+
+				// Add new valid route to route table
+				routeTable_.at(terminusNode).push_back(route);
+				cout << "-new route found through node:" << route.nextHop << ", arrivalConf:" << route.confidence
+						<< ", arrivalT:" << route.arrivalTime << ", txWin:(" << route.fromTime << "-" << route.toTime
+						<< "), maxCap:" << route.maxVolume << "Bytes:" << endl;
+
+				// Find limiting contact
+				Contact * limitContact = NULL;
+				if (route.toTime == firstContact->getEnd())
+					// Generaly it is the first
+					limitContact = firstContact;
+				else {
+					// If not, start new anchor search on firstContact
+					anchorContact = firstContact;
+
+					cout << "-anchored search starts in contactId: " << anchorContact->getId() << " (src:"
+							<< anchorContact->getSourceEid() << "-dst:" << anchorContact->getDestinationEid() << ", "
+							<< anchorContact->getStart() << "s-" << anchorContact->getEnd() << "s)" << endl;
+
+					// Find the limiting contact in route
+					for (vector<Contact *>::iterator it = route.hops.begin(); it != route.hops.end(); ++it)
+						if ((*it)->getEnd() == route.toTime) {
+							limitContact = (*it);
+							break;
+						}
+				}
+
+				// Supress limiting contact
+				suppressedContactIds.push_back(limitContact->getId());
+
+				cout << "supressing limiting contactId: " << limitContact->getId() << " (src:"
+						<< limitContact->getSourceEid() << "-dst:" << limitContact->getDestinationEid() << ", "
+						<< limitContact->getStart() << "s-" << limitContact->getEnd() << "s)" << endl;
+
+				tableEntriesCreated++;
+			}
+		}
 	}
 	if (routingType_.find("routeListType:allPaths-firstEnding") != std::string::npos) {
 		//////////////////////////////////////////////////
@@ -174,12 +274,37 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime) {
 		//////////////////////////////////////////////////
 
 		// If this is the route list to this terminus is empty,
-		// populate it with all paths to the destination
+		// populate it with all paths to the destination. This
+		// should only happen once per contact plan update.
 		if (routeTable_.at(terminusNode).empty()) {
 
+			vector<int> suppressedContactIds;
 
+			while (1) {
+				CgrRoute route;
+				this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
+
+				// If no more routes were found, stop search loop
+				if (route.nextHop == NO_ROUTE_FOUND)
+					break;
+
+				// Add new valid route to route table
+				routeTable_.at(terminusNode).push_back(route);
+
+				// Suppress the first ending contact of the last route found
+				double earliestEndingTime = numeric_limits<double>::max();
+				int earliestEndingContactId;
+				vector<Contact *>::iterator hop;
+				for (hop = route.hops.begin(); hop != route.hops.end(); ++hop)
+					if ((*hop)->getEnd() < earliestEndingTime) {
+						earliestEndingTime = (*hop)->getEnd();
+						earliestEndingContactId = (*hop)->getId();
+					}
+				suppressedContactIds.push_back(earliestEndingContactId);
+
+				tableEntriesCreated++;
+			}
 		}
-
 	}
 	if (routingType_.find("routeListType:allPaths-firstDepleted") != std::string::npos) {
 		//////////////////////////////////////////////////
@@ -187,8 +312,40 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime) {
 		// when the contact plan changes. The route list
 		// is completed removing the first depleted contact.
 		//////////////////////////////////////////////////
-		cout << "dtnsim error: routeListType:allPaths-firstDepleted not implemented yet" << endl;
-		exit(1);
+
+		// If this is the route list to this terminus is empty,
+		// populate it with all paths to the destination. This
+		// should only happen once per contact plan update.
+		if (routeTable_.at(terminusNode).empty()) {
+
+			vector<int> suppressedContactIds;
+
+			while (1) {
+				CgrRoute route;
+				this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
+
+				// If no more routes were found, stop search loop
+				if (route.nextHop == NO_ROUTE_FOUND)
+					break;
+
+				// Add new valid route to route table
+				routeTable_.at(terminusNode).push_back(route);
+
+				// Suppress the least capacitated contact of the last route found
+				double leastVolume = numeric_limits<double>::max();
+				int leastVolumeContactId;
+				vector<Contact *>::iterator hop;
+				for (hop = route.hops.begin(); hop != route.hops.end(); ++hop)
+					if ((*hop)->getVolume() < leastVolume) {
+						leastVolume = (*hop)->getVolume();
+						leastVolumeContactId = (*hop)->getId();
+					}
+				suppressedContactIds.push_back(leastVolumeContactId);
+
+				tableEntriesCreated++;
+			}
+		}
+
 	}
 	if (routingType_.find("routeListType:oneBestPath") != std::string::npos) {
 		//////////////////////////////////////////////////
@@ -215,7 +372,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime) {
 			needRecalculation = true;
 
 		// Due route condition
-		if (routeTable_.at(terminusNode).at(0).toTime < simTime)
+		if (routeTable_.at(terminusNode).at(0).toTime < simTime_)
 			needRecalculation = true;
 
 		// Depleted route condition
@@ -231,12 +388,13 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime) {
 		}
 
 		if (needRecalculation) {
+			vector<int> suppressedContactIds; // no suppressed contacts here
 			CgrRoute route;
-			this->findNextBestRoute(-1, terminusNode, &route, simTime);
+			this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
 			routeTable_.at(terminusNode).at(0) = route;
-		}
 
-		tableEntriesExplored++;
+			tableEntriesCreated++;
+		}
 	}
 	if (routingType_.find("routeListType:perNeighborBestPath") != std::string::npos) {
 		//////////////////////////////////////////////////
@@ -270,7 +428,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime) {
 				needRecalculation = true;
 
 			// Due route condition
-			if (routeTable_.at(terminusNode).at(r).toTime < simTime)
+			if (routeTable_.at(terminusNode).at(r).toTime < simTime_)
 				needRecalculation = true;
 
 			// Depleted route condition
@@ -286,38 +444,65 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime) {
 			}
 
 			if (needRecalculation) {
-				CgrRoute route;
-				this->findNextBestRoute(r, terminusNode, &route, simTime);
-				routeTable_.at(terminusNode).at(r) = route;
-			}
 
-			tableEntriesExplored++;
+				// Suppress all contacts which connect his node with other nodes
+				// different than the entry node of this route table entry (r)
+				vector<int> suppressedContactIds;
+				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
+						it != contactPlan_->getContacts()->end(); ++it)
+					if ((*it).getSourceEid() == eid_ && (*it).getDestinationEid() != r)
+						suppressedContactIds.push_back((*it).getId());
+
+				CgrRoute route;
+				this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
+				routeTable_.at(terminusNode).at(r) = route;
+
+				tableEntriesCreated++;
+			}
 		}
 	}
+
+	// At this point routeTable must be updated
+	// no matter which routingType was chosen
 
 	// Print route table for this terminus
 	this->printRouteTable(terminusNode);
 
+	// Filter routes
+	for (unsigned int r = 0; r < routeTable_.at(terminusNode).size(); r++) {
+
+		routeTable_.at(terminusNode).at(r).filtered = false;
+
+		// Filter those that should not be considered in
+		// the next best route determination calculation.
+		// Should have no effect when using dynamically updated
+		// route tables (perNeighborBestPath and oneBestPath),
+		// but on allPaths routing types.
+
+		// criteria 1) filter route: capacity is depleted
+		if (routeTable_.at(terminusNode).at(r).residualVolume < bundle->getByteLength()) {
+			routeTable_.at(terminusNode).at(r).filtered = true;
+		}
+		// criteria 2) filter route: due time is passed
+		if (routeTable_.at(terminusNode).at(r).toTime <= simTime_) {
+			routeTable_.at(terminusNode).at(r).filtered = true;
+		}
+
+		// Filter those that goes back to sender if such
+		// type of forwarding is forbidden as per .ini file
+		if (bundle->getReturnToSender() == false)
+			if (routeTable_.at(terminusNode).at(r).nextHop == bundle->getSenderEid())
+				routeTable_.at(terminusNode).at(r).filtered = true;
+	}
+
 	// Select best route
 	vector<CgrRoute>::iterator bestRoute;
-	if (bundle->getReturnToSender() == true) {
-		// consider all routes in table
-		bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(),
-				this->compareRoutes);
-	} else {
-		// Do not consider route back to sender (achieved bytemporaly set arrivalTime to infinite)
-		// This variant disables the forwarding back to sender node. This a feature currently
-		// operating in ION which mitigates the formation routing loops. However, it is well-known
-		// this does not completly avoid the issue as the route loop can still be formed by a
-		// third node that can reach the sender node instead. This situations are generally provoked
-		// by congestion and are very hard to solve via in-band protocols.
-		// See paper http://onlinelibrary.wiley.com/doi/10.1002/sat.1210/abstract for a more general discussion.
-		double arrivalTime = routeTable_.at(terminusNode).at(bundle->getSenderEid()).arrivalTime;
-		routeTable_.at(terminusNode).at(bundle->getSenderEid()).arrivalTime = numeric_limits<double>::max();
-		bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(),
-				this->compareRoutes);
-		routeTable_.at(terminusNode).at(bundle->getSenderEid()).arrivalTime = arrivalTime;
-	}
+	bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(),
+			this->compareRoutes);
+
+	// Save tableEntriesExplored metric. Notice that
+	// explored also includes filtered routes (i.e., pesimistic)
+	tableEntriesExplored = routeTable_.at(terminusNode).size();
 
 	// Enqueue bundle to route and update volumes
 	this->cgrEnqueue(bundle, &(*bestRoute));
@@ -327,11 +512,12 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle, double simTime) {
 // To this end, it updates contacts volume depending on the volume-awareness
 // type configured for the routing routine.
 void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
-	if (bestRoute->nextHop != NO_ROUTE_FOUND) {
-		cout << "*Best: routeTable[" << bestRoute->terminusNode << "][" << bestRoute->nextHop << "]: nextHop: "
-				<< bestRoute->nextHop << ", frm " << bestRoute->fromTime << " to " << bestRoute->toTime
-				<< ", arrival time: " << bestRoute->arrivalTime << ", volume: " << bestRoute->residualVolume << "/"
-				<< bestRoute->maxVolume << "Bytes" << endl;
+
+	if (bestRoute->nextHop != NO_ROUTE_FOUND && !bestRoute->filtered) {
+
+		cout << "*Best: routeTable[" << bestRoute->terminusNode << "][ ]: nextHop: " << bestRoute->nextHop << ", frm "
+				<< bestRoute->fromTime << " to " << bestRoute->toTime << ", arrival time: " << bestRoute->arrivalTime
+				<< ", volume: " << bestRoute->residualVolume << "/" << bestRoute->maxVolume << "Bytes" << endl;
 
 		//////////////////////////////////////////////////
 		// Update residualVolume: all contact
@@ -399,8 +585,8 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 // operations which render the code very difficult to read and to debug.
 // In general, each contact has a work pointer where temporal information only
 // valid and related to the current Dijstra search is stored.
-void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, CgrRoute * route, double simTime) {
-	// increment counter
+void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route) {
+	// increment metrics counter
 	dijkstraCalls++;
 
 	// Create rootContact and its corresponding rootWork
@@ -408,29 +594,25 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 	Contact * rootContact = new Contact(0, 0, numeric_limits<double>::max(), eid_, eid_, 0, 1.0);
 	Work rootWork;
 	rootWork.contact = rootContact;
-	rootWork.arrivalTime = simTime;
+	rootWork.arrivalTime = simTime_;
 	rootContact->work = &rootWork;
 
 	// Create and initialize working area in each contact.
-	vector<Contact>::iterator it;
-	for (it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end(); ++it) {
+	for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end();
+			++it) {
 		(*it).work = new Work;
 		((Work *) (*it).work)->contact = &(*it);
 		((Work *) (*it).work)->visitedNodes.clear();
 		((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
 		((Work *) (*it).work)->predecessor = 0;
 		((Work *) (*it).work)->visited = false;
-		((Work *) (*it).work)->suppressed = false;
 
-		if (entryNode >= 0)
-			//cout << "  suppressing initial contacts: ";
-			// Supress next hop contacts though nodes different than entryNode
-			if ((*it).getSourceEid() == eid_ && (*it).getDestinationEid() != entryNode) {
-				((Work *) (*it).work)->suppressed = true;
-				//cout << (*it).getId() << ", ";
-			}
+		// Suppress contacts as indicated in the suppressed list
+		if (find(suppressedContactIds.begin(), suppressedContactIds.end(), (*it).getId()) != suppressedContactIds.end())
+			((Work *) (*it).work)->suppressed = true;
+		else
+			((Work *) (*it).work)->suppressed = false;
 	}
-	//cout << endl;
 
 	// Start Dijkstra
 	Contact * currentContact = rootContact;
@@ -566,6 +748,12 @@ void RoutingCgrModelRev17::findNextBestRoute(int entryNode, int terminusNode, Cg
 		route->nextHop = NO_ROUTE_FOUND;
 		route->arrivalTime = numeric_limits<double>::max();			// never chosen as best route
 	}
+
+	// Delete working area in each contact.
+	for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end();
+			++it) {
+		delete ((Work *) (*it).work);
+	}
 }
 
 /////////////////////////////////////////////////
@@ -606,6 +794,15 @@ void RoutingCgrModelRev17::printRouteTable(int terminusNode) {
 // This functions is used to determine the best route out of a route list.
 // Must returns true if first argument is better (i.e., minor)
 bool RoutingCgrModelRev17::compareRoutes(CgrRoute i, CgrRoute j) {
+
+	// If one is filtered, the other is the best
+	if (i.filtered && !j.filtered)
+		return false;
+	if (!i.filtered && j.filtered)
+		return true;
+
+	// If both are not filtered, then compare criteria,
+	// If both are filtered, return any of them.
 
 	// criteria 1) lowest arrival time
 	if (i.arrivalTime < j.arrivalTime)
@@ -686,6 +883,10 @@ int RoutingCgrModelRev17::getDijkstraCalls() {
 
 int RoutingCgrModelRev17::getDijkstraLoops() {
 	return dijkstraLoops;
+}
+
+int RoutingCgrModelRev17::getRouteTableEntriesCreated() {
+	return tableEntriesCreated;
 }
 
 int RoutingCgrModelRev17::getRouteTableEntriesExplored() {

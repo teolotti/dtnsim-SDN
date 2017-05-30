@@ -83,6 +83,7 @@ void Dtn::initialize(int stage)
 		sdrBytesStored = registerSignal("sdrBytesStored");
 		routeCgrDijkstraCalls = registerSignal("routeCgrDijkstraCalls");
 		routeCgrDijkstraLoops = registerSignal("routeCgrDijkstraLoops");
+		routeCgrRouteTableEntriesCreated = registerSignal("routeCgrRouteTableEntriesCreated");
 		routeCgrRouteTableEntriesExplored = registerSignal("routeCgrRouteTableEntriesExplored");
 
 		if (eid_ != 0)
@@ -262,6 +263,7 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 		{
 			emit(routeCgrDijkstraCalls, ((RoutingCgrModelRev17*) routing)->getDijkstraCalls());
 			emit(routeCgrDijkstraLoops, ((RoutingCgrModelRev17*) routing)->getDijkstraLoops());
+			emit(routeCgrRouteTableEntriesCreated, ((RoutingCgrModelRev17*) routing)->getRouteTableEntriesCreated());
 			emit(routeCgrRouteTableEntriesExplored, ((RoutingCgrModelRev17*) routing)->getRouteTableEntriesExplored());
 		}
 		emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());

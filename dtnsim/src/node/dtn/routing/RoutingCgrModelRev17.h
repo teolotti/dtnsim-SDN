@@ -6,16 +6,17 @@
 
 #define	MAX_SPEED_MPH	(150000)
 
-class RoutingCgrModelRev17: public Routing
-{
+class RoutingCgrModelRev17: public Routing {
 public:
-	RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * localContactPlan, ContactPlan * globalContactPlan, string routingType, bool printDebug);
+	RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * localContactPlan,
+			ContactPlan * globalContactPlan, string routingType, bool printDebug);
 	virtual ~RoutingCgrModelRev17();
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 
 	// stats recollection
 	int getDijkstraCalls();
 	int getDijkstraLoops();
+	int getRouteTableEntriesCreated();
 	int getRouteTableEntriesExplored();
 
 	bool printDebug_ = true;
@@ -25,6 +26,7 @@ private:
 	// Stats collection
 	int dijkstraCalls;
 	int dijkstraLoops;
+	int tableEntriesCreated;
 	int tableEntriesExplored;
 
 	// Basic variables
@@ -33,6 +35,7 @@ private:
 	int nodeNum_;
 	SdrModel * sdr_;
 	ContactPlan * contactPlan_;
+	double simTime_;
 
 	void checkRoutingTypeString(void);
 
@@ -40,8 +43,7 @@ private:
 	vector<vector<CgrRoute>> routeTable_;
 	double routeTableLastEditTime = -1;
 
-	typedef struct
-	{
+	typedef struct {
 		Contact * contact;			// The owner contact of this Work
 		Contact * predecessor;		// Predecessor Contact
 		vector<int> visitedNodes;	// Dijkstra exploration: list of visited nodes
@@ -50,10 +52,10 @@ private:
 		bool suppressed;			// Dijkstra exploration: suppressed
 	} Work;
 
-	void cgrForward(BundlePkt * bundle, double simTime);
+	void cgrForward(BundlePkt * bundle);
 	void cgrEnqueue(BundlePkt * bundle, CgrRoute * bestRoute);
 
-	void findNextBestRoute(int entryNode, int terminusNode, CgrRoute * route, double simTime);
+	void findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route);
 
 	void clearRouteTable();
 	void printRouteTable(int terminusNode);

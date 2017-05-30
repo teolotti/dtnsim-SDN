@@ -26,6 +26,7 @@ simple Dtn
         @signal[sdrBytesStored];
         @signal[routeCgrDijkstraCalls];
         @signal[routeCgrDijkstraLoops];
+        @signal[routeCgrRouteTableEntriesCreated];
         @signal[routeCgrRouteTableEntriesExplored];
 
         @statistic[dtnBundleSentToCom](title="dtnBundleSentToCom"; source="dtnBundleSentToCom"; record=count; interpolationmode=none);
@@ -39,6 +40,7 @@ simple Dtn
         @statistic[sdrBytesStored](title="sdrBytesStored"; source="sdrBytesStored"; record=timeavg,max,vector; interpolationmode=none);
         @statistic[routeCgrDijkstraCalls](title="routeCgrDijkstraCalls"; source="routeCgrDijkstraCalls"; record=sum,vector; interpolationmode=none);
         @statistic[routeCgrDijkstraLoops](title="routeCgrDijkstraLoops"; source="routeCgrDijkstraLoops"; record=sum,vector; interpolationmode=none);
+        @statistic[routeCgrRouteTableEntriesCreated](title="routeCgrRouteTableEntriesCreated"; source="routeCgrRouteTableEntriesCreated"; record=max,vector; interpolationmode=none);
         @statistic[routeCgrRouteTableEntriesExplored](title="routeCgrRouteTableEntriesExplored"; source="routeCgrRouteTableEntriesExplored"; record=max,vector; interpolationmode=none);
 
     gates:

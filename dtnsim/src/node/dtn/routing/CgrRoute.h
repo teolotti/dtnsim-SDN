@@ -12,6 +12,7 @@ using namespace std;
 
 typedef struct
 {
+	bool filtered;
 	int terminusNode;			// Destination node
 	int nextHop; 				// Entry node
 	double fromTime; 			// Init time

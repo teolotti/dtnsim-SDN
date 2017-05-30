@@ -87,6 +87,7 @@ private:
 	simsignal_t sdrBytesStored;
 	simsignal_t routeCgrDijkstraCalls;
 	simsignal_t routeCgrDijkstraLoops;
+	simsignal_t routeCgrRouteTableEntriesCreated;
 	simsignal_t routeCgrRouteTableEntriesExplored;
 };
 
