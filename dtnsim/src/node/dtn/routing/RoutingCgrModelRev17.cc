@@ -82,7 +82,10 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 			bool ebRouteIsValid = true;
 			vector<Contact *> newHops;
 			for (vector<Contact *>::iterator hop = ebRoute.hops.begin(); hop != ebRoute.hops.end(); ++hop) {
+
 				// TODO: Fuse the ebRoute information with local contact graph
+				// This should provide an improved behavior in between the
+				// global and local contact plan extension block configuration
 				// But beware that this hop points to a remote contact graph.
 
 				if ((*hop)->getDestinationEid() == eid_)
@@ -113,7 +116,7 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 			}
 
 			if (ebRouteIsValid) {
-				// Update necesary route parameters (from/to time and max/residual volume not necesary)
+				// Update necessary route parameters (from/to time and max/residual volume not necessary)
 				ebRoute.hops = newHops;
 				ebRoute.nextHop = ebRoute.hops[0]->getDestinationEid();
 
@@ -128,7 +131,7 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 		}
 	}
 
-	// Re-enable cout if degug disabled
+	// Re-enable cout if debug disabled
 	if (printDebug_ == false)
 		cout.clear();
 }
@@ -139,7 +142,7 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 
 // This function tries to find the best path for the current bundle.
 // Initially it checks if the route table is up-to-date and update it
-// if it is outdated (by running a new Dijkstra search for the
+// if it is out of date (by running a new Dijkstra search for the
 // corresponding neighbor).
 void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 	// If contact plan was changed, empty route list
@@ -237,7 +240,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				// Find limiting contact
 				Contact * limitContact = NULL;
 				if (route.toTime == firstContact->getEnd())
-					// Generaly it is the first
+					// Generally it is the first
 					limitContact = firstContact;
 				else {
 					// If not, start new anchor search on firstContact
@@ -258,7 +261,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				// Supress limiting contact
 				suppressedContactIds.push_back(limitContact->getId());
 
-				cout << "supressing limiting contactId: " << limitContact->getId() << " (src:"
+				cout << "-suppressing limiting contactId: " << limitContact->getId() << " (src:"
 						<< limitContact->getSourceEid() << "-dst:" << limitContact->getDestinationEid() << ", "
 						<< limitContact->getStart() << "s-" << limitContact->getEnd() << "s)" << endl;
 
@@ -400,7 +403,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 
 			if (route.nextHop != NO_ROUTE_FOUND) {
 				// Suppress all contacts which connect this node with the entry node of
-				// the route found. All other neighbours should be considered
+				// the route found. All other neighbors should be considered
 				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
 						it != contactPlan_->getContacts()->end(); ++it)
 					if ((*it).getSourceEid() == eid_ && (*it).getDestinationEid() == route.nextHop)
@@ -433,7 +436,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 			}
 		}
 
-		// Explore list and recalculate if necesary
+		// Explore list and recalculate if necessary
 		for (int r = 0; r < nodeNum_; r++) {
 			// NO_ROUTE_FOUND does not trigger a recalculation
 			if (routeTable_.at(terminusNode).at(r).nextHop == NO_ROUTE_FOUND)
@@ -519,7 +522,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 			this->compareRoutes);
 
 	// Save tableEntriesExplored metric. Notice that
-	// explored also includes filtered routes (i.e., pesimistic)
+	// explored also includes filtered routes (i.e., pessimistic)
 	tableEntriesExplored = routeTable_.at(terminusNode).size();
 
 	// Enqueue bundle to route and update volumes
@@ -569,11 +572,21 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 			// Update residualVolume of the first hop
 			bestRoute->hops[0]->setResidualVolume(bestRoute->hops[0]->getResidualVolume() - bundle->getByteLength());
 
-			// Update residualVolume of the used route (TODO: shall we also check other routes?)
-			bestRoute->residualVolume = bestRoute->hops[0]->getResidualVolume();
-
-			cout << "*Rvol: routeTable[" << bestRoute->terminusNode << "][" << bestRoute->nextHop << "]: updated to "
-					<< bestRoute->hops[0]->getResidualVolume() << "Bytes (1st contact)" << endl;
+			// Update residualVolume of all routes that uses the updated hops
+			for (int n = 1; n < nodeNum_; n++)
+				if (!routeTable_.at(n).empty())
+					for (unsigned int r = 0; r < routeTable_.at(n).size(); r++)
+						for (vector<Contact *>::iterator hop1 = routeTable_.at(n).at(r).hops.begin();
+								hop1 != routeTable_.at(n).at(r).hops.end(); ++hop1)
+							for (vector<Contact *>::iterator hop2 = bestRoute->hops.begin();
+									hop2 != bestRoute->hops.end(); ++hop2)
+								if ((*hop1)->getId() == (*hop2)->getId())
+									// Does the reduction of this contact volume requires a route volume update?
+									if (routeTable_.at(n).at(r).residualVolume > (*hop1)->getResidualVolume()) {
+										routeTable_.at(n).at(r).residualVolume = (*hop1)->getResidualVolume();
+										cout << "*Rvol: routeTable[" << n << "][" << r << "]: updated to "
+												<< (*hop1)->getResidualVolume() << "Bytes (all contacts)" << endl;
+									}
 		}
 
 		//////////////////////////////////////////////////
@@ -588,7 +601,7 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 		bundle->setNextHopEid(bestRoute->nextHop);
 		sdr_->enqueueBundleToContact(bundle, bestRoute->hops.at(0)->getId());
 	} else {
-		// Enqueue to Limbo
+		// Enqueue to limbo
 		bundle->setNextHopEid(bestRoute->nextHop);
 		sdr_->enqueueBundleToContact(bundle, 0);
 
@@ -602,7 +615,7 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 // perspective it needs severe improvements as it currently overutilizes pointer
 // operations which render the code very difficult to read and to debug.
 // In general, each contact has a work pointer where temporal information only
-// valid and related to the current Dijstra search is stored.
+// valid and related to the current Dijkstra search is stored.
 void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route) {
 	// increment metrics counter
 	dijkstraCalls++;
@@ -847,7 +860,7 @@ bool RoutingCgrModelRev17::compareRoutes(CgrRoute i, CgrRoute j) {
 	}
 }
 
-// Verify the routingType string contains all necesary parameters
+// Verify the routingType string contains all necessary parameters
 void RoutingCgrModelRev17::checkRoutingTypeString() {
 	// If no routing type set, set a default one
 	if (routingType_.compare("none") == 0) {
@@ -888,7 +901,7 @@ void RoutingCgrModelRev17::checkRoutingTypeString() {
 		exit(1);
 	}
 
-	cout << "NODE: " << eid_ << ", rouingType string: " << routingType_ << endl;
+	//cout << "NODE: " << eid_ << ", rouingType string: " << routingType_ << endl;
 }
 
 //////////////////////
