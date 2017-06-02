@@ -677,7 +677,10 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 			if (std::find(v->begin(), v->end(), (*it).getDestinationEid()) != v->end())
 				continue;
 
-			// Get owlt (TODO: get it from contact plan)
+			// Get owlt (one way light time). If none found, ignore contact
+//			double owlt = contactPlan_->getRangeBySrcDst((*it).getSourceEid(), (*it).getDestinationEid());
+//			if(owlt==-1)
+//				continue;
 			double owlt = 0;
 			double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
 			owlt += owltMargin;
