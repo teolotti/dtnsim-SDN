@@ -180,17 +180,17 @@ endif
 # User-supplied makefile fragment(s)
 # >>>
 # inserted from file 'makefrag':
-INCLUDE_PATH += -I"/home/juanfraire/boost_1_64_0"
-INCLUDE_PATH += -I"/home/juanfraire/ibm/CPLEX_Studio125/cplex/include"
-INCLUDE_PATH += -I"/home/juanfraire/ibm/CPLEX_Studio125/concert/include"
+#INCLUDE_PATH += -I"/home/juanfraire/boost_1_64_0"
+#INCLUDE_PATH += -I"/home/juanfraire/ibm/CPLEX_Studio125/cplex/include"
+#INCLUDE_PATH += -I"/home/juanfraire/ibm/CPLEX_Studio125/concert/include"
 
 LIBS +=  -lpthread
-LIBS +=  -lconcert -lilocplex -lcplex -lm
+#LIBS +=  -lconcert -lilocplex -lcplex -lm
 
-LDFLAGS += -L"/home/juanfraire/ibm/CPLEX_Studio125/cplex/lib/x86-64_sles10_4.1/static_pic"
-LDFLAGS += -L"/home/juanfraire/ibm/CPLEX_Studio125/concert/lib/x86-64_sles10_4.1/static_pic"
+#LDFLAGS += -L"/home/juanfraire/ibm/CPLEX_Studio125/cplex/lib/x86-64_sles10_4.1/static_pic"
+#LDFLAGS += -L"/home/juanfraire/ibm/CPLEX_Studio125/concert/lib/x86-64_sles10_4.1/static_pic"
 
-COPTS += -DIL_STD=1
+#COPTS += -DIL_STD=1
 
 # <<<
 #------------------------------------------------------------------------------

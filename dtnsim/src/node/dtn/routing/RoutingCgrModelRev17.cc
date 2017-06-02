@@ -38,6 +38,7 @@ RoutingCgrModelRev17::~RoutingCgrModelRev17() {
 // is expected to be forwarded. This mimic ION behaviour. Other
 // implementations do enqueue bundles on a per neighbour-node basis.
 void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTime) {
+
 	// Disable cout if degug disabled
 	if (printDebug_ == false)
 		cout.setstate(std::ios_base::failbit);
@@ -516,17 +517,25 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				routeTable_.at(terminusNode).at(r).filtered = true;
 	}
 
-	// Select best route
-	vector<CgrRoute>::iterator bestRoute;
-	bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(),
-			this->compareRoutes);
+	if (!routeTable_.at(terminusNode).empty()) {
+		// Select best route
+		vector<CgrRoute>::iterator bestRoute;
+		bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(),
+				this->compareRoutes);
 
-	// Save tableEntriesExplored metric. Notice that
-	// explored also includes filtered routes (i.e., pessimistic)
-	tableEntriesExplored = routeTable_.at(terminusNode).size();
+		// Save tableEntriesExplored metric. Notice that
+		// explored also includes filtered routes (i.e., pessimistic)
+		tableEntriesExplored = routeTable_.at(terminusNode).size();
 
-	// Enqueue bundle to route and update volumes
-	this->cgrEnqueue(bundle, &(*bestRoute));
+		// Enqueue bundle to route and update volumes
+		this->cgrEnqueue(bundle, &(*bestRoute));
+	} else {
+		// Enqueue to limbo
+		bundle->setNextHopEid(NO_ROUTE_FOUND);
+		sdr_->enqueueBundleToContact(bundle, 0);
+
+		cout << "*BestRoute not found (enqueing to limbo)" << endl;
+	}
 }
 
 // This function enqueues the bundle in the best found path.
