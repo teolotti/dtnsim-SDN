@@ -76,25 +76,35 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 			for (vector<Contact *>::iterator hop = ebRoute.hops.begin(); hop != ebRoute.hops.end(); ++hop)
 				cout << "(+" << (*hop)->getStart() << " +" << (*hop)->getEnd() << " " << (*hop)->getSourceEid() << " "
 						<< (*hop)->getDestinationEid() << " " << (*hop)->getResidualVolume() << "/"
-						<< (*hop)->getVolume() << "Bytes) ";
+						<< (*hop)->getVolume() << "Bytes-local:"
+						<< contactPlan_->getContactById((*hop)->getId())->getResidualVolume() << "/"
+						<< contactPlan_->getContactById((*hop)->getId())->getVolume() << "Bytes)";
 			cout << endl;
 
 			// Check if encoded path is valid, update local contacts and route hops
 			bool ebRouteIsValid = true;
+
+			// Reason 1) If this bundle first contact is not a contact to this node, something
+			// weird happened (might be a bundle re-route). Declare ebRoute invalid.
+			if (ebRoute.hops.at(0)->getDestinationEid() != eid_)
+				ebRouteIsValid = false;
+
+			// Reason 2) If the remaining volume of local contact plan cannot
+			// accommodate the encoded path, declarr ebRout invalid.
 			vector<Contact *> newHops;
 			for (vector<Contact *>::iterator hop = ebRoute.hops.begin(); hop != ebRoute.hops.end(); ++hop) {
 
 				// TODO: Fuse the ebRoute information with local contact graph
 				// This should provide an improved behavior in between the
 				// global and local contact plan extension block configuration
-				// But beware that this hop points to a remote contact graph.
+				// But beware that this hops points to a remote contact graph.
 
 				if ((*hop)->getDestinationEid() == eid_)
 					// This is the contact that made this bundle arrive here,
 					// do not check nothing and discard it from the newHops path
 					continue;
 
-				if (routingType_.compare("volumeAware:1stContact") == 0)
+				if (routingType_.find("volumeAware:1stContact") != std::string::npos)
 					// Only check first contact volume
 					if ((*hop)->getSourceEid() == eid_)
 						if (contactPlan_->getContactById((*hop)->getId())->getResidualVolume()
@@ -104,7 +114,7 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 							break;
 						}
 
-				if (routingType_.compare("volumeAware:allContacts") == 0)
+				if (routingType_.find("volumeAware:allContacts") != std::string::npos)
 					// Check all contacts volume
 					if (contactPlan_->getContactById((*hop)->getId())->getResidualVolume() < bundle->getByteLength()) {
 						// Not enough residual capacity from local view of the path
@@ -122,7 +132,7 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 				ebRoute.nextHop = ebRoute.hops[0]->getDestinationEid();
 
 				// Enqueue using this route
-				cout << "Using EB Route in header" << endl;
+				cout << "Using EB Route in header. Next hop: " << ebRoute.nextHop << endl;
 				this->cgrEnqueue(bundle, &ebRoute);
 			} else {
 				// Discard old extension block, calculate and encode a new path and enqueue
@@ -369,7 +379,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 			routeTable_.at(terminusNode).at(1) = route;
 		}
 
-		// Explore list and recalculate if necesary
+		// Explore list and recalculate if necessary
 		bool needRecalculation = false;
 
 		// Empty route condition
@@ -554,8 +564,11 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 		//////////////////////////////////////////////////
 		if (routingType_.find("volumeAware:allContacts") != std::string::npos) {
 			// Update residualVolume of all this route hops
-			for (vector<Contact *>::iterator hop = bestRoute->hops.begin(); hop != bestRoute->hops.end(); ++hop)
+			for (vector<Contact *>::iterator hop = bestRoute->hops.begin(); hop != bestRoute->hops.end(); ++hop) {
 				(*hop)->setResidualVolume((*hop)->getResidualVolume() - bundle->getByteLength());
+				if ((*hop)->getResidualVolume() < 0)
+					exit(1);
+			}
 
 			// Update residualVolume of all routes that uses the updated hops
 			for (int n = 1; n < nodeNum_; n++)
@@ -594,7 +607,7 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 									if (routeTable_.at(n).at(r).residualVolume > (*hop1)->getResidualVolume()) {
 										routeTable_.at(n).at(r).residualVolume = (*hop1)->getResidualVolume();
 										cout << "*Rvol: routeTable[" << n << "][" << r << "]: updated to "
-												<< (*hop1)->getResidualVolume() << "Bytes (all contacts)" << endl;
+												<< (*hop1)->getResidualVolume() << "Bytes (1st contact)" << endl;
 									}
 		}
 
@@ -759,6 +772,7 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 
 		double earliestEndTime = numeric_limits<double>::max();
 		double maxVolume = numeric_limits<double>::max();
+		double maxResidualVolume = numeric_limits<double>::max();
 
 		// Go through all contacts in the path
 		for (Contact * contact = finalContact; contact != rootContact; contact =
@@ -771,6 +785,8 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 			// (TODO: this calculation assumes non-overlapped contacts, can be made more accurate)
 			if (contact->getVolume() < maxVolume)
 				maxVolume = contact->getVolume();
+			if (contact->getResidualVolume() < maxResidualVolume)
+				maxResidualVolume = contact->getResidualVolume();
 
 			// Update confidence
 			route->confidence *= contact->getConfidence();
@@ -784,7 +800,7 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 		route->fromTime = route->hops[0]->getStart();
 		route->toTime = earliestEndTime;
 		route->maxVolume = maxVolume;
-		route->residualVolume = maxVolume;
+		route->residualVolume = maxResidualVolume;
 	} else {
 		// No route found
 		route->terminusNode = NO_ROUTE_FOUND;
@@ -826,9 +842,11 @@ void RoutingCgrModelRev17::printRouteTable(int terminusNode) {
 					<< ", volume: " << route.residualVolume << "/" << route.maxVolume << "Bytes: ";
 
 			// print route:
-			for (vector<Contact *>::iterator ith = route.hops.begin(); ith != route.hops.end(); ++ith)
-				cout << "(+" << (*ith)->getStart() << "+" << (*ith)->getEnd() << " " << (*ith)->getSourceEid() << " "
-						<< (*ith)->getDestinationEid() << ")";
+			for (vector<Contact *>::iterator hop = route.hops.begin(); hop != route.hops.end(); ++hop)
+				cout << "(+" << (*hop)->getStart() << "+" << (*hop)->getEnd() << " " << (*hop)->getSourceEid() << " "
+						<< (*hop)->getDestinationEid() << " " << (*hop)->getResidualVolume() << "/"
+						<< (*hop)->getVolume() << "Bytes)";
+
 			cout << endl;
 		}
 	}
