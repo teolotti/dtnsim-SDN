@@ -163,6 +163,23 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 
 	int terminusNode = bundle->getDestinationEid();
 
+	// When using global contact plan, other nodes nodes might have
+	// updated contacts volumes that need to be refreshed in local
+	// route table.
+	if (routingType_.find("contactPlan:global") != std::string::npos) {
+
+		if (!routeTable_.at(terminusNode).empty())
+			for (unsigned int r = 0; r < routeTable_.at(terminusNode).size(); r++)
+				for (vector<Contact *>::iterator hop1 = routeTable_.at(terminusNode).at(r).hops.begin();
+						hop1 != routeTable_.at(terminusNode).at(r).hops.end(); ++hop1)
+					if (routeTable_.at(terminusNode).at(r).residualVolume > (*hop1)->getResidualVolume()) {
+						routeTable_.at(terminusNode).at(r).residualVolume = (*hop1)->getResidualVolume();
+						cout << "*Rvol: routeTable[" << terminusNode << "][" << r << "]: updated to "
+								<< (*hop1)->getResidualVolume() << "Bytes (all contacts)" << endl;
+					}
+
+	}
+
 	// Check route list for terminus node and recalculate if necesary depending on
 	// the routeListType configured in the routingType string
 	if (routingType_.find("routeListType:allPaths-yen") != std::string::npos) {
@@ -559,61 +576,72 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 				<< bestRoute->fromTime << " to " << bestRoute->toTime << ", arrival time: " << bestRoute->arrivalTime
 				<< ", volume: " << bestRoute->residualVolume << "/" << bestRoute->maxVolume << "Bytes" << endl;
 
-		//////////////////////////////////////////////////
-		// Update residualVolume: all contact
-		//////////////////////////////////////////////////
-		if (routingType_.find("volumeAware:allContacts") != std::string::npos) {
-			// Update residualVolume of all this route hops
-			for (vector<Contact *>::iterator hop = bestRoute->hops.begin(); hop != bestRoute->hops.end(); ++hop) {
-				(*hop)->setResidualVolume((*hop)->getResidualVolume() - bundle->getByteLength());
-				if ((*hop)->getResidualVolume() < 0)
-					exit(1);
+		// When using global contact plan, only the source node
+		// must update the global contact plan contact volumes.
+		// Otherwise a same path might be reserved several times
+		if (routingType_.find("contactPlan:global") != std::string::npos && bundle->getSourceEid() == eid_) {
+
+			//////////////////////////////////////////////////
+			// Update residualVolume: all contact
+			//////////////////////////////////////////////////
+			if (routingType_.find("volumeAware:allContacts") != std::string::npos) {
+				// Update residualVolume of all this route hops
+				for (vector<Contact *>::iterator hop = bestRoute->hops.begin(); hop != bestRoute->hops.end(); ++hop) {
+					(*hop)->setResidualVolume((*hop)->getResidualVolume() - bundle->getByteLength());
+
+					// This should never happen. We'ĺl temporarily leave
+					// this exit code 1 here to detect potential issues
+					// with the volume booking algorithms
+					if ((*hop)->getResidualVolume() < 0)
+						exit(1);
+				}
+
+				// Update residualVolume of all routes that uses the updated hops
+				for (int n = 1; n < nodeNum_; n++)
+					if (!routeTable_.at(n).empty())
+						for (unsigned int r = 0; r < routeTable_.at(n).size(); r++)
+							for (vector<Contact *>::iterator hop1 = routeTable_.at(n).at(r).hops.begin();
+									hop1 != routeTable_.at(n).at(r).hops.end(); ++hop1)
+								for (vector<Contact *>::iterator hop2 = bestRoute->hops.begin();
+										hop2 != bestRoute->hops.end(); ++hop2)
+									if ((*hop1)->getId() == (*hop2)->getId())
+										// Does the reduction of this contact volume requires a route volume update?
+										if (routeTable_.at(n).at(r).residualVolume > (*hop1)->getResidualVolume()) {
+											routeTable_.at(n).at(r).residualVolume = (*hop1)->getResidualVolume();
+											cout << "*Rvol: routeTable[" << n << "][" << r << "]: updated to "
+													<< (*hop1)->getResidualVolume() << "Bytes (all contacts)" << endl;
+										}
 			}
 
-			// Update residualVolume of all routes that uses the updated hops
-			for (int n = 1; n < nodeNum_; n++)
-				if (!routeTable_.at(n).empty())
-					for (unsigned int r = 0; r < routeTable_.at(n).size(); r++)
-						for (vector<Contact *>::iterator hop1 = routeTable_.at(n).at(r).hops.begin();
-								hop1 != routeTable_.at(n).at(r).hops.end(); ++hop1)
-							for (vector<Contact *>::iterator hop2 = bestRoute->hops.begin();
-									hop2 != bestRoute->hops.end(); ++hop2)
-								if ((*hop1)->getId() == (*hop2)->getId())
-									// Does the reduction of this contact volume requires a route volume update?
-									if (routeTable_.at(n).at(r).residualVolume > (*hop1)->getResidualVolume()) {
-										routeTable_.at(n).at(r).residualVolume = (*hop1)->getResidualVolume();
-										cout << "*Rvol: routeTable[" << n << "][" << r << "]: updated to "
-												<< (*hop1)->getResidualVolume() << "Bytes (all contacts)" << endl;
-									}
+			//////////////////////////////////////////////////
+			// Update residualVolume: 1st contact
+			//////////////////////////////////////////////////
+			if (routingType_.find("volumeAware:1stContact") != std::string::npos) {
+				// Update residualVolume of the first hop
+				bestRoute->hops[0]->setResidualVolume(
+						bestRoute->hops[0]->getResidualVolume() - bundle->getByteLength());
+
+				// Update residualVolume of all routes that uses the updated hops
+				for (int n = 1; n < nodeNum_; n++)
+					if (!routeTable_.at(n).empty())
+						for (unsigned int r = 0; r < routeTable_.at(n).size(); r++)
+							for (vector<Contact *>::iterator hop1 = routeTable_.at(n).at(r).hops.begin();
+									hop1 != routeTable_.at(n).at(r).hops.end(); ++hop1)
+								for (vector<Contact *>::iterator hop2 = bestRoute->hops.begin();
+										hop2 != bestRoute->hops.end(); ++hop2)
+									if ((*hop1)->getId() == (*hop2)->getId())
+										// Does the reduction of this contact volume requires a route volume update?
+										if (routeTable_.at(n).at(r).residualVolume > (*hop1)->getResidualVolume()) {
+											routeTable_.at(n).at(r).residualVolume = (*hop1)->getResidualVolume();
+											cout << "*Rvol: routeTable[" << n << "][" << r << "]: updated to "
+													<< (*hop1)->getResidualVolume() << "Bytes (1st contact)" << endl;
+										}
+			}
+
+			//////////////////////////////////////////////////
+			// Update residualVolume: off -> do nothing
+			//////////////////////////////////////////////////
 		}
-
-		//////////////////////////////////////////////////
-		// Update residualVolume: 1st contact
-		//////////////////////////////////////////////////
-		if (routingType_.find("volumeAware:1stContact") != std::string::npos) {
-			// Update residualVolume of the first hop
-			bestRoute->hops[0]->setResidualVolume(bestRoute->hops[0]->getResidualVolume() - bundle->getByteLength());
-
-			// Update residualVolume of all routes that uses the updated hops
-			for (int n = 1; n < nodeNum_; n++)
-				if (!routeTable_.at(n).empty())
-					for (unsigned int r = 0; r < routeTable_.at(n).size(); r++)
-						for (vector<Contact *>::iterator hop1 = routeTable_.at(n).at(r).hops.begin();
-								hop1 != routeTable_.at(n).at(r).hops.end(); ++hop1)
-							for (vector<Contact *>::iterator hop2 = bestRoute->hops.begin();
-									hop2 != bestRoute->hops.end(); ++hop2)
-								if ((*hop1)->getId() == (*hop2)->getId())
-									// Does the reduction of this contact volume requires a route volume update?
-									if (routeTable_.at(n).at(r).residualVolume > (*hop1)->getResidualVolume()) {
-										routeTable_.at(n).at(r).residualVolume = (*hop1)->getResidualVolume();
-										cout << "*Rvol: routeTable[" << n << "][" << r << "]: updated to "
-												<< (*hop1)->getResidualVolume() << "Bytes (1st contact)" << endl;
-									}
-		}
-
-		//////////////////////////////////////////////////
-		// Update residualVolume: off -> do nothing
-		//////////////////////////////////////////////////
 
 		// Save CgrRoute in header
 		if (routingType_.find("extensionBlock:on") != std::string::npos)
