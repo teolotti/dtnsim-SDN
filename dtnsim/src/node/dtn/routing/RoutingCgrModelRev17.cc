@@ -586,7 +586,10 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 		// When using global contact plan, only the source node
 		// must update the global contact plan contact volumes.
 		// Otherwise a same path might be reserved several times
-		if (routingType_.find("contactPlan:global") != std::string::npos && bundle->getSourceEid() == eid_) {
+		// When using local contact plan, capacity need to
+		// be updated every time a bundle is forwarded.
+		if (routingType_.find("contactPlan:local") != std::string::npos ||
+				(routingType_.find("contactPlan:global") != std::string::npos && bundle->getSourceEid() == eid_)) {
 
 			//////////////////////////////////////////////////
 			// Update residualVolume: all contact
