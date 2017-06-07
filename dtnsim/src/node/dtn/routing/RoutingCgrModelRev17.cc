@@ -90,7 +90,7 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 				ebRouteIsValid = false;
 
 			// Reason 2) If the remaining volume of local contact plan cannot
-			// accommodate the encoded path, declarr ebRout invalid.
+			// accommodate the encoded path, declare ebRout invalid.
 			vector<Contact *> newHops;
 			for (vector<Contact *>::iterator hop = ebRoute.hops.begin(); hop != ebRoute.hops.end(); ++hop) {
 
@@ -104,23 +104,30 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 					// do not check nothing and discard it from the newHops path
 					continue;
 
-				if (routingType_.find("volumeAware:1stContact") != std::string::npos)
-					// Only check first contact volume
-					if ((*hop)->getSourceEid() == eid_)
+				// Check volumes only when using a local contact plan perspective.
+				// When using global, the sender node will have already booked the
+				// capacity so we cannot and there is no need to verify this decision.
+				if (routingType_.find("contactPlan:local") != std::string::npos) {
+
+					if (routingType_.find("volumeAware:1stContact") != std::string::npos)
+						// Only check first contact volume
+						if ((*hop)->getSourceEid() == eid_)
+							if (contactPlan_->getContactById((*hop)->getId())->getResidualVolume()
+									< bundle->getByteLength()) {
+								// Not enough residual capacity from local view of the path
+								ebRouteIsValid = false;
+								break;
+							}
+
+					if (routingType_.find("volumeAware:allContacts") != std::string::npos)
+						// Check all contacts volume
 						if (contactPlan_->getContactById((*hop)->getId())->getResidualVolume()
 								< bundle->getByteLength()) {
 							// Not enough residual capacity from local view of the path
 							ebRouteIsValid = false;
 							break;
 						}
-
-				if (routingType_.find("volumeAware:allContacts") != std::string::npos)
-					// Check all contacts volume
-					if (contactPlan_->getContactById((*hop)->getId())->getResidualVolume() < bundle->getByteLength()) {
-						// Not enough residual capacity from local view of the path
-						ebRouteIsValid = false;
-						break;
-					}
+				}
 
 				// store in newHops the local contacts
 				newHops.push_back(contactPlan_->getContactById((*hop)->getId()));
