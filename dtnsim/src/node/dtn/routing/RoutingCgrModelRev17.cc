@@ -356,6 +356,17 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		// should only happen once per contact plan update.
 		if (routeTable_.at(terminusNode).empty()) {
 
+			// Temporarily store the residual capacity of each
+			// contact so we can use in the route calculation
+			// stage to determine how this capacity would get
+			// occupied as traffic is sent to this target node.
+			vector<double> contactVolume(contactPlan_->getContacts()->size());
+
+			vector<double>::iterator it1 = contactVolume.begin();
+			vector<Contact>::iterator it2 = contactPlan_->getContacts()->begin();
+			for (; it1 != contactVolume.end(); ++it1, ++it2)
+				(*it1) = (*it2).getResidualVolume();
+
 			vector<int> suppressedContactIds;
 
 			while (1) {
@@ -369,19 +380,32 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				// Add new valid route to route table
 				routeTable_.at(terminusNode).push_back(route);
 
-				// Suppress the least capacitated contact of the last route found
-				double leastVolume = numeric_limits<double>::max();
-				int leastVolumeContactId;
+				// Consume route residual volume and suppress the contact
+				// with least residual volume on the route
+				double leastResidualVolume = numeric_limits<double>::max();
+				int leastResidualVolumeContactId;
 				vector<Contact *>::iterator hop;
-				for (hop = route.hops.begin(); hop != route.hops.end(); ++hop)
-					if ((*hop)->getVolume() < leastVolume) {
-						leastVolume = (*hop)->getVolume();
-						leastVolumeContactId = (*hop)->getId();
-					}
-				suppressedContactIds.push_back(leastVolumeContactId);
+				for (hop = route.hops.begin(); hop != route.hops.end(); ++hop) {
 
+					// Consume route residual volume
+					(*hop)->setResidualVolume((*hop)->getResidualVolume() - route.residualVolume);
+
+					// If this is the limiting contact, suppress
+					// it from further route searches (other contacts
+					// in the path will remain with a reduced residual
+					// volume.
+					if ((*hop)->getResidualVolume() == 0) {
+						suppressedContactIds.push_back((*hop)->getId());
+					}
+				}
 				tableEntriesCreated++;
 			}
+
+			// Restore original residual capacities in the contact plan
+			it1 = contactVolume.begin();
+			it2 = contactPlan_->getContacts()->begin();
+			for (; it1 != contactVolume.end(); ++it1, ++it2)
+				(*it2).setResidualVolume(*it1);
 		}
 
 	}
@@ -588,8 +612,8 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 		// Otherwise a same path might be reserved several times
 		// When using local contact plan, capacity need to
 		// be updated every time a bundle is forwarded.
-		if (routingType_.find("contactPlan:local") != std::string::npos ||
-				(routingType_.find("contactPlan:global") != std::string::npos && bundle->getSourceEid() == eid_)) {
+		if (routingType_.find("contactPlan:local") != std::string::npos
+				|| (routingType_.find("contactPlan:global") != std::string::npos && bundle->getSourceEid() == eid_)) {
 
 			//////////////////////////////////////////////////
 			// Update residualVolume: all contact
@@ -794,7 +818,7 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 		if (nextContact == NULL)
 			break; // No next contact found, exit search (while(1))
 
-		// Update next contact and go with next itartion
+		// Update next contact and go with next iteration
 		currentContact = nextContact;
 	}
 
@@ -820,7 +844,11 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 				earliestEndTime = contact->getEnd();
 
 			// Get the minimal capacity
-			// (TODO: this calculation assumes non-overlapped contacts, can be made more accurate)
+			// (TODO: this calculation assumes non-overlapped contacts
+			// can be made more accurate. Indeed it is always assumed
+			// that contacts are booked from the beginning (time=0), but
+			// in fact long contacts might be booked from intermediate
+			// points which is not currently reflected in this calculation)
 			if (contact->getVolume() < maxVolume)
 				maxVolume = contact->getVolume();
 			if (contact->getResidualVolume() < maxResidualVolume)
