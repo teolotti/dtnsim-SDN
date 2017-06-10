@@ -361,7 +361,6 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 			// stage to determine how this capacity would get
 			// occupied as traffic is sent to this target node.
 			vector<double> contactVolume(contactPlan_->getContacts()->size());
-
 			vector<double>::iterator it1 = contactVolume.begin();
 			vector<Contact>::iterator it2 = contactPlan_->getContacts()->begin();
 			for (; it1 != contactVolume.end(); ++it1, ++it2)
@@ -382,8 +381,6 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 
 				// Consume route residual volume and suppress the contact
 				// with least residual volume on the route
-				double leastResidualVolume = numeric_limits<double>::max();
-				int leastResidualVolumeContactId;
 				vector<Contact *>::iterator hop;
 				for (hop = route.hops.begin(); hop != route.hops.end(); ++hop) {
 
@@ -467,8 +464,9 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 						it != contactPlan_->getContacts()->end(); ++it)
 					if ((*it).getSourceEid() == eid_ && (*it).getDestinationEid() == route.nextHop)
 						suppressedContactIds.push_back((*it).getId());
-				this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
-				routeTable_.at(terminusNode).at(1) = route;
+				CgrRoute route2;
+				this->findNextBestRoute(suppressedContactIds, terminusNode, &route2);
+				routeTable_.at(terminusNode).at(1) = route2;
 			} else {
 				routeTable_.at(terminusNode).at(1).nextHop = NO_ROUTE_FOUND;
 			}
@@ -630,7 +628,9 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 						exit(1);
 				}
 
-				// Update residualVolume of all routes that uses the updated hops
+				// Update residualVolume of all routes that uses the updated hops (including those
+				// routes that leads to other destinations). This is a very expensive routine
+				// that scales with large routes tables that need to happen in forwarding time.
 				for (int n = 1; n < nodeNum_; n++)
 					if (!routeTable_.at(n).empty())
 						for (unsigned int r = 0; r < routeTable_.at(n).size(); r++)
@@ -655,7 +655,9 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 				bestRoute->hops[0]->setResidualVolume(
 						bestRoute->hops[0]->getResidualVolume() - bundle->getByteLength());
 
-				// Update residualVolume of all routes that uses the updated hops
+				// Update residualVolume of all routes that uses the updated hops (including those
+				// routes that leads to other destinations). This is a very expensive routine
+				// that scales with large routes tables that need to happen in forwarding time.
 				for (int n = 1; n < nodeNum_; n++)
 					if (!routeTable_.at(n).empty())
 						for (unsigned int r = 0; r < routeTable_.at(n).size(); r++)
