@@ -458,6 +458,8 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 			// through this entry node. set not found if not primary route found.
 
 			if (route.nextHop != NO_ROUTE_FOUND) {
+				tableEntriesCreated++;
+
 				// Suppress all contacts which connect this node with the entry node of
 				// the route found. All other neighbors should be considered
 				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
@@ -467,17 +469,20 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				CgrRoute route2;
 				this->findNextBestRoute(suppressedContactIds, terminusNode, &route2);
 				routeTable_.at(terminusNode).at(1) = route2;
+
+				if (route2.nextHop != NO_ROUTE_FOUND)
+					tableEntriesCreated++;
+
 			} else {
 				routeTable_.at(terminusNode).at(1).nextHop = NO_ROUTE_FOUND;
 			}
 
-			tableEntriesCreated++;
 		}
 	}
 	if (routingType_.find("routeListType:perNeighborBestPath") != std::string::npos) {
 		//////////////////////////////////////////////////
 		// allPaths-perNeighborBestPath: A best path per
-		// neighbour is calculated for a given destination. The entry
+		// neighbor is calculated for a given destination. The entry
 		// is updated by the ending or depletion of a contact in the paths
 		//////////////////////////////////////////////////
 
@@ -535,7 +540,8 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
 				routeTable_.at(terminusNode).at(r) = route;
 
-				tableEntriesCreated++;
+				if (route.nextHop != NO_ROUTE_FOUND)
+					tableEntriesCreated++;
 			}
 		}
 	}
