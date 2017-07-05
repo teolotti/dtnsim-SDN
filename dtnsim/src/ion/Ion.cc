@@ -29,13 +29,21 @@ void Ion::initialize()
 
 	if (ionNodes_)
 	{
+		// create result folder if it doesn't exist
+		struct stat st =
+		{ 0 };
+		if (stat("ionFiles", &st) == -1)
+		{
+			mkdir("ionFiles", 0700);
+		}
+
 		// erase old folders and processes
 		bubble("Killing ION processes ...");
-		system("rm -rf ion/ion_nodes");
-		string command1 = "rm -rf ion/node*";
+		system("rm -rf ../src/ion/ion_nodes");
+		string command1 = "rm -rf ../src/ion/node*";
 		system(command1.c_str());
-		system("chmod +x ./ion/killm");
-		system("./ion/killm");
+		system("chmod +x ../src/ion/killm");
+		system("../src/ion/killm");
 	}
 }
 
@@ -49,6 +57,6 @@ void Ion::finish()
 	if (ionNodes_)
 	{
 		bubble("Killing ION processes ...");
-		system("./ion/killm");
+		system("../src/ion/killm");
 	}
 }
