@@ -10,7 +10,7 @@ outputscalarmanager-class="omnetpp::envir::SqliteOutputScalarManager"
 In order to generate the pdf files the following steps must be performed:
 
 1.- run an omnet simulation. Omnet result files will be saved in the folder results
-2.- if neccesary, give execution permissions to bash.sh script from a terminal console: chmod +x bash.sh
+2.- if necessary, give execution permissions to bash.sh script from a terminal console: chmod +x bash.sh
 3.- execute bash script from a terminal console: ./bash.sh
 
 pdf files are generated in results folder also.

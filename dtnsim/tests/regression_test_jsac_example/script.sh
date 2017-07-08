@@ -182,7 +182,7 @@ do
    # in spite of having all the same attributes
    nlines=$(wc -l < diffFile2.txt)
 
-   if [ $nlines -ne 2 ]; then echo "TEST FAILED" && exit; else echo "TEST PASSED"; fi
+   if [ $nlines -ne 3 ]; then echo "TEST FAILED" && exit; else echo "TEST PASSED"; fi
 
    # remove output files
    rm diffFile.txt
@@ -209,7 +209,7 @@ do
    # in spite of having all the same attributes
    nlines=$(wc -l < diffFile2.txt)
 
-   if [ $nlines -ne 2 ]; then echo "TEST FAILED" && exit; else echo "TEST PASSED"; fi
+   if [ $nlines -ne 4 ]; then echo "TEST FAILED" && exit; else echo "TEST PASSED"; fi
 
    # remove output files
    rm diffFile.txt
@@ -388,7 +388,7 @@ do
    # in spite of having all the same attributes
    nlines=$(wc -l < diffFile2.txt)
 
-   if [ $nlines -ne 2 ]; then echo "TEST FAILED" && exit; else echo "TEST PASSED"; fi
+   if [ $nlines -ne 3 ]; then echo "TEST FAILED" && exit; else echo "TEST PASSED"; fi
 
    # remove output files
    rm diffFile.txt
@@ -415,7 +415,7 @@ do
    # in spite of having all the same attributes
    nlines=$(wc -l < diffFile2.txt)
 
-   if [ $nlines -ne 2 ]; then echo "TEST FAILED" && exit; else echo "TEST PASSED"; fi
+   if [ $nlines -ne 4 ]; then echo "TEST FAILED" && exit; else echo "TEST PASSED"; fi
 
    # remove output files
    rm diffFile.txt

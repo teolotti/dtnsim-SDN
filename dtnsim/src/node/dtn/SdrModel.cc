@@ -49,8 +49,8 @@ void SdrModel::enqueueBundleToContact(BundlePkt * bundle, int contactId)
 bool SdrModel::isBundleForContact(int contactId)
 {
 	// This functions returns true if there is a queue
-	// with bundles for the contactId. If it is empy
-	// or not-existant, the function returns false
+	// with bundles for the contactId. If it is empty
+	// or non-existent, the function returns false
 
 	map<int, deque<BundlePkt *> >::iterator it = bundlesQueue_.find(contactId);
 

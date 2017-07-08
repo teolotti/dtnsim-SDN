@@ -22,11 +22,11 @@
 
 #include "Graphics.h"
 #include "Routing.h"
-#include "Ion.h"
 #include "Config.h"
 #include "RouterUtils.h"
 #include "utils/TopologyUtils.h"
 #include "utils/RouterUtils.h"
+#include "utils/ContactPlanUtils.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -46,6 +46,8 @@ public:
 	virtual void setOnFault(bool onFault);
 	virtual void refreshForwarding();
 	ContactPlan * getContactPlanPointer();
+	virtual void setContactPlan(ContactPlan &contactPlan);
+	virtual void setContactTopology(ContactPlan &contactTopology);
 
 protected:
 	virtual void initialize(int stage);
@@ -68,7 +70,15 @@ private:
 
 	// Routing and storage
 	Routing * routing;
+
+	// Contact Plan to feed CGR
+	// and get transmission rates
 	ContactPlan contactPlan_;
+
+	// Contact Topology to schedule Contacts
+	// and get transmission rates
+	ContactPlan contactTopology_;
+
 	SdrModel sdr_;
 
 	// BundlesMap

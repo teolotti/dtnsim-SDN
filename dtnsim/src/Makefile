@@ -53,7 +53,7 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
 OBJS = \
-    $O/ion/Ion.o \
+    $O/central/Central.o \
     $O/ion/bp/cgr/libcgr.o \
     $O/ion/bp/library/bei.o \
     $O/ion/bp/library/dtn2fw.o \
@@ -113,7 +113,6 @@ OBJS = \
     $O/ion/ici/sdr/sdrtable.o \
     $O/ion/ici/sdr/sdrxn.o \
     $O/ion/ici/utils/ionadmin.o \
-    $O/logger/Logger.o \
     $O/node/app/App.o \
     $O/node/com/Com.o \
     $O/node/dtn/Contact.o \
@@ -128,6 +127,7 @@ OBJS = \
     $O/node/dtn/routing/RoutingDirect.o \
     $O/node/fault/Fault.o \
     $O/node/graphics/Graphics.o \
+    $O/utils/ContactPlanUtils.o \
     $O/utils/Lp.o \
     $O/utils/LpUtils.o \
     $O/utils/RouterUtils.o \
@@ -180,17 +180,17 @@ endif
 # User-supplied makefile fragment(s)
 # >>>
 # inserted from file 'makefrag':
-#INCLUDE_PATH += -I"/home/madoery/boost_1_63_0"
-#INCLUDE_PATH += -I"/home/madoery/cplex/cplex/include"
-#INCLUDE_PATH += -I"/home/madoery/cplex/concert/include"
+INCLUDE_PATH += -I"/home/madoery/boost_1_63_0"
+INCLUDE_PATH += -I"/home/madoery/cplex/cplex/include"
+INCLUDE_PATH += -I"/home/madoery/cplex/concert/include"
 
 LIBS +=  -lpthread
-#LIBS +=  -lconcert -lilocplex -lcplex -lm
+LIBS +=  -lconcert -lilocplex -lcplex -lm
 
-#LDFLAGS += -L"/home/madoery/cplex/cplex/lib/x86-64_sles10_4.1/static_pic"
-#LDFLAGS += -L"/home/madoery/cplex/concert/lib/x86-64_sles10_4.1/static_pic"
+LDFLAGS += -L"/home/madoery/cplex/cplex/lib/x86-64_sles10_4.1/static_pic"
+LDFLAGS += -L"/home/madoery/cplex/concert/lib/x86-64_sles10_4.1/static_pic"
 
-#COPTS += -DIL_STD=1
+COPTS += -DIL_STD=1
 
 # <<<
 #------------------------------------------------------------------------------

@@ -18,9 +18,6 @@ void RoutingCgrModel350::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	if (!printDebug_) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);
 
-//	if (eid_==10 && bundle->getSourceEid()==8 && bundle->getDestinationEid()==48)
-//		cout.clear();
-
 	// Reset counters
 	dijkstraCalls = 0;
 	dijkstraLoops = 0;
@@ -431,7 +428,7 @@ void RoutingCgrModel350::loadRouteList(int terminusNode, double simTime)
 			}
 
 		// Record route
-		cout << "*New route found through node:" << route.nextHop << ", arrivalConf:" << route.confidence << ", arrivalT:" << route.arrivalTime << ", txWin:(" << route.fromTime << "-" << route.toTime << "), maxCap:" << route.maxVolume << "Bytes:" << endl;
+		cout << "NODE "<<eid_<<", *New route found through node:" << route.nextHop << ", arrivalConf:" << route.confidence << ", arrivalT:" << route.arrivalTime << ", txWin:(" << route.fromTime << "-" << route.toTime << "), maxCap:" << route.maxVolume << "Bytes:" << endl;
 		routeList_[terminusNode].push_back(route);
 
 		// Find limiting contact for next iteration
@@ -697,6 +694,139 @@ void RoutingCgrModel350::bpEnqueue(BundlePkt * bundle, ProximateNode * selectedN
 		EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued to limbo!" << endl;
 	}
 }
+
+CgrRoute* RoutingCgrModel350::getCgrBestRoute(BundlePkt * bundle, double simTime)
+{
+	// modified from method cgrForward()
+
+	CgrRoute *bestRoute = NULL;
+
+	// If contact plan was changed, discard route list
+	if (contactPlan_->getLastEditTime() > routeListLastEditTime)
+		routeList_.clear();
+
+	vector<ProximateNode> proximateNodes;
+	vector<int> excludedNodes;
+
+	// Insert sender node to excludedNodes to avoid loops
+	if (bundle->getReturnToSender() == false)
+		excludedNodes.push_back(bundle->getSenderEid());
+
+	// Insert other nodes into excludedNodes (embargoed nodes)
+	// Not happening in the DtnSim
+
+	// Populate proximateNodes
+	// cout << "  calling identifyProximateNodes: " << endl;
+	identifyProximateNodes(bundle, simTime, excludedNodes, &proximateNodes);
+
+	// TODO: send critical bundle to all proximateNodes
+	if (bundle->getCritical())
+	{
+		cout << "***Critical bundle forwarding not implemented yet!***" << endl;
+		exit(1);
+	}
+
+	//cout << "  proximateNodesSize: " << proximateNodes.size() << ":" << endl;
+
+	ProximateNode * selectedNeighbor = NULL;
+	for (vector<ProximateNode>::iterator it = proximateNodes.begin(); it != proximateNodes.end(); ++it)
+	{
+		cout << "routeTable[" << bundle->getDestinationEid() << "][" << (*it).neighborNodeNbr << "]: nextHop: " << (*it).neighborNodeNbr << " (cId:" << (*it).contactId << ", resCap:" << contactPlan_->getContactById((*it).contactId)->getResidualVolume() << "Bytes) arrivalConf:" << (*it).confidence
+				<< " arrivalT:" << (*it).arrivalTime << " hopCnt:" << (*it).hopCount << " forfT:" << (*it).forfeitTime << endl;
+		//cout << "routeTable[" << terminusNode << "][" << (*it).neighborNodeNbr << "]: nextHop: " << (*it).neighborNodeNbr << ", frm " << route.fromTime << " to " << (*it).arrivalTime << ", arrival time: " << route.arrivalTime << ", volume: " << route.residualVolume << "/" << route.maxVolume << "Bytes" << endl;
+
+		// If the confidence improvement is less than the minimal, continue
+		if (bundle->getDlvConfidence() > 0.0 && bundle->getDlvConfidence() < 1.0)
+		{
+			float newDlvConfidence = 1.0 - (1.0 - bundle->getDlvConfidence()) * (1.0 - it->confidence);
+			float confidenceImprovement = (newDlvConfidence / bundle->getDlvConfidence()) - 1.0;
+			if (confidenceImprovement < MIN_CONFIDENCE_IMPROVEMENT)
+			{
+				//cout << " Not chosen, not enough confidence improvement" << endl;
+				continue;
+			}
+		}
+
+		// Select Neighbor by arrival confidence, arrival time, hop count, and node number
+		// (Confidence criteria to be removed after 3.5.0)
+		if (selectedNeighbor == NULL)
+		{
+			//cout << " Chosen, first suitable neighbor" << endl;
+			selectedNeighbor = &(*it);
+		}
+
+		else if (it->confidence > selectedNeighbor->confidence)
+		{
+			//cout << " Chosen, best arrival confidence" << endl;
+			selectedNeighbor = &(*it);
+		}
+		else if (it->confidence < selectedNeighbor->confidence)
+		{
+			//cout << " Not Chosen, bad arrival confidence" << endl;
+			continue;
+		}
+		else if (it->arrivalTime < selectedNeighbor->arrivalTime)
+		{
+			//cout << " Chosen, best arrival time" << endl;
+			selectedNeighbor = &(*it);
+		}
+		else if (it->arrivalTime > selectedNeighbor->arrivalTime)
+		{
+			//cout << " Not Chosen, bad arrival time" << endl;
+			continue;
+		}
+		else if (it->hopCount < selectedNeighbor->hopCount)
+		{
+			//cout << " Chosen, best hop count" << endl;
+			selectedNeighbor = &(*it);
+		}
+		else if (it->hopCount > selectedNeighbor->hopCount)
+		{
+			//cout << " Not Chosen, bad hop count" << endl;
+			continue;
+		}
+		else if (it->neighborNodeNbr < selectedNeighbor->neighborNodeNbr)
+		{
+			//cout << " Chosen, best node number" << endl;
+			selectedNeighbor = &(*it);
+		}
+	}
+
+	if (selectedNeighbor != NULL)
+	{
+		bestRoute = selectedNeighbor->route;
+	}
+
+	return bestRoute;
+}
+
+vector<CgrRoute> RoutingCgrModel350::getCgrRoutes(BundlePkt * bundle, double simTime)
+{
+	if (!printDebug_) // disable cout if degug disabled
+		cout.setstate(std::ios_base::failbit);
+
+	vector<CgrRoute> routes;
+
+	int terminusNode = bundle->getDestinationEid();
+	if (routeList_[terminusNode].empty() == true)
+	{
+		loadRouteList(terminusNode, simTime);
+		routeListLastEditTime = simTime;
+	}
+
+
+	map<int, vector<CgrRoute> >::iterator it = routeList_.find(terminusNode);
+	if(it != routeList_.end())
+	{
+		routes = it->second;
+	}
+
+	if (!printDebug_)
+		cout.clear();
+
+	return routes;
+}
+
 
 //////////////////////
 // Stats recollection

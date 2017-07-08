@@ -3,6 +3,26 @@
 
 Define_Module (Dtn);
 
+Dtn::Dtn()
+{
+
+}
+
+Dtn::~Dtn()
+{
+
+}
+
+void Dtn::setContactPlan(ContactPlan &contactPlan)
+{
+	this->contactPlan_ = contactPlan;
+}
+
+void Dtn::setContactTopology(ContactPlan &contactTopology)
+{
+	this->contactTopology_ = contactTopology;
+}
+
 int Dtn::numInitStages() const
 {
 	int stages = 2;
@@ -20,12 +40,8 @@ void Dtn::initialize(int stage)
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
 		graphicsModule->setBundlesInSdr(sdr_.getBundlesStoredInSdr());
 
-		// Initialize contact plan
-		contactPlan_.parseContactPlanFile(par("contactsFile"));
-		//contactPlan_.printContactPlan();
-
 		// Schedule local contact messages
-		vector<Contact> localContacts = contactPlan_.getContactsBySrc(this->eid_);
+		vector<Contact> localContacts = contactTopology_.getContactsBySrc(this->eid_);
 		for (vector<Contact>::iterator it = localContacts.begin(); it != localContacts.end(); ++it)
 		{
 			ContactMsg *contactMsg = new ContactMsg("contactStart", CONTACT_START_TIMER);
@@ -42,6 +58,23 @@ void Dtn::initialize(int stage)
 			scheduleAt((*it).getStart(), contactMsg);
 			EV << "node " << eid_ << ": " << "a contact +" << (*it).getStart() << " +" << (*it).getEnd() << " " << (*it).getSourceEid() << " " << (*it).getDestinationEid() << " " << (*it).getDataRate() << endl;
 		}
+		// If nonFaultsAware, end time events of contacts in the contactPlan which are not present in the contactTopology
+		// must be scheduled in order to perform the necessary reroutings of bundles incorrectly routed in contacts that
+		// will not happen.
+		bool faultsAware = this->getParentModule()->getParentModule()->getSubmodule("central")->par("faultsAware");
+		if(!faultsAware)
+		{
+			vector<Contact> diffContacts = contactPlanUtils::getDifferenceContacts(contactPlan_, contactTopology_);
+
+			for(size_t i = 0; i<diffContacts.size(); i++)
+			{
+				ContactMsg *contactMsg = new ContactMsg("contactStart", CONTACT_START_TIMER);
+
+				contactMsg->setSchedulingPriority(CONTACT_END_TIMER);
+				contactMsg->setId(diffContacts.at(i).getId());
+				scheduleAt(diffContacts.at(i).getEnd(), contactMsg);
+			}
+		}
 
 		// Initialize routing
 		this->sdr_.setEid(eid_);
@@ -49,6 +82,7 @@ void Dtn::initialize(int stage)
 		this->sdr_.setContactPlan(&contactPlan_);
 
 		string routeString = par("routing");
+
 		if (routeString.compare("direct") == 0)
 			routing = new RoutingDirect(eid_, &sdr_, &contactPlan_);
 		else if (routeString.compare("cgrModel350") == 0)
@@ -109,6 +143,31 @@ void Dtn::initialize(int stage)
 			bundleMap_ << "SimTime" << "," << "SRC" << "," << "DST" << "," << "TSRC" << "," << "TDST" << "," << "BitLenght" << "," << "DurationSec" << endl;
 		}
 	}
+}
+
+void Dtn::finish()
+{
+	// Last call to sample-hold type metrics
+	if (eid_ != 0)
+	{
+		emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
+		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+	}
+
+	// Delete scheduled forwardingMsg
+	std::map<int, ForwardingMsg *>::iterator it;
+	for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
+	{
+		ForwardingMsg * forwardingMsg = it->second;
+		cancelAndDelete(forwardingMsg);
+	}
+
+	// Delete all stored bundles
+	sdr_.freeSdr(eid_);
+
+	// BundleMap End
+	if (saveBundleMap_)
+		bundleMap_.close();
 }
 
 void Dtn::handleMessage(cMessage * msg)
@@ -318,38 +377,5 @@ ContactPlan* Dtn::getContactPlanPointer(void)
 	return &this->contactPlan_;
 }
 
-void Dtn::finish()
-{
-	// Last call to sample-hold type metrics
-	if (eid_ != 0)
-	{
-		emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
-		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
-	}
 
-	// Delete scheduled forwardingMsg
-	std::map<int, ForwardingMsg *>::iterator it;
-	for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
-	{
-		ForwardingMsg * forwardingMsg = it->second;
-		cancelAndDelete(forwardingMsg);
-	}
-
-	// Delete all stored bundles
-	sdr_.freeSdr(eid_);
-
-	// BundleMap End
-	if (saveBundleMap_)
-		bundleMap_.close();
-}
-
-Dtn::Dtn()
-{
-
-}
-
-Dtn::~Dtn()
-{
-
-}
 
