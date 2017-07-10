@@ -254,7 +254,7 @@ void Dtn::handleMessage(cMessage * msg)
 				BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
 
 				// Calculate datarate and Tx duration
-				double dataRate = contactPlan_.getContactById(contactId)->getDataRate();
+				double dataRate = contactTopology_.getContactById(contactId)->getDataRate();
 				double txDuration = (double) bundle->getByteLength() / dataRate;
 
 				// Set bundle metadata (set by intermediate nodes)
