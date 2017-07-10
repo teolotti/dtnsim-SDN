@@ -745,7 +745,7 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 			bundle->setCgrRoute(*bestRoute);
 
 		// Enqueue bundle
-		cout << "encolando bundle en contacto " << bestRoute->hops.at(0)->getId() << endl;
+		cout << "queuing bundle in contact " << bestRoute->hops.at(0)->getId() << endl;
 
 		bundle->setNextHopEid(bestRoute->nextHop);
 		sdr_->enqueueBundleToContact(bundle, bestRoute->hops.at(0)->getId());
