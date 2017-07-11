@@ -11,6 +11,7 @@ simple Central
         bool saveLpFlows = default(false);
         string contactsFile = default("contacts.txt");
         
+        bool enableAvailableRoutesCalculation = default(false);
         int deleteNContacts = default(0);
 		bool useCentrality = default(false);
 		bool faultsAware = default(true);

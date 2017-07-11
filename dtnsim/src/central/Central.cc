@@ -42,11 +42,11 @@ void Central::initialize()
 
 		// erase old folders and processes
 		bubble("Killing ION processes ...");
-		system("rm -rf ../src/ion/ion_nodes");
-		string command1 = "rm -rf ../src/ion/node*";
+		system("rm -rf ionFiles/ion_nodes");
+		string command1 = "rm -rf ionFiles/node*";
 		system(command1.c_str());
-		system("chmod +x ../src/ion/killm");
-		system("../src/ion/killm");
+		system("chmod +x ../../src/ion/killm");
+		system("../../src/ion/killm");
 	}
 
 	// Initialize contact plan
@@ -61,25 +61,34 @@ void Central::initialize()
 
 	bool faultsAware = this->par("faultsAware");
 
+	if (par("enableAvailableRoutesCalculation"))
+	{
+		int totalRoutesVar = 0;
+		set < pair<int, int> > nodePairsRoutes1;
+		totalRoutesVar = this->computeTotalRoutesNumber(contactPlan_, nodesNumber_, nodePairsRoutes1);
+
+		// emit totalRoutes statistic
+		totalRoutes = registerSignal("totalRoutes");
+		emit(totalRoutes, totalRoutesVar);
+	}
+
 	int deleteNContacts = this->par("deleteNContacts");
 
-	int totalRoutesVar = 0;
-	int availableRoutesVar = 0;
-	set < pair<int, int> > nodePairsRoutes1;
-	totalRoutesVar = this->computeTotalRoutesNumber(contactPlan_, nodesNumber_, nodePairsRoutes1);
-
-	// delete N contacts
-	vector<int> contactIdsToDelete;
-	if (par("useCentrality"))
+	if (deleteNContacts > 0)
 	{
-		contactIdsToDelete = getCentralityContactIds(deleteNContacts, nodesNumber_);
-	}
-	else
-	{
-		contactIdsToDelete = getRandomContactIds(deleteNContacts);
-	}
+		// delete N contacts
+		vector<int> contactIdsToDelete;
+		if (par("useCentrality"))
+		{
+			contactIdsToDelete = getCentralityContactIds(deleteNContacts, nodesNumber_);
+		}
+		else
+		{
+			contactIdsToDelete = getRandomContactIds(deleteNContacts);
+		}
 
-	deleteContacts(contactIdsToDelete, faultsAware);
+		deleteContacts(contactIdsToDelete, faultsAware);
+	}
 
 	// setting modified contact plan and contact topology
 	// to each node
@@ -90,21 +99,21 @@ void Central::initialize()
 		dtn->setContactTopology(contactTopology_);
 	}
 
-	set < pair<int, int> > nodePairsRoutes2;
-	availableRoutesVar = this->computeTotalRoutesNumber(contactPlan_, nodesNumber_, nodePairsRoutes2);
+	if (par("enableAvailableRoutesCalculation"))
+	{
+		int availableRoutesVar = 0;
+		set < pair<int, int> > nodePairsRoutes2;
+		availableRoutesVar = this->computeTotalRoutesNumber(contactPlan_, nodesNumber_, nodePairsRoutes2);
 
-	// emit totalRoutes statistic
-	totalRoutes = registerSignal("totalRoutes");
-	emit(totalRoutes, totalRoutesVar);
+		// emit availableRoutes statistic
+		availableRoutes = registerSignal("availableRoutes");
+		emit(availableRoutes, availableRoutesVar);
 
-	// emit availableRoutes statistic
-	availableRoutes = registerSignal("availableRoutes");
-	emit(availableRoutes, availableRoutesVar);
-
-	// emit pairsOfNodesWithAtLeastOneRoute statistic
-	pairsOfNodesWithAtLeastOneRoute = registerSignal("pairsOfNodesWithAtLeastOneRoute");
-	int pairsOfNodesWithAtLeastOneRouteVar = nodePairsRoutes2.size();
-	emit(pairsOfNodesWithAtLeastOneRoute, pairsOfNodesWithAtLeastOneRouteVar);
+		// emit pairsOfNodesWithAtLeastOneRoute statistic
+		pairsOfNodesWithAtLeastOneRoute = registerSignal("pairsOfNodesWithAtLeastOneRoute");
+		int pairsOfNodesWithAtLeastOneRouteVar = nodePairsRoutes2.size();
+		emit(pairsOfNodesWithAtLeastOneRoute, pairsOfNodesWithAtLeastOneRouteVar);
+	}
 }
 
 void Central::finish()
@@ -112,7 +121,7 @@ void Central::finish()
 	if (ionNodes_)
 	{
 		bubble("Killing ION processes ...");
-		system("../src/ion/killm");
+		system("../../src/ion/killm");
 	}
 
 	if (this->par("saveTopology"))
@@ -204,7 +213,7 @@ void Central::saveLpFlows()
 map<int, map<int, map<int, double> > > Central::getTraffics()
 {
 	/// traffic[k][k1][k2] tráfico generado en el estado k desde el nodo k1 hacia el nodo k2
-	map<int, map<int, map<int, double> > >traffics;
+	map<int, map<int, map<int, double> > > traffics;
 
 	for (int i = 1; i <= nodesNumber_; i++)
 	{
@@ -212,12 +221,12 @@ map<int, map<int, map<int, double> > > Central::getTraffics()
 
 		int src = i;
 
-        vector<int> bundlesNumberVec = app->getBundlesNumberVec();
-        vector<int> destinationEidVec = app->getDestinationEidVec();
-        vector<int> sizeVec = app->getSizeVec();
-        vector<double> startVec = app->getStartVec();
+		vector<int> bundlesNumberVec = app->getBundlesNumberVec();
+		vector<int> destinationEidVec = app->getDestinationEidVec();
+		vector<int> sizeVec = app->getSizeVec();
+		vector<double> startVec = app->getStartVec();
 
-		for (size_t j = 0; j<bundlesNumberVec.size(); j++)
+		for (size_t j = 0; j < bundlesNumberVec.size(); j++)
 		{
 			double stateStart = this->getState(startVec.at(j));
 
@@ -226,17 +235,17 @@ map<int, map<int, map<int, double> > > Central::getTraffics()
 			double totalSize = bundlesNumberVec.at(j) * sizeVec.at(j);
 
 			map<int, map<int, map<int, double> > >::iterator it1 = traffics.find(stateStart);
-			if(it1 != traffics.end())
+			if (it1 != traffics.end())
 			{
 				map<int, map<int, double> > m1 = it1->second;
-				map<int, map<int, double> > ::iterator it2 = m1.find(src);
+				map<int, map<int, double> >::iterator it2 = m1.find(src);
 
-				if(it2 != m1.end())
+				if (it2 != m1.end())
 				{
 					map<int, double> m2 = it2->second;
 					map<int, double>::iterator it3 = m2.find(dst);
 
-					if(it3 != m2.end())
+					if (it3 != m2.end())
 					{
 						m2[dst] += totalSize;
 					}
@@ -287,28 +296,28 @@ double Central::getState(double trafficStart)
 	}
 
 	// get state of traffic generation
-    double state = 0;
-    vector<double>::iterator iit1 = stateTimes.begin();
-    vector<double>::iterator iit2 = stateTimes.end();
-    for (; iit1 != iit2; ++iit1)
-    {
-        double stateStart = *iit1;
-        double stateEnd = stateTimes.back();
+	double state = 0;
+	vector<double>::iterator iit1 = stateTimes.begin();
+	vector<double>::iterator iit2 = stateTimes.end();
+	for (; iit1 != iit2; ++iit1)
+	{
+		double stateStart = *iit1;
+		double stateEnd = stateTimes.back();
 
-        ++iit1;
-        if (iit1 != iit2)
-        {
-            stateEnd = *iit1;
-        }
-        --iit1;
+		++iit1;
+		if (iit1 != iit2)
+		{
+			stateEnd = *iit1;
+		}
+		--iit1;
 
-        if (trafficStart >= stateStart && trafficStart < stateEnd)
-        {
-            state = stateStart;
-        }
-    }
+		if (trafficStart >= stateStart && trafficStart < stateEnd)
+		{
+			state = stateStart;
+		}
+	}
 
-    return state;
+	return state;
 }
 
 void Central::deleteContacts(vector<int> contactsToDelete, bool faultsAware)
@@ -321,7 +330,7 @@ void Central::deleteContacts(vector<int> contactsToDelete, bool faultsAware)
 
 		// if faultsAware we delete contacts also from contactPlan
 		// so CGR will take better decisions
-		if(faultsAware)
+		if (faultsAware)
 		{
 			contactPlan_.deleteContactById(contactId);
 		}
@@ -458,15 +467,15 @@ vector<int> Central::getCentralityContactIds(int nContacts, int nodesNumber)
 		}
 
 		map<int, double>::iterator x = max_element(centralityMap.begin(), centralityMap.end(), [](const pair<int, double>& p1, const pair<int, double>& p2)
-		{return p1.second < p2.second;});
+		{	return p1.second < p2.second;});
 
 		// choose random contact among all max centrality contacts
-		vector<pair<int, double> > allMaxElements;
+		vector < pair<int, double> > allMaxElements;
 		map<int, double>::iterator ii1 = centralityMap.begin();
 		map<int, double>::iterator ii2 = centralityMap.end();
-		for(; ii1 != ii2; ++ii1)
+		for (; ii1 != ii2; ++ii1)
 		{
-			if(ii1->second == (*x).second)
+			if (ii1->second == (*x).second)
 			{
 				allMaxElements.push_back(make_pair(ii1->first, ii1->second));
 			}
