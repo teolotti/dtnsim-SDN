@@ -118,25 +118,28 @@ void Central::initialize()
 
 void Central::finish()
 {
-	if (ionNodes_)
+	if (nodesNumber_ >= 1)
 	{
-		bubble("Killing ION processes ...");
-		system("../../src/ion/killm");
-	}
+		if (ionNodes_)
+		{
+			bubble("Killing ION processes ...");
+			system("../../src/ion/killm");
+		}
 
-	if (this->par("saveTopology"))
-	{
-		this->saveTopology();
-	}
+		if (this->par("saveTopology"))
+		{
+			this->saveTopology();
+		}
 
-	if (this->par("saveFlows"))
-	{
-		this->saveFlows();
-	}
+		if (this->par("saveFlows"))
+		{
+			this->saveFlows();
+		}
 
-	if (this->par("saveLpFlows"))
-	{
-		this->saveLpFlows();
+		if (this->par("saveLpFlows"))
+		{
+			this->saveLpFlows();
+		}
 	}
 }
 

@@ -23,7 +23,7 @@ mkdir 0.5
 mkdir 1.0
 cd ..
 
-cd..
+cd ..
 
 # python scripts to read results databases and generate .txt results
 python3 deletedContactsAnalysis_centrality_0.1.py

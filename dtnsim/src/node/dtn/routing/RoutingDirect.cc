@@ -30,7 +30,10 @@ void RoutingDirect::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	vector<Contact> contacts = contactPlan_->getContactsBySrcDst(eid_,neighborEid);
 	for(size_t i = 0; i<contacts.size(); i++){
 		if((contacts.at(i).getEnd()>simTime)&&(contacts.at(i).getStart()<earliestStart))
+		{
 			contactId=contacts.at(i).getId();
+			earliestStart = contacts.at(i).getStart();
+		}
 	}
 
 	// Enqueue the bundle

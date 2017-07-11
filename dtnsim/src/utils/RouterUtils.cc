@@ -235,11 +235,11 @@ void saveGraphs(ContactPlan *contactPlan, map<double, RouterGraph> *flows, vecto
 	ofs << "nodesep=equally; " << endl;
 	ofs << "\n\n";
 
-	string totalTxBytes = "TotalTxBytes: " + to_string((int) routerUtils::getTotalTxBytes(contactPlan, flows)) + " bytes";
-	string maxDeliveryTime = "MaxDeliveryTime: " + to_string((int) routerUtils::getMaxDeliveryTime(contactPlan, flows)) + " s";
+	//string totalTxBytes = "TotalTxBytes: " + to_string((int) routerUtils::getTotalTxBytes(contactPlan, flows)) + " bytes";
+	//string maxDeliveryTime = "MaxDeliveryTime: " + to_string((int) routerUtils::getMaxDeliveryTime(contactPlan, flows)) + " s";
 
-	ofs << "label= \"\\n\\nDotted Lines = Contacts \\n" << "Coloured Lines = Traffic Flows \\n\\n" << totalTxBytes << "\\n" << maxDeliveryTime << "\"";
-
+	//ofs << "label= \"\\n\\nDotted Lines = Contacts \\n" << "Coloured Lines = Traffic Flows \\n\\n" << totalTxBytes << "\\n" << maxDeliveryTime << "\"";
+	ofs << "label= \"\\n\\nDotted Lines = Contacts \\n" << "Coloured Lines = Traffic Flows " << "\"";
 	ofs << "\n\n";
 
 	int k = 1;

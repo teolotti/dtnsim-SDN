@@ -6,7 +6,7 @@ import dtnsim.central.Central;
 network dtnsim
 {
     parameters:
-        int nodesNumber = default(1);
+        int nodesNumber = default(0);
         @display("bgb=503,408");
 
     submodules:

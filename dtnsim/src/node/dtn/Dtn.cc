@@ -62,11 +62,11 @@ void Dtn::initialize(int stage)
 		// must be scheduled in order to perform the necessary reroutings of bundles incorrectly routed in contacts that
 		// will not happen.
 		bool faultsAware = this->getParentModule()->getParentModule()->getSubmodule("central")->par("faultsAware");
-		if(!faultsAware)
+		if (!faultsAware)
 		{
 			vector<Contact> diffContacts = contactPlanUtils::getDifferenceContacts(contactPlan_, contactTopology_);
 
-			for(size_t i = 0; i<diffContacts.size(); i++)
+			for (size_t i = 0; i < diffContacts.size(); i++)
 			{
 				ContactMsg *contactMsg = new ContactMsg("contactStart", CONTACT_START_TIMER);
 
@@ -257,26 +257,31 @@ void Dtn::handleMessage(cMessage * msg)
 				double dataRate = contactTopology_.getContactById(contactId)->getDataRate();
 				double txDuration = (double) bundle->getByteLength() / dataRate;
 
-				// Set bundle metadata (set by intermediate nodes)
-				bundle->setSenderEid(eid_);
-				bundle->setHopCount(bundle->getHopCount() + 1);
-				bundle->getVisitedNodes().push_back(eid_);
-				bundle->setXmitCopiesCount(0);
+				// if the message can be fully transmitted before the end of the contact
+				// it is effectively transmitted
+				if ((simTime() + txDuration) <= contactTopology_.getContactById(contactId)->getEnd())
+				{
+					// Set bundle metadata (set by intermediate nodes)
+					bundle->setSenderEid(eid_);
+					bundle->setHopCount(bundle->getHopCount() + 1);
+					bundle->getVisitedNodes().push_back(eid_);
+					bundle->setXmitCopiesCount(0);
 
-				//cout<<"-----> sending bundle to node "<<bundle->getNextHopEid()<<endl;
-				send(bundle, "gateToCom$o");
+					//cout<<"-----> sending bundle to node "<<bundle->getNextHopEid()<<endl;
+					send(bundle, "gateToCom$o");
 
-				if (saveBundleMap_)
-					bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
+					if (saveBundleMap_)
+						bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
 
-				sdr_.popNextBundleForContact(contactId);
+					sdr_.popNextBundleForContact(contactId);
 
-				graphicsModule->setBundlesInSdr(sdr_.getBundlesStoredInSdr());
-				emit(dtnBundleSentToCom, true);
-				emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
-				emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+					graphicsModule->setBundlesInSdr(sdr_.getBundlesStoredInSdr());
+					emit(dtnBundleSentToCom, true);
+					emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
+					emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
 
-				scheduleAt(simTime() + txDuration, forwardingMsg);
+					scheduleAt(simTime() + txDuration, forwardingMsg);
+				}
 			}
 			else
 			{
@@ -376,6 +381,4 @@ ContactPlan* Dtn::getContactPlanPointer(void)
 {
 	return &this->contactPlan_;
 }
-
-
 
