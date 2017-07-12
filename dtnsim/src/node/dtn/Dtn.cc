@@ -40,40 +40,45 @@ void Dtn::initialize(int stage)
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
 		graphicsModule->setBundlesInSdr(sdr_.getBundlesStoredInSdr());
 
-		// Schedule local contact messages
-		vector<Contact> localContacts = contactTopology_.getContactsBySrc(this->eid_);
-		for (vector<Contact>::iterator it = localContacts.begin(); it != localContacts.end(); ++it)
+		// Schedule local starts contact messages.
+		// Only contactTopology starts contacts are scheduled.
+		vector<Contact> localContacts1 = contactTopology_.getContactsBySrc(this->eid_);
+		for (vector<Contact>::iterator it = localContacts1.begin(); it != localContacts1.end(); ++it)
 		{
-			ContactMsg *contactMsg = new ContactMsg("contactStart", CONTACT_START_TIMER);
+			ContactMsg *contactMsgStart = new ContactMsg("contactStart", CONTACT_START_TIMER);
 
-			// Smaller numeric value are executed first
-			contactMsg->setSchedulingPriority(CONTACT_START_TIMER);
-			contactMsg->setId((*it).getId());
-			contactMsg->setStart((*it).getStart());
-			contactMsg->setEnd((*it).getEnd());
-			contactMsg->setDuration((*it).getEnd() - (*it).getStart());
-			contactMsg->setSourceEid((*it).getSourceEid());
-			contactMsg->setDestinationEid((*it).getDestinationEid());
-			contactMsg->setDataRate((*it).getDataRate());
-			scheduleAt((*it).getStart(), contactMsg);
+			contactMsgStart->setSchedulingPriority(CONTACT_START_TIMER);
+			contactMsgStart->setId((*it).getId());
+			contactMsgStart->setStart((*it).getStart());
+			contactMsgStart->setEnd((*it).getEnd());
+			contactMsgStart->setDuration((*it).getEnd() - (*it).getStart());
+			contactMsgStart->setSourceEid((*it).getSourceEid());
+			contactMsgStart->setDestinationEid((*it).getDestinationEid());
+			contactMsgStart->setDataRate((*it).getDataRate());
+
+			scheduleAt((*it).getStart(), contactMsgStart);
+
 			EV << "node " << eid_ << ": " << "a contact +" << (*it).getStart() << " +" << (*it).getEnd() << " " << (*it).getSourceEid() << " " << (*it).getDestinationEid() << " " << (*it).getDataRate() << endl;
 		}
-		// If nonFaultsAware, end time events of contacts in the contactPlan which are not present in the contactTopology
-		// must be scheduled in order to perform the necessary reroutings of bundles incorrectly routed in contacts that
-		// will not happen.
-		bool faultsAware = this->getParentModule()->getParentModule()->getSubmodule("central")->par("faultsAware");
-		if (!faultsAware)
+		// Schedule local ends contact messages.
+		// All ends contacts of the contactPlan are scheduled.
+		// to trigger re-routings of bundles queued in contacts that did not happen.
+		vector<Contact> localContacts2 = contactPlan_.getContactsBySrc(this->eid_);
+		for (vector<Contact>::iterator it = localContacts2.begin(); it != localContacts2.end(); ++it)
 		{
-			vector<Contact> diffContacts = contactPlanUtils::getDifferenceContacts(contactPlan_, contactTopology_);
+			ContactMsg *contactMsgEnd = new ContactMsg("contactEnd", CONTACT_END_TIMER);
 
-			for (size_t i = 0; i < diffContacts.size(); i++)
-			{
-				ContactMsg *contactMsg = new ContactMsg("contactStart", CONTACT_START_TIMER);
+			contactMsgEnd->setName("ContactEnd");
+			contactMsgEnd->setSchedulingPriority(CONTACT_END_TIMER);
+			contactMsgEnd->setId((*it).getId());
+			contactMsgEnd->setStart((*it).getStart());
+			contactMsgEnd->setEnd((*it).getEnd());
+			contactMsgEnd->setDuration((*it).getEnd() - (*it).getStart());
+			contactMsgEnd->setSourceEid((*it).getSourceEid());
+			contactMsgEnd->setDestinationEid((*it).getDestinationEid());
+			contactMsgEnd->setDataRate((*it).getDataRate());
 
-				contactMsg->setSchedulingPriority(CONTACT_END_TIMER);
-				contactMsg->setId(diffContacts.at(i).getId());
-				scheduleAt(diffContacts.at(i).getEnd(), contactMsg);
-			}
+			scheduleAt((*it).getStart() + (*it).getDuration(), contactMsgEnd);
 		}
 
 		// Initialize routing
@@ -193,10 +198,6 @@ void Dtn::handleMessage(cMessage * msg)
 	{
 		// Schedule end of contact
 		ContactMsg* contactMsg = check_and_cast<ContactMsg *>(msg);
-		contactMsg->setKind(CONTACT_END_TIMER);
-		contactMsg->setName("ContactEnd");
-		contactMsg->setSchedulingPriority(CONTACT_END_TIMER);
-		scheduleAt(simTime() + contactMsg->getDuration(), contactMsg);
 
 		// Visualize contact line on
 		graphicsModule->setContactOn(contactMsg);
@@ -208,11 +209,14 @@ void Dtn::handleMessage(cMessage * msg)
 		forwardingMsg->setContactId(contactMsg->getId());
 		forwardingMsgs_[contactMsg->getId()] = forwardingMsg;
 		scheduleAt(simTime(), forwardingMsg);
+
+		delete contactMsg;
 	}
 	else if (msg->getKind() == CONTACT_END_TIMER)
 	{
 		// Finish transmission: If bundles are left in contact re-route them
 		ContactMsg* contactMsg = check_and_cast<ContactMsg *>(msg);
+
 		while (sdr_.isBundleForContact(contactMsg->getId()))
 		{
 			BundlePkt* bundle = sdr_.getNextBundleForContact(contactMsg->getId());
