@@ -30,7 +30,7 @@ RoutingCgrIon350::~RoutingCgrIon350()
 void RoutingCgrIon350::initializeIonNode()
 {
 	// set environment variable to allow one ion node per folder
-	chdir("ion");
+	chdir("ionFiles");
 	char cwd[1024];
 	getcwd(cwd, sizeof(cwd));
 	setenv("ION_NODE_LIST_DIR", cwd, 1);
@@ -353,7 +353,7 @@ void RoutingCgrIon350::routeAndQueueBundle(BundlePkt * bundlePkt, double simTime
 		cgrResult->contactId = -1;
 		cgrResult->neighborNode = -1;
 
-		string dir = string("ion/node") + to_string(this->eid_);
+		string dir = string("ionFiles/node") + to_string(this->eid_);
 		chdir(dir.c_str());
 
 		char cwd[1024];

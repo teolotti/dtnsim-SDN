@@ -15,10 +15,10 @@ public:
 
 	ContactPlan();
 	virtual ~ContactPlan();
+	ContactPlan(ContactPlan &contactPlan);
 
 	// Contact plan population functions
-	void addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate,
-			float confidence);
+	void addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence);
 	void addRange(int id, double start, double end, int sourceEid, int destinationEid, double range, float confidence);
 
 	// Contact plan exploration functions
@@ -27,15 +27,14 @@ public:
 	vector<Contact> getContactsBySrc(int Src);
 	vector<Contact> getContactsByDst(int Dst);
 	vector<Contact> getContactsBySrcDst(int Src, int Dst);
-	Contact getContactByTuple(int src, int dst, double start, double end);
 	double getRangeBySrcDst(int Src, int Dst);
-
-	// fill structs to make fast searchs of contacts
-	void finishContactPlan();
 	void parseContactPlanFile(string fileName);
 	void setContactsFile(string contactsFile);
 	const string& getContactsFile() const;
 	simtime_t getLastEditTime();
+
+	// delete contact function
+	vector<Contact>::iterator deleteContactById(int contactId);
 
 	// debug function
 	void printContactPlan();
@@ -45,17 +44,6 @@ private:
 	vector<Contact> contacts_;
 	vector<Contact> ranges_;
 	simtime_t lastEditTime;
-
-	// std structs to make fast searchs of contacts
-	map<int, vector<Contact *> > contactsBySrc_;
-	map<int, vector<Contact *> > contactsByDst_;
-	map<int, Contact *> contactsById_;
-
-	// std structs to make fast searchs of ranges
-	map<int, vector<Contact *> > rangesBySrc_;
-	map<int, vector<Contact *> > rangesByDst_;
-	map<int, Contact *> rangesById_;
-
 	string contactsFile_;
 
 };

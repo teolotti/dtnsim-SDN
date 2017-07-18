@@ -52,8 +52,8 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 	tableEntriesCreated = 0;
 	tableEntriesExplored = 0;
 
-	cout << "TIME: " << simTime_ << "s, NODE: " << eid_ << ", routing bundle to dst: " << bundle->getDestinationEid()
-			<< " (" << bundle->getByteLength() << "Bytes)" << endl;
+	cout << "TIME: " << simTime_ << "s, NODE: " << eid_ << ", routing bundle : " << bundle->getSourceEid() << "-"
+			<< bundle->getDestinationEid() << " (" << bundle->getByteLength() << "Bytes)" << endl;
 
 	// If no extensionBlock, run cgr each time a bundle is dispatched
 	if (routingType_.find("extensionBlock:off") != std::string::npos)
@@ -428,12 +428,17 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		bool needRecalculation = false;
 
 		// Empty route condition
-		if (routeTable_.at(terminusNode).at(0).nextHop == EMPTY_ROUTE)
+		if (routeTable_.at(terminusNode).at(0).nextHop == EMPTY_ROUTE) {
+			cout << "needRecalculation = true 1" << endl;
 			needRecalculation = true;
+		}
 
 		// Due route condition
-		if (routeTable_.at(terminusNode).at(0).toTime < simTime_)
+		// todo
+		if (routeTable_.at(terminusNode).at(0).toTime < simTime_) {
+			cout << "needRecalculation = true 2" << endl;
 			needRecalculation = true;
+		}
 
 		// Depleted route condition
 		if (routeTable_.at(terminusNode).at(0).residualVolume < bundle->getByteLength()) {
@@ -444,6 +449,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				if (routeTable_.at(terminusNode).at(0).residualVolume == (*hop)->getResidualVolume())
 					(*hop)->setResidualVolume(0);
 
+			cout << "needReclculation = true 3" << endl;
 			needRecalculation = true;
 		}
 
@@ -486,7 +492,8 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				needRecalculation = true;
 
 			// Due route condition
-			if (routeTable_.at(terminusNode).at(1).toTime < simTime_)
+			// todo
+			if (routeTable_.at(terminusNode).at(1).toTime <= simTime_)
 				needRecalculation = true;
 
 			// Depleted route condition
@@ -551,7 +558,8 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				needRecalculation = true;
 
 			// Due route condition
-			if (routeTable_.at(terminusNode).at(r).toTime < simTime_)
+			// todo
+			if (routeTable_.at(terminusNode).at(r).toTime <= simTime_)
 				needRecalculation = true;
 
 			// Depleted route condition
@@ -606,17 +614,24 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		// criteria 1) filter route: capacity is depleted
 		if (routeTable_.at(terminusNode).at(r).residualVolume < bundle->getByteLength()) {
 			routeTable_.at(terminusNode).at(r).filtered = true;
+			cout << "setting filtered true due to capacity to route next hop = "
+					<< routeTable_.at(terminusNode).at(r).nextHop << endl;
 		}
 		// criteria 2) filter route: due time is passed
 		if (routeTable_.at(terminusNode).at(r).toTime <= simTime_) {
 			routeTable_.at(terminusNode).at(r).filtered = true;
+			cout << "setting filtered true due to time to route next hop = "
+					<< routeTable_.at(terminusNode).at(r).nextHop << endl;
 		}
 
 		// Filter those that goes back to sender if such
 		// type of forwarding is forbidden as per .ini file
 		if (bundle->getReturnToSender() == false)
-			if (routeTable_.at(terminusNode).at(r).nextHop == bundle->getSenderEid())
+			if (routeTable_.at(terminusNode).at(r).nextHop == bundle->getSenderEid()) {
 				routeTable_.at(terminusNode).at(r).filtered = true;
+				cout << "setting filtered true due to not-return-to-sender to route next hop = "
+						<< routeTable_.at(terminusNode).at(r).nextHop << endl;
+			}
 	}
 
 	if (!routeTable_.at(terminusNode).empty()) {
@@ -730,6 +745,8 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 			bundle->setCgrRoute(*bestRoute);
 
 		// Enqueue bundle
+		cout << "queuing bundle in contact " << bestRoute->hops.at(0)->getId() << endl;
+
 		bundle->setNextHopEid(bestRoute->nextHop);
 		sdr_->enqueueBundleToContact(bundle, bestRoute->hops.at(0)->getId());
 	} else {
@@ -737,7 +754,7 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 		bundle->setNextHopEid(bestRoute->nextHop);
 		sdr_->enqueueBundleToContact(bundle, 0);
 
-		cout << "*BestRoute not found (enqueing to limbo)" << endl;
+		cout << "!*BestRoute not found (enqueing to limbo)" << endl;
 	}
 }
 
@@ -959,7 +976,7 @@ void RoutingCgrModelRev17::printRouteTable(int terminusNode) {
 			for (vector<Contact *>::iterator hop = route.hops.begin(); hop != route.hops.end(); ++hop)
 				cout << "(+" << (*hop)->getStart() << "+" << (*hop)->getEnd() << " " << (*hop)->getSourceEid() << " "
 						<< (*hop)->getDestinationEid() << " " << (*hop)->getResidualVolume() << "/"
-						<< (*hop)->getVolume() << "Bytes)";
+						<< (*hop)->getVolume() << "Bytes)" << ", toTime: " << route.toTime;
 
 			cout << endl;
 		}

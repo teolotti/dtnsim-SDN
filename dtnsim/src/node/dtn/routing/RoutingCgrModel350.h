@@ -12,6 +12,8 @@ public:
 	RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug);
 	virtual ~RoutingCgrModel350();
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
+	virtual CgrRoute* getCgrBestRoute(BundlePkt * bundle, double simTime);
+	virtual vector<CgrRoute> getCgrRoutes(BundlePkt * bundle, double simTime);
 
 	// stats recollection
 	int getDijkstraCalls();

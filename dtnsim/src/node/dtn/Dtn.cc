@@ -3,6 +3,26 @@
 
 Define_Module (Dtn);
 
+Dtn::Dtn()
+{
+
+}
+
+Dtn::~Dtn()
+{
+
+}
+
+void Dtn::setContactPlan(ContactPlan &contactPlan)
+{
+	this->contactPlan_ = contactPlan;
+}
+
+void Dtn::setContactTopology(ContactPlan &contactTopology)
+{
+	this->contactTopology_ = contactTopology;
+}
+
 int Dtn::numInitStages() const
 {
 	int stages = 2;
@@ -20,27 +40,45 @@ void Dtn::initialize(int stage)
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
 		graphicsModule->setBundlesInSdr(sdr_.getBundlesStoredInSdr());
 
-		// Initialize contact plan
-		contactPlan_.parseContactPlanFile(par("contactsFile"));
-		//contactPlan_.printContactPlan();
-
-		// Schedule local contact messages
-		vector<Contact> localContacts = contactPlan_.getContactsBySrc(this->eid_);
-		for (vector<Contact>::iterator it = localContacts.begin(); it != localContacts.end(); ++it)
+		// Schedule local starts contact messages.
+		// Only contactTopology starts contacts are scheduled.
+		vector<Contact> localContacts1 = contactTopology_.getContactsBySrc(this->eid_);
+		for (vector<Contact>::iterator it = localContacts1.begin(); it != localContacts1.end(); ++it)
 		{
-			ContactMsg *contactMsg = new ContactMsg("contactStart", CONTACT_START_TIMER);
+			ContactMsg *contactMsgStart = new ContactMsg("contactStart", CONTACT_START_TIMER);
 
-			// Smaller numeric value are executed first
-			contactMsg->setSchedulingPriority(CONTACT_START_TIMER);
-			contactMsg->setId((*it).getId());
-			contactMsg->setStart((*it).getStart());
-			contactMsg->setEnd((*it).getEnd());
-			contactMsg->setDuration((*it).getEnd() - (*it).getStart());
-			contactMsg->setSourceEid((*it).getSourceEid());
-			contactMsg->setDestinationEid((*it).getDestinationEid());
-			contactMsg->setDataRate((*it).getDataRate());
-			scheduleAt((*it).getStart(), contactMsg);
+			contactMsgStart->setSchedulingPriority(CONTACT_START_TIMER);
+			contactMsgStart->setId((*it).getId());
+			contactMsgStart->setStart((*it).getStart());
+			contactMsgStart->setEnd((*it).getEnd());
+			contactMsgStart->setDuration((*it).getEnd() - (*it).getStart());
+			contactMsgStart->setSourceEid((*it).getSourceEid());
+			contactMsgStart->setDestinationEid((*it).getDestinationEid());
+			contactMsgStart->setDataRate((*it).getDataRate());
+
+			scheduleAt((*it).getStart(), contactMsgStart);
+
 			EV << "node " << eid_ << ": " << "a contact +" << (*it).getStart() << " +" << (*it).getEnd() << " " << (*it).getSourceEid() << " " << (*it).getDestinationEid() << " " << (*it).getDataRate() << endl;
+		}
+		// Schedule local ends contact messages.
+		// All ends contacts of the contactPlan are scheduled.
+		// to trigger re-routings of bundles queued in contacts that did not happen.
+		vector<Contact> localContacts2 = contactPlan_.getContactsBySrc(this->eid_);
+		for (vector<Contact>::iterator it = localContacts2.begin(); it != localContacts2.end(); ++it)
+		{
+			ContactMsg *contactMsgEnd = new ContactMsg("contactEnd", CONTACT_END_TIMER);
+
+			contactMsgEnd->setName("ContactEnd");
+			contactMsgEnd->setSchedulingPriority(CONTACT_END_TIMER);
+			contactMsgEnd->setId((*it).getId());
+			contactMsgEnd->setStart((*it).getStart());
+			contactMsgEnd->setEnd((*it).getEnd());
+			contactMsgEnd->setDuration((*it).getEnd() - (*it).getStart());
+			contactMsgEnd->setSourceEid((*it).getSourceEid());
+			contactMsgEnd->setDestinationEid((*it).getDestinationEid());
+			contactMsgEnd->setDataRate((*it).getDataRate());
+
+			scheduleAt((*it).getStart() + (*it).getDuration(), contactMsgEnd);
 		}
 
 		// Initialize routing
@@ -49,6 +87,7 @@ void Dtn::initialize(int stage)
 		this->sdr_.setContactPlan(&contactPlan_);
 
 		string routeString = par("routing");
+
 		if (routeString.compare("direct") == 0)
 			routing = new RoutingDirect(eid_, &sdr_, &contactPlan_);
 		else if (routeString.compare("cgrModel350") == 0)
@@ -111,6 +150,31 @@ void Dtn::initialize(int stage)
 	}
 }
 
+void Dtn::finish()
+{
+	// Last call to sample-hold type metrics
+	if (eid_ != 0)
+	{
+		emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
+		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+	}
+
+	// Delete scheduled forwardingMsg
+	std::map<int, ForwardingMsg *>::iterator it;
+	for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
+	{
+		ForwardingMsg * forwardingMsg = it->second;
+		cancelAndDelete(forwardingMsg);
+	}
+
+	// Delete all stored bundles
+	sdr_.freeSdr(eid_);
+
+	// BundleMap End
+	if (saveBundleMap_)
+		bundleMap_.close();
+}
+
 void Dtn::handleMessage(cMessage * msg)
 {
 	///////////////////////////////////////////
@@ -134,10 +198,6 @@ void Dtn::handleMessage(cMessage * msg)
 	{
 		// Schedule end of contact
 		ContactMsg* contactMsg = check_and_cast<ContactMsg *>(msg);
-		contactMsg->setKind(CONTACT_END_TIMER);
-		contactMsg->setName("ContactEnd");
-		contactMsg->setSchedulingPriority(CONTACT_END_TIMER);
-		scheduleAt(simTime() + contactMsg->getDuration(), contactMsg);
 
 		// Visualize contact line on
 		graphicsModule->setContactOn(contactMsg);
@@ -149,11 +209,14 @@ void Dtn::handleMessage(cMessage * msg)
 		forwardingMsg->setContactId(contactMsg->getId());
 		forwardingMsgs_[contactMsg->getId()] = forwardingMsg;
 		scheduleAt(simTime(), forwardingMsg);
+
+		delete contactMsg;
 	}
 	else if (msg->getKind() == CONTACT_END_TIMER)
 	{
 		// Finish transmission: If bundles are left in contact re-route them
 		ContactMsg* contactMsg = check_and_cast<ContactMsg *>(msg);
+
 		while (sdr_.isBundleForContact(contactMsg->getId()))
 		{
 			BundlePkt* bundle = sdr_.getNextBundleForContact(contactMsg->getId());
@@ -195,28 +258,34 @@ void Dtn::handleMessage(cMessage * msg)
 				BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
 
 				// Calculate datarate and Tx duration
-				double dataRate = contactPlan_.getContactById(contactId)->getDataRate();
+				double dataRate = contactTopology_.getContactById(contactId)->getDataRate();
 				double txDuration = (double) bundle->getByteLength() / dataRate;
 
-				// Set bundle metadata (set by intermediate nodes)
-				bundle->setSenderEid(eid_);
-				bundle->setHopCount(bundle->getHopCount() + 1);
-				bundle->getVisitedNodes().push_back(eid_);
-				bundle->setXmitCopiesCount(0);
+				// if the message can be fully transmitted before the end of the contact
+				// it is effectively transmitted
+				if ((simTime() + txDuration) <= contactTopology_.getContactById(contactId)->getEnd())
+				{
+					// Set bundle metadata (set by intermediate nodes)
+					bundle->setSenderEid(eid_);
+					bundle->setHopCount(bundle->getHopCount() + 1);
+					bundle->getVisitedNodes().push_back(eid_);
+					bundle->setXmitCopiesCount(0);
 
-				send(bundle, "gateToCom$o");
+					//cout<<"-----> sending bundle to node "<<bundle->getNextHopEid()<<endl;
+					send(bundle, "gateToCom$o");
 
-				if (saveBundleMap_)
-					bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
+					if (saveBundleMap_)
+						bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
 
-				sdr_.popNextBundleForContact(contactId);
+					sdr_.popNextBundleForContact(contactId);
 
-				graphicsModule->setBundlesInSdr(sdr_.getBundlesStoredInSdr());
-				emit(dtnBundleSentToCom, true);
-				emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
-				emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+					graphicsModule->setBundlesInSdr(sdr_.getBundlesStoredInSdr());
+					emit(dtnBundleSentToCom, true);
+					emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
+					emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
 
-				scheduleAt(simTime() + txDuration, forwardingMsg);
+					scheduleAt(simTime() + txDuration, forwardingMsg);
+				}
 			}
 			else
 			{
@@ -315,40 +384,5 @@ void Dtn::setOnFault(bool onFault)
 ContactPlan* Dtn::getContactPlanPointer(void)
 {
 	return &this->contactPlan_;
-}
-
-void Dtn::finish()
-{
-	// Last call to sample-hold type metrics
-	if (eid_ != 0)
-	{
-		emit(sdrBundleStored, sdr_.getBundlesStoredInSdr());
-		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
-	}
-
-	// Delete scheduled forwardingMsg
-	std::map<int, ForwardingMsg *>::iterator it;
-	for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
-	{
-		ForwardingMsg * forwardingMsg = it->second;
-		cancelAndDelete(forwardingMsg);
-	}
-
-	// Delete all stored bundles
-	sdr_.freeSdr(eid_);
-
-	// BundleMap End
-	if (saveBundleMap_)
-		bundleMap_.close();
-}
-
-Dtn::Dtn()
-{
-
-}
-
-Dtn::~Dtn()
-{
-
 }
 

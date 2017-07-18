@@ -1,27 +1,21 @@
 package dtnsim;
 
-import dtnsim.ion.Ion;
 import dtnsim.node.Node;
-import dtnsim.logger.Logger;
+import dtnsim.central.Central;
 
 network dtnsim
 {
     parameters:
-        int nodesNumber = default(1);
+        int nodesNumber = default(0);
         @display("bgb=503,408");
-        
+
     submodules:
         node[nodesNumber+1]: Node {
             parameters:
-                @display("p=80,50");
+                @display("p=169,50");
         }
 
-        ion: Ion {
-            parameters:
-                @display("p=40,50");
-        }
-        
-        logger: Logger {
+        central: Central {
             parameters:
                 @display("p=40,150");
         }
