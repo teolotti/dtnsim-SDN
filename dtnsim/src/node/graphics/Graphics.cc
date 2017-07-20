@@ -99,7 +99,13 @@ void Graphics::setContactOff(ContactMsg* contactMsg)
 	{
 		string lineName = "line";
 		lineName.append(to_string(contactMsg->getId()));
-		networkCanvas->removeFigure(networkCanvas->findFigureRecursively(lineName.c_str()));
+
+		cFigure* figure = networkCanvas->findFigureRecursively(lineName.c_str());
+
+		if(figure != NULL)
+		{
+			networkCanvas->removeFigure(figure);
+		}
 	}
 }
 
