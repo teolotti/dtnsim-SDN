@@ -7,6 +7,7 @@ static void traceFnDefault(void *data, unsigned int lineNbr, CgrTraceType traceT
 static int getDirective(uvast nodeNbr, Object plans, Bundle *bundle, FwdDirective *directive);
 
 RoutingCgrIon350::RoutingCgrIon350(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodesNumber)
+	: RoutingDeterministic(eid, sdr, contactPlan)
 {
 	// Do nothing for eid=0 (unnused in ion)
 	if (eid == 0)
@@ -14,9 +15,6 @@ RoutingCgrIon350::RoutingCgrIon350(int eid, SdrModel * sdr, ContactPlan * contac
 		return;
 	}
 
-	eid_ = eid;
-	sdr_ = sdr;
-	contactPlan_ = contactPlan;
 	nodesNumber_ = nodesNumber;
 
 	this->initializeIonNode();

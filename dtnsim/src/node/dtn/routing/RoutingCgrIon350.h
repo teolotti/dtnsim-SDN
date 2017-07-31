@@ -4,7 +4,7 @@
 
 #define CGR_DEBUG 1
 
-#include <dtn/routing/Routing.h>
+#include <dtn/routing/RoutingDeterministic.h>
 #include "bp/include/cgr.h"
 #include "ici/include/psm.h"
 #include "ici/include/ion.h"
@@ -32,7 +32,7 @@ typedef struct {
 	PsmAddress	hops; // contacts of the best route
 } TraceState;
 
-class RoutingCgrIon350 : public Routing
+class RoutingCgrIon350 : public RoutingDeterministic
 {
 public:
 	RoutingCgrIon350(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodesNumber);
@@ -53,9 +53,6 @@ public:
 
 private:
 
-	int eid_;
-	SdrModel * sdr_;
-	ContactPlan * contactPlan_;
 	time_t startUtcTime_;
 	int nodesNumber_;
 

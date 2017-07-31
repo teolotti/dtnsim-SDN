@@ -76,6 +76,7 @@ void App::handleMessage(cMessage *msg)
 		// Bundle properties
 		char bundleName[10];
 		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, trafficGenMsg->getDestinationEid(), (int) bundle->getId());
+		bundle->setBundleId(bundle->getId());
 		bundle->setName(bundleName);
 		bundle->setBitLength(trafficGenMsg->getSize() * 8);
 		bundle->setByteLength(trafficGenMsg->getSize());

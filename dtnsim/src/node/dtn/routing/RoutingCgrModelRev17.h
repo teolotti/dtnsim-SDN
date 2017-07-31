@@ -2,11 +2,11 @@
 #define SRC_NODE_DTN_ROUTING_ROUTINGCGRMODELREV17_H_
 
 #include <dtn/routing/CgrRoute.h>
-#include <dtn/routing/Routing.h>
+#include <dtn/routing/RoutingDeterministic.h>
 
 #define	MAX_SPEED_MPH	(150000)
 
-class RoutingCgrModelRev17: public Routing {
+class RoutingCgrModelRev17: public RoutingDeterministic {
 public:
 	RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * localContactPlan,
 			ContactPlan * globalContactPlan, string routingType, bool printDebug);
@@ -31,10 +31,7 @@ private:
 
 	// Basic variables
 	string routingType_;
-	int eid_;
 	int nodeNum_;
-	SdrModel * sdr_;
-	ContactPlan * contactPlan_;
 	double simTime_;
 
 	void checkRoutingTypeString(void);

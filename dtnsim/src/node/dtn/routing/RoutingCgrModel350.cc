@@ -2,10 +2,8 @@
 #include <dtn/routing/RoutingCgrModel350.h>
 
 RoutingCgrModel350::RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug)
+	: RoutingDeterministic(eid, sdr, contactPlan)
 {
-	eid_ = eid;
-	sdr_ = sdr;
-	contactPlan_ = contactPlan;
 	printDebug_ = printDebug;
 }
 

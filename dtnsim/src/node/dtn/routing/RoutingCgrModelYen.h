@@ -8,10 +8,10 @@
 #ifndef SRC_NODE_DTN_ROUTINGCGRMODELYEN_H_
 #define SRC_NODE_DTN_ROUTINGCGRMODELYEN_H_
 
-#include <dtn/routing/Routing.h>
+#include <dtn/routing/RoutingDeterministic.h>
 #include <dtn/SdrModel.h>
 
-class RoutingCgrModelYen: public Routing
+class RoutingCgrModelYen: public RoutingDeterministic
 {
 public:
 	RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug);
@@ -19,9 +19,6 @@ public:
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 private:
 	bool printDebug_ = true;
-	int eid_;
-	SdrModel * sdr_;
-	ContactPlan * contactPlan_;
 
 	/////////////////////////////////////////////////
 	// Ion Cgr Functions based in libcgr.c (v 3.5.0):

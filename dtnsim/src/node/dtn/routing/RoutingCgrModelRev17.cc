@@ -4,11 +4,11 @@
 // To this end, local eid_, the total number of nodes nodeNum_,
 // a pointer to local storage sdr_, and a contact plan are set.
 RoutingCgrModelRev17::RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * localContactPlan,
-		ContactPlan * globalContactPlan, string routingType, bool printDebug) {
+		ContactPlan * globalContactPlan, string routingType, bool printDebug)
+	: RoutingDeterministic(eid, sdr, NULL)
+{
 	// Initialize basic and default variables
-	eid_ = eid; 					// local node EID
 	nodeNum_ = nodeNum;				// number of neighbors
-	sdr_ = sdr;						// local storage
 	printDebug_ = printDebug;		// direct debug to cout
 	routingType_ = routingType;		// routing type string
 
