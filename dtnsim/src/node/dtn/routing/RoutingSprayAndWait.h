@@ -4,18 +4,25 @@
  *  Created on: Jul 18, 2017
  *      Author: FRaverta
  *
- * This class provides a simplified implementation of Epidemic routing scheme proposed by Vahdat and Becker in
- * "Epidemic routing for partially connected ad-hoc networks, Technical Report CS-200006. Duke University; 2000".
+ * This class provides an implementation of Spray and Wait routing scheme proposed by T. Spyropoulos, K. Psounis and C. S. Raghavendra in
+ * "Spray and Wait: An Efficient Routing Scheme for Intermittently Connected Mobile Networks, Proceedings of ACM SIG-COMM Workshop on
+ *  Delay-Tolerant Networking (WDTN), 2005".
  *
- * Description of the Epidemic routing behavior:
+ * This class provides classical and binary Spray And Wait algorithm implementations.
  *
- * 		1) When a contact starts it enqueue to send all bundles whose destination is the contact's destination if target node has not received it.
- * 		   Here we assume that there isn't any cost associated to get this information.
- * 		   This bundles are deleted from bundles_ list.
+ * Description of the Spray And Wait routing behavior
  *
- * 		2) Enqueue to send those bundles, intended to other nodes, which has not been received by the other yet.
- * 		   Again, we assume that there isn't any cost associated to get this information.
- * 		   This bundles aren't deleted from bundles_ list, since these will be sent again in the next contact opportunity.
+ *	 Routing decisions are taken in two moments:
+ * 			1) When a contact start
+ *	 		2) When a bundle is successfully forwarded.
+ *
+ *	 In both moments, it enqueue a bundle to send according following criteria:
+ *
+ *		1) 	If there is a bundle whose destination is the contact destination, enqueue to send one copy of this.
+ *
+ * 		2)  If there aren't any bundle to that destination, enqueue a bundle with bundlesCopies > 1. Since if
+ *			bundleCopy == 1 it must be delivered to destination only. If binary=false, it only sends one copy to next node. Otherwise it
+ *			sends bundlesCopies/2.
  */
 
 #ifndef SRC_NODE_DTN_ROUTINGSPRAYANDWAIT_H_
