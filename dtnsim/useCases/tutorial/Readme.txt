@@ -2,6 +2,13 @@ This document is aimed at explaining a series of examples which
 instantiate different functionalities of the Dtnsim simulator. 
 (https://bitbucket.org/lcd-unc-ar/dtnsim)
 
+The examples are divided in two folders:
+1) routingAnalysis 
+2) faultsInjectionAnalysis
+
+
+1) routingAnalysis: 
+
 The example1 is a "hello world" scenario that make use of the basic functionalities
 of the simulator. It instantiates a DTN network with two nodes in a full-duplex communication.
 It is possible to choose between two possible configurations (Configs):
@@ -35,5 +42,10 @@ the variable "routingType". Furthermore, different traffics can be generated
 by choosing among different runs.
 It can be observed here, that the network performance is highly dependant on the
 chosen routing strategy.
+
+1) faultsInjectionAnalysis: 
+
+Here we have example5 and example6. Both examples define parameters in a central module for
+injecting faults in the contact plan in a random or directed manner.
 
 
