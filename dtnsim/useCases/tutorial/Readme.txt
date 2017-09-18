@@ -43,7 +43,7 @@ by choosing among different runs.
 It can be observed here, that the network performance is highly dependant on the
 chosen routing strategy.
 
-1) faultsInjectionAnalysis: 
+2) faultsInjectionAnalysis: 
 
 Here we have example5 and example6. Both examples define parameters in a central module for
 injecting faults in the contact plan in a random or directed manner.
