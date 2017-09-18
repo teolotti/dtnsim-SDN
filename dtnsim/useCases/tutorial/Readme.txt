@@ -54,4 +54,9 @@ In fact, by running:
 ./script2.sh the graphic results are generated with python scripts after having run script.sh. Results are saved in results_Graphis folder
 ./scriptMain.sh all data results and graphics are generated and saved in the respective folders.
 
+Additional Note: in order to obtain the graphics results, several python scripts must be run. 
+The following python libraries are needed to be installed for python 3.4: 
+matplotlib, math. In Ubuntu this can be done with the command "sudo pip3 install matplotlib".
+
+
 
