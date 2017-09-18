@@ -43,7 +43,7 @@ import sys
 import os
 
 INPUT_PATH = os.getcwd() + "/resultsRandom"
-OUTPUT_PATH = os.getcwd() + "/results/results_random/0.5"
+OUTPUT_PATH = os.getcwd() + "/results_Graphics/random/0.5"
 
 PERCENTAGE = 0.5
 DENSITY_RANGE = [PERCENTAGE]

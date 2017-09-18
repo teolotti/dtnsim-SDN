@@ -3,13 +3,13 @@ import ast
 import os
 
 #OUTPUT
-FILE_OUTPUT_PATH = os.getcwd() + "/results/results_random/random_bundles_Recibidos.pdf"
+FILE_OUTPUT_PATH = os.getcwd() + "/results_Graphics/random_bundles_Recibidos.pdf"
 
 #INPUT. Complete path will be computed as DIRECTORY/FILE_PATHS_C1[i]
-DIRECTORY = os.getcwd() + "/results/results_random"
-FILE_PATHS_C1 = ["0.5/METRIC=appBundleReceived:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=1-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt"]
+DIRECTORY = os.getcwd() + "/results_Graphics/random/0.5"
+FILE_PATHS_C1 = ["METRIC=appBundleReceived:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=1-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt"]
 
-FILE_PATHS_C2 = ["0.5/METRIC=appBundleReceived:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=1-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt"]
+FILE_PATHS_C2 = ["METRIC=appBundleReceived:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=1-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt"]
 
 #Calculate complete path
 COMPLETE_PATHS_C1 = list(map(lambda x: DIRECTORY + "/" + x, FILE_PATHS_C1))

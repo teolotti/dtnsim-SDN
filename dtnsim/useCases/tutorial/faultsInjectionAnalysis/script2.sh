@@ -1,21 +1,21 @@
 #!/bin/bash
 
 #remove old results
-rm -rf results
+rm -rf results_Graphics
 
 #create results folders
-mkdir results
+mkdir results_Graphics
 
-cd results
+cd results_Graphics
 
-mkdir results_centrality
-mkdir results_random
+mkdir centrality
+mkdir random
 
-cd results_centrality
+cd centrality
 mkdir 0.5
 cd ..
 
-cd results_random
+cd random
 mkdir 0.5
 cd ..
 

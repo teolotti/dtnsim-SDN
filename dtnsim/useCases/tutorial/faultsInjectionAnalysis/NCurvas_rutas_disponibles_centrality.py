@@ -3,13 +3,13 @@ import ast
 import os
 
 #OUTPUT
-FILE_OUTPUT_PATH = os.getcwd() + "/results/results_centrality/centrality_rutas_Disponibles.pdf"
+FILE_OUTPUT_PATH = os.getcwd() + "/results_Graphics/centrality_rutas_Disponibles.pdf"
 
 #INPUT. Complete path will be computed as DIRECTORY/FILE_PATHS_C1[i]
-DIRECTORY = os.getcwd() + "/results/results_centrality"
-FILE_PATHS_C1 = ["0.5/METRIC=availableRoutes:sum-DENSITY=0.5-AMOUNT_CONTACT_PLANS=1-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt"]
+DIRECTORY = os.getcwd() + "/results_Graphics/centrality/0.5"
+FILE_PATHS_C1 = ["METRIC=availableRoutes:sum-DENSITY=0.5-AMOUNT_CONTACT_PLANS=1-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt"]
 
-FILE_PATHS_C2 = ["0.5/METRIC=availableRoutes:sum-DENSITY=0.5-AMOUNT_CONTACT_PLANS=1-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt"]
+FILE_PATHS_C2 = ["METRIC=availableRoutes:sum-DENSITY=0.5-AMOUNT_CONTACT_PLANS=1-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt"]
 
 #Calculate complete path
 COMPLETE_PATHS_C1 = list(map(lambda x: DIRECTORY + "/" + x, FILE_PATHS_C1))

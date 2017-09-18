@@ -47,5 +47,11 @@ chosen routing strategy.
 
 Here we have example5 and example6. Both examples define parameters in a central module for
 injecting faults in the contact plan in a random or directed manner.
+Furthermore, we use these examples to show how it is possible to use scripts
+to automate the launching of many simulations and the obtaining of graphic results showing several metrics. 
+In fact, by running:
+./script.sh only the data results are obtained and saved in resultsCentrality and resultsRandom.
+./script2.sh the graphic results are generated with python scripts after having run script.sh. Results are saved in results_Graphis folder
+./scriptMain.sh all data results and graphics are generated and saved in the respective folders.
 
 

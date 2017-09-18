@@ -43,7 +43,7 @@ import sys
 import os
 
 INPUT_PATH = os.getcwd() + "/resultsCentrality"
-OUTPUT_PATH = os.getcwd() + "/results/results_centrality/0.5"
+OUTPUT_PATH = os.getcwd() + "/results_Graphics/centrality/0.5"
 
 PERCENTAGE = 0.5
 DENSITY_RANGE = [PERCENTAGE]
