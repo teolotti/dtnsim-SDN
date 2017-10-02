@@ -104,6 +104,11 @@ bool RoutingStochastic::isDeliveredBundle(long bundleId)
 	return false;
 }
 
+void RoutingStochastic::refreshForwarding(Contact *c)
+{
+	this->routeAndQueueBundle(c);
+}
+
 
 
 

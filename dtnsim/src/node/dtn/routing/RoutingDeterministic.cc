@@ -50,5 +50,10 @@ void RoutingDeterministic::contactEnd(Contact *c)
 	}
 }
 
+void RoutingDeterministic::refreshForwarding(Contact *c)
+{
+
+}
+
 
 

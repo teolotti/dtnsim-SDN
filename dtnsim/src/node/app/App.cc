@@ -90,6 +90,7 @@ void App::initialize()
 	// Register signals
 	appBundleSent = registerSignal("appBundleSent");
 	appBundleReceived = registerSignal("appBundleReceived");
+	appBundleReceivedHops = registerSignal("appBundleReceivedHops");
 	appBundleReceivedDelay = registerSignal("appBundleReceivedDelay");
 
 }
@@ -134,7 +135,6 @@ void App::handleMessage(cMessage *msg)
 		else
 			scheduleAt(simTime() + trafficGenMsg->getInterval(), msg);
 
-		// Send bundle to Dtn
 		send(bundle, "gateToDtn$o");
 		emit(appBundleSent, true);
 
@@ -148,6 +148,7 @@ void App::handleMessage(cMessage *msg)
 		if (this->eid_ == destinationEid)
 		{
 			emit(appBundleReceived, true);
+			emit(appBundleReceivedHops, bundle->getHopCount());
 			emit(appBundleReceivedDelay, simTime() - bundle->getCreationTimestamp());
 			delete msg;
 		}

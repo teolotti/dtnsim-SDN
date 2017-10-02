@@ -50,6 +50,8 @@ public:
 	// implement this function)
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime) = 0;
 
+	virtual void refreshForwarding(Contact *c);
+
 protected:
 	ContactPlan * contactPlan_;
 };

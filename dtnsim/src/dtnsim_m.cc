@@ -181,6 +181,7 @@ Register_Class(BundlePkt)
 
 BundlePkt::BundlePkt(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
+    this->bundleId = 0;
     this->sourceEid = 0;
     this->destinationEid = 0;
     this->critical = false;
@@ -192,6 +193,7 @@ BundlePkt::BundlePkt(const char *name, short kind) : ::omnetpp::cPacket(name,kin
     this->hopCount = 0;
     this->xmitCopiesCount = 0;
     this->dlvConfidence = 0;
+    this->bundlesCopies = 0;
 }
 
 BundlePkt::BundlePkt(const BundlePkt& other) : ::omnetpp::cPacket(other)
@@ -213,6 +215,7 @@ BundlePkt& BundlePkt::operator=(const BundlePkt& other)
 
 void BundlePkt::copy(const BundlePkt& other)
 {
+    this->bundleId = other.bundleId;
     this->sourceEid = other.sourceEid;
     this->destinationEid = other.destinationEid;
     this->critical = other.critical;
@@ -226,11 +229,13 @@ void BundlePkt::copy(const BundlePkt& other)
     this->visitedNodes = other.visitedNodes;
     this->xmitCopiesCount = other.xmitCopiesCount;
     this->dlvConfidence = other.dlvConfidence;
+    this->bundlesCopies = other.bundlesCopies;
 }
 
 void BundlePkt::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
+    doParsimPacking(b,this->bundleId);
     doParsimPacking(b,this->sourceEid);
     doParsimPacking(b,this->destinationEid);
     doParsimPacking(b,this->critical);
@@ -244,11 +249,13 @@ void BundlePkt::parsimPack(omnetpp::cCommBuffer *b) const
     doParsimPacking(b,this->visitedNodes);
     doParsimPacking(b,this->xmitCopiesCount);
     doParsimPacking(b,this->dlvConfidence);
+    doParsimPacking(b,this->bundlesCopies);
 }
 
 void BundlePkt::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
+    doParsimUnpacking(b,this->bundleId);
     doParsimUnpacking(b,this->sourceEid);
     doParsimUnpacking(b,this->destinationEid);
     doParsimUnpacking(b,this->critical);
@@ -262,6 +269,17 @@ void BundlePkt::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->visitedNodes);
     doParsimUnpacking(b,this->xmitCopiesCount);
     doParsimUnpacking(b,this->dlvConfidence);
+    doParsimUnpacking(b,this->bundlesCopies);
+}
+
+long BundlePkt::getBundleId() const
+{
+    return this->bundleId;
+}
+
+void BundlePkt::setBundleId(long bundleId)
+{
+    this->bundleId = bundleId;
 }
 
 int BundlePkt::getSourceEid() const
@@ -394,6 +412,16 @@ void BundlePkt::setDlvConfidence(double dlvConfidence)
     this->dlvConfidence = dlvConfidence;
 }
 
+int BundlePkt::getBundlesCopies() const
+{
+    return this->bundlesCopies;
+}
+
+void BundlePkt::setBundlesCopies(int bundlesCopies)
+{
+    this->bundlesCopies = bundlesCopies;
+}
+
 class BundlePktDescriptor : public omnetpp::cClassDescriptor
 {
   private:
@@ -459,7 +487,7 @@ const char *BundlePktDescriptor::getProperty(const char *propertyname) const
 int BundlePktDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 13+basedesc->getFieldCount() : 13;
+    return basedesc ? 15+basedesc->getFieldCount() : 15;
 }
 
 unsigned int BundlePktDescriptor::getFieldTypeFlags(int field) const
@@ -477,15 +505,17 @@ unsigned int BundlePktDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
-        FD_ISCOMPOUND,
-        FD_ISEDITABLE,
-        FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISCOMPOUND,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISCOMPOUND,
+        FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
     };
-    return (field>=0 && field<13) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<15) ? fieldTypeFlags[field] : 0;
 }
 
 const char *BundlePktDescriptor::getFieldName(int field) const
@@ -497,6 +527,7 @@ const char *BundlePktDescriptor::getFieldName(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldNames[] = {
+        "bundleId",
         "sourceEid",
         "destinationEid",
         "critical",
@@ -510,27 +541,30 @@ const char *BundlePktDescriptor::getFieldName(int field) const
         "visitedNodes",
         "xmitCopiesCount",
         "dlvConfidence",
+        "bundlesCopies",
     };
-    return (field>=0 && field<13) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<15) ? fieldNames[field] : nullptr;
 }
 
 int BundlePktDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0]=='s' && strcmp(fieldName, "sourceEid")==0) return base+0;
-    if (fieldName[0]=='d' && strcmp(fieldName, "destinationEid")==0) return base+1;
-    if (fieldName[0]=='c' && strcmp(fieldName, "critical")==0) return base+2;
-    if (fieldName[0]=='c' && strcmp(fieldName, "creationTimestamp")==0) return base+3;
-    if (fieldName[0]=='t' && strcmp(fieldName, "ttl")==0) return base+4;
-    if (fieldName[0]=='r' && strcmp(fieldName, "returnToSender")==0) return base+5;
-    if (fieldName[0]=='c' && strcmp(fieldName, "cgrRoute")==0) return base+6;
-    if (fieldName[0]=='s' && strcmp(fieldName, "senderEid")==0) return base+7;
-    if (fieldName[0]=='n' && strcmp(fieldName, "nextHopEid")==0) return base+8;
-    if (fieldName[0]=='h' && strcmp(fieldName, "hopCount")==0) return base+9;
-    if (fieldName[0]=='v' && strcmp(fieldName, "visitedNodes")==0) return base+10;
-    if (fieldName[0]=='x' && strcmp(fieldName, "xmitCopiesCount")==0) return base+11;
-    if (fieldName[0]=='d' && strcmp(fieldName, "dlvConfidence")==0) return base+12;
+    if (fieldName[0]=='b' && strcmp(fieldName, "bundleId")==0) return base+0;
+    if (fieldName[0]=='s' && strcmp(fieldName, "sourceEid")==0) return base+1;
+    if (fieldName[0]=='d' && strcmp(fieldName, "destinationEid")==0) return base+2;
+    if (fieldName[0]=='c' && strcmp(fieldName, "critical")==0) return base+3;
+    if (fieldName[0]=='c' && strcmp(fieldName, "creationTimestamp")==0) return base+4;
+    if (fieldName[0]=='t' && strcmp(fieldName, "ttl")==0) return base+5;
+    if (fieldName[0]=='r' && strcmp(fieldName, "returnToSender")==0) return base+6;
+    if (fieldName[0]=='c' && strcmp(fieldName, "cgrRoute")==0) return base+7;
+    if (fieldName[0]=='s' && strcmp(fieldName, "senderEid")==0) return base+8;
+    if (fieldName[0]=='n' && strcmp(fieldName, "nextHopEid")==0) return base+9;
+    if (fieldName[0]=='h' && strcmp(fieldName, "hopCount")==0) return base+10;
+    if (fieldName[0]=='v' && strcmp(fieldName, "visitedNodes")==0) return base+11;
+    if (fieldName[0]=='x' && strcmp(fieldName, "xmitCopiesCount")==0) return base+12;
+    if (fieldName[0]=='d' && strcmp(fieldName, "dlvConfidence")==0) return base+13;
+    if (fieldName[0]=='b' && strcmp(fieldName, "bundlesCopies")==0) return base+14;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -543,6 +577,7 @@ const char *BundlePktDescriptor::getFieldTypeString(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
+        "long",
         "int",
         "int",
         "bool",
@@ -556,8 +591,9 @@ const char *BundlePktDescriptor::getFieldTypeString(int field) const
         "intList",
         "int",
         "double",
+        "int",
     };
-    return (field>=0 && field<13) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<15) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **BundlePktDescriptor::getFieldPropertyNames(int field) const
@@ -624,19 +660,21 @@ std::string BundlePktDescriptor::getFieldValueAsString(void *object, int field, 
     }
     BundlePkt *pp = (BundlePkt *)object; (void)pp;
     switch (field) {
-        case 0: return long2string(pp->getSourceEid());
-        case 1: return long2string(pp->getDestinationEid());
-        case 2: return bool2string(pp->getCritical());
-        case 3: return simtime2string(pp->getCreationTimestamp());
-        case 4: return simtime2string(pp->getTtl());
-        case 5: return bool2string(pp->getReturnToSender());
-        case 6: {std::stringstream out; out << pp->getCgrRoute(); return out.str();}
-        case 7: return long2string(pp->getSenderEid());
-        case 8: return long2string(pp->getNextHopEid());
-        case 9: return long2string(pp->getHopCount());
-        case 10: {std::stringstream out; out << pp->getVisitedNodes(); return out.str();}
-        case 11: return long2string(pp->getXmitCopiesCount());
-        case 12: return double2string(pp->getDlvConfidence());
+        case 0: return long2string(pp->getBundleId());
+        case 1: return long2string(pp->getSourceEid());
+        case 2: return long2string(pp->getDestinationEid());
+        case 3: return bool2string(pp->getCritical());
+        case 4: return simtime2string(pp->getCreationTimestamp());
+        case 5: return simtime2string(pp->getTtl());
+        case 6: return bool2string(pp->getReturnToSender());
+        case 7: {std::stringstream out; out << pp->getCgrRoute(); return out.str();}
+        case 8: return long2string(pp->getSenderEid());
+        case 9: return long2string(pp->getNextHopEid());
+        case 10: return long2string(pp->getHopCount());
+        case 11: {std::stringstream out; out << pp->getVisitedNodes(); return out.str();}
+        case 12: return long2string(pp->getXmitCopiesCount());
+        case 13: return double2string(pp->getDlvConfidence());
+        case 14: return long2string(pp->getBundlesCopies());
         default: return "";
     }
 }
@@ -651,17 +689,19 @@ bool BundlePktDescriptor::setFieldValueAsString(void *object, int field, int i, 
     }
     BundlePkt *pp = (BundlePkt *)object; (void)pp;
     switch (field) {
-        case 0: pp->setSourceEid(string2long(value)); return true;
-        case 1: pp->setDestinationEid(string2long(value)); return true;
-        case 2: pp->setCritical(string2bool(value)); return true;
-        case 3: pp->setCreationTimestamp(string2simtime(value)); return true;
-        case 4: pp->setTtl(string2simtime(value)); return true;
-        case 5: pp->setReturnToSender(string2bool(value)); return true;
-        case 7: pp->setSenderEid(string2long(value)); return true;
-        case 8: pp->setNextHopEid(string2long(value)); return true;
-        case 9: pp->setHopCount(string2long(value)); return true;
-        case 11: pp->setXmitCopiesCount(string2long(value)); return true;
-        case 12: pp->setDlvConfidence(string2double(value)); return true;
+        case 0: pp->setBundleId(string2long(value)); return true;
+        case 1: pp->setSourceEid(string2long(value)); return true;
+        case 2: pp->setDestinationEid(string2long(value)); return true;
+        case 3: pp->setCritical(string2bool(value)); return true;
+        case 4: pp->setCreationTimestamp(string2simtime(value)); return true;
+        case 5: pp->setTtl(string2simtime(value)); return true;
+        case 6: pp->setReturnToSender(string2bool(value)); return true;
+        case 8: pp->setSenderEid(string2long(value)); return true;
+        case 9: pp->setNextHopEid(string2long(value)); return true;
+        case 10: pp->setHopCount(string2long(value)); return true;
+        case 12: pp->setXmitCopiesCount(string2long(value)); return true;
+        case 13: pp->setDlvConfidence(string2double(value)); return true;
+        case 14: pp->setBundlesCopies(string2long(value)); return true;
         default: return false;
     }
 }
@@ -675,8 +715,8 @@ const char *BundlePktDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 6: return omnetpp::opp_typename(typeid(CgrRoute));
-        case 10: return omnetpp::opp_typename(typeid(intList));
+        case 7: return omnetpp::opp_typename(typeid(CgrRoute));
+        case 11: return omnetpp::opp_typename(typeid(intList));
         default: return nullptr;
     };
 }
@@ -691,8 +731,8 @@ void *BundlePktDescriptor::getFieldStructValuePointer(void *object, int field, i
     }
     BundlePkt *pp = (BundlePkt *)object; (void)pp;
     switch (field) {
-        case 6: return (void *)(&pp->getCgrRoute()); break;
-        case 10: return (void *)(&pp->getVisitedNodes()); break;
+        case 7: return (void *)(&pp->getCgrRoute()); break;
+        case 11: return (void *)(&pp->getVisitedNodes()); break;
         default: return nullptr;
     }
 }
@@ -1457,24 +1497,25 @@ void *ContactMsgDescriptor::getFieldStructValuePointer(void *object, int field, 
     }
 }
 
-Register_Class(ForwardingMsg)
+Register_Class(ForwardingMsgEnd)
 
-ForwardingMsg::ForwardingMsg(const char *name, short kind) : ::omnetpp::cMessage(name,kind)
+ForwardingMsgEnd::ForwardingMsgEnd(const char *name, short kind) : ::omnetpp::cMessage(name,kind)
 {
     this->neighborEid = 0;
     this->contactId = 0;
+    this->bundleId = 0;
 }
 
-ForwardingMsg::ForwardingMsg(const ForwardingMsg& other) : ::omnetpp::cMessage(other)
+ForwardingMsgEnd::ForwardingMsgEnd(const ForwardingMsgEnd& other) : ::omnetpp::cMessage(other)
 {
     copy(other);
 }
 
-ForwardingMsg::~ForwardingMsg()
+ForwardingMsgEnd::~ForwardingMsgEnd()
 {
 }
 
-ForwardingMsg& ForwardingMsg::operator=(const ForwardingMsg& other)
+ForwardingMsgEnd& ForwardingMsgEnd::operator=(const ForwardingMsgEnd& other)
 {
     if (this==&other) return *this;
     ::omnetpp::cMessage::operator=(other);
@@ -1482,53 +1523,66 @@ ForwardingMsg& ForwardingMsg::operator=(const ForwardingMsg& other)
     return *this;
 }
 
-void ForwardingMsg::copy(const ForwardingMsg& other)
+void ForwardingMsgEnd::copy(const ForwardingMsgEnd& other)
 {
     this->neighborEid = other.neighborEid;
     this->contactId = other.contactId;
+    this->bundleId = other.bundleId;
 }
 
-void ForwardingMsg::parsimPack(omnetpp::cCommBuffer *b) const
+void ForwardingMsgEnd::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cMessage::parsimPack(b);
     doParsimPacking(b,this->neighborEid);
     doParsimPacking(b,this->contactId);
+    doParsimPacking(b,this->bundleId);
 }
 
-void ForwardingMsg::parsimUnpack(omnetpp::cCommBuffer *b)
+void ForwardingMsgEnd::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->neighborEid);
     doParsimUnpacking(b,this->contactId);
+    doParsimUnpacking(b,this->bundleId);
 }
 
-int ForwardingMsg::getNeighborEid() const
+int ForwardingMsgEnd::getNeighborEid() const
 {
     return this->neighborEid;
 }
 
-void ForwardingMsg::setNeighborEid(int neighborEid)
+void ForwardingMsgEnd::setNeighborEid(int neighborEid)
 {
     this->neighborEid = neighborEid;
 }
 
-int ForwardingMsg::getContactId() const
+int ForwardingMsgEnd::getContactId() const
 {
     return this->contactId;
 }
 
-void ForwardingMsg::setContactId(int contactId)
+void ForwardingMsgEnd::setContactId(int contactId)
 {
     this->contactId = contactId;
 }
 
-class ForwardingMsgDescriptor : public omnetpp::cClassDescriptor
+long ForwardingMsgEnd::getBundleId() const
+{
+    return this->bundleId;
+}
+
+void ForwardingMsgEnd::setBundleId(long bundleId)
+{
+    this->bundleId = bundleId;
+}
+
+class ForwardingMsgEndDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    ForwardingMsgDescriptor();
-    virtual ~ForwardingMsgDescriptor();
+    ForwardingMsgEndDescriptor();
+    virtual ~ForwardingMsgEndDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -1550,24 +1604,24 @@ class ForwardingMsgDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(ForwardingMsgDescriptor)
+Register_ClassDescriptor(ForwardingMsgEndDescriptor)
 
-ForwardingMsgDescriptor::ForwardingMsgDescriptor() : omnetpp::cClassDescriptor("ForwardingMsg", "omnetpp::cMessage")
+ForwardingMsgEndDescriptor::ForwardingMsgEndDescriptor() : omnetpp::cClassDescriptor("ForwardingMsgEnd", "omnetpp::cMessage")
 {
     propertynames = nullptr;
 }
 
-ForwardingMsgDescriptor::~ForwardingMsgDescriptor()
+ForwardingMsgEndDescriptor::~ForwardingMsgEndDescriptor()
 {
     delete[] propertynames;
 }
 
-bool ForwardingMsgDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool ForwardingMsgEndDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<ForwardingMsg *>(obj)!=nullptr;
+    return dynamic_cast<ForwardingMsgEnd *>(obj)!=nullptr;
 }
 
-const char **ForwardingMsgDescriptor::getPropertyNames() const
+const char **ForwardingMsgEndDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -1578,19 +1632,325 @@ const char **ForwardingMsgDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *ForwardingMsgDescriptor::getProperty(const char *propertyname) const
+const char *ForwardingMsgEndDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int ForwardingMsgDescriptor::getFieldCount() const
+int ForwardingMsgEndDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 3+basedesc->getFieldCount() : 3;
+}
+
+unsigned int ForwardingMsgEndDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+    };
+    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
+}
+
+const char *ForwardingMsgEndDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "neighborEid",
+        "contactId",
+        "bundleId",
+    };
+    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
+}
+
+int ForwardingMsgEndDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='n' && strcmp(fieldName, "neighborEid")==0) return base+0;
+    if (fieldName[0]=='c' && strcmp(fieldName, "contactId")==0) return base+1;
+    if (fieldName[0]=='b' && strcmp(fieldName, "bundleId")==0) return base+2;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *ForwardingMsgEndDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "int",
+        "int",
+        "long",
+    };
+    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **ForwardingMsgEndDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *ForwardingMsgEndDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int ForwardingMsgEndDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    ForwardingMsgEnd *pp = (ForwardingMsgEnd *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *ForwardingMsgEndDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    ForwardingMsgEnd *pp = (ForwardingMsgEnd *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string ForwardingMsgEndDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    ForwardingMsgEnd *pp = (ForwardingMsgEnd *)object; (void)pp;
+    switch (field) {
+        case 0: return long2string(pp->getNeighborEid());
+        case 1: return long2string(pp->getContactId());
+        case 2: return long2string(pp->getBundleId());
+        default: return "";
+    }
+}
+
+bool ForwardingMsgEndDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    ForwardingMsgEnd *pp = (ForwardingMsgEnd *)object; (void)pp;
+    switch (field) {
+        case 0: pp->setNeighborEid(string2long(value)); return true;
+        case 1: pp->setContactId(string2long(value)); return true;
+        case 2: pp->setBundleId(string2long(value)); return true;
+        default: return false;
+    }
+}
+
+const char *ForwardingMsgEndDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    };
+}
+
+void *ForwardingMsgEndDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    ForwardingMsgEnd *pp = (ForwardingMsgEnd *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+Register_Class(ForwardingMsgStart)
+
+ForwardingMsgStart::ForwardingMsgStart(const char *name, short kind) : ::omnetpp::cMessage(name,kind)
+{
+    this->neighborEid = 0;
+    this->contactId = 0;
+}
+
+ForwardingMsgStart::ForwardingMsgStart(const ForwardingMsgStart& other) : ::omnetpp::cMessage(other)
+{
+    copy(other);
+}
+
+ForwardingMsgStart::~ForwardingMsgStart()
+{
+}
+
+ForwardingMsgStart& ForwardingMsgStart::operator=(const ForwardingMsgStart& other)
+{
+    if (this==&other) return *this;
+    ::omnetpp::cMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void ForwardingMsgStart::copy(const ForwardingMsgStart& other)
+{
+    this->neighborEid = other.neighborEid;
+    this->contactId = other.contactId;
+}
+
+void ForwardingMsgStart::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::omnetpp::cMessage::parsimPack(b);
+    doParsimPacking(b,this->neighborEid);
+    doParsimPacking(b,this->contactId);
+}
+
+void ForwardingMsgStart::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::omnetpp::cMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->neighborEid);
+    doParsimUnpacking(b,this->contactId);
+}
+
+int ForwardingMsgStart::getNeighborEid() const
+{
+    return this->neighborEid;
+}
+
+void ForwardingMsgStart::setNeighborEid(int neighborEid)
+{
+    this->neighborEid = neighborEid;
+}
+
+int ForwardingMsgStart::getContactId() const
+{
+    return this->contactId;
+}
+
+void ForwardingMsgStart::setContactId(int contactId)
+{
+    this->contactId = contactId;
+}
+
+class ForwardingMsgStartDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    ForwardingMsgStartDescriptor();
+    virtual ~ForwardingMsgStartDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(ForwardingMsgStartDescriptor)
+
+ForwardingMsgStartDescriptor::ForwardingMsgStartDescriptor() : omnetpp::cClassDescriptor("ForwardingMsgStart", "omnetpp::cMessage")
+{
+    propertynames = nullptr;
+}
+
+ForwardingMsgStartDescriptor::~ForwardingMsgStartDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool ForwardingMsgStartDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<ForwardingMsgStart *>(obj)!=nullptr;
+}
+
+const char **ForwardingMsgStartDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *ForwardingMsgStartDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int ForwardingMsgStartDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 2+basedesc->getFieldCount() : 2;
 }
 
-unsigned int ForwardingMsgDescriptor::getFieldTypeFlags(int field) const
+unsigned int ForwardingMsgStartDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1605,7 +1965,7 @@ unsigned int ForwardingMsgDescriptor::getFieldTypeFlags(int field) const
     return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
 }
 
-const char *ForwardingMsgDescriptor::getFieldName(int field) const
+const char *ForwardingMsgStartDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1620,7 +1980,7 @@ const char *ForwardingMsgDescriptor::getFieldName(int field) const
     return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
 
-int ForwardingMsgDescriptor::findField(const char *fieldName) const
+int ForwardingMsgStartDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
@@ -1629,7 +1989,7 @@ int ForwardingMsgDescriptor::findField(const char *fieldName) const
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *ForwardingMsgDescriptor::getFieldTypeString(int field) const
+const char *ForwardingMsgStartDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1644,7 +2004,7 @@ const char *ForwardingMsgDescriptor::getFieldTypeString(int field) const
     return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **ForwardingMsgDescriptor::getFieldPropertyNames(int field) const
+const char **ForwardingMsgStartDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1657,7 +2017,7 @@ const char **ForwardingMsgDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *ForwardingMsgDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *ForwardingMsgStartDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1670,7 +2030,7 @@ const char *ForwardingMsgDescriptor::getFieldProperty(int field, const char *pro
     }
 }
 
-int ForwardingMsgDescriptor::getFieldArraySize(void *object, int field) const
+int ForwardingMsgStartDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1678,13 +2038,13 @@ int ForwardingMsgDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    ForwardingMsg *pp = (ForwardingMsg *)object; (void)pp;
+    ForwardingMsgStart *pp = (ForwardingMsgStart *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *ForwardingMsgDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *ForwardingMsgStartDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1692,13 +2052,13 @@ const char *ForwardingMsgDescriptor::getFieldDynamicTypeString(void *object, int
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    ForwardingMsg *pp = (ForwardingMsg *)object; (void)pp;
+    ForwardingMsgStart *pp = (ForwardingMsgStart *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string ForwardingMsgDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string ForwardingMsgStartDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1706,7 +2066,7 @@ std::string ForwardingMsgDescriptor::getFieldValueAsString(void *object, int fie
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    ForwardingMsg *pp = (ForwardingMsg *)object; (void)pp;
+    ForwardingMsgStart *pp = (ForwardingMsgStart *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getNeighborEid());
         case 1: return long2string(pp->getContactId());
@@ -1714,7 +2074,7 @@ std::string ForwardingMsgDescriptor::getFieldValueAsString(void *object, int fie
     }
 }
 
-bool ForwardingMsgDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool ForwardingMsgStartDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1722,7 +2082,7 @@ bool ForwardingMsgDescriptor::setFieldValueAsString(void *object, int field, int
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    ForwardingMsg *pp = (ForwardingMsg *)object; (void)pp;
+    ForwardingMsgStart *pp = (ForwardingMsgStart *)object; (void)pp;
     switch (field) {
         case 0: pp->setNeighborEid(string2long(value)); return true;
         case 1: pp->setContactId(string2long(value)); return true;
@@ -1730,7 +2090,7 @@ bool ForwardingMsgDescriptor::setFieldValueAsString(void *object, int field, int
     }
 }
 
-const char *ForwardingMsgDescriptor::getFieldStructName(int field) const
+const char *ForwardingMsgStartDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1743,7 +2103,7 @@ const char *ForwardingMsgDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *ForwardingMsgDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *ForwardingMsgStartDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -1751,7 +2111,7 @@ void *ForwardingMsgDescriptor::getFieldStructValuePointer(void *object, int fiel
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    ForwardingMsg *pp = (ForwardingMsg *)object; (void)pp;
+    ForwardingMsgStart *pp = (ForwardingMsgStart *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
