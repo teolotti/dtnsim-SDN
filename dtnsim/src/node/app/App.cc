@@ -58,6 +58,35 @@ void App::initialize()
 		}
 	}
 
+	//@NANDO: DUMMY CODE FOR GENERATE TRAFFIC
+	string externalEventsFile = par("externalTrafficEvents");
+	if(externalEventsFile.compare("") != 0)
+	{
+		double ts;
+		string name;
+		char c;
+		int from, to;
+		string size;
+
+		ifstream infile(externalEventsFile);
+		while (infile >> ts >> c >> name >> from >> to >> size){
+			if( from+1 == this->eid_)
+			{
+				TrafficGeneratorMsg * trafficGenMsg = new TrafficGeneratorMsg("trafGenMsg");
+				trafficGenMsg->setSchedulingPriority(TRAFFIC_TIMER);
+				trafficGenMsg->setKind(TRAFFIC_TIMER);
+				trafficGenMsg->setBundlesNumber(1);
+				trafficGenMsg->setDestinationEid(to+1);
+				trafficGenMsg->setSize(pow(10,6));
+				//trafficGenMsg->setInterval(par("interval").doubleValue());
+				trafficGenMsg->setTtl(10000);
+				scheduleAt(ts, trafficGenMsg);
+			}
+		}
+	}
+	//@NANDO: END DUMMY CODE FOR GENERATE TRAFFIC
+
+
 	// Register signals
 	appBundleSent = registerSignal("appBundleSent");
 	appBundleReceived = registerSignal("appBundleReceived");

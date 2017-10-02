@@ -111,11 +111,13 @@ void Dtn::initialize(int stage)
 		}
 		else if (routeString.compare("sprayAndWait") == 0)
 		{
-			routing = new RoutingSprayAndWait(eid_, &sdr_, this, 3, false);
+			int bundlesCopies = par("bundlesCopies");
+			routing = new RoutingSprayAndWait(eid_, &sdr_, this, bundlesCopies, false);
 		}
 		else if (routeString.compare("binarySprayAndWait") == 0)
 		{
-			routing = new RoutingSprayAndWait(eid_, &sdr_, this, 8, true);
+			int bundlesCopies = par("bundlesCopies");
+			routing = new RoutingSprayAndWait(eid_, &sdr_, this, bundlesCopies, true);
 		}
 		else
 		{

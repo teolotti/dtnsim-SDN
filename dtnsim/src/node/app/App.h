@@ -8,6 +8,8 @@
 #include "MsgTypes.h"
 #include "dtnsim_m.h"
 
+#include <fstream>
+#include <iostream>
 using namespace omnetpp;
 using namespace std;
 

@@ -8,6 +8,7 @@ simple Dtn
 
         string routing = default("direct");
         string routingType = default("none");
+        int bundlesCopies = default(1);
         bool printRoutingDebug = default(false);
 
         bool saveBundleMap = default(false);
