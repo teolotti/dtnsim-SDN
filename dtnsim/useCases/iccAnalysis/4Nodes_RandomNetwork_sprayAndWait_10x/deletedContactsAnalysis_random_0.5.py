@@ -54,7 +54,7 @@ METRICS = [("appBundleReceived:count","Delivered Bundles"),("deliveryRatio","Del
 def main():
     for metric in METRICS:
             cmp_graph_data = []
-            for aware in ["true", "false"]:
+            for aware in ["false"]:
                 f_avg_by_rep = []
                 for cp in CP_RANGE:
 
@@ -88,11 +88,11 @@ def main():
                 plt.close()
 
             # plot compared results
-            name_c1 = "CGR-MODEL-FaultsAware"
-            name_c2 = "CGR-MODEL-NonFaultsAware"
-            line_up, = plt.plot([x[0] for x in cmp_graph_data[0]], [y[1] for y in cmp_graph_data[0]], '--o', label=name_c1)
-            line_down, = plt.plot([x[0] for x in cmp_graph_data[1]], [y[1] for y in cmp_graph_data[1]], '--x', label=name_c2)
-            plt.legend(handles=[line_up, line_down])
+            #name_c1 = "CGR-MODEL-FaultsAware"
+            name_c2 = "SprayAndWait-2"
+            line_up, = plt.plot([x[0] for x in cmp_graph_data[0]], [y[1] for y in cmp_graph_data[0]], '--x', label=name_c2)
+            #line_down, = plt.plot([x[0] for x in cmp_graph_data[1]], [y[1] for y in cmp_graph_data[1]], '--x', label=name_c2)
+            plt.legend(handles=[line_up])
             plt.xlabel('deleted contacts/ total contacts')
             plt.ylabel(metric[1])
             plt.grid(color='gray', linestyle='dashed')

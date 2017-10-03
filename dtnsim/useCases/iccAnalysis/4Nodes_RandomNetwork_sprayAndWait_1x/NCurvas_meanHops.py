@@ -42,16 +42,16 @@ X_LABEL = "Proporción de Contactos con Fallas"
 Y_LABEL = "Mean Hops per Bundle"
 
 def main():
-    c1s = [getListFromFile(fname) for fname in COMPLETE_PATHS_C1]
+    #c1s = [getListFromFile(fname) for fname in COMPLETE_PATHS_C1]
     c2s = [getListFromFile(fname) for fname in COMPLETE_PATHS_C2]
 
     # plot results
 
     lines = []
-    for c1,c2,name1,name2,color1,color2,style1,style2, in zip(c1s,c2s,NAME_CURVAS_1,NAME_CURVAS_2,COLOR_CURVAS_1,COLOR_CURVAS_2,STYLE_CURVAS_1,STYLE_CURVAS_2):
-        line_up, = plt.plot([x[0] for x in c1],[y[1] for y in c1],style1, color=color1, label=name1)
+    for c2,name1,name2,color1,color2,style1,style2, in zip(c2s,NAME_CURVAS_1,NAME_CURVAS_2,COLOR_CURVAS_1,COLOR_CURVAS_2,STYLE_CURVAS_1,STYLE_CURVAS_2):
+        #line_up, = plt.plot([x[0] for x in c1],[y[1] for y in c1],style1, color=color1, label=name1)
         line_down, = plt.plot([x[0] for x in c2],[y[1] for y in c2],style2, color=color2, label=name2)
-        lines.append(line_up)
+        #lines.append(line_up)
         lines.append(line_down)
 
     plt.legend(handles= lines)

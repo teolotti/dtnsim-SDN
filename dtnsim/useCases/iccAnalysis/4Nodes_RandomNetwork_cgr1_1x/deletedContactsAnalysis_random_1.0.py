@@ -59,19 +59,19 @@ def main():
                 for cp in CP_RANGE:
 
                     if(metric[0] == "deliveryRatio"):
-                        f_avg_by_rep.append(receivedPacketAv2("%s/dtnsim-CP=contactPlan#2f%1.1f#_%d,faultsAware=%s"%(INPUT_PATH, density, cp,aware),MAX_DELETED_CONTACTS,AMOUNT_OF_REPETITIONS))
+                        f_avg_by_rep.append(receivedPacketAv2("%s/dtnsim-CP=contactPlan#2f%1.0f#_%d,faultsAware=%s"%(INPUT_PATH, density, cp,aware),MAX_DELETED_CONTACTS,AMOUNT_OF_REPETITIONS))
                     elif( (metric[0] == "appBundleReceivedDelay:mean") or (metric[0] == "appBundleReceivedHops:mean") ):
-                        f_avg_by_rep.append(receivedPacketAv3("%s/dtnsim-CP=contactPlan#2f%1.1f#_%d,faultsAware=%s" % (INPUT_PATH, density, cp, aware),MAX_DELETED_CONTACTS, AMOUNT_OF_REPETITIONS,metric[0]))
+                        f_avg_by_rep.append(receivedPacketAv3("%s/dtnsim-CP=contactPlan#2f%1.0f#_%d,faultsAware=%s" % (INPUT_PATH, density, cp, aware),MAX_DELETED_CONTACTS, AMOUNT_OF_REPETITIONS,metric[0]))
                     else:
                         #compute average function for all repetitions of a contact plan (one contac plan average- CONTACT PLAN AVERAGE)
-                        f_avg_by_rep.append(receivedPacketAv("%s/dtnsim-CP=contactPlan#2f%1.1f#_%d,faultsAware=%s"%(INPUT_PATH, density, cp,aware),MAX_DELETED_CONTACTS,AMOUNT_OF_REPETITIONS,metric[0]))
+                        f_avg_by_rep.append(receivedPacketAv("%s/dtnsim-CP=contactPlan#2f%1.0f#_%d,faultsAware=%s"%(INPUT_PATH, density, cp,aware),MAX_DELETED_CONTACTS,AMOUNT_OF_REPETITIONS,metric[0]))
 
                 #compute average function for all contact plans (all contact plans average - DENSITY AVERAGE)
                 graph_data = promList(f_avg_by_rep)
                 cmp_graph_data.append(graph_data)
 
                 # save function
-                text_file = open("%s/METRIC=%s-DENSITY=%1.1f-AMOUNT_CONTACT_PLANS=%d-FAULTAWARE=%s-MAX_DELETED_CONTACTS=%d.txt"%(OUTPUT_PATH,metric[0],density,len(CP_RANGE),aware,MAX_DELETED_CONTACTS),"w")
+                text_file = open("%s/METRIC=%s-DENSITY=%1.0f-AMOUNT_CONTACT_PLANS=%d-FAULTAWARE=%s-MAX_DELETED_CONTACTS=%d.txt"%(OUTPUT_PATH,metric[0],density,len(CP_RANGE),aware,MAX_DELETED_CONTACTS),"w")
                 text_file.write(str(graph_data))
                 text_file.close()
 
@@ -82,7 +82,7 @@ def main():
                 plt.grid(color='gray', linestyle='dashed')
                 # xint = range(0, max_deleted_contacts + 1)
                 # plt.xticks(xint)
-                plt.savefig("%s/METRIC=%s-DENSITY=%1.1f-AMOUNT_CONTACT_PLANS=%d-FAULTAWARE=%s-MAX_DELETED_CONTACTS=%d.png"%(OUTPUT_PATH,metric[0],density,len(CP_RANGE),aware,MAX_DELETED_CONTACTS))
+                plt.savefig("%s/METRIC=%s-DENSITY=%1.0f-AMOUNT_CONTACT_PLANS=%d-FAULTAWARE=%s-MAX_DELETED_CONTACTS=%d.png"%(OUTPUT_PATH,metric[0],density,len(CP_RANGE),aware,MAX_DELETED_CONTACTS))
                 plt.clf()
                 plt.cla()
                 plt.close()
