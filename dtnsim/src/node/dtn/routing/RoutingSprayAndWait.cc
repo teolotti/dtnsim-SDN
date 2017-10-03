@@ -73,6 +73,11 @@ void RoutingSprayAndWait::successfulBundleForwarded(long bundleId, Contact * con
 
 void RoutingSprayAndWait::routeAndQueueBundle(Contact *c)
 {
+	if(sdr_->isBundleForContact(c->getId()))
+	{
+		return;
+	}
+
 	RoutingSprayAndWait * other = check_and_cast<RoutingSprayAndWait *>(check_and_cast<Dtn *>(
 																dtn_->getParentModule()->getParentModule()->getSubmodule("node", c->getDestinationEid())
 																->getSubmodule("dtn"))->getRouting());
