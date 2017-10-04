@@ -10,8 +10,8 @@ DIRECTORY = os.getcwd() + "/.."
 FILE_PATHS_C1 = [
 "4Nodes_RandomNetwork_cgr1_10x/results/results_random/0.5/METRIC=appBundleReceivedHops:mean-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt",
 "4Nodes_RandomNetwork_cgr1_10x/results/results_random/0.5/METRIC=appBundleReceivedHops:mean-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt",
-"../../../../../git/dtnsim/dtnsim/useCases/4Nodes_RandomNetwork_cgr3_10x/results/results_random/0.5/METRIC=appBundleReceivedHops:mean-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt",
-"../../../../../git/dtnsim/dtnsim/useCases/4Nodes_RandomNetwork_cgr3_10x/results/results_random/0.5/METRIC=appBundleReceivedHops:mean-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt",
+"4Nodes_RandomNetwork_cgr3_10x/results/results_random/0.5/METRIC=appBundleReceivedHops:mean-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt",
+"4Nodes_RandomNetwork_cgr3_10x/results/results_random/0.5/METRIC=appBundleReceivedHops:mean-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt",
 "4Nodes_RandomNetwork_sprayAndWait_10x/results/results_random/0.5/METRIC=appBundleReceivedHops:mean-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt",
 "4Nodes_RandomNetwork_sprayAndWait_3copies_10x/results/results_random/0.5/METRIC=appBundleReceivedHops:mean-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt"
 ]
