@@ -3,17 +3,17 @@ import ast
 import os
 
 #OUTPUT
-FILE_OUTPUT_PATH = os.getcwd() + "/results/transmitted.pdf"
+FILE_OUTPUT_PATH = os.getcwd() + "/results/deliveredBundles.pdf"
 
 #INPUT. Complete path will be computed as DIRECTORY/FILE_PATHS_C1[i]
 DIRECTORY = os.getcwd() + "/.."
 FILE_PATHS_C1 = [
-"4Nodes_RandomNetwork_cgr1_10x/results/results_random/0.5/METRIC=dtnBundleSentToCom:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt",
-"4Nodes_RandomNetwork_cgr1_10x/results/results_random/0.5/METRIC=dtnBundleSentToCom:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt",
-"../../../../../git/dtnsim/dtnsim/useCases/4Nodes_RandomNetwork_cgr3_10x/results/results_random/0.5/METRIC=dtnBundleSentToCom:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt",
-"../../../../../git/dtnsim/dtnsim/useCases/4Nodes_RandomNetwork_cgr3_10x/results/results_random/0.5/METRIC=dtnBundleSentToCom:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt",
-"4Nodes_RandomNetwork_sprayAndWait_10x/results/results_random/0.5/METRIC=dtnBundleSentToCom:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt",
-"4Nodes_RandomNetwork_sprayAndWait_3copies_10x/results/results_random/0.5/METRIC=dtnBundleSentToCom:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt"
+"4Nodes_RandomNetwork_cgr1_1x/results/results_random/0.5/METRIC=appBundleReceived:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt",
+"4Nodes_RandomNetwork_cgr1_1x/results/results_random/0.5/METRIC=appBundleReceived:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt",
+"../../../../../git/dtnsim/dtnsim/useCases/4Nodes_RandomNetwork_cgr3_1x/results/results_random/0.5/METRIC=appBundleReceived:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt",
+"../../../../../git/dtnsim/dtnsim/useCases/4Nodes_RandomNetwork_cgr3_1x/results/results_random/0.5/METRIC=appBundleReceived:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=true-MAX_DELETED_CONTACTS=60.txt",
+"4Nodes_RandomNetwork_sprayAndWait_1x/results/results_random/0.5/METRIC=appBundleReceived:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt",
+"4Nodes_RandomNetwork_sprayAndWait_3copies_1x/results/results_random/0.5/METRIC=appBundleReceived:count-DENSITY=0.5-AMOUNT_CONTACT_PLANS=10-FAULTAWARE=false-MAX_DELETED_CONTACTS=60.txt"
 ]
 
 #Calculate complete path
@@ -39,7 +39,7 @@ STYLE_CURVAS_1 = ['--o','--s','--v','--p','--x','--+']
 #RANGE = [[round(p * i) for p in DOTS] for i in NUMBER_OF_CONTACT
 
 X_LABEL = "Proportion of Contacts with Faults"
-Y_LABEL = "Transmitted Bundles"
+Y_LABEL = "Delivered Bundles"
 
 def main():
     c1s = [getListFromFile(fname) for fname in COMPLETE_PATHS_C1]
@@ -53,6 +53,8 @@ def main():
 
     plt.legend(handles= lines)
 
+    #plt.xlim([0.2,0.9])
+    #plt.ylim([0.4,1.05])
     plt.xlabel(X_LABEL)
     plt.ylabel(Y_LABEL)
     plt.grid(color='gray', linestyle='dashed')

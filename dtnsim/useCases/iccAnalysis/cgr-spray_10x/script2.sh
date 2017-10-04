@@ -8,7 +8,7 @@ mkdir results
 
 # python scripts to read results databases and generate .txt results
 
-python3 NCurvas_received.py
+python3 NCurvas_delivered.py
 python3 NCurvas_transmitted.py
 python3 NCurvas_deliveryRatio.py
 python3 NCurvas_meanDelay.py
