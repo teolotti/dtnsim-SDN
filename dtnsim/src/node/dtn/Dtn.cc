@@ -97,6 +97,8 @@ void Dtn::initialize(int stage)
 			routing = new RoutingDirect(eid_, &sdr_, &contactPlan_);
 		else if (routeString.compare("cgrModel350") == 0)
 			routing = new RoutingCgrModel350(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"));
+		else if (routeString.compare("cgrModel350_3") == 0)
+			routing = new RoutingCgrModel350_3(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"));
 		else if (routeString.compare("cgrModelYen") == 0)
 			routing = new RoutingCgrModelYen(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"));
 		else if (routeString.compare("cgrModelRev17") == 0)
@@ -372,6 +374,12 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 			emit(routeCgrDijkstraCalls, ((RoutingCgrModel350*) routing)->getDijkstraCalls());
 			emit(routeCgrDijkstraLoops, ((RoutingCgrModel350*) routing)->getDijkstraLoops());
 			emit(routeCgrRouteTableEntriesExplored, ((RoutingCgrModel350*) routing)->getRouteTableEntriesExplored());
+		}
+		if (routeString.compare("cgrModel350_3") == 0)
+		{
+			emit(routeCgrDijkstraCalls, ((RoutingCgrModel350_3*) routing)->getDijkstraCalls());
+			emit(routeCgrDijkstraLoops, ((RoutingCgrModel350_3*) routing)->getDijkstraLoops());
+			emit(routeCgrRouteTableEntriesExplored, ((RoutingCgrModel350_3*) routing)->getRouteTableEntriesExplored());
 		}
 		if (routeString.compare("cgrModelRev17") == 0)
 		{

@@ -5,6 +5,7 @@
 #include <dtn/routing/Routing.h>
 #include <dtn/routing/RoutingCgrIon350.h>
 #include <dtn/routing/RoutingCgrModel350.h>
+#include <dtn/routing/RoutingCgrModel350_3.h>
 #include <dtn/routing/RoutingCgrModelRev17.h>
 #include <dtn/routing/RoutingCgrModelYen.h>
 #include <dtn/routing/RoutingDirect.h>
