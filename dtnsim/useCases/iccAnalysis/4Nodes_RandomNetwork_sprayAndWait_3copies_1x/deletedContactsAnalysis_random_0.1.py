@@ -26,6 +26,7 @@ The varriable parts in string are marked with %%. They are:
 
 OUTPUT:
 
+
 "%s/METRIC=%s-FAULTAWARE=%s-MAX_DELETED_CONTACTS=%d-.txt"%(OUTPUT_PATH,metric[0],aware,MAX_DELETED_CONTACTS)
 
 '''
