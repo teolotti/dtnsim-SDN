@@ -36,10 +36,13 @@ void Dtn::initialize(int stage)
 		// Store this node eid
 		this->eid_ = this->getParentModule()->getIndex();
 
+		this->simpleCustodyModel_ = this->par("simpleCustodyModel");
+
 		// Get a pointer to graphics module
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
 		// Register this object as sdr obsever, in order to display bundles stored in sdr properly.
-		sdr_.addObserver(this); update();
+		sdr_.addObserver(this);
+		update();
 
 		// Schedule local starts contact messages.
 		// Only contactTopology starts contacts are scheduled.
@@ -84,6 +87,7 @@ void Dtn::initialize(int stage)
 
 		// Initialize routing
 		this->sdr_.setEid(eid_);
+		this->sdr_.setSize(par("sdrSize"));
 		this->sdr_.setNodesNumber(this->getParentModule()->getParentModule()->par("nodesNumber"));
 		this->sdr_.setContactPlan(&contactPlan_);
 
@@ -237,7 +241,7 @@ void Dtn::handleMessage(cMessage * msg)
 		// Finish transmission: If bundles are left in contact re-route them
 		ContactMsg* contactMsg = check_and_cast<ContactMsg *>(msg);
 
-		for(int i=0; i < sdr_.getBundlesCountInContact(contactMsg->getId()); i++)
+		for (int i = 0; i < sdr_.getBundlesCountInContact(contactMsg->getId()); i++)
 			emit(dtnBundleReRouted, true);
 
 		routing->contactEnd(contactPlan_.getContactById(contactMsg->getId()));
@@ -273,43 +277,46 @@ void Dtn::handleMessage(cMessage * msg)
 				// Get bundle pointer from sdr
 				BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
 
-				// Calculate datarate and Tx duration
-				double dataRate = contactTopology_.getContactById(contactId)->getDataRate();
-				double txDuration = (double) bundle->getByteLength() / dataRate;
-
-				Contact * contact = contactTopology_.getContactById(contactId);
-
-				// if the message can be fully transmitted before the end of the contact
-				// it is effectively transmitted
-				if ((simTime() + txDuration) <= contact->getEnd())
+				if ((!this->simpleCustodyModel_) || (this->simpleCustodyModel_ && neighborDtn->sdr_.isSdrFreeSpace(bundle->getByteLength())))
 				{
-					// Set bundle metadata (set by intermediate nodes)
-					bundle->setSenderEid(eid_);
-					bundle->setHopCount(bundle->getHopCount() + 1);
-					bundle->getVisitedNodes().push_back(eid_);
-					bundle->setXmitCopiesCount(0);
+					// Calculate datarate and Tx duration
+					double dataRate = contactTopology_.getContactById(contactId)->getDataRate();
+					double txDuration = (double) bundle->getByteLength() / dataRate;
 
-					//cout<<"-----> sending bundle to node "<<bundle->getNextHopEid()<<endl;
-					send(bundle, "gateToCom$o");
+					Contact * contact = contactTopology_.getContactById(contactId);
 
-					if (saveBundleMap_)
-						bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
+					// if the message can be fully transmitted before the end of the contact
+					// it is effectively transmitted
+					if ((simTime() + txDuration) <= contact->getEnd())
+					{
+						// Set bundle metadata (set by intermediate nodes)
+						bundle->setSenderEid(eid_);
+						bundle->setHopCount(bundle->getHopCount() + 1);
+						bundle->getVisitedNodes().push_back(eid_);
+						bundle->setXmitCopiesCount(0);
 
-					sdr_.popNextBundleForContact(contactId);
+						//cout<<"-----> sending bundle to node "<<bundle->getNextHopEid()<<endl;
+						send(bundle, "gateToCom$o");
 
-					emit(dtnBundleSentToCom, true);
-					emit(sdrBundleStored, sdr_.getBundlesCountInSdr());
-					emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+						if (saveBundleMap_)
+							bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
 
-					scheduleAt(simTime() + txDuration, forwardingMsgStart);
+						sdr_.popNextBundleForContact(contactId);
 
-					// Schedule forwarding message end
-					ForwardingMsgEnd * forwardingMsgEnd = new ForwardingMsgEnd("forwardingMsgEnd", FORWARDING_MSG_END);
-					forwardingMsgEnd->setSchedulingPriority(FORWARDING_MSG_END);
-					forwardingMsgEnd->setNeighborEid(neighborEid);
-					forwardingMsgEnd->setContactId(contactId);
-					forwardingMsgEnd->setBundleId(bundle->getBundleId());
-					scheduleAt(simTime() + txDuration, forwardingMsgEnd);
+						emit(dtnBundleSentToCom, true);
+						emit(sdrBundleStored, sdr_.getBundlesCountInSdr());
+						emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+
+						scheduleAt(simTime() + txDuration, forwardingMsgStart);
+
+						// Schedule forwarding message end
+						ForwardingMsgEnd * forwardingMsgEnd = new ForwardingMsgEnd("forwardingMsgEnd", FORWARDING_MSG_END);
+						forwardingMsgEnd->setSchedulingPriority(FORWARDING_MSG_END);
+						forwardingMsgEnd->setNeighborEid(neighborEid);
+						forwardingMsgEnd->setContactId(contactId);
+						forwardingMsgEnd->setBundleId(bundle->getBundleId());
+						scheduleAt(simTime() + txDuration, forwardingMsgEnd);
+					}
 				}
 			}
 			else
@@ -325,7 +332,7 @@ void Dtn::handleMessage(cMessage * msg)
 			// will wake up this forwarding thread
 		}
 	}
-	else if(msg->getKind() == FORWARDING_MSG_END)
+	else if (msg->getKind() == FORWARDING_MSG_END)
 	{
 		// A bundle was successfully forwarded. Notify routing schema in order to it makes proper decisions.
 		ForwardingMsgEnd* forwardingMsgEnd = check_and_cast<ForwardingMsgEnd *>(msg);
@@ -349,7 +356,7 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 		bundle->getVisitedNodes().unique();
 		emit(dtnBundleSentToAppRevisitedHops, bundle->getHopCount() - bundle->getVisitedNodes().size());
 
-		if( routing->msgToMeArrive(bundle) )
+		if (routing->msgToMeArrive(bundle))
 			send(bundle, "gateToApp$o");
 		else
 			delete bundle;
@@ -386,19 +393,20 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 
 void Dtn::refreshForwarding()
 {
-    // Check all on-going forwardingMsgs threads
-    // (contacts) and wake up those not scheduled.
-    std::map<int, ForwardingMsgStart *>::iterator it;
-    for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
-    {
-        ForwardingMsgStart * forwardingMsg = it->second;
-        int cid = forwardingMsg->getContactId();
-        if(!sdr_.isBundleForContact(cid))
-                routing->refreshForwarding(contactPlan_.getContactById(cid));
-        if (!forwardingMsg->isScheduled()){
-            scheduleAt(simTime(), forwardingMsg);
-        }
-    }
+	// Check all on-going forwardingMsgs threads
+	// (contacts) and wake up those not scheduled.
+	std::map<int, ForwardingMsgStart *>::iterator it;
+	for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
+	{
+		ForwardingMsgStart * forwardingMsg = it->second;
+		int cid = forwardingMsg->getContactId();
+		if (!sdr_.isBundleForContact(cid))
+			routing->refreshForwarding(contactPlan_.getContactById(cid));
+		if (!forwardingMsg->isScheduled())
+		{
+			scheduleAt(simTime(), forwardingMsg);
+		}
+	}
 }
 
 void Dtn::setOnFault(bool onFault)
@@ -441,5 +449,4 @@ void Dtn::update(void)
 	// update srd size text
 	graphicsModule->setBundlesInSdr(sdr_.getBundlesCountInSdr());
 }
-
 

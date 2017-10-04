@@ -67,6 +67,7 @@ private:
 
 	int eid_;
 	bool onFault = false;
+	bool simpleCustodyModel_;
 
 	// Pointer to grahics module
 	Graphics *graphicsModule;

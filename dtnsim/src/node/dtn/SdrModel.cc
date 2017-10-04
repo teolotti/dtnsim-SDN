@@ -21,6 +21,11 @@ void SdrModel::setEid(int eid)
 	this->eid_ = eid;
 }
 
+void SdrModel::setSize(int size)
+{
+	this->size_ = size;
+}
+
 void SdrModel::setNodesNumber(int nodesNumber)
 {
 	this->nodesNumber_ = nodesNumber;
@@ -31,8 +36,17 @@ void SdrModel::setContactPlan(ContactPlan *contactPlan)
 	this->contactPlan_ = contactPlan;
 }
 
-void SdrModel::enqueueBundleToContact(BundlePkt * bundle, int contactId)
+bool SdrModel::enqueueBundleToContact(BundlePkt * bundle, int contactId)
 {
+	// if there is not enough space in sdr, the bundle is deleted
+	// if another behaviour is required, the simpleCustodyModel should be used
+	// to avoid bundle deletions
+	if(!(this->isSdrFreeSpace(bundle->getByteLength())))
+	{
+		delete bundle;
+		return false;
+	}
+
 	// Check is queue exits, if not, create it. Add bundle to queue.
 	map<int, list<BundlePkt *> >::iterator it = bundlesQueue_.find(contactId);
 	if (it != bundlesQueue_.end())
@@ -46,7 +60,9 @@ void SdrModel::enqueueBundleToContact(BundlePkt * bundle, int contactId)
 		bundlesQueue_[contactId] = q;
 	}
 
-	bundlesNumber_++; notify();
+	bundlesNumber_++;
+	notify();
+	return true;
 }
 
 bool SdrModel::isBundleForContact(int contactId)
@@ -258,4 +274,27 @@ BundlePkt * SdrModel::getEnqueuedBundle(long bundleId)
 			return *it;
 
 	return NULL;
+}
+
+// Check if there is free space in sdr for a new packet
+bool SdrModel::isSdrFreeSpace(int sizeNewPacket)
+{
+	bool isSdrFreeSpace = true;
+	if(this->size_ == 0)
+	{
+		return isSdrFreeSpace;
+	}
+
+	int bytesStoredInSdr = this->getBytesStoredInSdr();
+
+	if (bytesStoredInSdr + sizeNewPacket <= this->size_)
+	{
+		isSdrFreeSpace = true;
+	}
+	else
+	{
+		isSdrFreeSpace = false;
+	}
+
+	return isSdrFreeSpace;
 }
