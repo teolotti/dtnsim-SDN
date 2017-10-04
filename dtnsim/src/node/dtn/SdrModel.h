@@ -30,9 +30,10 @@ public:
 	virtual void setEid(int eid);
 	virtual void setNodesNumber(int nodesNumber);
 	virtual void setContactPlan(ContactPlan *contactPlan);
+	virtual void setSize(int size);
 
 	// Enqueue and dequeue from contact
-	virtual void enqueueBundleToContact(BundlePkt * bundle, int contactId);
+	virtual bool enqueueBundleToContact(BundlePkt * bundle, int contactId);
 	virtual bool isBundleForContact(int contactId);
 	virtual BundlePkt * getNextBundleForContact(int contactId);
 	virtual void popNextBundleForContact(int contactId);
@@ -55,7 +56,13 @@ public:
 	// Erase memory
 	virtual void freeSdr(int eid);
 
+	// Check if there is free space in sdr for a new packet
+	bool isSdrFreeSpace(int sizeNewPacket);
+
 private:
+
+	// capacity of sdr in bytes
+	int size_;
 
 	int eid_;
 	int nodesNumber_;
