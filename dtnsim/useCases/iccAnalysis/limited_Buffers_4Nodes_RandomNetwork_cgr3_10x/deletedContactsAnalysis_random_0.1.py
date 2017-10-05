@@ -49,7 +49,7 @@ AMOUNT_OF_REPETITIONS = 10
 STEP=int(round(PERCENTAGE * 12))
 
 #[(metric, x-axis label)]
-METRICS = [("appBundleReceived:count","Delivered Bundles"),("deliveryRatio","Delivery Ratio"), ("dtnBundleSentToCom:count","Transmitted bundles"), ("appBundleReceivedDelay:mean","Mean Delay per Bundle"), ("appBundleReceivedHops:mean","Mean Hops per Bundle")]
+METRICS = [("appBundleReceived:count","Delivered Bundles"),("deliveryRatio","Delivery Ratio"), ("dtnBundleSentToCom:count","Transmitted bundles"), ("appBundleReceivedDelay:mean","Mean Delay per Bundle"), ("appBundleReceivedHops:mean","Mean Hops per Bundle"), ("sdrBundleStored:timeavg", "Mean Bundles in SDR")]
 
 def main():
     for metric in METRICS:
@@ -60,7 +60,7 @@ def main():
 
                     if(metric[0] == "deliveryRatio"):
                         f_avg_by_rep.append(receivedPacketAv2("%s/dtnsim-CP=contactPlan#2f%1.1f#_%d,faultsAware=%s"%(INPUT_PATH, density, cp,aware),MAX_DELETED_CONTACTS,AMOUNT_OF_REPETITIONS))
-                    elif( (metric[0] == "appBundleReceivedDelay:mean") or (metric[0] == "appBundleReceivedHops:mean") ):
+                    elif( (metric[0] == "appBundleReceivedDelay:mean") or (metric[0] == "appBundleReceivedHops:mean") or (metric[0] == "sdrBundleStored:timeavg")):
                         f_avg_by_rep.append(receivedPacketAv3("%s/dtnsim-CP=contactPlan#2f%1.1f#_%d,faultsAware=%s" % (INPUT_PATH, density, cp, aware),MAX_DELETED_CONTACTS, AMOUNT_OF_REPETITIONS,metric[0]))
                     else:
                         #compute average function for all repetitions of a contact plan (one contac plan average- CONTACT PLAN AVERAGE)

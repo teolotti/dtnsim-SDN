@@ -13,6 +13,7 @@ python3 NCurvas_transmitted.py
 python3 NCurvas_deliveryRatio.py
 python3 NCurvas_meanDelay.py
 python3 NCurvas_meanHops.py
+python3 NCurvas_meanBundlesInSDR.py
 
 : <<'END'
 END

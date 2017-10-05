@@ -26,7 +26,6 @@ The varriable parts in string are marked with %%. They are:
 
 OUTPUT:
 
-
 "%s/METRIC=%s-FAULTAWARE=%s-MAX_DELETED_CONTACTS=%d-.txt"%(OUTPUT_PATH,metric[0],aware,MAX_DELETED_CONTACTS)
 
 '''
@@ -50,18 +49,18 @@ AMOUNT_OF_REPETITIONS = 10
 STEP=int(round(PERCENTAGE * 12))
 
 #[(metric, x-axis label)]
-METRICS = [("appBundleReceived:count","Delivered Bundles"),("deliveryRatio","Delivery Ratio"), ("dtnBundleSentToCom:count","Transmitted bundles"), ("appBundleReceivedDelay:mean","Mean Delay per Bundle"), ("appBundleReceivedHops:mean","Mean Hops per Bundle")]
+METRICS = [("appBundleReceived:count","Delivered Bundles"),("deliveryRatio","Delivery Ratio"), ("dtnBundleSentToCom:count","Transmitted bundles"), ("appBundleReceivedDelay:mean","Mean Delay per Bundle"), ("appBundleReceivedHops:mean","Mean Hops per Bundle"), ("sdrBundleStored:timeavg", "Mean Bundles in SDR")]
 
 def main():
     for metric in METRICS:
             cmp_graph_data = []
-            for aware in ["false"]:
+            for aware in ["true", "false"]:
                 f_avg_by_rep = []
                 for cp in CP_RANGE:
 
                     if(metric[0] == "deliveryRatio"):
                         f_avg_by_rep.append(receivedPacketAv2("%s/dtnsim-CP=contactPlan#2f%1.1f#_%d,faultsAware=%s"%(INPUT_PATH, density, cp,aware),MAX_DELETED_CONTACTS,AMOUNT_OF_REPETITIONS))
-                    elif( (metric[0] == "appBundleReceivedDelay:mean") or (metric[0] == "appBundleReceivedHops:mean") ):
+                    elif( (metric[0] == "appBundleReceivedDelay:mean") or (metric[0] == "appBundleReceivedHops:mean") or (metric[0] == "sdrBundleStored:timeavg")):
                         f_avg_by_rep.append(receivedPacketAv3("%s/dtnsim-CP=contactPlan#2f%1.1f#_%d,faultsAware=%s" % (INPUT_PATH, density, cp, aware),MAX_DELETED_CONTACTS, AMOUNT_OF_REPETITIONS,metric[0]))
                     else:
                         #compute average function for all repetitions of a contact plan (one contac plan average- CONTACT PLAN AVERAGE)
@@ -89,11 +88,11 @@ def main():
                 plt.close()
 
             # plot compared results
-            #name_c1 = "CGR-MODEL-FaultsAware"
-            name_c2 = "SprayAndWait-2"
-            line_up, = plt.plot([x[0] for x in cmp_graph_data[0]], [y[1] for y in cmp_graph_data[0]], '--x', label=name_c2)
-            #line_down, = plt.plot([x[0] for x in cmp_graph_data[1]], [y[1] for y in cmp_graph_data[1]], '--x', label=name_c2)
-            plt.legend(handles=[line_up])
+            name_c1 = "CGR-MODEL-FaultsAware"
+            name_c2 = "CGR-MODEL-NonFaultsAware"
+            line_up, = plt.plot([x[0] for x in cmp_graph_data[0]], [y[1] for y in cmp_graph_data[0]], '--o', label=name_c1)
+            line_down, = plt.plot([x[0] for x in cmp_graph_data[1]], [y[1] for y in cmp_graph_data[1]], '--x', label=name_c2)
+            plt.legend(handles=[line_up, line_down])
             plt.xlabel('deleted contacts/ total contacts')
             plt.ylabel(metric[1])
             plt.grid(color='gray', linestyle='dashed')
