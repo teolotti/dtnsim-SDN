@@ -51,12 +51,12 @@ bool SdrModel::enqueueBundleToContact(BundlePkt * bundle, int contactId)
 	map<int, list<BundlePkt *> >::iterator it = bundlesQueue_.find(contactId);
 	if (it != bundlesQueue_.end())
 	{
-		it->second.push_front(bundle);
+		it->second.push_back(bundle);
 	}
 	else
 	{
 		list<BundlePkt *> q;
-		q.push_front(bundle);
+		q.push_back(bundle);
 		bundlesQueue_[contactId] = q;
 	}
 
@@ -101,7 +101,7 @@ BundlePkt * SdrModel::getNextBundleForContact(int contactId)
 	// Find and return pointer to bundle
 	list<BundlePkt *> bundlesToTx = it->second;
 
-	return bundlesToTx.back();
+	return bundlesToTx.front();
 }
 
 void SdrModel::popNextBundleForContact(int contactId)
@@ -110,7 +110,7 @@ void SdrModel::popNextBundleForContact(int contactId)
 	map<int, list<BundlePkt *> >::iterator it = bundlesQueue_.find(contactId);
 	list<BundlePkt *> bundlesToTx = it->second;
 
-	bundlesToTx.pop_back();
+	bundlesToTx.pop_front();
 
 	// Update queue after popping the bundle
 	if (!bundlesToTx.empty())
@@ -217,7 +217,7 @@ void SdrModel::freeSdr(int eid)
 	map<int, list<BundlePkt *> >::iterator it2 = bundlesQueue_.end();
 	while (it1 != it2)
 	{
-		int bundlesDeleted = 0;
+		//int bundlesDeleted = 0;
 
 		list<BundlePkt *> bundles = it1->second;
 
@@ -225,7 +225,7 @@ void SdrModel::freeSdr(int eid)
 		{
 			delete (bundles.back());
 			bundles.pop_back();
-			bundlesDeleted++;
+			//bundlesDeleted++;
 		}
 		bundlesQueue_.erase(it1++);
 	}

@@ -401,20 +401,20 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 
 void Dtn::refreshForwarding()
 {
-	// Check all on-going forwardingMsgs threads
-	// (contacts) and wake up those not scheduled.
-	std::map<int, ForwardingMsgStart *>::iterator it;
-	for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
-	{
-		ForwardingMsgStart * forwardingMsg = it->second;
-		int cid = forwardingMsg->getContactId();
-		if (!sdr_.isBundleForContact(cid))
-			routing->refreshForwarding(contactPlan_.getContactById(cid));
-		if (!forwardingMsg->isScheduled())
-		{
-			scheduleAt(simTime(), forwardingMsg);
-		}
-	}
+    // Check all on-going forwardingMsgs threads
+    // (contacts) and wake up those not scheduled.
+    std::map<int, ForwardingMsgStart *>::iterator it;
+    for (it = forwardingMsgs_.begin(); it != forwardingMsgs_.end(); ++it)
+    {
+        ForwardingMsgStart * forwardingMsg = it->second;
+        int cid = forwardingMsg->getContactId();
+        if(!sdr_.isBundleForContact(cid))
+        	//notify routing protocol that it has messages to send and contacts for routing
+                routing->refreshForwarding(contactPlan_.getContactById(cid));
+        if (!forwardingMsg->isScheduled()){
+            scheduleAt(simTime(), forwardingMsg);
+        }
+    }
 }
 
 void Dtn::setOnFault(bool onFault)

@@ -80,6 +80,11 @@ void RoutingStochastic::successfulBundleForwarded(long bundleId, Contact * conta
 	}
 }
 
+void  RoutingStochastic::refreshForwarding(Contact * c)
+{
+	routeAndQueueBundle(c);
+}
+
 /**
  * Check if it is carrying a bundle with bundleId equals to bundleId.
  */

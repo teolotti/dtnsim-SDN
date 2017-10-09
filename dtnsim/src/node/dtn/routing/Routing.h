@@ -57,6 +57,8 @@ public:
 	 */
 	virtual void contactEnd(Contact *c) = 0;
 
+	virtual void  refreshForwarding(Contact * c) = 0;
+
 	/**
 	 * Method that will be called by Dtn module when some bundle is forwarded successfully
 	 */

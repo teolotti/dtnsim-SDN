@@ -44,7 +44,7 @@ void RoutingSprayAndWait::contactEnd(Contact *c)
 		if( enqueueBundle != NULL)
 			enqueueBundle->setBundlesCopies(enqueueBundle->getBundlesCopies() + bundle->getBundlesCopies());
 		else
-			cout<<"SprayAndWait::ContactEnd(Contact * c) - It try to set bundle's copies but bundle ID = "<< bundle->getBundleId() <<" was already dequeue"<<endl;
+			cout<<"SprayAndWait::ContactEnd(Contact * c) - WARNNING: It try to set bundle's copies but bundle ID = "<< bundle->getBundleId() <<" was already dequeue."<<endl;
 		delete bundle;
 
 		//If there are more than one bundle report error and exit simulation. (For test propose)
@@ -73,10 +73,9 @@ void RoutingSprayAndWait::successfulBundleForwarded(long bundleId, Contact * con
 
 void RoutingSprayAndWait::routeAndQueueBundle(Contact *c)
 {
+	//Enqueue only one bundle per contact
 	if(sdr_->isBundleForContact(c->getId()))
-	{
 		return;
-	}
 
 	RoutingSprayAndWait * other = check_and_cast<RoutingSprayAndWait *>(check_and_cast<Dtn *>(
 																dtn_->getParentModule()->getParentModule()->getSubmodule("node", c->getDestinationEid())
@@ -86,7 +85,7 @@ void RoutingSprayAndWait::routeAndQueueBundle(Contact *c)
 	list<BundlePkt *> bundlesToOthers = list<BundlePkt *>();
 	//Check if there are bundles whose destination is currentContact's destination
 	//enqueue those bundles to this contact
-	for(list<BundlePkt *>::iterator it = carryingBundles.begin(); it != carryingBundles.end(); it++)
+	for(list<BundlePkt *>::iterator it = carryingBundles.begin(); it != carryingBundles.end(); ++it)
 	{
 		if((*it)->getDestinationEid() == c->getDestinationEid())
 		{
