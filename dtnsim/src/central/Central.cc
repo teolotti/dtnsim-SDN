@@ -55,6 +55,16 @@ void Central::initialize()
 	// Initialize topology
 	contactTopology_.parseContactPlanFile(par("contactsFile"));
 
+	// schedule dummy event to make time pass until
+	// last potential contact. This is mandatory in order for nodes
+	// finish() method to be called and collect some statistics when
+	// none contact is scheduled.
+	double topologyEndTime = contactTopology_.getContacts()->back().getEnd();
+	ContactMsg *contactMsgEnd = new ContactMsg("contactEnd", CONTACT_END_TIMER);
+	contactMsgEnd->setSchedulingPriority(CONTACT_END_TIMER);
+	scheduleAt(topologyEndTime, contactMsgEnd);
+
+
 	// emit contactsNumber statistic
 	contactsNumber = registerSignal("contactsNumber");
 	emit(contactsNumber, contactPlan_.getContacts()->size());
@@ -141,6 +151,12 @@ void Central::finish()
 			this->saveLpFlows();
 		}
 	}
+}
+
+void Central::handleMessage(cMessage * msg)
+{
+	// delete dummy msg
+	delete msg;
 }
 
 void Central::computeFlowIds()

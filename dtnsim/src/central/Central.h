@@ -20,6 +20,9 @@
 #include "dtn/routing/RoutingCgrModel350.h"
 #include "dtn/SdrModel.h"
 
+#include "MsgTypes.h"
+#include "dtnsim_m.h"
+
 using namespace omnetpp;
 using namespace std;
 
@@ -34,6 +37,7 @@ public:
 	virtual ~Central();
 	void finish();
 	virtual void initialize();
+	virtual void handleMessage(cMessage * msg);
 
 private:
 
