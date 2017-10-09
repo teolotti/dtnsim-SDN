@@ -19,6 +19,10 @@ RoutingEpidemic::~RoutingEpidemic()
 
 void RoutingEpidemic::routeAndQueueBundle(Contact *c)
 {
+	//Enqueue only one bundle per contact
+	if(sdr_->isBundleForContact(c->getId()))
+		return;
+
 	RoutingEpidemic * other = check_and_cast<RoutingEpidemic *>(check_and_cast<Dtn *>(
 																dtn_->getParentModule()->getParentModule()->getSubmodule("node", c->getDestinationEid())
 																->getSubmodule("dtn"))->getRouting());

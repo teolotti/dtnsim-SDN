@@ -38,6 +38,11 @@ void RoutingDeterministic::successfulBundleForwarded(long bundleId, Contact * c)
 
 }
 
+void  RoutingDeterministic::refreshForwarding(Contact * c)
+{
+
+}
+
 void RoutingDeterministic::contactEnd(Contact *c)
 {
 	while (sdr_->isBundleForContact(c->getId()))

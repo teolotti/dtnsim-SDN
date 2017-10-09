@@ -47,6 +47,8 @@ public:
 
 	virtual void successfulBundleForwarded(long bundleId, Contact * contact);
 
+	virtual void  refreshForwarding(Contact * c);
+
 	// This is a pure virtual method (all stochastic routing must at least
 	// implement this function)
 	virtual void routeAndQueueBundle(Contact *c) = 0;

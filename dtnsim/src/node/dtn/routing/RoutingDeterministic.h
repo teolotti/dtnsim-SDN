@@ -46,6 +46,8 @@ public:
 
 	virtual void successfulBundleForwarded(long bundleId, Contact * contact);
 
+	virtual void  refreshForwarding(Contact * c);
+
 	// This is a pure virtual method (all deterministic routing must at least
 	// implement this function)
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime) = 0;
