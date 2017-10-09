@@ -53,7 +53,6 @@ public:
 	// implement this function)
 	virtual void routeAndQueueBundle(Contact *c) = 0;
 
-	virtual void refreshForwarding(Contact *c);
 
 protected:
 	cModule * dtn_;

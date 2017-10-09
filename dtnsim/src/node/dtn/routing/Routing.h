@@ -64,8 +64,6 @@ public:
 	 */
 	virtual void successfulBundleForwarded(long bundleId, Contact * contact)=0;
 
-	virtual void refreshForwarding(Contact *c) = 0;
-
 
 protected:
 	//Endpoint id
