@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import ast
 import os
 
+#
 #OUTPUT
 FILE_OUTPUT_PATH = os.getcwd() + "/results/energyEfficiency.pdf"
 
