@@ -37,6 +37,7 @@ import matplotlib.pyplot as plt
 from functools import reduce
 import sys
 import os
+import statistics
 
 INPUT_PATH = os.getcwd() + "/resultsRandom"
 OUTPUT_PATH = os.getcwd() + "/results/results_random/1.0"
@@ -77,6 +78,7 @@ def main():
 
                 # plot results
                 plt.plot([x[0] for x in graph_data], [y[1] for y in graph_data], '--o')
+                plt.errorbar([x[0] for x in graph_data], [y[1] for y in graph_data], [t[2] for t in graph_data], linestyle='None', marker='')
                 plt.xlabel('Number of deleted contacts')
                 plt.ylabel(metric[1])
                 plt.grid(color='gray', linestyle='dashed')
@@ -191,12 +193,12 @@ Given a list of list of pairs: [[(x0,y0),...] , [(xn,yn),....]]
 returns a unique list compute as average of above functions
 '''
 def promList(llist):
-    assert len(llist) == len(CP_RANGE), "error amount of contact plans"
-    assert len(list(filter(lambda l: len(l) != len(range(0,MAX_DELETED_CONTACTS + 1,STEP)), llist))) == 0, "error MAX_DELETED_CONTACTS"
+  assert len(llist) == len(CP_RANGE), "error amount of contact plans"
+  assert len(list(filter(lambda l: len(l) != len(range(0,MAX_DELETED_CONTACTS + 1,STEP)), llist))) == 0, "error MAX_DELETED_CONTACTS"
 
-    llist = [list(map(lambda f: f[x], llist)) for x in range(len(range(0,MAX_DELETED_CONTACTS + 1,STEP)))]
-    llist = list(map(lambda l: reduce(lambda x,y: (x[0] + y[0],x[1] + y[1]),l), llist))
-    return [(x[0]/float(len(CP_RANGE)), x[1]/float(len(CP_RANGE))) for x in llist]
+  llist = [list(map(lambda f: f[x], llist)) for x in range(len(range(0,MAX_DELETED_CONTACTS + 1,STEP)))]
+  llist = list(map(lambda l: (reduce(lambda x,y: (x[0] + y[0],x[1] + y[1]),l), statistics.stdev([t[1] for t in l])), llist))
+  return [(x[0][0]/float(len(CP_RANGE)), x[0][1]/float(len(CP_RANGE)), x[1]) for x in llist]
 
 
 main()

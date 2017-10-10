@@ -50,6 +50,7 @@ def main():
     for c1,name1,color1,style1, in zip(c1s,NAME_CURVAS_1,COLOR_CURVAS_1,STYLE_CURVAS_1):
         line_up, = plt.plot([x[0] for x in c1],[y[1] for y in c1],style1, color=color1, label=name1)
         lines.append(line_up)
+        plt.errorbar([x[0] for x in c1],[y[1] for y in c1],[t[1] for t in c1],linestyle='None', marker='')
 
     plt.legend(handles= lines)
 
