@@ -59,11 +59,13 @@ void Central::initialize()
 	// last potential contact. This is mandatory in order for nodes
 	// finish() method to be called and collect some statistics when
 	// none contact is scheduled.
-	double topologyEndTime = contactTopology_.getContacts()->back().getEnd();
-	ContactMsg *contactMsgEnd = new ContactMsg("contactEnd", CONTACT_END_TIMER);
-	contactMsgEnd->setSchedulingPriority(CONTACT_END_TIMER);
-	scheduleAt(topologyEndTime, contactMsgEnd);
-
+	if (!contactTopology_.getContacts()->empty())
+	{
+		double topologyEndTime = contactTopology_.getContacts()->back().getEnd();
+		ContactMsg *contactMsgEnd = new ContactMsg("contactEnd", CONTACT_END_TIMER);
+		contactMsgEnd->setSchedulingPriority(CONTACT_END_TIMER);
+		scheduleAt(topologyEndTime, contactMsgEnd);
+	}
 
 	// emit contactsNumber statistic
 	contactsNumber = registerSignal("contactsNumber");
