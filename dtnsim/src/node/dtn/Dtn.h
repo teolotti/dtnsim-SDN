@@ -11,6 +11,7 @@
 #include <dtn/routing/RoutingDirect.h>
 #include <dtn/routing/RoutingEpidemic.h>
 #include <dtn/routing/RoutingSprayAndWait.h>
+#include <dtn/routing/RoutingCgrModel350_Proactive.h>
 #include <dtn/SdrModel.h>
 #include <cstdio>
 #include <string>

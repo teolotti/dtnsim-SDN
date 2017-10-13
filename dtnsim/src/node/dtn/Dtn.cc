@@ -125,6 +125,9 @@ void Dtn::initialize(int stage)
 			int bundlesCopies = par("bundlesCopies");
 			routing = new RoutingSprayAndWait(eid_, &sdr_, this, bundlesCopies, true);
 		}
+		else if (routeString.compare("cgrModel350_Proactive") == 0)
+			routing = new RoutingCgrModel350_Proactive(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"));
+
 		else
 		{
 			cout << "dtnsim error: unknown routing type: " << routeString << endl;
