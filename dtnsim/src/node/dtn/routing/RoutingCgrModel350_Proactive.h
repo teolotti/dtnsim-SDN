@@ -9,13 +9,13 @@
 class RoutingCgrModel350_Proactive: public RoutingDeterministic
 {
 public:
-	RoutingCgrModel350_Proactive(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug);
+	RoutingCgrModel350_Proactive(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug, cModule * dtn);
 	virtual ~RoutingCgrModel350_Proactive();
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 	virtual CgrRoute* getCgrBestRoute(BundlePkt * bundle, double simTime);
 	virtual vector<CgrRoute> getCgrRoutes(BundlePkt * bundle, double simTime);
 	virtual bool msgToMeArrive(BundlePkt * bundle);
-	//virtual void contactStart(Contact *c);
+	virtual void contactStart(Contact *c);
 
 	// stats recollection
 	int getDijkstraCalls();
@@ -31,6 +31,7 @@ private:
 	bool printDebug_ = false;
 	// The bundles this node has received as the final recipient or sent to final destination
 	list<int> deliveredBundles_;
+	cModule * dtn_;
 
 
 	/////////////////////////////////////////////////
@@ -41,7 +42,7 @@ private:
 #define MAX_XMIT_COPIES (20)
 #define	MAX_SPEED_MPH	(150000)
 
-	typedef struct
+	struct ProximateNode
 	{
 		int neighborNodeNbr;
 		int contactId; // This is not, in ION
@@ -52,7 +53,7 @@ private:
 		CgrRoute * route; // pointer to route so we can decrement capacities
 		//Scalar	overbooked; 	//Bytes needing reforward.
 		//Scalar	protected; 		//Bytes not overbooked.
-	} ProximateNode;
+	};
 
 	typedef struct
 	{
@@ -68,7 +69,7 @@ private:
 	double routeListLastEditTime = -1;
 	enum Mode {hopCount,arrivalTime};
 
-	int cgrForward(BundlePkt * bundle, double simTime, Mode mode, int excludeNeighbord);
+	ProximateNode* cgrForward(BundlePkt * bundle, double simTime, Mode mode);
 	void identifyProximateNodes(BundlePkt * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes);
 	void loadRouteList(int terminusNode, double simTime);
 

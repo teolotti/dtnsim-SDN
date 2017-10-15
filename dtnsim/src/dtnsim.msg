@@ -42,6 +42,12 @@ packet BundlePkt{
         //Spray And Wait number of copies variable
         int bundlesCopies;
         
+        //Proactive CGR Routing specific use variable 
+        // 0 to route by delivery time
+        // 1 to route by hops
+        // 2 to route by hops and delivery time (making a copy)
+        int qos;
+        
 };
 
 message TrafficGeneratorMsg{
@@ -72,6 +78,5 @@ message ForwardingMsgStart{
     int neighborEid;
     int contactId;
 };
-
 
 

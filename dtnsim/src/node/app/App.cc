@@ -118,6 +118,7 @@ void App::handleMessage(cMessage *msg)
 		bundle->setCritical(par("critical"));
 		bundle->setTtl(trafficGenMsg->getTtl());
 		bundle->setCreationTimestamp(simTime());
+		bundle->setQos(2);
 
 		// Bundle meta-data init (set by intermediate nodes)
 		bundle->setHopCount(0);
