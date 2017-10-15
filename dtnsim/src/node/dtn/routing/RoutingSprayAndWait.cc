@@ -61,10 +61,10 @@ void RoutingSprayAndWait::contactEnd(Contact *c)
  * if that happens, it deletes this from bundles queue since there is no sense
  * in carrying a delivered to destination bundle.
  */
-void RoutingSprayAndWait::successfulBundleForwarded(long bundleId, Contact * contact)
+void RoutingSprayAndWait::successfulBundleForwarded(long bundleId, Contact * contact,  bool sentToDestination)
 {
 	routeAndQueueBundle(contact);
-	RoutingStochastic::successfulBundleForwarded(bundleId, contact);
+	RoutingStochastic::successfulBundleForwarded(bundleId, contact, sentToDestination);
 
 }
 

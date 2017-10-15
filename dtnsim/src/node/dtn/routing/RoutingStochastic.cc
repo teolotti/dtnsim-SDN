@@ -68,7 +68,7 @@ void RoutingStochastic::contactEnd(Contact *c)
  * if that happens, it deletes this from bundles queue since there is no sense
  * in carrying a delivered to destination bundle.
  */
-void RoutingStochastic::successfulBundleForwarded(long bundleId, Contact * contact)
+void RoutingStochastic::successfulBundleForwarded(long bundleId, Contact * contact,  bool sentToDestination)
 {
 	//Check if bundle was deliver to its final destination.
 	//Note it is necessary to check if bundle is enqueue since bundle could be sent

@@ -37,7 +37,7 @@ public:
 	virtual ~RoutingSprayAndWait();
 	virtual void msgToOtherArrive(BundlePkt * bundle, double simTime);
 	virtual void contactEnd(Contact *c);
-	virtual void successfulBundleForwarded(long bundleId, Contact * contact);
+	virtual void successfulBundleForwarded(long bundleId, Contact * contact, bool sentToDestination);
 	virtual void routeAndQueueBundle(Contact *c);
 
 private:

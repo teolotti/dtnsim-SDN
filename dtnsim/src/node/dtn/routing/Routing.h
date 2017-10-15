@@ -62,7 +62,7 @@ public:
 	/**
 	 * Method that will be called by Dtn module when some bundle is forwarded successfully
 	 */
-	virtual void successfulBundleForwarded(long bundleId, Contact * contact)=0;
+	virtual void successfulBundleForwarded(long bundleId, Contact * contact, bool sentToDestination)=0;
 
 
 protected:

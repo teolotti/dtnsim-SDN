@@ -44,7 +44,7 @@ public:
 
 	virtual void contactEnd(Contact *c);
 
-	virtual void successfulBundleForwarded(long bundleId, Contact * contact);
+	virtual void successfulBundleForwarded(long bundleId, Contact * contact,  bool sentToDestination);
 
 	virtual void  refreshForwarding(Contact * c);
 

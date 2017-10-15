@@ -72,6 +72,7 @@ message ForwardingMsgEnd{
     int neighborEid;
     int contactId;
     long bundleId;
+    bool sentToDestination;
 };
 
 message ForwardingMsgStart{

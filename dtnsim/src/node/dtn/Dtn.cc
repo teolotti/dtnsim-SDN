@@ -320,6 +320,7 @@ void Dtn::handleMessage(cMessage * msg)
 						forwardingMsgEnd->setNeighborEid(neighborEid);
 						forwardingMsgEnd->setContactId(contactId);
 						forwardingMsgEnd->setBundleId(bundle->getBundleId());
+						forwardingMsgEnd->setSentToDestination(neighborEid == bundle->getDestinationEid());
 						scheduleAt(simTime() + txDuration, forwardingMsgEnd);
 					}
 				}
@@ -345,7 +346,7 @@ void Dtn::handleMessage(cMessage * msg)
 		int contactId = forwardingMsgEnd->getContactId();
 		Contact * contact = contactTopology_.getContactById(contactId);
 
-		routing->successfulBundleForwarded(bundleId, contact);
+		routing->successfulBundleForwarded(bundleId, contact, forwardingMsgEnd->getSentToDestination());
 		delete forwardingMsgEnd;
 	}
 }

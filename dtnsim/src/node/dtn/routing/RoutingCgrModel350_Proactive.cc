@@ -41,6 +41,7 @@ void RoutingCgrModel350_Proactive::routeAndQueueBundle(BundlePkt * bundle, doubl
 					<< contactPlan_->getContactById(selectedNeighbor->contactId)->getResidualVolume() << "Bytes) arrivalConf:" << selectedNeighbor->confidence << " arrivalT:" << selectedNeighbor->arrivalTime << " hopCnt:"
 					<< selectedNeighbor->hopCount << " forfT:" << selectedNeighbor->forfeitTime << endl;
 			enqueueToNeighbor(bundle, selectedNeighbor);
+			delete selectedNeighbor;
 		}
 
 	}
@@ -77,6 +78,8 @@ void RoutingCgrModel350_Proactive::routeAndQueueBundle(BundlePkt * bundle, doubl
 					<< selectedNeighborAT->hopCount << " forfT:" << selectedNeighborAT->forfeitTime << endl;
 			enqueueToNeighbor(bundle, selectedNeighborAT);
 
+			delete selectedNeighborAT;
+			delete selectedNeighborH;
 			return;
 		}
 		else{
@@ -94,6 +97,9 @@ void RoutingCgrModel350_Proactive::routeAndQueueBundle(BundlePkt * bundle, doubl
 					<< contactPlan_->getContactById(selectedNeighborH->contactId)->getResidualVolume() << "Bytes) arrivalConf:" << selectedNeighborH->confidence << " arrivalT:" << selectedNeighborH->arrivalTime << " hopCnt:"
 					<< selectedNeighborH->hopCount << " forfT:" << selectedNeighborH->forfeitTime << endl;
 			enqueueToNeighbor(bundleCopy, selectedNeighborH);
+
+			delete selectedNeighborAT;
+			delete selectedNeighborH;
 		}
 	}
 	else
@@ -240,7 +246,7 @@ RoutingCgrModel350_Proactive::ProximateNode* RoutingCgrModel350_Proactive::cgrFo
 	if (selectedNeighbor == NULL)
 		return selectedNeighbor;
 	else{
-		ProximateNode * res = (ProximateNode *) malloc(sizeof(ProximateNode));
+		ProximateNode * res = new ProximateNode;
 		*res = *selectedNeighbor;
 		return res;
 	}
@@ -961,8 +967,18 @@ void RoutingCgrModel350_Proactive::contactStart(Contact *c)
 		sdr_->enqueueBundleToContact(*it, c->getId());
 }
 
+/***
+ * If bundle successful forwarded is delivered to its destination,
+ * remember that to avoid re-send bundle
+ */
+void RoutingCgrModel350_Proactive::successfulBundleForwarded(long bundleId, Contact * contact,  bool sentToDestination)
+{
+	if(sentToDestination)
+		deliveredBundles_.push_back(bundleId);
+}
+
 /**
- * Check if bundleId has been delivered to App.
+ * Check if bundleId has been delivered to App or its destination.
  */
 bool RoutingCgrModel350_Proactive::isDeliveredBundle(long bundleId)
 {

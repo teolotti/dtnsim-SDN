@@ -33,7 +33,7 @@ void RoutingDeterministic::contactStart(Contact *c)
 
 }
 
-void RoutingDeterministic::successfulBundleForwarded(long bundleId, Contact * c)
+void RoutingDeterministic::successfulBundleForwarded(long bundleId, Contact * c,  bool sentToDestination)
 {
 
 }

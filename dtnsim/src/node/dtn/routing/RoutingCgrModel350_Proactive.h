@@ -16,6 +16,8 @@ public:
 	virtual vector<CgrRoute> getCgrRoutes(BundlePkt * bundle, double simTime);
 	virtual bool msgToMeArrive(BundlePkt * bundle);
 	virtual void contactStart(Contact *c);
+	virtual void successfulBundleForwarded(long bundleId, Contact * contact,  bool sentToDestination);
+
 
 	// stats recollection
 	int getDijkstraCalls();
