@@ -72,11 +72,11 @@ private:
 	enum Mode {hopCount,arrivalTime};
 
 	ProximateNode* cgrForward(BundlePkt * bundle, double simTime, Mode mode);
-	void identifyProximateNodes(BundlePkt * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes);
+	void identifyProximateNodes(BundlePkt * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes, Mode mode);
 	void loadRouteList(int terminusNode, double simTime);
 
 	void findNextBestRoute(Contact * rootContact, int terminusNode, CgrRoute * route);
-	void tryRoute(BundlePkt * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes);
+	void tryRoute(BundlePkt * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes, Mode mode);
 	void recomputeRouteForContact();
 	void enqueueToNeighbor(BundlePkt * bundle, ProximateNode * selectedNeighbor);
 	void enqueueToLimbo(BundlePkt * bundle);

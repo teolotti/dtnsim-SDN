@@ -137,7 +137,7 @@ RoutingCgrModel350_Proactive::ProximateNode* RoutingCgrModel350_Proactive::cgrFo
 
 	// Populate proximateNodes
 	// cout << "  calling identifyProximateNodes: " << endl;
-	identifyProximateNodes(bundle, simTime, excludedNodes, &proximateNodes);
+	identifyProximateNodes(bundle, simTime, excludedNodes, &proximateNodes, mode);
 
 	// TODO: send critical bundle to all proximateNodes
 	if (bundle->getCritical())
@@ -253,7 +253,7 @@ RoutingCgrModel350_Proactive::ProximateNode* RoutingCgrModel350_Proactive::cgrFo
 }
 
 
-void RoutingCgrModel350_Proactive::identifyProximateNodes(BundlePkt * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes)
+void RoutingCgrModel350_Proactive::identifyProximateNodes(BundlePkt * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes, Mode mode)
 {
 	int terminusNode = bundle->getDestinationEid();
 
@@ -340,11 +340,11 @@ void RoutingCgrModel350_Proactive::identifyProximateNodes(BundlePkt * bundle, do
 		// If we got to this point, the route might be
 		// considered. However, some final tests must be
 		// donde before evaluating the node for the proxNodes.
-		tryRoute(bundle, &(*it), proximateNodes);
+		tryRoute(bundle, &(*it), proximateNodes, mode);
 	}
 }
 
-void RoutingCgrModel350_Proactive::tryRoute(BundlePkt * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes)
+void RoutingCgrModel350_Proactive::tryRoute(BundlePkt * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes, Mode mode)
 {
 
 	// First, ion test if outduct is blocked,
@@ -365,65 +365,135 @@ void RoutingCgrModel350_Proactive::tryRoute(BundlePkt * bundle, CgrRoute * route
 		return;
 	}
 
-	// Last, we go through proximateNodes to add the route
-	for (vector<ProximateNode>::iterator it = (*proximateNodes).begin(); it != (*proximateNodes).end(); ++it)
+	switch (mode)
 	{
-		if ((*it).neighborNodeNbr == route->nextHop)
+	case hopCount:
+
+		// Last, we go through proximateNodes to add the route
+		for (vector<ProximateNode>::iterator it = (*proximateNodes).begin(); it != (*proximateNodes).end(); ++it)
 		{
-			// The next-hop is already among proximateNodes.
-			// Test if we should update this node metrics.
-			// Confidence criteria to be removed in post 3.5.0
-			if (route->confidence > (*it).confidence)
+			if ((*it).neighborNodeNbr == route->nextHop)
 			{
-				//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
-				(*it).confidence = route->confidence;
-				(*it).arrivalTime = route->arrivalTime;
-				(*it).hopCount = route->hops.size();
-				(*it).forfeitTime = route->toTime;
-				(*it).contactId = route->hops[0]->getId();
-				(*it).route = route;
-			}
-			else if (route->confidence < (*it).confidence)
-			{
-				//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival confidence" << endl;
+				// The next-hop is already among proximateNodes.
+				// Test if we should update this node metrics.
+				// Confidence criteria to be removed in post 3.5.0
+				if (route->confidence > (*it).confidence)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).confidence = route->confidence;
+					(*it).arrivalTime = route->arrivalTime;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->confidence < (*it).confidence)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival confidence" << endl;
+					return;
+				}
+				else if (route->hops.size() < (*it).hopCount)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->hops.size() > (*it).hopCount)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better hop count" << endl;
+					return;
+				}
+				else if (route->arrivalTime < (*it).arrivalTime)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).arrivalTime = route->arrivalTime;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->arrivalTime > (*it).arrivalTime)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival time" << endl;
+					return;
+				}
+				else if (route->nextHop < (*it).neighborNodeNbr)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				//cout << " route through node " << route->toNodeNbr << " in proxNodes has same metrics" << endl;
 				return;
 			}
-			else if (route->arrivalTime < (*it).arrivalTime)
+		}
+
+	case arrivalTime:
+	default:
+
+		// Last, we go through proximateNodes to add the route
+		for (vector<ProximateNode>::iterator it = (*proximateNodes).begin(); it != (*proximateNodes).end(); ++it)
+		{
+			if ((*it).neighborNodeNbr == route->nextHop)
 			{
-				//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
-				(*it).arrivalTime = route->arrivalTime;
-				(*it).hopCount = route->hops.size();
-				(*it).forfeitTime = route->toTime;
-				(*it).contactId = route->hops[0]->getId();
-				(*it).route = route;
-			}
-			else if (route->arrivalTime > (*it).arrivalTime)
-			{
-				//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival time" << endl;
+				// The next-hop is already among proximateNodes.
+				// Test if we should update this node metrics.
+				// Confidence criteria to be removed in post 3.5.0
+				if (route->confidence > (*it).confidence)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).confidence = route->confidence;
+					(*it).arrivalTime = route->arrivalTime;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->confidence < (*it).confidence)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival confidence" << endl;
+					return;
+				}
+				else if (route->arrivalTime < (*it).arrivalTime)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).arrivalTime = route->arrivalTime;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->arrivalTime > (*it).arrivalTime)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival time" << endl;
+					return;
+				}
+				else if (route->hops.size() < (*it).hopCount)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->hops.size() > (*it).hopCount)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better hop count" << endl;
+					return;
+				}
+				else if (route->nextHop < (*it).neighborNodeNbr)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				//cout << " route through node " << route->toNodeNbr << " in proxNodes has same metrics" << endl;
 				return;
 			}
-			else if (route->hops.size() < (*it).hopCount)
-			{
-				//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
-				(*it).hopCount = route->hops.size();
-				(*it).forfeitTime = route->toTime;
-				(*it).contactId = route->hops[0]->getId();
-				(*it).route = route;
-			}
-			else if (route->hops.size() > (*it).hopCount)
-			{
-				//cout << " route through node " << route->toNodeNbr << " in proxNodes has better hop count" << endl;
-				return;
-			}
-			else if (route->nextHop < (*it).neighborNodeNbr)
-			{
-				//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
-				(*it).forfeitTime = route->toTime;
-				(*it).contactId = route->hops[0]->getId();
-				(*it).route = route;
-			}
-			//cout << " route through node " << route->toNodeNbr << " in proxNodes has same metrics" << endl;
-			return;
 		}
 	}
 
@@ -802,7 +872,7 @@ CgrRoute* RoutingCgrModel350_Proactive::getCgrBestRoute(BundlePkt * bundle, doub
 
 	// Populate proximateNodes
 	// cout << "  calling identifyProximateNodes: " << endl;
-	identifyProximateNodes(bundle, simTime, excludedNodes, &proximateNodes);
+	identifyProximateNodes(bundle, simTime, excludedNodes, &proximateNodes, arrivalTime);
 
 	// TODO: send critical bundle to all proximateNodes
 	if (bundle->getCritical())
