@@ -39,7 +39,7 @@ public:
 	virtual void popNextBundleForContact(int contactId);
 
 	//Enqueue and dequeue carrying bundles (non routed)
-	virtual void enqueueBundle(BundlePkt * bundle);
+	virtual bool enqueueBundle(BundlePkt * bundle);
 	virtual void removeBundle(long bundleId);
 	virtual list<BundlePkt *> getCarryingBundles();
 
@@ -66,11 +66,13 @@ private:
 
 	int eid_;
 	int nodesNumber_;
-
+	int bytesStored_;
 
 	ContactPlan *contactPlan_;
 	map<int, list<BundlePkt *> > bundlesQueue_;
-	int bundlesNumber_; //Amount of bundles enqueued in sdr_. It considers all contacts (i.e contact 0 is included)
+	list<BundlePkt *> carriedBundles_;
+	int bundlesNumber_; //Amount of bundles enqueued in sdr_ + carriedBundles_. It considers all contacts (i.e contact 0 is included)
+
 };
 
 

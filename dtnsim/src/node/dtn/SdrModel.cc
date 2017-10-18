@@ -10,6 +10,7 @@
 SdrModel::SdrModel()
 {
 	bundlesNumber_ = 0;
+	bytesStored_ = 0;
 }
 
 SdrModel::~SdrModel()
@@ -39,7 +40,7 @@ void SdrModel::setContactPlan(ContactPlan *contactPlan)
 bool SdrModel::enqueueBundleToContact(BundlePkt * bundle, int contactId)
 {
 	// if there is not enough space in sdr, the bundle is deleted
-	// if another behaviour is required, the simpleCustodyModel should be used
+	// if another behavior is required, the simpleCustodyModel should be used
 	// to avoid bundle deletions
 	if(!(this->isSdrFreeSpace(bundle->getByteLength())))
 	{
@@ -61,6 +62,7 @@ bool SdrModel::enqueueBundleToContact(BundlePkt * bundle, int contactId)
 	}
 
 	bundlesNumber_++;
+	bytesStored_ += bundle->getByteLength();
 	notify();
 	return true;
 }
@@ -110,6 +112,7 @@ void SdrModel::popNextBundleForContact(int contactId)
 	map<int, list<BundlePkt *> >::iterator it = bundlesQueue_.find(contactId);
 	list<BundlePkt *> bundlesToTx = it->second;
 
+	int size = bundlesToTx.front()->getByteLength();
 	bundlesToTx.pop_front();
 
 	// Update queue after popping the bundle
@@ -118,16 +121,12 @@ void SdrModel::popNextBundleForContact(int contactId)
 	else
 		bundlesQueue_.erase(contactId);
 
-	bundlesNumber_--; notify();
+	bundlesNumber_--; bytesStored_ -= size; notify();
 }
 
 int SdrModel::getBundlesCountInSdr()
 {
 	return bundlesNumber_;
-//	int bundlesInSdr = 0;
-//	for (map<int, list<BundlePkt *> >::iterator it = bundlesQueue_.begin(); it != bundlesQueue_.end(); ++it)
-//		bundlesInSdr += (*it).second.size();
-//	return bundlesInSdr;
 }
 
 int SdrModel::getBundlesCountInLimbo()
@@ -148,17 +147,7 @@ int SdrModel::getBundlesCountInContact(int cid)
 
 int SdrModel::getBytesStoredInSdr()
 {
-	int bytesStoredInSdr = 0;
-	for (map<int, list<BundlePkt *> >::iterator it = bundlesQueue_.begin(); it != bundlesQueue_.end(); ++it)
-	{
-		list<BundlePkt *>::iterator ii1 = (*it).second.begin();
-		list<BundlePkt *>::iterator ii2 = (*it).second.end();
-		for (; ii1 != ii2; ++ii1)
-		{
-			bytesStoredInSdr += (*ii1)->getByteLength();
-		}
-	}
-	return bytesStoredInSdr;
+	return bytesStored_;
 }
 
 int SdrModel::getBytesStoredToNeighbor(int eid)
@@ -217,59 +206,79 @@ void SdrModel::freeSdr(int eid)
 	map<int, list<BundlePkt *> >::iterator it2 = bundlesQueue_.end();
 	while (it1 != it2)
 	{
-		//int bundlesDeleted = 0;
-
 		list<BundlePkt *> bundles = it1->second;
 
 		while (!bundles.empty())
 		{
 			delete (bundles.back());
 			bundles.pop_back();
-			//bundlesDeleted++;
 		}
 		bundlesQueue_.erase(it1++);
 	}
-	bundlesNumber_ = 0; notify();
+
+	//delete all messages in carriedBundles
+	while(!carriedBundles_.empty())
+	{
+		delete (carriedBundles_.back());
+		carriedBundles_.pop_back();
+	}
+
+	bundlesNumber_ = 0; bytesStored_ = 0; notify();
 
 }
 
 /**
- * Enqueue bundle to limbo.
+ * Enqueue bundle to carriedBundles_.
  * */
-void SdrModel::enqueueBundle(BundlePkt * bundle)
+bool SdrModel::enqueueBundle(BundlePkt * bundle)
 {
-	this->enqueueBundleToContact(bundle, 0);
+	// if there is not enough space in sdr, the bundle is deleted
+	// if another behaviour is required, the simpleCustodyModel should be used
+	// to avoid bundle deletions
+	if(!(this->isSdrFreeSpace(bundle->getByteLength())))
+	{
+		cout<<"SDRModel::enqueuBundle(BundlePkt * bundle): Bundle exceed sdr capacity so it was not enqueue."<<endl;
+		delete bundle;
+		return false;
+	}
+
+	carriedBundles_.push_back(bundle);
+	bundlesNumber_++;
+	bytesStored_ += bundle->getByteLength();
+	notify();
+	return true;
 }
 
 /**
- * Delete bundle with bundleId from limbo if it exists.
+ * Delete bundle with bundleId from carriedBundles_ if it exists.
  * */
 void SdrModel::removeBundle(long bundleId)
 {
-	for(list<BundlePkt *>::iterator it = bundlesQueue_[0].begin(); it != bundlesQueue_[0].end();it++)
+	for(list<BundlePkt *>::iterator it = carriedBundles_.begin(); it != carriedBundles_.end();it++)
 		if((*it)->getBundleId() == bundleId)
 		{
+			int size = (*it)->getByteLength();
 			delete (*it);
-			bundlesQueue_[0].erase(it);
-			bundlesNumber_--; notify();
+			carriedBundles_.erase(it);
+			bundlesNumber_--; bytesStored_ -= size; notify();
 			break;
 		}
 }
 
 /**
- * Returns bundles stored in limbo.
+ * Returns bundles which current node is carrying.
  */
 list<BundlePkt *> SdrModel::getCarryingBundles(){
-	return bundlesQueue_[0];
+	return carriedBundles_;
 }
 
 /**
-* Look in limbo if there is a bundle with bundleId, if exist its returns a pointer to this bundle. Otherwise
+* Look in carriedBundles_ if there is a bundle with bundleId, if exist its returns a pointer to this bundle. Otherwise
 * a null pointer is returned.
 */
 BundlePkt * SdrModel::getEnqueuedBundle(long bundleId)
 {
-	for(list<BundlePkt *>::iterator it = bundlesQueue_[0].begin(); it != bundlesQueue_[0].end();it++)
+	for(list<BundlePkt *>::iterator it = carriedBundles_.begin(); it != carriedBundles_.end();it++)
 		if((*it)->getBundleId())
 			return *it;
 
@@ -279,22 +288,8 @@ BundlePkt * SdrModel::getEnqueuedBundle(long bundleId)
 // Check if there is free space in sdr for a new packet
 bool SdrModel::isSdrFreeSpace(int sizeNewPacket)
 {
-	bool isSdrFreeSpace = true;
 	if(this->size_ == 0)
-	{
-		return isSdrFreeSpace;
-	}
-
-	int bytesStoredInSdr = this->getBytesStoredInSdr();
-
-	if (bytesStoredInSdr + sizeNewPacket <= this->size_)
-	{
-		isSdrFreeSpace = true;
-	}
+		return true;
 	else
-	{
-		isSdrFreeSpace = false;
-	}
-
-	return isSdrFreeSpace;
+		return (bytesStored_ + sizeNewPacket <= this->size_)? true : false;
 }
