@@ -8,7 +8,7 @@ The simulator is still under development: this is a beta version. Nonetheless, f
 
 ### Basic Installation ###
 
-* Download [Omnet++](https://omnetpp.org/omnetpp). DTNSIM was tested on version 5.0, but should work in newer versions as well.
+* Download [Omnet++](https://omnetpp.org/omnetpp). DTNSIM was tested on version 5.1, but should version 5.0 as well.
 * Import the DTNSIM repository from the Omnet++ IDE (File->Import->Projects from Git->Clone URI).
 * Build DTNSIM project.
 
