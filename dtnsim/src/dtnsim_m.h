@@ -33,6 +33,7 @@
  * {
  *     // Bundle Protocol fields (set by source node)
  *     ////////////////////////////////////////////////
+ *     long bundleId;
  *     int sourceEid;
  *     int destinationEid;
  *     bool critical;
@@ -54,12 +55,23 @@
  *     // Probabilistic routing meta-data
  *     int xmitCopiesCount;
  *     double dlvConfidence;
+ * 
+ *     //Spray And Wait number of copies variable
+ *     int bundlesCopies;
+ * 
+ *     //Proactive CGR Routing specific use variable 
+ *     // 0 to route by delivery time
+ *     // 1 to route by hops
+ *     // 2 to route by hops and delivery time (making a copy)
+ *     int qos;
+ * 
  * }
  * </pre>
  */
 class BundlePkt : public ::omnetpp::cPacket
 {
   protected:
+    long bundleId;
     int sourceEid;
     int destinationEid;
     bool critical;
@@ -73,6 +85,8 @@ class BundlePkt : public ::omnetpp::cPacket
     intList visitedNodes;
     int xmitCopiesCount;
     double dlvConfidence;
+    int bundlesCopies;
+    int qos;
 
   private:
     void copy(const BundlePkt& other);
@@ -91,6 +105,8 @@ class BundlePkt : public ::omnetpp::cPacket
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
     // field getter/setter methods
+    virtual long getBundleId() const;
+    virtual void setBundleId(long bundleId);
     virtual int getSourceEid() const;
     virtual void setSourceEid(int sourceEid);
     virtual int getDestinationEid() const;
@@ -119,13 +135,17 @@ class BundlePkt : public ::omnetpp::cPacket
     virtual void setXmitCopiesCount(int xmitCopiesCount);
     virtual double getDlvConfidence() const;
     virtual void setDlvConfidence(double dlvConfidence);
+    virtual int getBundlesCopies() const;
+    virtual void setBundlesCopies(int bundlesCopies);
+    virtual int getQos() const;
+    virtual void setQos(int qos);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const BundlePkt& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BundlePkt& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:42</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:53</tt> by nedtool.
  * <pre>
  * message TrafficGeneratorMsg
  * {
@@ -179,7 +199,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const TrafficGeneratorMsg& 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, TrafficGeneratorMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:50</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:61</tt> by nedtool.
  * <pre>
  * message ContactMsg
  * {
@@ -241,34 +261,84 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ContactMsg& obj) {obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ContactMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:60</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:71</tt> by nedtool.
  * <pre>
- * message ForwardingMsg
+ * message ForwardingMsgEnd
+ * {
+ *     int neighborEid;
+ *     int contactId;
+ *     long bundleId;
+ *     bool sentToDestination;
+ * }
+ * </pre>
+ */
+class ForwardingMsgEnd : public ::omnetpp::cMessage
+{
+  protected:
+    int neighborEid;
+    int contactId;
+    long bundleId;
+    bool sentToDestination;
+
+  private:
+    void copy(const ForwardingMsgEnd& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const ForwardingMsgEnd&);
+
+  public:
+    ForwardingMsgEnd(const char *name=nullptr, short kind=0);
+    ForwardingMsgEnd(const ForwardingMsgEnd& other);
+    virtual ~ForwardingMsgEnd();
+    ForwardingMsgEnd& operator=(const ForwardingMsgEnd& other);
+    virtual ForwardingMsgEnd *dup() const override {return new ForwardingMsgEnd(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual int getNeighborEid() const;
+    virtual void setNeighborEid(int neighborEid);
+    virtual int getContactId() const;
+    virtual void setContactId(int contactId);
+    virtual long getBundleId() const;
+    virtual void setBundleId(long bundleId);
+    virtual bool getSentToDestination() const;
+    virtual void setSentToDestination(bool sentToDestination);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const ForwardingMsgEnd& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ForwardingMsgEnd& obj) {obj.parsimUnpack(b);}
+
+/**
+ * Class generated from <tt>dtnsim.msg:78</tt> by nedtool.
+ * <pre>
+ * message ForwardingMsgStart
  * {
  *     int neighborEid;
  *     int contactId;
  * }
  * </pre>
  */
-class ForwardingMsg : public ::omnetpp::cMessage
+class ForwardingMsgStart : public ::omnetpp::cMessage
 {
   protected:
     int neighborEid;
     int contactId;
 
   private:
-    void copy(const ForwardingMsg& other);
+    void copy(const ForwardingMsgStart& other);
 
   protected:
     // protected and unimplemented operator==(), to prevent accidental usage
-    bool operator==(const ForwardingMsg&);
+    bool operator==(const ForwardingMsgStart&);
 
   public:
-    ForwardingMsg(const char *name=nullptr, short kind=0);
-    ForwardingMsg(const ForwardingMsg& other);
-    virtual ~ForwardingMsg();
-    ForwardingMsg& operator=(const ForwardingMsg& other);
-    virtual ForwardingMsg *dup() const override {return new ForwardingMsg(*this);}
+    ForwardingMsgStart(const char *name=nullptr, short kind=0);
+    ForwardingMsgStart(const ForwardingMsgStart& other);
+    virtual ~ForwardingMsgStart();
+    ForwardingMsgStart& operator=(const ForwardingMsgStart& other);
+    virtual ForwardingMsgStart *dup() const override {return new ForwardingMsgStart(*this);}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
@@ -279,8 +349,8 @@ class ForwardingMsg : public ::omnetpp::cMessage
     virtual void setContactId(int contactId);
 };
 
-inline void doParsimPacking(omnetpp::cCommBuffer *b, const ForwardingMsg& obj) {obj.parsimPack(b);}
-inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ForwardingMsg& obj) {obj.parsimUnpack(b);}
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const ForwardingMsgStart& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ForwardingMsgStart& obj) {obj.parsimUnpack(b);}
 
 
 #endif // ifndef __DTNSIM_M_H

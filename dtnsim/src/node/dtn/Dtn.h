@@ -5,9 +5,14 @@
 #include <dtn/routing/Routing.h>
 #include <dtn/routing/RoutingCgrIon350.h>
 #include <dtn/routing/RoutingCgrModel350.h>
+#include <dtn/routing/RoutingCgrModel350_3.h>
 #include <dtn/routing/RoutingCgrModelRev17.h>
 #include <dtn/routing/RoutingCgrModelYen.h>
 #include <dtn/routing/RoutingDirect.h>
+#include <dtn/routing/RoutingEpidemic.h>
+#include <dtn/routing/RoutingSprayAndWait.h>
+#include <dtn/routing/RoutingCgrModel350_Proactive.h>
+#include <dtn/routing/RoutingCgrModel350_Probabilistic.h>
 #include <dtn/SdrModel.h>
 #include <cstdio>
 #include <string>
@@ -27,6 +32,7 @@
 #include "utils/TopologyUtils.h"
 #include "utils/RouterUtils.h"
 #include "utils/ContactPlanUtils.h"
+#include "utils/Observer.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -37,7 +43,7 @@ using namespace std;
 
 
 
-class Dtn: public cSimpleModule
+class Dtn: public cSimpleModule, public Observer
 {
 public:
 	Dtn();
@@ -48,6 +54,9 @@ public:
 	ContactPlan * getContactPlanPointer();
 	virtual void setContactPlan(ContactPlan &contactPlan);
 	virtual void setContactTopology(ContactPlan &contactTopology);
+	virtual Routing * getRouting();
+
+	virtual void update(void);
 
 protected:
 	virtual void initialize(int stage);
@@ -61,12 +70,13 @@ private:
 
 	int eid_;
 	bool onFault = false;
+	bool simpleCustodyModel_;
 
 	// Pointer to grahics module
 	Graphics *graphicsModule;
 
 	// Forwarding threads
-	map<int, ForwardingMsg *> forwardingMsgs_;
+	map<int, ForwardingMsgStart *> forwardingMsgs_;
 
 	// Routing and storage
 	Routing * routing;

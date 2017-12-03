@@ -58,9 +58,39 @@ void App::initialize()
 		}
 	}
 
+	//@NANDO: DUMMY CODE FOR GENERATE TRAFFIC
+	string externalEventsFile = par("externalTrafficEvents");
+	if(externalEventsFile.compare("") != 0)
+	{
+		double ts;
+		string name;
+		char c;
+		int from, to;
+		string size;
+
+		ifstream infile(externalEventsFile);
+		while (infile >> ts >> c >> name >> from >> to >> size){
+			if( from+1 == this->eid_)
+			{
+				TrafficGeneratorMsg * trafficGenMsg = new TrafficGeneratorMsg("trafGenMsg");
+				trafficGenMsg->setSchedulingPriority(TRAFFIC_TIMER);
+				trafficGenMsg->setKind(TRAFFIC_TIMER);
+				trafficGenMsg->setBundlesNumber(1);
+				trafficGenMsg->setDestinationEid(to+1);
+				trafficGenMsg->setSize(pow(10,6));
+				//trafficGenMsg->setInterval(par("interval").doubleValue());
+				trafficGenMsg->setTtl(10000);
+				scheduleAt(ts, trafficGenMsg);
+			}
+		}
+	}
+	//@NANDO: END DUMMY CODE FOR GENERATE TRAFFIC
+
+
 	// Register signals
 	appBundleSent = registerSignal("appBundleSent");
 	appBundleReceived = registerSignal("appBundleReceived");
+	appBundleReceivedHops = registerSignal("appBundleReceivedHops");
 	appBundleReceivedDelay = registerSignal("appBundleReceivedDelay");
 
 }
@@ -76,6 +106,7 @@ void App::handleMessage(cMessage *msg)
 		// Bundle properties
 		char bundleName[10];
 		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, trafficGenMsg->getDestinationEid(), (int) bundle->getId());
+		bundle->setBundleId(bundle->getId());
 		bundle->setName(bundleName);
 		bundle->setBitLength(trafficGenMsg->getSize() * 8);
 		bundle->setByteLength(trafficGenMsg->getSize());
@@ -87,6 +118,7 @@ void App::handleMessage(cMessage *msg)
 		bundle->setCritical(par("critical"));
 		bundle->setTtl(trafficGenMsg->getTtl());
 		bundle->setCreationTimestamp(simTime());
+		bundle->setQos(2);
 
 		// Bundle meta-data init (set by intermediate nodes)
 		bundle->setHopCount(0);
@@ -104,7 +136,6 @@ void App::handleMessage(cMessage *msg)
 		else
 			scheduleAt(simTime() + trafficGenMsg->getInterval(), msg);
 
-		// Send bundle to Dtn
 		send(bundle, "gateToDtn$o");
 		emit(appBundleSent, true);
 
@@ -118,6 +149,7 @@ void App::handleMessage(cMessage *msg)
 		if (this->eid_ == destinationEid)
 		{
 			emit(appBundleReceived, true);
+			emit(appBundleReceivedHops, bundle->getHopCount());
 			emit(appBundleReceivedDelay, simTime() - bundle->getCreationTimestamp());
 			delete msg;
 		}

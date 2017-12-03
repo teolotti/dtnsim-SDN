@@ -8,10 +8,8 @@
 #include <dtn/routing/RoutingDirect.h>
 
 RoutingDirect::RoutingDirect(int eid, SdrModel * sdr, ContactPlan * contactPlan)
+	: RoutingDeterministic(eid, sdr, contactPlan)
 {
-	eid_ = eid;
-	sdr_ = sdr;
-	contactPlan_ = contactPlan;
 }
 
 RoutingDirect::~RoutingDirect()

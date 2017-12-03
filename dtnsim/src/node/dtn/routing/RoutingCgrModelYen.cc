@@ -8,10 +8,8 @@
 #include <dtn/routing/RoutingCgrModelYen.h>
 
 RoutingCgrModelYen::RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug)
+	: RoutingDeterministic(eid, sdr, contactPlan)
 {
-	eid_ = eid;
-	sdr_ = sdr;
-	contactPlan_ = contactPlan;
 	printDebug_ = printDebug;
 }
 

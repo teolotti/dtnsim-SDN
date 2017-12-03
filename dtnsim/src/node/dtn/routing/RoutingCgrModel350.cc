@@ -1,11 +1,8 @@
-
 #include <dtn/routing/RoutingCgrModel350.h>
 
-RoutingCgrModel350::RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug)
+RoutingCgrModel350::RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug) :
+		RoutingDeterministic(eid, sdr, contactPlan)
 {
-	eid_ = eid;
-	sdr_ = sdr;
-	contactPlan_ = contactPlan;
 	printDebug_ = printDebug;
 }
 
@@ -69,8 +66,9 @@ void RoutingCgrModel350::cgrForward(BundlePkt * bundle, double simTime)
 	ProximateNode * selectedNeighbor = NULL;
 	for (vector<ProximateNode>::iterator it = proximateNodes.begin(); it != proximateNodes.end(); ++it)
 	{
-		cout << "routeTable[" << bundle->getDestinationEid() << "][" << (*it).neighborNodeNbr << "]: nextHop: " << (*it).neighborNodeNbr << " (cId:" << (*it).contactId << ", resCap:" << contactPlan_->getContactById((*it).contactId)->getResidualVolume() << "Bytes) arrivalConf:" << (*it).confidence
-				<< " arrivalT:" << (*it).arrivalTime << " hopCnt:" << (*it).hopCount << " forfT:" << (*it).forfeitTime << endl;
+		cout << "routeTable[" << bundle->getDestinationEid() << "][" << (*it).neighborNodeNbr << "]: nextHop: " << (*it).neighborNodeNbr << " (cId:" << (*it).contactId << ", resCap:"
+				<< contactPlan_->getContactById((*it).contactId)->getResidualVolume() << "Bytes) arrivalConf:" << (*it).confidence << " arrivalT:" << (*it).arrivalTime << " hopCnt:" << (*it).hopCount << " forfT:" << (*it).forfeitTime
+				<< endl;
 		//cout << "routeTable[" << terminusNode << "][" << (*it).neighborNodeNbr << "]: nextHop: " << (*it).neighborNodeNbr << ", frm " << route.fromTime << " to " << (*it).arrivalTime << ", arrival time: " << route.arrivalTime << ", volume: " << route.residualVolume << "/" << route.maxVolume << "Bytes" << endl;
 
 		// If the confidence improvement is less than the minimal, continue
@@ -135,8 +133,8 @@ void RoutingCgrModel350::cgrForward(BundlePkt * bundle, double simTime)
 		// enqueueToNeighbor() function in ion
 		// cout << "  enqueueing to chosen Neighbor" << endl;
 		cout << "Best: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighbor->neighborNodeNbr << "]: nextHop: " << selectedNeighbor->neighborNodeNbr << " (cId:" << selectedNeighbor->contactId << ", resCap:"
-				<< contactPlan_->getContactById(selectedNeighbor->contactId)->getResidualVolume() << "Bytes) arrivalConf:" << selectedNeighbor->confidence << " arrivalT:" << selectedNeighbor->arrivalTime << " hopCnt:" << selectedNeighbor->hopCount << " forfT:" << selectedNeighbor->forfeitTime
-				<< endl;
+				<< contactPlan_->getContactById(selectedNeighbor->contactId)->getResidualVolume() << "Bytes) arrivalConf:" << selectedNeighbor->confidence << " arrivalT:" << selectedNeighbor->arrivalTime << " hopCnt:"
+				<< selectedNeighbor->hopCount << " forfT:" << selectedNeighbor->forfeitTime << endl;
 		enqueueToNeighbor(bundle, selectedNeighbor);
 
 		// TODO: manageOverbooking() function
@@ -192,7 +190,8 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 	{
 		tableEntriesExplored++;
 
-		cout << "*route through node:" << (*it).nextHop << ", arrivalConf:" << (*it).confidence << ", arrivalT:" << (*it).arrivalTime << ", txWin:(" << (*it).fromTime << "-" << (*it).toTime << "), maxCap:" << (*it).maxVolume << "Bytes:" << endl;
+		cout << "*route through node:" << (*it).nextHop << ", arrivalConf:" << (*it).confidence << ", arrivalT:" << (*it).arrivalTime << ", txWin:(" << (*it).fromTime << "-" << (*it).toTime << "), maxCap:" << (*it).maxVolume << "Bytes:"
+				<< endl;
 
 		// print route:
 		for (vector<Contact *>::iterator ith = (*it).hops.begin(); ith != (*it).hops.end(); ++ith)
@@ -428,7 +427,8 @@ void RoutingCgrModel350::loadRouteList(int terminusNode, double simTime)
 			}
 
 		// Record route
-		cout << "NODE "<<eid_<<", *New route found through node:" << route.nextHop << ", arrivalConf:" << route.confidence << ", arrivalT:" << route.arrivalTime << ", txWin:(" << route.fromTime << "-" << route.toTime << "), maxCap:" << route.maxVolume << "Bytes:" << endl;
+		cout << "NODE " << eid_ << ", *New route found through node:" << route.nextHop << ", arrivalConf:" << route.confidence << ", arrivalT:" << route.arrivalTime << ", txWin:(" << route.fromTime << "-" << route.toTime << "), maxCap:"
+				<< route.maxVolume << "Bytes:" << endl;
 		routeList_[terminusNode].push_back(route);
 
 		// Find limiting contact for next iteration
@@ -668,30 +668,34 @@ void RoutingCgrModel350::enqueueToLimbo(BundlePkt * bundle)
 void RoutingCgrModel350::bpEnqueue(BundlePkt * bundle, ProximateNode * selectedNeighbor)
 {
 	bundle->setNextHopEid(selectedNeighbor->neighborNodeNbr);
-	sdr_->enqueueBundleToContact(bundle, selectedNeighbor->contactId);
+	bool enqueued = sdr_->enqueueBundleToContact(bundle, selectedNeighbor->contactId);
 
-	if (selectedNeighbor->contactId != 0)
+	if (enqueued)
 	{
-		// Decrease first contact capacity:
-		selectedNeighbor->route->hops[0]->setResidualVolume(selectedNeighbor->route->hops[0]->getResidualVolume() - bundle->getByteLength());
+		if (selectedNeighbor->contactId != 0)
+		{
+			// Decrease first contact capacity:
+			selectedNeighbor->route->hops[0]->setResidualVolume(selectedNeighbor->route->hops[0]->getResidualVolume() - bundle->getByteLength());
 
-		cout << "RVol: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighbor->neighborNodeNbr << "]: new resCap: (cId:" << selectedNeighbor->contactId << ", resCap:" << contactPlan_->getContactById(selectedNeighbor->contactId)->getResidualVolume() << "Bytes)" << endl;
+			cout << "RVol: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighbor->neighborNodeNbr << "]: new resCap: (cId:" << selectedNeighbor->contactId << ", resCap:"
+					<< contactPlan_->getContactById(selectedNeighbor->contactId)->getResidualVolume() << "Bytes)" << endl;
 
-		// Decrease route capacity:
-		// It seems this does not happen in ION. In fact, the
-		// queiung process considers the local outbound capacity, which
-		// is analogous to consider the first contact capacity. However,
-		// there is chance to also consider remote contact capacity as
-		// in PA-CGR. Furthermore, the combined effect of routeList
-		// and PA-CGR need to be investigated because an update from
-		// one route might impact other routes that uses the same contacts.
-		selectedNeighbor->route->maxVolume -= bundle->getByteLength();
+			// Decrease route capacity:
+			// It seems this does not happen in ION. In fact, the
+			// queiung process considers the local outbound capacity, which
+			// is analogous to consider the first contact capacity. However,
+			// there is chance to also consider remote contact capacity as
+			// in PA-CGR. Furthermore, the combined effect of routeList
+			// and PA-CGR need to be investigated because an update from
+			// one route might impact other routes that uses the same contacts.
+			selectedNeighbor->route->maxVolume -= bundle->getByteLength();
 
-		EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued in queueId: " << selectedNeighbor->contactId << " (next hop: " << selectedNeighbor->neighborNodeNbr << ")" << endl;
-	}
-	else
-	{
-		EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued to limbo!" << endl;
+			EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued in queueId: " << selectedNeighbor->contactId << " (next hop: " << selectedNeighbor->neighborNodeNbr << ")" << endl;
+		}
+		else
+		{
+			EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued to limbo!" << endl;
+		}
 	}
 }
 
@@ -731,8 +735,9 @@ CgrRoute* RoutingCgrModel350::getCgrBestRoute(BundlePkt * bundle, double simTime
 	ProximateNode * selectedNeighbor = NULL;
 	for (vector<ProximateNode>::iterator it = proximateNodes.begin(); it != proximateNodes.end(); ++it)
 	{
-		cout << "routeTable[" << bundle->getDestinationEid() << "][" << (*it).neighborNodeNbr << "]: nextHop: " << (*it).neighborNodeNbr << " (cId:" << (*it).contactId << ", resCap:" << contactPlan_->getContactById((*it).contactId)->getResidualVolume() << "Bytes) arrivalConf:" << (*it).confidence
-				<< " arrivalT:" << (*it).arrivalTime << " hopCnt:" << (*it).hopCount << " forfT:" << (*it).forfeitTime << endl;
+		cout << "routeTable[" << bundle->getDestinationEid() << "][" << (*it).neighborNodeNbr << "]: nextHop: " << (*it).neighborNodeNbr << " (cId:" << (*it).contactId << ", resCap:"
+				<< contactPlan_->getContactById((*it).contactId)->getResidualVolume() << "Bytes) arrivalConf:" << (*it).confidence << " arrivalT:" << (*it).arrivalTime << " hopCnt:" << (*it).hopCount << " forfT:" << (*it).forfeitTime
+				<< endl;
 		//cout << "routeTable[" << terminusNode << "][" << (*it).neighborNodeNbr << "]: nextHop: " << (*it).neighborNodeNbr << ", frm " << route.fromTime << " to " << (*it).arrivalTime << ", arrival time: " << route.arrivalTime << ", volume: " << route.residualVolume << "/" << route.maxVolume << "Bytes" << endl;
 
 		// If the confidence improvement is less than the minimal, continue
@@ -814,9 +819,8 @@ vector<CgrRoute> RoutingCgrModel350::getCgrRoutes(BundlePkt * bundle, double sim
 		routeListLastEditTime = simTime;
 	}
 
-
 	map<int, vector<CgrRoute> >::iterator it = routeList_.find(terminusNode);
-	if(it != routeList_.end())
+	if (it != routeList_.end())
 	{
 		routes = it->second;
 	}
@@ -826,7 +830,6 @@ vector<CgrRoute> RoutingCgrModel350::getCgrRoutes(BundlePkt * bundle, double sim
 
 	return routes;
 }
-
 
 //////////////////////
 // Stats recollection

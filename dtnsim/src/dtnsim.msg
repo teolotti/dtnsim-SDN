@@ -16,6 +16,7 @@ packet BundlePkt{
 		////////////////////////////////////////////////    
     	// Bundle Protocol fields (set by source node)
     	////////////////////////////////////////////////
+    	long bundleId;
     	int sourceEid;
         int destinationEid;
         bool critical;
@@ -37,6 +38,16 @@ packet BundlePkt{
         // Probabilistic routing meta-data
         int xmitCopiesCount;
         double dlvConfidence;
+        
+        //Spray And Wait number of copies variable
+        int bundlesCopies;
+        
+        //Proactive CGR Routing specific use variable 
+        // 0 to route by delivery time
+        // 1 to route by hops
+        // 2 to route by hops and delivery time (making a copy)
+        int qos;
+        
 };
 
 message TrafficGeneratorMsg{
@@ -57,7 +68,14 @@ message ContactMsg{
     int destinationEid;
 };
 
-message ForwardingMsg{
+message ForwardingMsgEnd{
+    int neighborEid;
+    int contactId;
+    long bundleId;
+    bool sentToDestination;
+};
+
+message ForwardingMsgStart{
     int neighborEid;
     int contactId;
 };

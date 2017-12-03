@@ -3,10 +3,10 @@
 #define SRC_NODE_DTN_ROUTINGCGRMODEL_H_
 
 #include <dtn/routing/CgrRoute.h>
-#include <dtn/routing/Routing.h>
+#include <dtn/routing/RoutingDeterministic.h>
 #include <dtn/SdrModel.h>
 
-class RoutingCgrModel350: public Routing
+class RoutingCgrModel350: public RoutingDeterministic
 {
 public:
 	RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug);
@@ -27,9 +27,6 @@ private:
 	int tableEntriesExplored;
 
 	bool printDebug_ = false;
-	int eid_;
-	SdrModel * sdr_;
-	ContactPlan * contactPlan_;
 
 	/////////////////////////////////////////////////
 	// Ion Cgr Functions based in libcgr.c (v 3.5.0):

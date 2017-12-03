@@ -8,9 +8,12 @@ simple Dtn
 
         string routing = default("direct");
         string routingType = default("none");
+        int bundlesCopies = default(1);
+        double sContactProb = default(1.0);
         bool printRoutingDebug = default(false);
-
         bool saveBundleMap = default(false);
+        int sdrSize = default(0); // SDR Memory Size in Bytes (0 = infinite)
+        bool simpleCustodyModel = default(false);
 
         // Signals and Statistics
         @signal[dtnBundleSentToCom];

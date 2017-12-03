@@ -8,6 +8,8 @@
 #include "MsgTypes.h"
 #include "dtnsim_m.h"
 
+#include <fstream>
+#include <iostream>
 using namespace omnetpp;
 using namespace std;
 
@@ -38,6 +40,7 @@ class App : public cSimpleModule
         // Signal
         simsignal_t appBundleSent;
         simsignal_t appBundleReceived;
+        simsignal_t appBundleReceivedHops;
         simsignal_t appBundleReceivedDelay;
 
 };

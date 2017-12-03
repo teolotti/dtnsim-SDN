@@ -13,7 +13,8 @@
 
 #define BUNDLE 3
 
-#define FORWARDING_MSG 4
+#define FORWARDING_MSG_END 4
+#define FORWARDING_MSG_START 5
 
 
 #define FAULT_END_TIMER 21

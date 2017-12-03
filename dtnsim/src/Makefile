@@ -122,15 +122,23 @@ OBJS = \
     $O/node/dtn/SdrStatus.o \
     $O/node/dtn/routing/RoutingCgrIon350.o \
     $O/node/dtn/routing/RoutingCgrModel350.o \
+    $O/node/dtn/routing/RoutingCgrModel350_3.o \
+    $O/node/dtn/routing/RoutingCgrModel350_Proactive.o \
+    $O/node/dtn/routing/RoutingCgrModel350_Probabilistic.o \
     $O/node/dtn/routing/RoutingCgrModelRev17.o \
     $O/node/dtn/routing/RoutingCgrModelYen.o \
+    $O/node/dtn/routing/RoutingDeterministic.o \
     $O/node/dtn/routing/RoutingDirect.o \
+    $O/node/dtn/routing/RoutingEpidemic.o \
+    $O/node/dtn/routing/RoutingSprayAndWait.o \
+    $O/node/dtn/routing/RoutingStochastic.o \
     $O/node/fault/Fault.o \
     $O/node/graphics/Graphics.o \
     $O/utils/ContactPlanUtils.o \
     $O/utils/Lp.o \
     $O/utils/LpUtils.o \
     $O/utils/RouterUtils.o \
+    $O/utils/Subject.o \
     $O/utils/TopologyUtils.o \
     $O/dtnsim_m.o
 
@@ -180,17 +188,17 @@ endif
 # User-supplied makefile fragment(s)
 # >>>
 # inserted from file 'makefrag':
-INCLUDE_PATH += -I"/home/madoery/boost_1_63_0"
-INCLUDE_PATH += -I"/home/madoery/cplex/cplex/include"
-INCLUDE_PATH += -I"/home/madoery/cplex/concert/include"
+#INCLUDE_PATH += -I"/home/madoery/boost_1_63_0"
+#INCLUDE_PATH += -I"/home/madoery/cplex/cplex/include"
+#INCLUDE_PATH += -I"/home/madoery/cplex/concert/include"
 
 LIBS +=  -lpthread
-LIBS +=  -lconcert -lilocplex -lcplex -lm
+#LIBS +=  -lconcert -lilocplex -lcplex -lm
 
-LDFLAGS += -L"/home/madoery/cplex/cplex/lib/x86-64_sles10_4.1/static_pic"
-LDFLAGS += -L"/home/madoery/cplex/concert/lib/x86-64_sles10_4.1/static_pic"
+#LDFLAGS += -L"/home/madoery/cplex/cplex/lib/x86-64_sles10_4.1/static_pic"
+#LDFLAGS += -L"/home/madoery/cplex/concert/lib/x86-64_sles10_4.1/static_pic"
 
-COPTS += -DIL_STD=1
+#COPTS += -DIL_STD=1
 
 # <<<
 #------------------------------------------------------------------------------
