@@ -32,9 +32,10 @@ Note: DTNSIM can be used without Cplex library but the linear programming model 
 
 ## Utilization ##
 
-* Open dtnsim_demo.ini config file from the project src folder. Familiarize with the simulation parameters which are explained in the same file.
+* Open dtnsim_demo.ini config file from the use cases folder. Familiarize with the simulation parameters which are explained in the same file.
 * Run the simulation. If using Omnet++ IDE, the Tkenv environment will be started. 
 * Results (scalar and vectorial statistics) will be stored in the results folder.
+* Explore more complex scenarios from the tutorial folder in the use cases folder.
 
 Note: Nodes will remain static in the simulation visualization. Indeed, the dynamic of the network is captured in the "contact plans" which comprises a list of all time-bound communication opportunities between nodes. In other words, if simulating mobile network, the mobility should be captured in such contact plans and provided to DTNSIM as input.
 
