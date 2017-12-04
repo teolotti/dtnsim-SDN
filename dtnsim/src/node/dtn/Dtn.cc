@@ -288,15 +288,14 @@ void Dtn::handleMessage(cMessage * msg)
 
 				if ((!this->simpleCustodyModel_) || (this->simpleCustodyModel_ && neighborDtn->sdr_.isSdrFreeSpace(bundle->getByteLength())))
 				{
-					// Calculate datarate and Tx duration
+					// Calculate data rate and Tx duration
 					double dataRate = contactTopology_.getContactById(contactId)->getDataRate();
 					double txDuration = (double) bundle->getByteLength() / dataRate;
 					double linkDelay = contactTopology_.getRangeBySrcDst(eid_, neighborEid);
 
 					Contact * contact = contactTopology_.getContactById(contactId);
 
-					// if the message can be fully transmitted before the end of the contact
-					// it is effectively transmitted
+					// if the message can be fully transmitted before the end of the contact, transmit it
 					if ((simTime() + txDuration + linkDelay) <= contact->getEnd())
 					{
 						// Set bundle metadata (set by intermediate nodes)
@@ -317,6 +316,7 @@ void Dtn::handleMessage(cMessage * msg)
 						emit(sdrBundleStored, sdr_.getBundlesCountInSdr());
 						emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
 
+						// Schedule next transmission
 						scheduleAt(simTime() + txDuration, forwardingMsgStart);
 
 						// Schedule forwarding message end
@@ -336,9 +336,9 @@ void Dtn::handleMessage(cMessage * msg)
 				// fault recovery will trigger a local and remote refreshForwarding
 			}
 		}
-		// if there are no messages in the queue for this contact
 		else
 		{
+			// There are no messages in the queue for this contact
 			// Do nothing, if new data arrives, a refreshForwarding
 			// will wake up this forwarding thread
 		}
@@ -399,9 +399,6 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 		}
 		emit(sdrBundleStored, sdr_.getBundlesCountInSdr());
 		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
-
-		// update srd size text
-		//graphicsModule->setBundlesInSdr(sdr_.getBundlesCountInSdr());
 
 		// Wake-up un scheduled forwarding threads
 		this->refreshForwarding();
