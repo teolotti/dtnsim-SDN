@@ -24,6 +24,7 @@ public:
 	// Contact plan exploration functions
 	Contact *getContactById(int id);
 	vector<Contact> * getContacts();
+	vector<Contact> * getRanges();
 	vector<Contact> getContactsBySrc(int Src);
 	vector<Contact> getContactsByDst(int Dst);
 	vector<Contact> getContactsBySrcDst(int Src, int Dst);

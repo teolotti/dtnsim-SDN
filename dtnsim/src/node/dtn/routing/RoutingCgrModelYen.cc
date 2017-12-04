@@ -349,7 +349,7 @@ void RoutingCgrModelYen::tryRoute(BundlePkt * bundle, CgrRoute * route, vector<P
 void RoutingCgrModelYen::loadRouteList(int terminusNode, double simTime)
 {
 	// Create rootContact and its corresponding rootWork
-	Contact rootContact(0, 0, 0, eid_, eid_, 0, 1.0);
+	Contact rootContact(0, 0, 0, eid_, eid_, 0, 1.0, 0);
 	Work rootWork;
 	rootWork.contact = &rootContact;
 	rootWork.arrivalTime = simTime;
@@ -463,7 +463,7 @@ void RoutingCgrModelYen::loadRouteList(int terminusNode, double simTime)
 void RoutingCgrModelYen::loadRouteListYen(int terminusNode, double simTime)
 {
 	// Create rootContact and its corresponding rootWork
-	Contact rootContact(0, 0, 0, eid_, eid_, 0, 1.0);
+	Contact rootContact(0, 0, 0, eid_, eid_, 0, 1.0, 0);
 	Work rootWork;
 	rootWork.contact = &rootContact;
 	rootWork.arrivalTime = simTime;
@@ -553,10 +553,16 @@ void RoutingCgrModelYen::loadRouteListYen(int terminusNode, double simTime)
 				if (capacity < maxCapacity)
 					maxCapacity = capacity;
 
-				// Update arrival time
-				double owlt = 0;
-				double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
-				owlt += owltMargin;
+				// Get owlt (one way light time). If none found, ignore contact
+				double owlt = contactPlan_->getRangeBySrcDst((*it2)->getSourceEid(), (*it2)->getDestinationEid());
+				if (owlt == -1)
+				{
+					cout << "warning, range not available for nodes " << (*it2)->getSourceEid() << "-" << (*it2)->getDestinationEid() << ", assuming range=0" << endl;
+					owlt = 0;
+				}
+				//double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
+				//owlt += owltMargin;
+
 				if ((*it2)->getStart() < arrivalTime)
 					arrivalTime = arrivalTime; // no changes
 				else

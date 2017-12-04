@@ -1,0 +1,17 @@
+m horizon  +0
+
+# Contacts 
+a contact +0 +1000 1 2 10
+a contact +0 +1000 2 1 10
+a contact +0 +1000 2 3 10
+a contact +0 +1000 3 2 10
+a contact +0 +1000 3 4 10
+a contact +0 +1000 4 3 10
+
+a range +0 +1000 1 2 100
+a range +0 +1000 2 3 200
+a range +0 +1000 3 4 300
+
+
+
+

@@ -3,6 +3,7 @@
 
 #include <dtn/ContactPlan.h>
 #include <dtn/Dtn.h>
+#include <com/Com.h>
 #include <omnetpp.h>
 #include <string>
 #include <iostream>

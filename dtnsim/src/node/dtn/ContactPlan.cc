@@ -99,7 +99,7 @@ void ContactPlan::parseContactPlanFile(string fileName)
 
 void ContactPlan::addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
 {
-	Contact contact(id, start, end, sourceEid, destinationEid, dataRate, confidence);
+	Contact contact(id, start, end, sourceEid, destinationEid, dataRate, confidence, 0);
 
 	contacts_.push_back(contact);
 
@@ -108,10 +108,10 @@ void ContactPlan::addContact(int id, double start, double end, int sourceEid, in
 
 void ContactPlan::addRange(int id, double start, double end, int sourceEid, int destinationEid, double range, float confidence)
 {
-
 	// Ranges can be declared in a single direction, but they are bidirectional
-	Contact contact1(id, start, end, sourceEid, destinationEid, range, confidence);
-	Contact contact2(id, start, end, destinationEid, sourceEid, range, confidence);
+	// In the worst case they are repeated
+	Contact contact1(id, start, end, sourceEid, destinationEid, 0, confidence, range);
+	Contact contact2(id, start, end, destinationEid, sourceEid, 0, confidence, range);
 
 	ranges_.push_back(contact1);
 	ranges_.push_back(contact2);
@@ -128,7 +128,7 @@ double ContactPlan::getRangeBySrcDst(int Src, int Dst)
 	{
 		if ((ranges_.at(i).getSourceEid() == Src) && (ranges_.at(i).getDestinationEid() == Dst))
 		{
-			rangeFirstContact = ranges_.at(i).getDataRate();
+			rangeFirstContact = ranges_.at(i).getRange();
 		}
 	}
 
@@ -154,6 +154,11 @@ Contact *ContactPlan::getContactById(int id)
 vector<Contact> * ContactPlan::getContacts()
 {
 	return &contacts_;
+}
+
+vector<Contact> * ContactPlan::getRanges()
+{
+	return &ranges_;
 }
 
 vector<Contact> ContactPlan::getContactsBySrc(int Src)
@@ -221,6 +226,9 @@ void ContactPlan::printContactPlan()
 	vector<Contact>::iterator it;
 	for (it = this->getContacts()->begin(); it != this->getContacts()->end(); ++it)
 		cout << "a contact +" << (*it).getStart() << " +" << (*it).getEnd() << " " << (*it).getSourceEid() << " " << (*it).getDestinationEid() << " " << (*it).getResidualVolume() << "/" << (*it).getVolume() << endl;
+
+	for (it = this->getRanges()->begin(); it != this->getRanges()->end(); ++it)
+			cout << "a range +" << (*it).getStart() << " +" << (*it).getEnd() << " " << (*it).getSourceEid() << " " << (*it).getDestinationEid() << " " << (*it).getRange() << endl;
 	cout << endl;
 }
 

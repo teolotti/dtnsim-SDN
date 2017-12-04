@@ -9,6 +9,11 @@ void Com::initialize()
 	this->eid_ = this->getParentModule()->getIndex();
 }
 
+void Com::setContactTopology(ContactPlan &contactTopology)
+{
+	this->contactTopology_ = contactTopology;
+}
+
 void Com::handleMessage(cMessage *msg)
 {
 	if (msg->getKind() == BUNDLE)
@@ -24,7 +29,12 @@ void Com::handleMessage(cMessage *msg)
 			// Get a pointer to the next hop mac module
 			cModule *destinationModule = this->getParentModule()->getParentModule()->getSubmodule("node", bundle->getNextHopEid())->getSubmodule("com");
 
-			sendDirect(msg, destinationModule, "gateToAir");
+			//Zero delay send:
+			//sendDirect(msg, destinationModule, "gateToAir");
+
+			//Delayed send
+			double linkDelay = contactTopology_.getRangeBySrcDst(eid_, bundle->getNextHopEid());
+			sendDirect(msg, linkDelay, 0, destinationModule, "gateToAir");
 		}
 	}
 }

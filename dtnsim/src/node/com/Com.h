@@ -1,6 +1,8 @@
 #ifndef COM_H_
 #define COM_H_
 
+#include <dtn/ContactPlan.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <omnetpp.h>
@@ -18,6 +20,7 @@ class Com: public cSimpleModule
 public:
 	Com();
 	virtual ~Com();
+	virtual void setContactTopology(ContactPlan &contactTopology);
 
 protected:
 	virtual void initialize();
@@ -27,6 +30,7 @@ protected:
 private:
 
 	int eid_;
+	ContactPlan contactTopology_;
 
 };
 

@@ -9,7 +9,7 @@ class Contact
 {
 public:
 
-	Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence);
+	Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence, double range);
 	virtual ~Contact();
 
 	// A contact Id (unique)
@@ -24,6 +24,7 @@ public:
 	double getVolume() const;
 	double getDuration() const;
 	float getConfidence() const;
+	double getRange() const;
 
 	// Get and Set residual capacity (Bytes)
 	double getResidualVolume() const;
@@ -43,6 +44,7 @@ private:
 	double dataRate_; // In Bytes per seconds
 	double residualVolume_; // In Bytes
 	float confidence_;
+	double range_;
 };
 
 #endif /* CONTACT_H_ */

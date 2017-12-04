@@ -293,7 +293,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 						}
 				}
 
-				// Supress limiting contact
+				// Suppress limiting contact
 				suppressedContactIds.push_back(limitContact->getId());
 
 				cout << "-suppressing limiting contactId: " << limitContact->getId() << " (src:"
@@ -408,7 +408,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 	}
 	if (routingType_.find("routeListType:oneBestPath") != std::string::npos) {
 		//////////////////////////////////////////////////
-		// allPaths-oneBestPath: Only a best path is
+		// oneBestPath: Only a best path is
 		// calculated for a given destination. The entry
 		// is updated by the ending or depletion of a contact in the path
 		//////////////////////////////////////////////////
@@ -528,7 +528,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 	}
 	if (routingType_.find("routeListType:perNeighborBestPath") != std::string::npos) {
 		//////////////////////////////////////////////////
-		// allPaths-perNeighborBestPath: A best path per
+		// perNeighborBestPath: A best path per
 		// neighbor is calculated for a given destination. The entry
 		// is updated by the ending or depletion of a contact in the paths
 		//////////////////////////////////////////////////
@@ -771,7 +771,7 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 
 	// Create rootContact and its corresponding rootWork
 	// id=0, start=0, end=inf, src=me, dst=me, rate=0, conf=1
-	Contact * rootContact = new Contact(0, 0, numeric_limits<double>::max(), eid_, eid_, 0, 1.0);
+	Contact * rootContact = new Contact(0, 0, numeric_limits<double>::max(), eid_, eid_, 0, 1.0, 0);
 	Work rootWork;
 	rootWork.contact = rootContact;
 	rootWork.arrivalTime = simTime_;
@@ -827,12 +827,14 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 				continue;
 
 			// Get owlt (one way light time). If none found, ignore contact
-//			double owlt = contactPlan_->getRangeBySrcDst((*it).getSourceEid(), (*it).getDestinationEid());
-//			if(owlt==-1)
-//				continue;
-			double owlt = 0;
-			double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
-			owlt += owltMargin;
+			double owlt = contactPlan_->getRangeBySrcDst((*it).getSourceEid(), (*it).getDestinationEid());
+			if (owlt == -1)
+			{
+				cout << "warning, range not available for nodes " << (*it).getSourceEid() << "-" << (*it).getDestinationEid() << ", assuming range=0" << endl;
+				owlt = 0;
+			}
+			//double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
+			//owlt += owltMargin;
 
 			// Calculate the cost for this contact (Arrival Time)
 			double arrivalTime;

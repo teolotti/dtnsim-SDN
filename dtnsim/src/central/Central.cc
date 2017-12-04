@@ -109,6 +109,9 @@ void Central::initialize()
 		Dtn *dtn = check_and_cast<Dtn *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("dtn"));
 		dtn->setContactPlan(contactPlan_);
 		dtn->setContactTopology(contactTopology_);
+
+		Com *com = check_and_cast<Com *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("com"));
+		com->setContactTopology(contactTopology_);
 	}
 
 	if (par("enableAvailableRoutesCalculation"))

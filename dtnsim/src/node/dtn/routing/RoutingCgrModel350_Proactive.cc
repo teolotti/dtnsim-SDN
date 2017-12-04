@@ -514,7 +514,7 @@ void RoutingCgrModel350_Proactive::tryRoute(BundlePkt * bundle, CgrRoute * route
 void RoutingCgrModel350_Proactive::loadRouteList(int terminusNode, double simTime)
 {
 	// Create rootContact and its corresponding rootWork
-	Contact rootContact(0, 0, 0, eid_, eid_, 0, 1.0);
+	Contact rootContact(0, 0, 0, eid_, eid_, 0, 1.0, 0);
 	Work rootWork;
 	rootWork.contact = &rootContact;
 	rootWork.arrivalTime = simTime;
@@ -665,13 +665,15 @@ void RoutingCgrModel350_Proactive::findNextBestRoute(Contact * rootContact, int 
 			if (((Work *) (*it).work)->suppressed || ((Work *) (*it).work)->visited)
 				continue;
 
-			// Check if this contact has a range associated and
-			// obtain One Way Light Time (owlt)
-			// in ion: if (getApplicableRange(contact, &owlt) < 0) continue;
-			// TODO: we need to get this from contact plan.
-			double owlt = 0;
-			double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
-			owlt += owltMargin;
+			// Get owlt (one way light time). If none found, ignore contact
+			double owlt = contactPlan_->getRangeBySrcDst((*it).getSourceEid(), (*it).getDestinationEid());
+			if (owlt == -1)
+			{
+				cout << "warning, range not available for nodes " << (*it).getSourceEid() << "-" << (*it).getDestinationEid() << ", assuming range=0" << endl;
+				owlt = 0;
+			}
+			//double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
+			//owlt += owltMargin;
 
 			// Calculate capacity
 			// TODO: This capacity calculation should be then

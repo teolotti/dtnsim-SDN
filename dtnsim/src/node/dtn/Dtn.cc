@@ -291,12 +291,13 @@ void Dtn::handleMessage(cMessage * msg)
 					// Calculate datarate and Tx duration
 					double dataRate = contactTopology_.getContactById(contactId)->getDataRate();
 					double txDuration = (double) bundle->getByteLength() / dataRate;
+					double linkDelay = contactTopology_.getRangeBySrcDst(eid_, neighborEid);
 
 					Contact * contact = contactTopology_.getContactById(contactId);
 
 					// if the message can be fully transmitted before the end of the contact
 					// it is effectively transmitted
-					if ((simTime() + txDuration) <= contact->getEnd())
+					if ((simTime() + txDuration + linkDelay) <= contact->getEnd())
 					{
 						// Set bundle metadata (set by intermediate nodes)
 						bundle->setSenderEid(eid_);

@@ -1,6 +1,6 @@
 #include <dtn/Contact.h>
 
-Contact::Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
+Contact::Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence, double range)
 {
 	this->id_ = id;
 	this->start_ = start;
@@ -10,6 +10,7 @@ Contact::Contact(int id, double start, double end, int sourceEid, int destinatio
 	this->dataRate_ = dataRate;
 	this->confidence_ = confidence;
 	this->residualVolume_ = (end - start) * dataRate;
+	this->range_ = range;
 }
 
 Contact::~Contact()
@@ -70,4 +71,9 @@ double Contact::getVolume() const
 float Contact::getConfidence() const
 {
 	return confidence_;
+}
+
+double Contact::getRange() const
+{
+	return range_;
 }
