@@ -40,13 +40,20 @@
  *     simtime_t creationTimestamp;
  *     simtime_t ttl;
  *     bool returnToSender;
+ *     bool custodyTransferRequested;
  * 
  *     // Source routing path
  *     CgrRoute cgrRoute;
  * 
+ *     // Bundle is a report
+ *     bool bundleIsCustodyReport;
+ *     bool custodyAccepted;
+ *     long custodyBundleId;
+ * 
  *     ////////////////////////////////////////////////
  *     // Bundle meta-data (set by intermediate nodes)
  *     ////////////////////////////////////////////////
+ *     int custodianEid;
  *     int senderEid;
  *     int nextHopEid;
  *     int hopCount;
@@ -78,7 +85,12 @@ class BundlePkt : public ::omnetpp::cPacket
     ::omnetpp::simtime_t creationTimestamp;
     ::omnetpp::simtime_t ttl;
     bool returnToSender;
+    bool custodyTransferRequested;
     CgrRoute cgrRoute;
+    bool bundleIsCustodyReport;
+    bool custodyAccepted;
+    long custodyBundleId;
+    int custodianEid;
     int senderEid;
     int nextHopEid;
     int hopCount;
@@ -119,9 +131,19 @@ class BundlePkt : public ::omnetpp::cPacket
     virtual void setTtl(::omnetpp::simtime_t ttl);
     virtual bool getReturnToSender() const;
     virtual void setReturnToSender(bool returnToSender);
+    virtual bool getCustodyTransferRequested() const;
+    virtual void setCustodyTransferRequested(bool custodyTransferRequested);
     virtual CgrRoute& getCgrRoute();
     virtual const CgrRoute& getCgrRoute() const {return const_cast<BundlePkt*>(this)->getCgrRoute();}
     virtual void setCgrRoute(const CgrRoute& cgrRoute);
+    virtual bool getBundleIsCustodyReport() const;
+    virtual void setBundleIsCustodyReport(bool bundleIsCustodyReport);
+    virtual bool getCustodyAccepted() const;
+    virtual void setCustodyAccepted(bool custodyAccepted);
+    virtual long getCustodyBundleId() const;
+    virtual void setCustodyBundleId(long custodyBundleId);
+    virtual int getCustodianEid() const;
+    virtual void setCustodianEid(int custodianEid);
     virtual int getSenderEid() const;
     virtual void setSenderEid(int senderEid);
     virtual int getNextHopEid() const;
@@ -145,7 +167,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const BundlePkt& obj) {obj.
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BundlePkt& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:53</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:60</tt> by nedtool.
  * <pre>
  * message TrafficGeneratorMsg
  * {
@@ -199,7 +221,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const TrafficGeneratorMsg& 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, TrafficGeneratorMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:61</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:68</tt> by nedtool.
  * <pre>
  * message ContactMsg
  * {
@@ -261,7 +283,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ContactMsg& obj) {obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ContactMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:71</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:78</tt> by nedtool.
  * <pre>
  * message ForwardingMsgEnd
  * {
@@ -311,7 +333,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ForwardingMsgEnd& obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ForwardingMsgEnd& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:78</tt> by nedtool.
+ * Class generated from <tt>dtnsim.msg:85</tt> by nedtool.
  * <pre>
  * message ForwardingMsgStart
  * {

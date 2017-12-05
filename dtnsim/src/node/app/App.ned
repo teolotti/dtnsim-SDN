@@ -14,6 +14,7 @@ simple App
         int ttl = default(9000000); // Generated Bundles Time to Live in Secs
         bool returnToSender = default(true);
         bool critical = default(false);
+        bool custodyTransfer = default(false);
         string externalTrafficEvents = default("");
         
         // Signals and Statistics

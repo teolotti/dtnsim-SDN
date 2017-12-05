@@ -2,6 +2,7 @@
 #define _DTN_H_
 
 #include <dtn/ContactPlan.h>
+#include <dtn/CustodyModel.h>
 #include <dtn/routing/Routing.h>
 #include <dtn/routing/RoutingCgrIon350.h>
 #include <dtn/routing/RoutingCgrModel350.h>
@@ -40,8 +41,6 @@
 
 using namespace omnetpp;
 using namespace std;
-
-
 
 class Dtn: public cSimpleModule, public Observer
 {
@@ -89,6 +88,7 @@ private:
 	// and get transmission rates
 	ContactPlan contactTopology_;
 
+	CustodyModel custodyModel;
 	SdrModel sdr_;
 
 	// BundlesMap

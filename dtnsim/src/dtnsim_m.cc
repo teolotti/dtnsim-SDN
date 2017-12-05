@@ -188,6 +188,11 @@ BundlePkt::BundlePkt(const char *name, short kind) : ::omnetpp::cPacket(name,kin
     this->creationTimestamp = 0;
     this->ttl = 0;
     this->returnToSender = false;
+    this->custodyTransferRequested = false;
+    this->bundleIsCustodyReport = false;
+    this->custodyAccepted = false;
+    this->custodyBundleId = 0;
+    this->custodianEid = 0;
     this->senderEid = 0;
     this->nextHopEid = 0;
     this->hopCount = 0;
@@ -223,7 +228,12 @@ void BundlePkt::copy(const BundlePkt& other)
     this->creationTimestamp = other.creationTimestamp;
     this->ttl = other.ttl;
     this->returnToSender = other.returnToSender;
+    this->custodyTransferRequested = other.custodyTransferRequested;
     this->cgrRoute = other.cgrRoute;
+    this->bundleIsCustodyReport = other.bundleIsCustodyReport;
+    this->custodyAccepted = other.custodyAccepted;
+    this->custodyBundleId = other.custodyBundleId;
+    this->custodianEid = other.custodianEid;
     this->senderEid = other.senderEid;
     this->nextHopEid = other.nextHopEid;
     this->hopCount = other.hopCount;
@@ -244,7 +254,12 @@ void BundlePkt::parsimPack(omnetpp::cCommBuffer *b) const
     doParsimPacking(b,this->creationTimestamp);
     doParsimPacking(b,this->ttl);
     doParsimPacking(b,this->returnToSender);
+    doParsimPacking(b,this->custodyTransferRequested);
     doParsimPacking(b,this->cgrRoute);
+    doParsimPacking(b,this->bundleIsCustodyReport);
+    doParsimPacking(b,this->custodyAccepted);
+    doParsimPacking(b,this->custodyBundleId);
+    doParsimPacking(b,this->custodianEid);
     doParsimPacking(b,this->senderEid);
     doParsimPacking(b,this->nextHopEid);
     doParsimPacking(b,this->hopCount);
@@ -265,7 +280,12 @@ void BundlePkt::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->creationTimestamp);
     doParsimUnpacking(b,this->ttl);
     doParsimUnpacking(b,this->returnToSender);
+    doParsimUnpacking(b,this->custodyTransferRequested);
     doParsimUnpacking(b,this->cgrRoute);
+    doParsimUnpacking(b,this->bundleIsCustodyReport);
+    doParsimUnpacking(b,this->custodyAccepted);
+    doParsimUnpacking(b,this->custodyBundleId);
+    doParsimUnpacking(b,this->custodianEid);
     doParsimUnpacking(b,this->senderEid);
     doParsimUnpacking(b,this->nextHopEid);
     doParsimUnpacking(b,this->hopCount);
@@ -346,6 +366,16 @@ void BundlePkt::setReturnToSender(bool returnToSender)
     this->returnToSender = returnToSender;
 }
 
+bool BundlePkt::getCustodyTransferRequested() const
+{
+    return this->custodyTransferRequested;
+}
+
+void BundlePkt::setCustodyTransferRequested(bool custodyTransferRequested)
+{
+    this->custodyTransferRequested = custodyTransferRequested;
+}
+
 CgrRoute& BundlePkt::getCgrRoute()
 {
     return this->cgrRoute;
@@ -354,6 +384,46 @@ CgrRoute& BundlePkt::getCgrRoute()
 void BundlePkt::setCgrRoute(const CgrRoute& cgrRoute)
 {
     this->cgrRoute = cgrRoute;
+}
+
+bool BundlePkt::getBundleIsCustodyReport() const
+{
+    return this->bundleIsCustodyReport;
+}
+
+void BundlePkt::setBundleIsCustodyReport(bool bundleIsCustodyReport)
+{
+    this->bundleIsCustodyReport = bundleIsCustodyReport;
+}
+
+bool BundlePkt::getCustodyAccepted() const
+{
+    return this->custodyAccepted;
+}
+
+void BundlePkt::setCustodyAccepted(bool custodyAccepted)
+{
+    this->custodyAccepted = custodyAccepted;
+}
+
+long BundlePkt::getCustodyBundleId() const
+{
+    return this->custodyBundleId;
+}
+
+void BundlePkt::setCustodyBundleId(long custodyBundleId)
+{
+    this->custodyBundleId = custodyBundleId;
+}
+
+int BundlePkt::getCustodianEid() const
+{
+    return this->custodianEid;
+}
+
+void BundlePkt::setCustodianEid(int custodianEid)
+{
+    this->custodianEid = custodianEid;
 }
 
 int BundlePkt::getSenderEid() const
@@ -501,7 +571,7 @@ const char *BundlePktDescriptor::getProperty(const char *propertyname) const
 int BundlePktDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 16+basedesc->getFieldCount() : 16;
+    return basedesc ? 21+basedesc->getFieldCount() : 21;
 }
 
 unsigned int BundlePktDescriptor::getFieldTypeFlags(int field) const
@@ -520,7 +590,12 @@ unsigned int BundlePktDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
         FD_ISCOMPOUND,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
@@ -530,7 +605,7 @@ unsigned int BundlePktDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
     };
-    return (field>=0 && field<16) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<21) ? fieldTypeFlags[field] : 0;
 }
 
 const char *BundlePktDescriptor::getFieldName(int field) const
@@ -549,7 +624,12 @@ const char *BundlePktDescriptor::getFieldName(int field) const
         "creationTimestamp",
         "ttl",
         "returnToSender",
+        "custodyTransferRequested",
         "cgrRoute",
+        "bundleIsCustodyReport",
+        "custodyAccepted",
+        "custodyBundleId",
+        "custodianEid",
         "senderEid",
         "nextHopEid",
         "hopCount",
@@ -559,7 +639,7 @@ const char *BundlePktDescriptor::getFieldName(int field) const
         "bundlesCopies",
         "qos",
     };
-    return (field>=0 && field<16) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<21) ? fieldNames[field] : nullptr;
 }
 
 int BundlePktDescriptor::findField(const char *fieldName) const
@@ -573,15 +653,20 @@ int BundlePktDescriptor::findField(const char *fieldName) const
     if (fieldName[0]=='c' && strcmp(fieldName, "creationTimestamp")==0) return base+4;
     if (fieldName[0]=='t' && strcmp(fieldName, "ttl")==0) return base+5;
     if (fieldName[0]=='r' && strcmp(fieldName, "returnToSender")==0) return base+6;
-    if (fieldName[0]=='c' && strcmp(fieldName, "cgrRoute")==0) return base+7;
-    if (fieldName[0]=='s' && strcmp(fieldName, "senderEid")==0) return base+8;
-    if (fieldName[0]=='n' && strcmp(fieldName, "nextHopEid")==0) return base+9;
-    if (fieldName[0]=='h' && strcmp(fieldName, "hopCount")==0) return base+10;
-    if (fieldName[0]=='v' && strcmp(fieldName, "visitedNodes")==0) return base+11;
-    if (fieldName[0]=='x' && strcmp(fieldName, "xmitCopiesCount")==0) return base+12;
-    if (fieldName[0]=='d' && strcmp(fieldName, "dlvConfidence")==0) return base+13;
-    if (fieldName[0]=='b' && strcmp(fieldName, "bundlesCopies")==0) return base+14;
-    if (fieldName[0]=='q' && strcmp(fieldName, "qos")==0) return base+15;
+    if (fieldName[0]=='c' && strcmp(fieldName, "custodyTransferRequested")==0) return base+7;
+    if (fieldName[0]=='c' && strcmp(fieldName, "cgrRoute")==0) return base+8;
+    if (fieldName[0]=='b' && strcmp(fieldName, "bundleIsCustodyReport")==0) return base+9;
+    if (fieldName[0]=='c' && strcmp(fieldName, "custodyAccepted")==0) return base+10;
+    if (fieldName[0]=='c' && strcmp(fieldName, "custodyBundleId")==0) return base+11;
+    if (fieldName[0]=='c' && strcmp(fieldName, "custodianEid")==0) return base+12;
+    if (fieldName[0]=='s' && strcmp(fieldName, "senderEid")==0) return base+13;
+    if (fieldName[0]=='n' && strcmp(fieldName, "nextHopEid")==0) return base+14;
+    if (fieldName[0]=='h' && strcmp(fieldName, "hopCount")==0) return base+15;
+    if (fieldName[0]=='v' && strcmp(fieldName, "visitedNodes")==0) return base+16;
+    if (fieldName[0]=='x' && strcmp(fieldName, "xmitCopiesCount")==0) return base+17;
+    if (fieldName[0]=='d' && strcmp(fieldName, "dlvConfidence")==0) return base+18;
+    if (fieldName[0]=='b' && strcmp(fieldName, "bundlesCopies")==0) return base+19;
+    if (fieldName[0]=='q' && strcmp(fieldName, "qos")==0) return base+20;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -601,7 +686,12 @@ const char *BundlePktDescriptor::getFieldTypeString(int field) const
         "simtime_t",
         "simtime_t",
         "bool",
+        "bool",
         "CgrRoute",
+        "bool",
+        "bool",
+        "long",
+        "int",
         "int",
         "int",
         "int",
@@ -611,7 +701,7 @@ const char *BundlePktDescriptor::getFieldTypeString(int field) const
         "int",
         "int",
     };
-    return (field>=0 && field<16) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<21) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **BundlePktDescriptor::getFieldPropertyNames(int field) const
@@ -685,15 +775,20 @@ std::string BundlePktDescriptor::getFieldValueAsString(void *object, int field, 
         case 4: return simtime2string(pp->getCreationTimestamp());
         case 5: return simtime2string(pp->getTtl());
         case 6: return bool2string(pp->getReturnToSender());
-        case 7: {std::stringstream out; out << pp->getCgrRoute(); return out.str();}
-        case 8: return long2string(pp->getSenderEid());
-        case 9: return long2string(pp->getNextHopEid());
-        case 10: return long2string(pp->getHopCount());
-        case 11: {std::stringstream out; out << pp->getVisitedNodes(); return out.str();}
-        case 12: return long2string(pp->getXmitCopiesCount());
-        case 13: return double2string(pp->getDlvConfidence());
-        case 14: return long2string(pp->getBundlesCopies());
-        case 15: return long2string(pp->getQos());
+        case 7: return bool2string(pp->getCustodyTransferRequested());
+        case 8: {std::stringstream out; out << pp->getCgrRoute(); return out.str();}
+        case 9: return bool2string(pp->getBundleIsCustodyReport());
+        case 10: return bool2string(pp->getCustodyAccepted());
+        case 11: return long2string(pp->getCustodyBundleId());
+        case 12: return long2string(pp->getCustodianEid());
+        case 13: return long2string(pp->getSenderEid());
+        case 14: return long2string(pp->getNextHopEid());
+        case 15: return long2string(pp->getHopCount());
+        case 16: {std::stringstream out; out << pp->getVisitedNodes(); return out.str();}
+        case 17: return long2string(pp->getXmitCopiesCount());
+        case 18: return double2string(pp->getDlvConfidence());
+        case 19: return long2string(pp->getBundlesCopies());
+        case 20: return long2string(pp->getQos());
         default: return "";
     }
 }
@@ -715,13 +810,18 @@ bool BundlePktDescriptor::setFieldValueAsString(void *object, int field, int i, 
         case 4: pp->setCreationTimestamp(string2simtime(value)); return true;
         case 5: pp->setTtl(string2simtime(value)); return true;
         case 6: pp->setReturnToSender(string2bool(value)); return true;
-        case 8: pp->setSenderEid(string2long(value)); return true;
-        case 9: pp->setNextHopEid(string2long(value)); return true;
-        case 10: pp->setHopCount(string2long(value)); return true;
-        case 12: pp->setXmitCopiesCount(string2long(value)); return true;
-        case 13: pp->setDlvConfidence(string2double(value)); return true;
-        case 14: pp->setBundlesCopies(string2long(value)); return true;
-        case 15: pp->setQos(string2long(value)); return true;
+        case 7: pp->setCustodyTransferRequested(string2bool(value)); return true;
+        case 9: pp->setBundleIsCustodyReport(string2bool(value)); return true;
+        case 10: pp->setCustodyAccepted(string2bool(value)); return true;
+        case 11: pp->setCustodyBundleId(string2long(value)); return true;
+        case 12: pp->setCustodianEid(string2long(value)); return true;
+        case 13: pp->setSenderEid(string2long(value)); return true;
+        case 14: pp->setNextHopEid(string2long(value)); return true;
+        case 15: pp->setHopCount(string2long(value)); return true;
+        case 17: pp->setXmitCopiesCount(string2long(value)); return true;
+        case 18: pp->setDlvConfidence(string2double(value)); return true;
+        case 19: pp->setBundlesCopies(string2long(value)); return true;
+        case 20: pp->setQos(string2long(value)); return true;
         default: return false;
     }
 }
@@ -735,8 +835,8 @@ const char *BundlePktDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 7: return omnetpp::opp_typename(typeid(CgrRoute));
-        case 11: return omnetpp::opp_typename(typeid(intList));
+        case 8: return omnetpp::opp_typename(typeid(CgrRoute));
+        case 16: return omnetpp::opp_typename(typeid(intList));
         default: return nullptr;
     };
 }
@@ -751,8 +851,8 @@ void *BundlePktDescriptor::getFieldStructValuePointer(void *object, int field, i
     }
     BundlePkt *pp = (BundlePkt *)object; (void)pp;
     switch (field) {
-        case 7: return (void *)(&pp->getCgrRoute()); break;
-        case 11: return (void *)(&pp->getVisitedNodes()); break;
+        case 8: return (void *)(&pp->getCgrRoute()); break;
+        case 16: return (void *)(&pp->getVisitedNodes()); break;
         default: return nullptr;
     }
 }

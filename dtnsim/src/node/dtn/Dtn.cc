@@ -37,6 +37,9 @@ void Dtn::initialize(int stage)
 		this->eid_ = this->getParentModule()->getIndex();
 
 		this->simpleCustodyModel_ = this->par("simpleCustodyModel");
+		this->custodyModel.setEid(eid_);
+		this->custodyModel.setSdr(&sdr_);
+		//this->custodyModel.setDtn(this);
 
 		// Get a pointer to graphics module
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
@@ -358,25 +361,52 @@ void Dtn::handleMessage(cMessage * msg)
 
 void Dtn::dispatchBundle(BundlePkt *bundle)
 {
+	char bundleName[10];
+	sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", bundle->getSourceEid() , bundle->getDestinationEid(), (int) bundle->getId());
+	cout << "Dispatching " << bundleName << endl;
+
 	if (this->eid_ == bundle->getDestinationEid())
 	{
-		// We are the destination, send to App
+		// We are the final destination of this bundle
 		emit(dtnBundleSentToApp, true);
 		emit(dtnBundleSentToAppHopCount, bundle->getHopCount());
 		bundle->getVisitedNodes().sort();
 		bundle->getVisitedNodes().unique();
 		emit(dtnBundleSentToAppRevisitedHops, bundle->getHopCount() - bundle->getVisitedNodes().size());
 
+		// Check if this bundle has previously arrived here
 		if (routing->msgToMeArrive(bundle))
-			send(bundle, "gateToApp$o");
+		{
+			// This is the first time this bundle arrives
+			if (bundle->getBundleIsCustodyReport())
+				// This is a custody report destined to me
+				this->custodyModel.custodyReportArrived(bundle);
+			else
+			{
+				// This is a data bundle destined to me
+				if (bundle->getCustodyTransferRequested())
+					this->dispatchBundle(this->custodyModel.bundleWithCustodyRequestedArrived(bundle));
+
+				// Send to app layer
+				send(bundle, "gateToApp$o");
+			}
+		}
 		else
+			// A copy of this bundle was previously received
 			delete bundle;
 	}
 	else
 	{
+		// This is a bundle in transit
+
+		// Manage custody transfer
+		if (bundle->getCustodyTransferRequested())
+			this->dispatchBundle(this->custodyModel.bundleWithCustodyRequestedArrived(bundle));
+
+		// Either accepted or rejected custody, route bundle
 		routing->msgToOtherArrive(bundle, simTime().dbl());
 
-		// Emit routing specific stats
+		// Emit routing specific statistics
 		string routeString = par("routing");
 		if (routeString.compare("cgrModel350") == 0)
 		{
@@ -400,7 +430,7 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 		emit(sdrBundleStored, sdr_.getBundlesCountInSdr());
 		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
 
-		// Wake-up un scheduled forwarding threads
+		// Wake-up sleeping forwarding threads
 		this->refreshForwarding();
 	}
 }

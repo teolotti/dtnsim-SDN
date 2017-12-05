@@ -86,13 +86,11 @@ void App::initialize()
 	}
 	//@NANDO: END DUMMY CODE FOR GENERATE TRAFFIC
 
-
 	// Register signals
 	appBundleSent = registerSignal("appBundleSent");
 	appBundleReceived = registerSignal("appBundleReceived");
 	appBundleReceivedHops = registerSignal("appBundleReceivedHops");
 	appBundleReceivedDelay = registerSignal("appBundleReceivedDelay");
-
 }
 
 void App::handleMessage(cMessage *msg)
@@ -116,14 +114,17 @@ void App::handleMessage(cMessage *msg)
 		bundle->setDestinationEid(trafficGenMsg->getDestinationEid());
 		bundle->setReturnToSender(par("returnToSender"));
 		bundle->setCritical(par("critical"));
+		bundle->setCustodyTransferRequested(par("custodyTransfer"));
 		bundle->setTtl(trafficGenMsg->getTtl());
 		bundle->setCreationTimestamp(simTime());
 		bundle->setQos(2);
+		bundle->setBundleIsCustodyReport(false);
 
-		// Bundle meta-data init (set by intermediate nodes)
+		// Bundle meta-data (set by intermediate nodes)
 		bundle->setHopCount(0);
 		bundle->setNextHopEid(0);
 		bundle->setSenderEid(0);
+		bundle->setCustodianEid(this->eid_);
 		bundle->getVisitedNodes().clear();
 		CgrRoute emptyRoute;
 		emptyRoute.nextHop = EMPTY_ROUTE;

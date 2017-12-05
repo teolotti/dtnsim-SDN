@@ -23,13 +23,20 @@ packet BundlePkt{
         simtime_t creationTimestamp;
         simtime_t ttl;
         bool returnToSender;
+        bool custodyTransferRequested;
         
         // Source routing path
         CgrRoute cgrRoute;
         
+        // Bundle is a report
+        bool bundleIsCustodyReport;
+        bool custodyAccepted;
+        long custodyBundleId;
+        
         ////////////////////////////////////////////////
         // Bundle meta-data (set by intermediate nodes)
         ////////////////////////////////////////////////
+        int custodianEid;
         int senderEid;
         int nextHopEid;
         int hopCount;

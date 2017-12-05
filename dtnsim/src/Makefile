@@ -117,6 +117,7 @@ OBJS = \
     $O/node/com/Com.o \
     $O/node/dtn/Contact.o \
     $O/node/dtn/ContactPlan.o \
+    $O/node/dtn/CustodyModel.o \
     $O/node/dtn/Dtn.o \
     $O/node/dtn/SdrModel.o \
     $O/node/dtn/SdrStatus.o \
