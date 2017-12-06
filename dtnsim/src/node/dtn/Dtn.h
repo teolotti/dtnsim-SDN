@@ -87,7 +87,9 @@ private:
 	// and get transmission rates
 	ContactPlan contactTopology_;
 
-	CustodyModel custodyModel;
+	CustodyModel custodyModel_;
+	int custodyTimeout_;
+
 	SdrModel sdr_;
 
 	// BundlesMap

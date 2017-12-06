@@ -10,8 +10,9 @@
 
 #include <dtn/SdrModel.h>
 #include "MsgTypes.h"
+#include <omnetpp.h>
 
-//#include <dtn/Dtn.h>
+using namespace omnetpp;
 
 class CustodyModel
 {
@@ -19,19 +20,26 @@ public:
 	CustodyModel();
 	virtual ~CustodyModel();
 
+	// Initialization and configuration
 	void setEid(int eid);
 	void setSdr(SdrModel * sdr);
-	//void setDtn(Dtn * dtn);
+	void setCustodyReportByteSize(int custodyReportByteSize);
 
+	// Events from Dtn layer
 	BundlePkt * bundleWithCustodyRequestedArrived(BundlePkt * bundle);
-	void custodyReportArrived(BundlePkt * bundle);
+	BundlePkt * custodyReportArrived(BundlePkt * bundle);
+	BundlePkt * custodyTimerExpired(CustodyTimout * custodyTimout);
+
+	void printBundlesInCustody(void);
+
+private:
 
 	BundlePkt * getNewCustodyReport(bool accept, BundlePkt * bundle);
 
-private:
 	int eid_;
 	SdrModel * sdr_;
-	//Dtn * dtn_;
+
+	int custodyReportByteSize_;
 };
 
 #endif /* SRC_NODE_DTN_CUSTODYMODEL_H_ */

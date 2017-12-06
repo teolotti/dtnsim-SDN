@@ -26,26 +26,12 @@ public:
 	SdrModel();
 	virtual ~SdrModel();
 
-	// Init sdr
+	// Initialization and configuration
 	virtual void setEid(int eid);
 	virtual void setNodesNumber(int nodesNumber);
 	virtual void setContactPlan(ContactPlan *contactPlan);
 	virtual void setSize(int size);
-
-	// Enqueue and dequeue from contacts
-	virtual bool enqueueBundleToContact(BundlePkt * bundle, int contactId);
-	virtual bool isBundleForContact(int contactId);
-	virtual BundlePkt * getNextBundleForContact(int contactId);
-	virtual void popNextBundleForContact(int contactId);
-
-	//Enqueue and dequeue carrying bundles (non routed)
-	virtual bool enqueueBundle(BundlePkt * bundle);
-	virtual void removeBundle(long bundleId);
-	virtual list<BundlePkt *> getCarryingBundles();
-
-	//Enqueue and dequeue transmitted bundles in custody
-	virtual bool enqueueTransmittedBundleInCustody(BundlePkt * bundle);
-	virtual void removeTransmittedBundleInCustody(long bundleId);
+	virtual void freeSdr(int eid);
 
 	// Get information
 	virtual int getBundlesCountInSdr();
@@ -56,29 +42,48 @@ public:
 	virtual int getBytesStoredToNeighbor(int eid);
 	virtual SdrStatus getSdrStatus();
 	virtual BundlePkt * getEnqueuedBundle(long bundleId);
-
-	// Erase memory
-	virtual void freeSdr(int eid);
-
-	// Check if there is free space in sdr for a new packet
 	bool isSdrFreeSpace(int sizeNewPacket);
+
+	// Enqueue and dequeue from perContactBundleQueue_
+	virtual bool enqueueBundleToContact(BundlePkt * bundle, int contactId);
+	virtual bool isBundleForContact(int contactId);
+	virtual BundlePkt * getNextBundleForContact(int contactId);
+	virtual void popNextBundleForContact(int contactId);
+
+	// Enqueue and dequeue from genericBundleQueue_
+	virtual bool enqueueBundle(BundlePkt * bundle);
+	virtual void removeBundle(long bundleId);
+	virtual list<BundlePkt *> getCarryingBundles();
+
+	// Enqueue and dequeue from transmittedBundlesInCustody_
+	virtual bool enqueueTransmittedBundleInCustody(BundlePkt * bundle);
+	virtual void removeTransmittedBundleInCustody(long bundleId);
+	virtual BundlePkt * getTransmittedBundleInCustody(long bundleId);
+	virtual list<BundlePkt *> getTransmittedBundlesInCustody();
 
 private:
 
-	// capacity of sdr in bytes
-	int size_;
-
-	int eid_;
-	int nodesNumber_;
-	int bytesStored_;
+	int size_;  		// Capacity of sdr in bytes
+	int eid_;  			// Local eid of the node
+	int nodesNumber_;	// Number of nodes in the network
+	int bytesStored_;	// Total Bytes stored in Sdr
+	int bundlesNumber_;	// Total bundles enqueued in all sdr queues (index, generic, in custody)
 
 	ContactPlan *contactPlan_;
 
-	map<int, list<BundlePkt *> > bundlesQueue_;
-	list<BundlePkt *> transmittedBundlesInCustody_;
-	list<BundlePkt *> carriedBundles_;
+	// Indexed queues where index can be used by routing algorithms
+	// to enqueue bundles to specific contacts or nodes. When there
+	// is no need for an indexed queue, a generic one can be used instead
+	map<int, list<BundlePkt *> > perContactBundleQueue_;
+	map<int, list<BundlePkt *> > perNodeBundleQueue_;
+	list<BundlePkt *> genericBundleQueue_;
 
-	int bundlesNumber_; //Amount of bundles enqueued in sdr_ + carriedBundles_. It considers all contacts (i.e contact 0 is included)
+	// A separate area of memory to store transmitted bundles for which
+	// the current node is custodian. Bundles are removed as custody reports
+	// arrives with either custody acceptance or rejection of a remote node
+	list<BundlePkt *> transmittedBundlesInCustody_;
+
+
 
 };
 

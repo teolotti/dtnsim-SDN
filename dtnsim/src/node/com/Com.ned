@@ -4,6 +4,8 @@ simple Com
 {
     parameters:
         @display("i=block/wtx");
+        
+        double packetLoss = default(0.0);
                       
     gates:
         inout gateToDtn;

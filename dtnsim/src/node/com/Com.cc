@@ -7,6 +7,9 @@ void Com::initialize()
 {
 	// Store this node eid
 	this->eid_ = this->getParentModule()->getIndex();
+
+	// Store packetLoss probability
+	this->packetLoss_ = par("packetLoss").doubleValue();
 }
 
 void Com::setContactTopology(ContactPlan &contactTopology)
@@ -16,23 +19,29 @@ void Com::setContactTopology(ContactPlan &contactTopology)
 
 void Com::handleMessage(cMessage *msg)
 {
-	if (msg->getKind() == BUNDLE)
+	if (msg->getKind() == BUNDLE || msg->getKind() == BUNDLE_CUSTODY_REPORT)
 	{
 		BundlePkt* bundle = check_and_cast<BundlePkt *>(msg);
 
 		if (eid_ == bundle->getNextHopEid())
 		{
-			send(msg, "gateToDtn$o");
+			// This is an inbound message, check if packet was lost on the way
+			if (packetLoss_ > uniform(0, 1.0))
+			{
+				// Packet was lost in the way, delete it
+				cout << simTime() << " Node " << eid_ << " Bundle id " << bundle->getBundleId() << " lost on the way!" << endl;
+				delete bundle;
+			}
+			else
+			{
+				// received correctly, send to Dtn layer
+				send(msg, "gateToDtn$o");
+			}
 		}
 		else
 		{
-			// Get a pointer to the next hop mac module
+			// This is an outbound message, perform a delayed send
 			cModule *destinationModule = this->getParentModule()->getParentModule()->getSubmodule("node", bundle->getNextHopEid())->getSubmodule("com");
-
-			//Zero delay send:
-			//sendDirect(msg, destinationModule, "gateToAir");
-
-			//Delayed send
 			double linkDelay = contactTopology_.getRangeBySrcDst(eid_, bundle->getNextHopEid());
 			if (linkDelay == -1)
 			{

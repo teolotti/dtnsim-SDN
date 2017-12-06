@@ -87,4 +87,8 @@ message ForwardingMsgStart{
     int contactId;
 };
 
+message CustodyTimout{
+    int bundleId;
+};
+
 

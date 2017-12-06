@@ -11,11 +11,13 @@
 
 #define TRAFFIC_TIMER 2
 
-#define BUNDLE 3
-#define CUSTODY_REPORT 4
+#define BUNDLE_CUSTODY_REPORT 3	// white
+#define BUNDLE 4				// yellow
 
-#define FORWARDING_MSG_END 5
-#define FORWARDING_MSG_START 6
+#define CUSTODY_TIMEOUT 5
+
+#define FORWARDING_MSG_END 6
+#define FORWARDING_MSG_START 7
 
 #define FAULT_END_TIMER 21
 #define FAULT_START_TIMER 20

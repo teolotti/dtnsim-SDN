@@ -2257,4 +2257,284 @@ void *ForwardingMsgStartDescriptor::getFieldStructValuePointer(void *object, int
     }
 }
 
+Register_Class(CustodyTimout)
+
+CustodyTimout::CustodyTimout(const char *name, short kind) : ::omnetpp::cMessage(name,kind)
+{
+    this->bundleId = 0;
+}
+
+CustodyTimout::CustodyTimout(const CustodyTimout& other) : ::omnetpp::cMessage(other)
+{
+    copy(other);
+}
+
+CustodyTimout::~CustodyTimout()
+{
+}
+
+CustodyTimout& CustodyTimout::operator=(const CustodyTimout& other)
+{
+    if (this==&other) return *this;
+    ::omnetpp::cMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void CustodyTimout::copy(const CustodyTimout& other)
+{
+    this->bundleId = other.bundleId;
+}
+
+void CustodyTimout::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::omnetpp::cMessage::parsimPack(b);
+    doParsimPacking(b,this->bundleId);
+}
+
+void CustodyTimout::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::omnetpp::cMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->bundleId);
+}
+
+int CustodyTimout::getBundleId() const
+{
+    return this->bundleId;
+}
+
+void CustodyTimout::setBundleId(int bundleId)
+{
+    this->bundleId = bundleId;
+}
+
+class CustodyTimoutDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    CustodyTimoutDescriptor();
+    virtual ~CustodyTimoutDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(CustodyTimoutDescriptor)
+
+CustodyTimoutDescriptor::CustodyTimoutDescriptor() : omnetpp::cClassDescriptor("CustodyTimout", "omnetpp::cMessage")
+{
+    propertynames = nullptr;
+}
+
+CustodyTimoutDescriptor::~CustodyTimoutDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool CustodyTimoutDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<CustodyTimout *>(obj)!=nullptr;
+}
+
+const char **CustodyTimoutDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *CustodyTimoutDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int CustodyTimoutDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 1+basedesc->getFieldCount() : 1;
+}
+
+unsigned int CustodyTimoutDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISEDITABLE,
+    };
+    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+}
+
+const char *CustodyTimoutDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "bundleId",
+    };
+    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+}
+
+int CustodyTimoutDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='b' && strcmp(fieldName, "bundleId")==0) return base+0;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *CustodyTimoutDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "int",
+    };
+    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **CustodyTimoutDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *CustodyTimoutDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int CustodyTimoutDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    CustodyTimout *pp = (CustodyTimout *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *CustodyTimoutDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    CustodyTimout *pp = (CustodyTimout *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string CustodyTimoutDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    CustodyTimout *pp = (CustodyTimout *)object; (void)pp;
+    switch (field) {
+        case 0: return long2string(pp->getBundleId());
+        default: return "";
+    }
+}
+
+bool CustodyTimoutDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    CustodyTimout *pp = (CustodyTimout *)object; (void)pp;
+    switch (field) {
+        case 0: pp->setBundleId(string2long(value)); return true;
+        default: return false;
+    }
+}
+
+const char *CustodyTimoutDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    };
+}
+
+void *CustodyTimoutDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    CustodyTimout *pp = (CustodyTimout *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
 

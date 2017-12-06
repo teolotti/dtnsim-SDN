@@ -374,6 +374,44 @@ class ForwardingMsgStart : public ::omnetpp::cMessage
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const ForwardingMsgStart& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ForwardingMsgStart& obj) {obj.parsimUnpack(b);}
 
+/**
+ * Class generated from <tt>dtnsim.msg:90</tt> by nedtool.
+ * <pre>
+ * message CustodyTimout
+ * {
+ *     int bundleId;
+ * }
+ * </pre>
+ */
+class CustodyTimout : public ::omnetpp::cMessage
+{
+  protected:
+    int bundleId;
+
+  private:
+    void copy(const CustodyTimout& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const CustodyTimout&);
+
+  public:
+    CustodyTimout(const char *name=nullptr, short kind=0);
+    CustodyTimout(const CustodyTimout& other);
+    virtual ~CustodyTimout();
+    CustodyTimout& operator=(const CustodyTimout& other);
+    virtual CustodyTimout *dup() const override {return new CustodyTimout(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual int getBundleId() const;
+    virtual void setBundleId(int bundleId);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const CustodyTimout& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, CustodyTimout& obj) {obj.parsimUnpack(b);}
+
 
 #endif // ifndef __DTNSIM_M_H
 

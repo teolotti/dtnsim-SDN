@@ -32,6 +32,8 @@ private:
 	int eid_;
 	ContactPlan contactTopology_;
 
+	double packetLoss_;
+
 };
 
 #endif /* COM_H_ */

@@ -36,9 +36,10 @@ void Dtn::initialize(int stage)
 		// Store this node eid
 		this->eid_ = this->getParentModule()->getIndex();
 
-		this->custodyModel.setEid(eid_);
-		this->custodyModel.setSdr(&sdr_);
-		//this->custodyModel.setDtn(this);
+		this->custodyTimeout_ = par("custodyTimeout");
+		this->custodyModel_.setEid(eid_);
+		this->custodyModel_.setSdr(&sdr_);
+		this->custodyModel_.setCustodyReportByteSize(par("custodyReportByteSize"));
 
 		// Get a pointer to graphics module
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
@@ -212,7 +213,7 @@ void Dtn::handleMessage(cMessage * msg)
 	///////////////////////////////////////////
 	// New Bundle (from App or Com):
 	///////////////////////////////////////////
-	if (msg->getKind() == BUNDLE)
+	if (msg->getKind() == BUNDLE || msg->getKind() == BUNDLE_CUSTODY_REPORT)
 	{
 		if (msg->arrivedOn("gateToCom$i"))
 			emit(dtnBundleReceivedFromCom, true);
@@ -312,10 +313,17 @@ void Dtn::handleMessage(cMessage * msg)
 
 					sdr_.popNextBundleForContact(contactId);
 
-					// If custody requested, store bundle until report received
+					// If custody requested, store a copy of the bundle until report received
 					if (bundle->getCustodyTransferRequested())
+					{
 						sdr_.enqueueTransmittedBundleInCustody(bundle->dup());
-					// TODO: Enqueue a retransmission event in case custody acceptance did not receive
+						this->custodyModel_.printBundlesInCustody();
+
+						// Enqueue a retransmission event in case custody acceptance not received
+						CustodyTimout * custodyTimeout = new CustodyTimout("custodyTimeout", CUSTODY_TIMEOUT);
+						custodyTimeout->setBundleId(bundle->getBundleId());
+						scheduleAt(simTime() + this->custodyTimeout_, custodyTimeout);
+					}
 
 					emit(dtnBundleSentToCom, true);
 					emit(sdrBundleStored, sdr_.getBundlesCountInSdr());
@@ -358,6 +366,20 @@ void Dtn::handleMessage(cMessage * msg)
 		routing->successfulBundleForwarded(bundleId, contact, forwardingMsgEnd->getSentToDestination());
 		delete forwardingMsgEnd;
 	}
+	///////////////////////////////////////////
+	// Custody retransmission timer
+	///////////////////////////////////////////
+	else if (msg->getKind() == CUSTODY_TIMEOUT)
+	{
+		// Custody timer expired, check if bundle still in custody memory space and retransmit it if positive
+		CustodyTimout* custodyTimout = check_and_cast<CustodyTimout *>(msg);
+		BundlePkt * reSendBundle = this->custodyModel_.custodyTimerExpired(custodyTimout);
+
+		if(reSendBundle!=NULL)
+			this->dispatchBundle(reSendBundle);
+
+		delete custodyTimout;
+	}
 }
 
 void Dtn::dispatchBundle(BundlePkt *bundle)
@@ -380,13 +402,19 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 		{
 			// This is the first time this bundle arrives
 			if (bundle->getBundleIsCustodyReport())
+			{
 				// This is a custody report destined to me
-				this->custodyModel.custodyReportArrived(bundle);
+				BundlePkt * reSendBundle = this->custodyModel_.custodyReportArrived(bundle);
+
+				// If custody was rejected, reroute
+				if(reSendBundle!=NULL)
+					this->dispatchBundle(reSendBundle);
+			}
 			else
 			{
 				// This is a data bundle destined to me
 				if (bundle->getCustodyTransferRequested())
-					this->dispatchBundle(this->custodyModel.bundleWithCustodyRequestedArrived(bundle));
+					this->dispatchBundle(this->custodyModel_.bundleWithCustodyRequestedArrived(bundle));
 
 				// Send to app layer
 				send(bundle, "gateToApp$o");
@@ -402,7 +430,7 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 
 		// Manage custody transfer
 		if (bundle->getCustodyTransferRequested())
-			this->dispatchBundle(this->custodyModel.bundleWithCustodyRequestedArrived(bundle));
+			this->dispatchBundle(this->custodyModel_.bundleWithCustodyRequestedArrived(bundle));
 
 		// Either accepted or rejected custody, route bundle
 		routing->msgToOtherArrive(bundle, simTime().dbl());
