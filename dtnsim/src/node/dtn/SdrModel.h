@@ -32,7 +32,7 @@ public:
 	virtual void setContactPlan(ContactPlan *contactPlan);
 	virtual void setSize(int size);
 
-	// Enqueue and dequeue from contact
+	// Enqueue and dequeue from contacts
 	virtual bool enqueueBundleToContact(BundlePkt * bundle, int contactId);
 	virtual bool isBundleForContact(int contactId);
 	virtual BundlePkt * getNextBundleForContact(int contactId);
@@ -42,6 +42,10 @@ public:
 	virtual bool enqueueBundle(BundlePkt * bundle);
 	virtual void removeBundle(long bundleId);
 	virtual list<BundlePkt *> getCarryingBundles();
+
+	//Enqueue and dequeue transmitted bundles in custody
+	virtual bool enqueueTransmittedBundleInCustody(BundlePkt * bundle);
+	virtual void removeTransmittedBundleInCustody(long bundleId);
 
 	// Get information
 	virtual int getBundlesCountInSdr();
@@ -69,8 +73,11 @@ private:
 	int bytesStored_;
 
 	ContactPlan *contactPlan_;
+
 	map<int, list<BundlePkt *> > bundlesQueue_;
+	list<BundlePkt *> transmittedBundlesInCustody_;
 	list<BundlePkt *> carriedBundles_;
+
 	int bundlesNumber_; //Amount of bundles enqueued in sdr_ + carriedBundles_. It considers all contacts (i.e contact 0 is included)
 
 };

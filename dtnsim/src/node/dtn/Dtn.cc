@@ -36,7 +36,6 @@ void Dtn::initialize(int stage)
 		// Store this node eid
 		this->eid_ = this->getParentModule()->getIndex();
 
-		this->simpleCustodyModel_ = this->par("simpleCustodyModel");
 		this->custodyModel.setEid(eid_);
 		this->custodyModel.setSdr(&sdr_);
 		//this->custodyModel.setDtn(this);
@@ -289,48 +288,50 @@ void Dtn::handleMessage(cMessage * msg)
 				// Get bundle pointer from sdr
 				BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
 
-				if ((!this->simpleCustodyModel_) || (this->simpleCustodyModel_ && neighborDtn->sdr_.isSdrFreeSpace(bundle->getByteLength())))
+				// Calculate data rate and Tx duration
+				double dataRate = contactTopology_.getContactById(contactId)->getDataRate();
+				double txDuration = (double) bundle->getByteLength() / dataRate;
+				double linkDelay = contactTopology_.getRangeBySrcDst(eid_, neighborEid);
+
+				Contact * contact = contactTopology_.getContactById(contactId);
+
+				// if the message can be fully transmitted before the end of the contact, transmit it
+				if ((simTime() + txDuration + linkDelay) <= contact->getEnd())
 				{
-					// Calculate data rate and Tx duration
-					double dataRate = contactTopology_.getContactById(contactId)->getDataRate();
-					double txDuration = (double) bundle->getByteLength() / dataRate;
-					double linkDelay = contactTopology_.getRangeBySrcDst(eid_, neighborEid);
+					// Set bundle metadata (set by intermediate nodes)
+					bundle->setSenderEid(eid_);
+					bundle->setHopCount(bundle->getHopCount() + 1);
+					bundle->getVisitedNodes().push_back(eid_);
+					bundle->setXmitCopiesCount(0);
 
-					Contact * contact = contactTopology_.getContactById(contactId);
+					//cout<<"-----> sending bundle to node "<<bundle->getNextHopEid()<<endl;
+					send(bundle, "gateToCom$o");
 
-					// if the message can be fully transmitted before the end of the contact, transmit it
-					if ((simTime() + txDuration + linkDelay) <= contact->getEnd())
-					{
-						// Set bundle metadata (set by intermediate nodes)
-						bundle->setSenderEid(eid_);
-						bundle->setHopCount(bundle->getHopCount() + 1);
-						bundle->getVisitedNodes().push_back(eid_);
-						bundle->setXmitCopiesCount(0);
+					if (saveBundleMap_)
+						bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
 
-						//cout<<"-----> sending bundle to node "<<bundle->getNextHopEid()<<endl;
-						send(bundle, "gateToCom$o");
+					sdr_.popNextBundleForContact(contactId);
 
-						if (saveBundleMap_)
-							bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
+					// If custody requested, store bundle until report received
+					if (bundle->getCustodyTransferRequested())
+						sdr_.enqueueTransmittedBundleInCustody(bundle->dup());
+					// TODO: Enqueue a retransmission event in case custody acceptance did not receive
 
-						sdr_.popNextBundleForContact(contactId);
+					emit(dtnBundleSentToCom, true);
+					emit(sdrBundleStored, sdr_.getBundlesCountInSdr());
+					emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
 
-						emit(dtnBundleSentToCom, true);
-						emit(sdrBundleStored, sdr_.getBundlesCountInSdr());
-						emit(sdrBytesStored, sdr_.getBytesStoredInSdr());
+					// Schedule next transmission
+					scheduleAt(simTime() + txDuration, forwardingMsgStart);
 
-						// Schedule next transmission
-						scheduleAt(simTime() + txDuration, forwardingMsgStart);
-
-						// Schedule forwarding message end
-						ForwardingMsgEnd * forwardingMsgEnd = new ForwardingMsgEnd("forwardingMsgEnd", FORWARDING_MSG_END);
-						forwardingMsgEnd->setSchedulingPriority(FORWARDING_MSG_END);
-						forwardingMsgEnd->setNeighborEid(neighborEid);
-						forwardingMsgEnd->setContactId(contactId);
-						forwardingMsgEnd->setBundleId(bundle->getBundleId());
-						forwardingMsgEnd->setSentToDestination(neighborEid == bundle->getDestinationEid());
-						scheduleAt(simTime() + txDuration, forwardingMsgEnd);
-					}
+					// Schedule forwarding message end
+					ForwardingMsgEnd * forwardingMsgEnd = new ForwardingMsgEnd("forwardingMsgEnd", FORWARDING_MSG_END);
+					forwardingMsgEnd->setSchedulingPriority(FORWARDING_MSG_END);
+					forwardingMsgEnd->setNeighborEid(neighborEid);
+					forwardingMsgEnd->setContactId(contactId);
+					forwardingMsgEnd->setBundleId(bundle->getBundleId());
+					forwardingMsgEnd->setSentToDestination(neighborEid == bundle->getDestinationEid());
+					scheduleAt(simTime() + txDuration, forwardingMsgEnd);
 				}
 			}
 			else
@@ -361,9 +362,9 @@ void Dtn::handleMessage(cMessage * msg)
 
 void Dtn::dispatchBundle(BundlePkt *bundle)
 {
-	char bundleName[10];
-	sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", bundle->getSourceEid() , bundle->getDestinationEid(), (int) bundle->getId());
-	cout << "Dispatching " << bundleName << endl;
+	//char bundleName[10];
+	//sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", bundle->getSourceEid() , bundle->getDestinationEid(), (int) bundle->getId());
+	//cout << "Dispatching " << bundleName << endl;
 
 	if (this->eid_ == bundle->getDestinationEid())
 	{

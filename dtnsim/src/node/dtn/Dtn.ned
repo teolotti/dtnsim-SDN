@@ -13,7 +13,6 @@ simple Dtn
         bool printRoutingDebug = default(false);
         bool saveBundleMap = default(false);
         int sdrSize = default(0); // SDR Memory Size in Bytes (0 = infinite)
-        bool simpleCustodyModel = default(false);
 
         // Signals and Statistics
         @signal[dtnBundleSentToCom];

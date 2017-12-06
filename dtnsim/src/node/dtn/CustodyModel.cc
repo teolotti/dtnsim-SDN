@@ -37,34 +37,41 @@ BundlePkt * CustodyModel::bundleWithCustodyRequestedArrived(BundlePkt * bundleIn
 	if (sdr_->isSdrFreeSpace(bundleInCustody->getByteLength()) || this->eid_ == bundleInCustody->getDestinationEid())
 	{
 		// Accept custody, send custody report to previous custodian
-		cout << "Custody accept" << endl;
+		cout << "Node " << eid_ << " ** Custody accept for bundleId " << bundleInCustody->getBundleId() << " - ";
 		custodyReport = this->getNewCustodyReport(true, bundleInCustody);
 		bundleInCustody->setCustodianEid(eid_);
 	}
 	else
 	{
 		// Reject custody, send custody report to previous custodian
-		cout << "Custody reject" << endl;
+		cout << "Node " << eid_ << " ** Custody reject for bundleId " << bundleInCustody->getBundleId() << " - ";
 		custodyReport = this->getNewCustodyReport(false, bundleInCustody);
 	}
 	return custodyReport;
 }
 
-void CustodyModel::custodyReportArrived(BundlePkt * bundle)
+void CustodyModel::custodyReportArrived(BundlePkt * custodyReport)
 {
+	if (custodyReport->getSourceEid() == eid_)
+	{
+		// I sent this report to myself, meaning I was the generator of the bundle in custody
+		delete custodyReport;
+		return;
+	}
 
-	if (bundle->getCustodyAccepted())
+	if (custodyReport->getCustodyAccepted())
 	{
 		// Custody was accepted by remote node, release custodyBundleId
-
-
+		cout << "Node " << eid_ << " ** Releasing custody of bundleId " << custodyReport->getCustodyBundleId() << endl;
+		sdr_->removeTransmittedBundleInCustody(custodyReport->getCustodyBundleId());
 	}
 	else
 	{
-		// Custody was rejected by remote node, reroute custodyBundleId
-
+		// Custody was rejected by remote node,
+		// TODO: reroute custodyBundleId
+		cout << "Node " << eid_ <<  " ** NOT releasing custody of bundleId " << custodyReport->getCustodyBundleId() << " rejected... do something!" << endl;
 	}
-	delete bundle;
+	delete custodyReport;
 }
 
 BundlePkt * CustodyModel::getNewCustodyReport(bool accept, BundlePkt *bundleInCustody)
@@ -75,11 +82,8 @@ BundlePkt * CustodyModel::getNewCustodyReport(bool accept, BundlePkt *bundleInCu
 	custodyReport->setSchedulingPriority(BUNDLE);
 
 	// Bundle properties
-	char bundleName[10];
+	char bundleName[15];
 	sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, bundleInCustody->getCustodianEid(), (int) custodyReport->getId());
-
-	cout << "Report: " << bundleName << endl;
-
 	custodyReport->setBundleId(custodyReport->getId());
 	custodyReport->setName(bundleName);
 	custodyReport->setBitLength(custodyReportByteSize * 8);
@@ -95,8 +99,10 @@ BundlePkt * CustodyModel::getNewCustodyReport(bool accept, BundlePkt *bundleInCu
 	custodyReport->setCreationTimestamp(simTime());
 	custodyReport->setQos(2);
 
+	// Custody fields
 	custodyReport->setBundleIsCustodyReport(true);
 	custodyReport->setCustodyBundleId(bundleInCustody->getBundleId());
+	custodyReport->setCustodyAccepted(accept);
 
 	// Bundle meta-data (set by intermediate nodes)
 	custodyReport->setHopCount(0);
@@ -107,6 +113,8 @@ BundlePkt * CustodyModel::getNewCustodyReport(bool accept, BundlePkt *bundleInCu
 	CgrRoute emptyRoute;
 	emptyRoute.nextHop = EMPTY_ROUTE;
 	custodyReport->setCgrRoute(emptyRoute);
+
+	cout << "Sending report: " << bundleName << endl;
 
 	return custodyReport;
 }
