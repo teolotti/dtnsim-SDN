@@ -200,12 +200,17 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 
 		if ((*it).toTime <= simTime)
 		{
-			//cout << " ignoring, route due, recompute route for contact (not implemented yet!)" << endl;
-			recomputeRouteForContact();
+			// clean the route table for this destination and traverse the route table again
+			routeList_[terminusNode].clear();
+			loadRouteList(terminusNode, simTime);
+			it = routeList_[terminusNode].begin();
+
+			// cout << " ignoring, route due, recompute route for contact (not implemented yet!)" << endl;
+			// recomputeRouteForContact();
 			// TODO: a new route should be looked and the
 			// for loop might need to be restarted if found
 			// Now we just ignore the old route (pesimistic)
-			continue;
+			// continue;
 		}
 
 		// If arrival time is after deadline, ignore route
