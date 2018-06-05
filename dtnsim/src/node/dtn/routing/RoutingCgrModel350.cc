@@ -186,7 +186,8 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 
 	//cout << "    routeList to Node:" << terminusNode << " size:" << routeList_[terminusNode].size() << endl;
 
-	for (vector<CgrRoute>::iterator it = routeList_[terminusNode].begin(); it != routeList_[terminusNode].end(); ++it)
+	vector<CgrRoute>::iterator it = routeList_[terminusNode].begin();
+	while (it != routeList_[terminusNode].end())
 	{
 		tableEntriesExplored++;
 
@@ -200,10 +201,15 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 
 		if ((*it).toTime <= simTime)
 		{
-			// clean the route table for this destination and traverse the route table again
+			// clear the route table for this destination, load a new route list and traverse it again
 			routeList_[terminusNode].clear();
 			loadRouteList(terminusNode, simTime);
 			it = routeList_[terminusNode].begin();
+
+			// clean old proximate nodes
+			proximateNodes->clear();
+
+			continue;
 
 			// cout << " ignoring, route due, recompute route for contact (not implemented yet!)" << endl;
 			// recomputeRouteForContact();
@@ -217,6 +223,7 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 		if ((*it).arrivalTime > bundle->getTtl().dbl())
 		{
 			//cout << " ignoring, does not satisfies bundle deadline" << endl;
+			++it;
 			continue;
 		}
 
@@ -226,6 +233,7 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 		if ((*it).hops[0]->getConfidence() != 1.0)
 		{
 			//cout << " ignoring, first hop has confidence different than 1" << endl;
+			++it;
 			continue;
 		}
 
@@ -236,6 +244,7 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 			if (bundle->getDestinationEid() == (*it).nextHop)
 			{
 				//cout << " ignoring, first hop and destination is this node" << endl;
+				++it;
 				continue;
 			}
 
@@ -250,6 +259,7 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 		// If bundle does not fit in first contact, ignore.
 		if (bundle->getByteLength() > (*it).hops[0]->getResidualVolume())
 		{
+			++it;
 			continue;
 		}
 
@@ -258,6 +268,7 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 		if (itExl != excludedNodes.end())
 		{
 			//cout << " ignoring, next hop is in excludedNodes" << endl;
+			++it;
 			continue;
 		}
 
@@ -265,6 +276,8 @@ void RoutingCgrModel350::identifyProximateNodes(BundlePkt * bundle, double simTi
 		// considered. However, some final tests must be
 		// donde before evaluating the node for the proxNodes.
 		tryRoute(bundle, &(*it), proximateNodes);
+
+		++it;
 	}
 }
 
