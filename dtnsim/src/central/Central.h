@@ -68,6 +68,10 @@ private:
 	/// @return vector of contact ids
 	vector<int> getRandomContactIds(int nContacts);
 
+	/// @brief get contacts randomly. Any contact is chosen with probability failureProbability.
+	/// @return vector of contact ids
+	vector<int> getRandomContactIdsWithFProb(double failureProbability);
+
 	/// @brief get nContacts by iteratively erasing contacts
 	/// with highest centrality
 	/// @return vector of contact ids

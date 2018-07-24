@@ -100,6 +100,27 @@ void Central::initialize()
 		}
 
 		deleteContacts(contactIdsToDelete, faultsAware);
+	}else{
+        double failureProbability = this->par("failureProbability");
+        vector<int> contactIdsToDelete;
+        if (failureProbability > 0)
+        {
+                contactIdsToDelete = getRandomContactIdsWithFProb(failureProbability);
+                deleteContacts(contactIdsToDelete, faultsAware);
+        }else{
+                string toDeleteContactsIds = this->par("contactIdsToDelete");
+                stringstream stream(toDeleteContactsIds);
+                vector<int> contactIdsToDelete;
+                while(1) {
+                   int n; stream >> n;
+                   contactIdsToDelete.push_back(n);
+                   if(!stream)
+                          break;
+                }
+                if (contactIdsToDelete.size() > 0 ){
+                        deleteContacts(contactIdsToDelete, faultsAware);
+                }
+        }
 	}
 
 	// setting modified contact plan and contact topology
@@ -387,6 +408,23 @@ vector<int> Central::getRandomContactIds(int nContacts)
 	}
 
 	return contactIds;
+}
+
+vector<int> Central::getRandomContactIdsWithFProb(double failureProbability)
+{
+       vector<int> contactIds;
+
+       // get working copy of contactPlan_
+       ContactPlan workCP(contactPlan_);
+       vector<Contact> *contacts = workCP.getContacts();
+
+       for(int i=0; i<contacts->size(); i++){
+               double randomNumber =  uniform(0, 1);
+               if (randomNumber < failureProbability)
+                       contactIds.push_back(contacts->at(i).getId());
+       }
+
+       return contactIds;
 }
 
 vector<int> Central::getCentralityContactIds(int nContacts, int nodesNumber)

@@ -135,6 +135,11 @@ void Dtn::initialize(int stage)
 			double sContactProb = par("sContactProb");
 			routing = new RoutingCgrModel350_Probabilistic(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"), this, sContactProb);
 		}
+		else if (routeString.compare("BRUF1T") == 0)
+		{
+		       string frouting = par("frouting");
+		       routing = new RoutingBRUF1T(eid_, &sdr_, &contactPlan_, frouting);
+		}
 		else
 		{
 			cout << "dtnsim error: unknown routing type: " << routeString << endl;

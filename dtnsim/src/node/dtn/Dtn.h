@@ -14,6 +14,7 @@
 #include <dtn/routing/RoutingSprayAndWait.h>
 #include <dtn/routing/RoutingCgrModel350_Proactive.h>
 #include <dtn/routing/RoutingCgrModel350_Probabilistic.h>
+#include <dtn/routing/RoutingBRUF1T.h>
 #include <dtn/SdrModel.h>
 #include <cstdio>
 #include <string>
