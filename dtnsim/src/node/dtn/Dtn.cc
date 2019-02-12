@@ -140,6 +140,13 @@ void Dtn::initialize(int stage)
 		       string frouting = par("frouting");
 		       routing = new RoutingBRUF1T(eid_, &sdr_, &contactPlan_, frouting);
 		}
+		else if (routeString.compare("BRUFNCopies") == 0)
+		{
+		       string frouting = par("frouting");
+		       int bundlesCopies = par("bundlesCopies");
+		       int numOfNodes = this->getParentModule()->getParentModule()->par("nodesNumber");
+		       routing = new RoutingBRUFNCopies(eid_, &sdr_, &contactPlan_, bundlesCopies, numOfNodes, frouting, ".json");
+		}
 		else
 		{
 			cout << "dtnsim error: unknown routing type: " << routeString << endl;

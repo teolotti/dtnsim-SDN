@@ -13,7 +13,7 @@ simple Dtn
         bool printRoutingDebug = default(false);
         bool saveBundleMap = default(false);
         int sdrSize = default(0); // SDR Memory Size in Bytes (0 = infinite)
-        string frouting = default(""); //Path to file wich encodes routing decisions (only valid for BRUF1T routing)
+        string frouting = default(""); //Path to file wich encodes routing decisions (only valid for BRUF1T/BRUFNCopies routing)
         
         // Custody
         int custodyReportByteSize = default(20);

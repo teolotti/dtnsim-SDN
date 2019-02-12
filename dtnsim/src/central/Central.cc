@@ -418,7 +418,7 @@ vector<int> Central::getRandomContactIdsWithFProb(double failureProbability)
        ContactPlan workCP(contactPlan_);
        vector<Contact> *contacts = workCP.getContacts();
 
-       for(int i=0; i<contacts->size(); i++){
+       for(unsigned int i=0; i < contacts->size(); i++){
                double randomNumber =  uniform(0, 1);
                if (randomNumber < failureProbability)
                        contactIds.push_back(contacts->at(i).getId());
