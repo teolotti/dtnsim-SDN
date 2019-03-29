@@ -14,9 +14,9 @@ public:
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 
 private:
-	//<target_node_id, time up to the routing decision is valid, outgoing contact_id>
-	std::map<int, std::map<int,int>> routing_decisions_;
+	//<source_node_id, target_node_id, time up to the routing decision is valid, outgoing contact_id>
+	std::map<int, std::map<int,std::map<int,int>>> routing_decisions_;
 
 };
 
-#endif /* SRC_NODE_DTN_ROUTINGDIRECT_H_ */
+#endif
