@@ -145,7 +145,12 @@ void Dtn::initialize(int stage)
 		       string frouting = par("frouting");
 		       int bundlesCopies = par("bundlesCopies");
 		       int numOfNodes = this->getParentModule()->getParentModule()->par("nodesNumber");
-		       routing = new RoutingBRUFNCopies(eid_, &sdr_, &contactPlan_, bundlesCopies, numOfNodes, frouting, ".json");
+		       double pf = this->getParentModule()->getParentModule()->getSubmodule("central")->par("failureProbability");
+		       //routing = new RoutingBRUFNCopies(eid_, &sdr_, &contactPlan_, bundlesCopies, numOfNodes, frouting, ".json");
+		       ostringstream prefix; prefix << frouting << "pf="<<fixed << setprecision(2) << pf <<"/todtnsim-";
+		       ostringstream posfix; posfix << "-" << fixed << setprecision(2) << pf << ".json";
+
+		       routing = new RoutingBRUFNCopies(eid_, &sdr_, &contactPlan_, bundlesCopies, numOfNodes, prefix.str(), posfix.str());
 		}
 		else
 		{

@@ -1,6 +1,7 @@
 #ifndef _DTN_H_
 #define _DTN_H_
 
+#include <iomanip>
 #include <brufncopies/RoutingBRUFNCopies.h>
 #include <dtn/ContactPlan.h>
 #include <dtn/CustodyModel.h>

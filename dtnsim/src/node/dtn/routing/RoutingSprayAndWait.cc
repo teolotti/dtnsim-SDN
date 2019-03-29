@@ -29,11 +29,10 @@ void RoutingSprayAndWait::msgToOtherArrive(BundlePkt * bundle, double simTime)
 
 void RoutingSprayAndWait::contactEnd(Contact *c)
 {
-	/** todo NO DEBERIA HABER MAS DE UN BUNDLE ENCOLADO!! Y DEBERIA REASIGNAR LAS COPIAS QUE NO SE ENVIARON A LA LISTA DE BUNDLES*/
-	/*
-	 * When a contact finishes, it takes bundles which
-	 * weren't sent and removes these since we assume they are copies.
-	 */
+
+//	 When a contact finishes, it takes bundles which
+//	 weren't sent and removes these since we assume they are copies.
+
 	if (sdr_->isBundleForContact(c->getId()))
 	{
 		BundlePkt* bundle = sdr_->getNextBundleForContact(c->getId());

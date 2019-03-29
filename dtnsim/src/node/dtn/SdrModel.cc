@@ -312,7 +312,7 @@ list<BundlePkt *> SdrModel::getCarryingBundles()
 BundlePkt * SdrModel::getEnqueuedBundle(long bundleId)
 {
 	for (list<BundlePkt *>::iterator it = genericBundleQueue_.begin(); it != genericBundleQueue_.end(); it++)
-		if ((*it)->getBundleId())
+		if ((*it)->getBundleId() == bundleId)
 			return *it;
 
 	return NULL;

@@ -21,12 +21,12 @@ RoutingBRUFNCopies::~RoutingBRUFNCopies()
 	auto it2 = copiesList_.end();
 	while (it1 != it2)
 	{
-		list<BundlePkt *> bundles = it1->second;
+		list<BundlePkt *> * bundles = &(it1->second);
 
-		while (!bundles.empty())
+		while (!bundles->empty())
 		{
-			delete (bundles.back());
-			bundles.pop_back();
+			delete (bundles->back());
+			bundles->pop_back();
 		}
 		copiesList_.erase(it1++);
 	}
@@ -38,8 +38,8 @@ void RoutingBRUFNCopies::msgToOtherArrive(BundlePkt * bundle, double simTime)
 	//Check if it is a new message which was created in this node
 	if (bundle->getHopCount() == 0 and bundle->getSourceEid() == this->eid_)
 	{
-		cout<<"RoutingBRUFNCopies::msgToOtherArrive Node " << eid_<<": Bundle from " <<eid_ << "to " << bundle->getDestinationEid()
-				<<"( "<< bundlesCopies_ << " copies) was generated."<< bundle->getBundlesCopies()<< endl;
+		cout<<"RoutingBRUFNCopies::msgToOtherArrive Node " << eid_ << ": Bundle " << bundle
+				<<"( "<< bundlesCopies_ << " copies) was generated."<< endl;
 
 		int target = bundle->getDestinationEid();
 		bundle->setBundlesCopies(bundlesCopies_); // Set the number of copies to current bundle
@@ -84,7 +84,18 @@ bool RoutingBRUFNCopies::msgToMeArrive(BundlePkt * bundle)
 	int copies = bundle->getBundlesCopies();
 
 	oracle_->succesfulBundleForwarded(source, eid_, sender, eid_, copies, true); //Notify oracle of this event
-	return true;
+
+	/*
+	*Check if current bundle has already sent to app, if not
+	*it tells to dtn that bundle should be delivered to app and
+	*save it as delivered bundle.
+	*/
+	if (!isDeliveredBundle(bundle->getBundleId()))
+	{
+		deliveredBundles_.push_back(bundle->getBundleId());
+		return true;
+	}
+	return false;
 }
 
 void RoutingBRUFNCopies::contactEnd(Contact *c)
@@ -116,6 +127,7 @@ void RoutingBRUFNCopies::enqueueToCarryingBundles(BundlePkt * bundle)
 	// Check if node is already carrying copies of this bundle
 	if (storedBundle != nullptr)
 	{
+		cout<<storedBundle<<endl;
 		generateCopies(bundle);
 		storedBundle->setBundlesCopies(storedBundle->getBundlesCopies() + bundle->getBundlesCopies()); //update copies number
 		delete bundle;
@@ -231,8 +243,12 @@ BundlePkt *  RoutingBRUFNCopies::getCopiesToSend(long bundle_id, int copies)
 		reportErrorAndExit("RoutingBRUFNCopies::getCopiesToSend", "Error trying to send more copies than those it is carrying");
 
 	BundlePkt * bundleCopy = list->front();
-	for(int i=0; i<copies; i++)
+	list->pop_front();
+	for(int i=0; i < copies-1; i++)
+	{
+		delete list->front();
 		list->pop_front();
+	}
 
 	if (list->size() == 0)
 		copiesList_.erase(bundle_id);
@@ -266,4 +282,15 @@ string RoutingBRUFNCopies::reportErrorAndExit(string method, string msg)
 {
 	cout<< method <<" - node " << eid_ << ": " << msg <<endl;
 	exit(1);
+}
+
+/**
+ * Check if bundleId has been delivered to App.
+ */
+bool RoutingBRUFNCopies::isDeliveredBundle(long bundleId)
+{
+	for(list<int>::iterator it = deliveredBundles_.begin(); it != deliveredBundles_.end(); ++it)
+		if( (*it) == bundleId )
+			return true;
+	return false;
 }

@@ -30,6 +30,8 @@ private:
 	BRUFNCopiesOracle* oracle_;
 	int bundlesCopies_;
 	map<long, list<BundlePkt *>> copiesList_;
+	// The bundles destined to this node that it has already received
+	list<int> deliveredBundles_;
 
 	void enqueueToCarryingBundles(BundlePkt * bundle);
 	void routeBundle(BundlePkt * bundle, int copies, vector<int> route);
@@ -38,6 +40,8 @@ private:
 	void generateCopies(BundlePkt * bundle);
 	BundlePkt * getCarryingBundle(int source, int target);
 	string reportErrorAndExit(string method, string msg);
+
+	bool isDeliveredBundle(long bundleId);
 
 
 };

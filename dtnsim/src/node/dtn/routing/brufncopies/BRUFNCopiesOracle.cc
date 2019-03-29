@@ -19,16 +19,19 @@ BRUFNCopiesOracle::BRUFNCopiesOracle(int numOfNodes, int numOfCopies, string pat
 			if (source != target)
 			{
 				ostringstream stream;
-				stream << pathPrefix << source << "-" << target << pathPosfix;
+				stream << pathPrefix << source-1 << "-" << target-1 << pathPosfix;
 				string pathToRouting = stream.str();
+				cout<<"BRUFNCopiesOracle::BRUFNCopiesOracle check if exist file: " << pathToRouting << endl;
 				ifstream infile(pathToRouting);
 				if (infile.good())
 				{
 					BRUFNCopies1TOracle * oracleij = new BRUFNCopies1TOracle(source, target, pathToRouting, numOfCopies);
 					oneTrafficOracles_[source][target] = oracleij;
 				}
-				else
+				else{
 					cout<<"BRUFNCopiesOracle::BRUFNCopiesOracle there is not traffic from " << source << " to " << target << endl;
+					exit(1);
+				}
 			}
 		}
 	}
