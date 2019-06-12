@@ -61,8 +61,8 @@ message TrafficGeneratorMsg{
     int bundlesNumber;
     int destinationEid;
     int size;
-    int ttl;
-    int interval;
+    double ttl;
+    double interval;
 };
 
 message ContactMsg{

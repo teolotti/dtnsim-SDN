@@ -88,7 +88,7 @@ private:
 	ContactPlan contactTopology_;
 
 	CustodyModel custodyModel_;
-	int custodyTimeout_;
+	double custodyTimeout_;
 
 	SdrModel sdr_;
 

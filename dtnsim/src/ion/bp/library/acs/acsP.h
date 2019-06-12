@@ -21,9 +21,9 @@
 extern "C" {
 #endif
 
-#ifdef NDEBUG
-#error "NDEBUG is defined"
-#endif
+//#ifdef NDEBUG
+//#error "NDEBUG is defined"
+//#endif
 #include <assert.h>
 #define ASSERT_ACSSDR_XN    assert(sdr_in_xn(acsSdr) != 0)
 #define ASSERT_ACSSDR_NOXN  assert(sdr_in_xn(acsSdr) == 0)

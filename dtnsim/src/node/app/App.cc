@@ -52,8 +52,8 @@ void App::initialize()
 			trafficGenMsg->setBundlesNumber(bundlesNumberVec_.at(i));
 			trafficGenMsg->setDestinationEid(destinationEidVec_.at(i));
 			trafficGenMsg->setSize(sizeVec_.at(i));
-			trafficGenMsg->setInterval(par("interval").doubleValue());
-			trafficGenMsg->setTtl(par("ttl").doubleValue());
+			trafficGenMsg->setInterval(par("interval"));
+			trafficGenMsg->setTtl(par("ttl"));
 			scheduleAt(startVec_.at(i), trafficGenMsg);
 		}
 	}
