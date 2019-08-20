@@ -152,6 +152,14 @@ void Dtn::initialize(int stage)
 
 		       routing = new RoutingBRUFNCopies(eid_, &sdr_, &contactPlan_, bundlesCopies, numOfNodes, prefix.str(), posfix.str());
 		}
+		else if (routeString.compare("CGR_BRUFPowered") == 0)
+		{
+		       string frouting = par("frouting");
+		       int numOfNodes = this->getParentModule()->getParentModule()->par("nodesNumber");
+		       double pf = this->getParentModule()->getParentModule()->getSubmodule("central")->par("failureProbability");
+		       int ts_duration = par("ts_duration");
+		       routing = new CGRBRUFPowered(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"), pf, ts_duration, frouting);
+		}
 		else
 		{
 			cout << "dtnsim error: unknown routing type: " << routeString << endl;

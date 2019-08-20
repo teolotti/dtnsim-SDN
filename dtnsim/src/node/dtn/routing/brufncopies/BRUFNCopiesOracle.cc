@@ -30,7 +30,7 @@ BRUFNCopiesOracle::BRUFNCopiesOracle(int numOfNodes, int numOfCopies, string pat
 				}
 				else{
 					cout<<"BRUFNCopiesOracle::BRUFNCopiesOracle there is not traffic from " << source << " to " << target << endl;
-					exit(1);
+					//exit(1);
 				}
 			}
 		}
