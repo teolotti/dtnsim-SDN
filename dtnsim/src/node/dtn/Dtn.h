@@ -2,7 +2,6 @@
 #define _DTN_H_
 
 #include <iomanip>
-#include <brufncopies/RoutingBRUFNCopies.h>
 #include <dtn/ContactPlan.h>
 #include <dtn/CustodyModel.h>
 #include <dtn/routing/Routing.h>
@@ -17,6 +16,8 @@
 #include <dtn/routing/RoutingCgrModel350_Proactive.h>
 #include <dtn/routing/RoutingCgrModel350_Probabilistic.h>
 #include <dtn/routing/RoutingBRUF1T.h>
+#include <brufncopies/RoutingBRUFNCopies.h>
+#include <cgrbrufpowered/CGRBRUFPowered.h>
 #include <dtn/SdrModel.h>
 #include <cstdio>
 #include <string>
