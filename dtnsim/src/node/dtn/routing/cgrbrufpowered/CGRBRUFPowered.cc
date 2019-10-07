@@ -7,25 +7,38 @@
 
 #include <cgrbrufpowered/CGRBRUFPowered.h>
 
-CGRBRUFPowered::CGRBRUFPowered(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug, double probability_of_failure, int ts_duration, string path_to_bruf_function) :
+CGRBRUFPowered::CGRBRUFPowered(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug, double probability_of_failure, int ts_duration, int numOfNodes, string pathPrefix, string pathPosfix) :
 		RoutingDeterministic(eid, sdr, contactPlan)
 {
 	this->contact_failure_probability = probability_of_failure;
 	this->ts_duration = ts_duration;
 	printDebug_ = printDebug;
-	ifstream infile(path_to_bruf_function);
-	if (infile)
+
+	//It looks up for all routing files  {pathPrefix}{source}-{target}{pathPosfix}
+	for(int source=1; source <= numOfNodes; source++)
 	{
-		cout<<path_to_bruf_function<<endl;
-		this->bruf_fuction = json::parse(infile);
-		get_node_future_delivery_probability(1,2);
-		infile.close();
-	}
-	else
-	{
-		infile.close();
-		cout<<"CGRBRUFPowered::CGRBRUFPowered : Error opening file "<< path_to_bruf_function <<endl;
-		exit(1);
+		for(int target=1; target <= numOfNodes; target++)
+		{
+			if (source != target)
+			{
+				ostringstream stream;
+				stream << pathPrefix << source-1 << "-" << target-1 << pathPosfix;
+				string pathToRouting = stream.str();
+				cout<<"CGRBrufPowered::CGRBrufPowered check if exist file: " << pathToRouting << endl;
+				ifstream infile(pathToRouting);
+				if (infile.good())
+				{
+					cout<<pathToRouting<<endl;
+					this->bruf_function[to_string(source)][to_string(target)] = json::parse(infile);
+					//cout<<this->bruf_function.dump();
+					infile.close();
+				}
+				else{
+					cout<<"CGRBrufPowered::CGRBrufPowered there is not traffic from " << source << " to " << target << endl;
+					//exit(1);
+				}
+			}
+		}
 	}
 }
 
@@ -406,7 +419,7 @@ void CGRBRUFPowered::tryRoute(BundlePkt * bundle, CgrRoute * route, vector<Proxi
 	node.forfeitTime = route->toTime;
 	node.hopCount = route->hops.size();
 	node.route = route;
-	node.success_probability = get_probability_if_this_route_is_chosed(route);
+	node.success_probability = get_probability_if_this_route_is_chosed(bundle->getSourceEid(), bundle->getDestinationEid(), route);
 	proximateNodes->push_back(node);
 }
 
@@ -910,16 +923,19 @@ int CGRBRUFPowered::getRouteTableEntriesExplored()
 	return tableEntriesExplored;
 }
 
-double CGRBRUFPowered::get_node_future_delivery_probability(int ts, int node)
+double CGRBRUFPowered::get_node_future_delivery_probability(int source_eid, int target_eid, int carrier_eid, int ts)
 {
-	string a = to_string(ts);
-	string b = to_string(node);
-    cout<<this->bruf_fuction.at(a).at(b)<<endl;
-    cout<<typeid(this->bruf_fuction.at(a).at(b)).name()<<endl;
-	return this->bruf_fuction.at(a).at(b);
+	string s_source = to_string(source_eid);
+	string s_target = to_string(target_eid);
+	string s_ts = to_string(ts);
+	string s_carrier = to_string(carrier_eid);
+
+    //cout<<this->bruf_function.at(s_source).at(s_target).at(s_ts).at(s_carrier)<<endl;
+    //cout<<typeid(this->bruf_function.at(s_source).at(s_target).at(s_ts).at(s_carrier)).name()<<endl;
+	return this->bruf_function.at(s_source).at(s_target).at(s_ts).at(s_carrier);
 }
 
-double CGRBRUFPowered::get_probability_if_this_route_is_chosed(CgrRoute * route)
+double CGRBRUFPowered::get_probability_if_this_route_is_chosed(int source_eid, int target_eid, CgrRoute * route)
 {
 	vector<Contact *> first_ts_contacts;
 	Contact * first_hop = *(route->hops.begin());
@@ -930,10 +946,10 @@ double CGRBRUFPowered::get_probability_if_this_route_is_chosed(CgrRoute * route)
 	int route_initial_ts = int(first_hop->getStart() / this->ts_duration); // At which time stamp route starts
 	int last_hop_destination_in_initial = first_ts_contacts.back()->getDestinationEid(); //At which node this bundle will arrive in current timestamp is all go well
 
-	double route_successful_probability = pow(1 - this->contact_failure_probability, first_ts_contacts.size()) * get_node_future_delivery_probability(route_initial_ts + 1, last_hop_destination_in_initial);
+	double route_successful_probability = pow(1 - this->contact_failure_probability, first_ts_contacts.size()) * get_node_future_delivery_probability(source_eid, target_eid, last_hop_destination_in_initial, route_initial_ts + 1);
 
 	for(unsigned int num_of_working_links = 0; num_of_working_links < first_ts_contacts.size(); num_of_working_links++)
-		route_successful_probability +=	 pow( 1 - this->contact_failure_probability, num_of_working_links) * this->contact_failure_probability * get_node_future_delivery_probability(route_initial_ts + 1, first_ts_contacts.at(num_of_working_links)->getSourceEid());
+		route_successful_probability +=	 pow( 1 - this->contact_failure_probability, num_of_working_links) * this->contact_failure_probability * get_node_future_delivery_probability(source_eid, target_eid, first_ts_contacts.at(num_of_working_links)->getSourceEid(), route_initial_ts + 1);
 
 	return route_successful_probability;
 }

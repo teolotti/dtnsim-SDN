@@ -14,6 +14,7 @@ simple Dtn
         bool saveBundleMap = default(false);
         int sdrSize = default(0); // SDR Memory Size in Bytes (0 = infinite)
         string frouting = default(""); //Path to file wich encodes routing decisions (only valid for BRUF1T/BRUFNCopies routing)
+        int ts_duration = default(0); //The timestamp duration in seconds   
         
         // Custody
         int custodyReportByteSize = default(20);
