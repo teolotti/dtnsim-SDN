@@ -158,10 +158,18 @@ void Dtn::initialize(int stage)
 		       int numOfNodes = this->getParentModule()->getParentModule()->par("nodesNumber");
 		       double pf = this->getParentModule()->getParentModule()->getSubmodule("central")->par("failureProbability");
 		       int ts_duration = par("ts_duration");
+
+		       //Parse parameter ts_start_times
+		       const char *str_ts_start_times = par("ts_start_times");
+		       cStringTokenizer ts_start_Tokenizer(str_ts_start_times, ",");
+		       std::vector<int> ts_start_times;
+		       while (ts_start_Tokenizer.hasMoreTokens())
+		    	   ts_start_times.push_back(atoi(ts_start_Tokenizer.nextToken()));
+
 		       ostringstream prefix; prefix << frouting << "pf="<<fixed << setprecision(2) << pf <<"/todtnsim-";
 		       ostringstream posfix; posfix << "-" << fixed << setprecision(2) << pf << ".json";
 
-		       routing = new CGRBRUFPowered(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"), pf, ts_duration, numOfNodes, prefix.str(), posfix.str());
+		       routing = new CGRBRUFPowered(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"), pf, ts_duration, ts_start_times, numOfNodes, prefix.str(), posfix.str());
 		}
 		else
 		{

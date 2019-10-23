@@ -7,11 +7,18 @@
 
 #include <cgrbrufpowered/CGRBRUFPowered.h>
 
-CGRBRUFPowered::CGRBRUFPowered(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug, double probability_of_failure, int ts_duration, int numOfNodes, string pathPrefix, string pathPosfix) :
+CGRBRUFPowered::CGRBRUFPowered(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug, double probability_of_failure, int ts_duration, std::vector<int> ts_start_times, int numOfNodes, string pathPrefix, string pathPosfix) :
 		RoutingDeterministic(eid, sdr, contactPlan)
 {
 	this->contact_failure_probability = probability_of_failure;
 	this->ts_duration = ts_duration;
+	this->ts_start_times = ts_start_times;
+    //Check that only one of the parameters ts_duration and ts_start_times has been set
+	if ((ts_duration != -1 && ts_start_times.size()) || (ts_duration == -1 && ts_start_times.size() == 0))
+	{
+		cout << "[Error] in CGRBRUFPowered::CGRBRUFPowered() : When CGR_BRUFPowered is used you must set ts_duration or ts_start_times but not both."<< endl;
+		exit(1);
+	}
 	printDebug_ = printDebug;
 
 	//It looks up for all routing files  {pathPrefix}{source}-{target}{pathPosfix}
@@ -368,6 +375,18 @@ void CGRBRUFPowered::tryRoute(BundlePkt * bundle, CgrRoute * route, vector<Proxi
 			{
 				//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival confidence" << endl;
 				return;
+			}
+			else if(get_probability_if_this_route_is_chosed(bundle->getSourceEid(), bundle->getDestinationEid(), route) > get_probability_if_this_route_is_chosed(bundle->getSourceEid(), bundle->getDestinationEid(), (*it).route))			{
+				//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+				(*it).arrivalTime = route->arrivalTime;
+				(*it).hopCount = route->hops.size();
+				(*it).forfeitTime = route->toTime;
+				(*it).contactId = route->hops[0]->getId();
+				(*it).route = route;
+			}
+			else if(get_probability_if_this_route_is_chosed(bundle->getSourceEid(), bundle->getDestinationEid(), route) < get_probability_if_this_route_is_chosed(bundle->getSourceEid(), bundle->getDestinationEid(), (*it).route))
+			{
+				continue; // Not chosen, because it has less delivery probability
 			}
 			else if (route->arrivalTime < (*it).arrivalTime)
 			{
@@ -937,13 +956,16 @@ double CGRBRUFPowered::get_node_future_delivery_probability(int source_eid, int 
 
 double CGRBRUFPowered::get_probability_if_this_route_is_chosed(int source_eid, int target_eid, CgrRoute * route)
 {
-	vector<Contact *> first_ts_contacts;
 	Contact * first_hop = *(route->hops.begin());
+	int route_initial_ts = get_ts_for_contact(first_hop); // At which time stamp route starts
+	vector<Contact *> first_ts_contacts;
 	for(vector<Contact *>::iterator it = route->hops.begin(); it != route->hops.end(); it++)
-		if (first_hop->getStart() == (*it)->getStart())
+		if (route_initial_ts == get_ts_for_contact(*it))
 			first_ts_contacts.push_back(*it);
+		else
+			break; // When a contact does not belong to the same time stamp that first then the following contacts neither.
 
-	int route_initial_ts = int(first_hop->getStart() / this->ts_duration); // At which time stamp route starts
+
 	int last_hop_destination_in_initial = first_ts_contacts.back()->getDestinationEid(); //At which node this bundle will arrive in current timestamp is all go well
 
 	double route_successful_probability = pow(1 - this->contact_failure_probability, first_ts_contacts.size()) * get_node_future_delivery_probability(source_eid, target_eid, last_hop_destination_in_initial, route_initial_ts + 1);
@@ -954,35 +976,58 @@ double CGRBRUFPowered::get_probability_if_this_route_is_chosed(int source_eid, i
 	return route_successful_probability;
 }
 
-/*
-double CGRBRUFPowered::get_probability_if_this_route_is_chosed(CgrRoute * route)
-{
-	double failure_pr[] = {0, 0.5, 0.6, 0.5};
-
-	vector<Contact *> first_ts_contacts;
-	Contact * first_hop = *(route->hops.begin());
-	for(vector<Contact *>::iterator it = route->hops.begin(); it != route->hops.end(); it++)
-		if (first_hop->getStart() == (*it)->getStart())
-			first_ts_contacts.push_back(*it);
-
-	int route_initial_ts = int(first_hop->getStart() / this->ts_duration); // At which time stamp route starts
-	int last_hop_destination_in_initial = first_ts_contacts.back()->getDestinationEid(); //At which node this bundle will arrive in current timestamp is all go well
-
-	double route_successful_probability = get_node_future_delivery_probability(route_initial_ts + 1, last_hop_destination_in_initial);
-	for(vector<Contact *>::iterator it = first_ts_contacts.begin(); it != first_ts_contacts.end(); it++)
+int CGRBRUFPowered::get_ts_for_contact(Contact * c){
+	int cStartTime = c->getStart();
+	if (this->ts_duration != -1)
+		return int(cStartTime) / this->ts_duration;
+	else
 	{
-		route_successful_probability *= 1 - failure_pr[(*it)->getId()];
+		int ts = 0;
+		vector<int>::iterator it = this->ts_start_times.begin();
+		while(it != this->ts_start_times.end() && (*it) <= cStartTime)
+		{
+			it++;
+			ts++;
+		}
+
+		return ts-1;
 	}
-
-	for(unsigned int i=0; i<first_ts_contacts.size(); i++)
-	{
-		double case_pr = failure_pr[first_ts_contacts.at(i)->getId()];
-		for(unsigned int j=0; j<i; j++)
-			case_pr *= 1 - failure_pr[first_ts_contacts.at(j)->getId()];
-
-		route_successful_probability += case_pr * get_node_future_delivery_probability(route_initial_ts + 1, first_ts_contacts.at(i)->getSourceEid());
-	}
-
-	return route_successful_probability;
 }
-*/
+
+/*
+ * This method allows to hardcode contact failure probabilities
+ */
+//double CGRBRUFPowered::get_probability_if_this_route_is_chosed(int source_eid, int target_eid, CgrRoute * route)
+//{
+//
+//	double failure_pr[] = {0, 0.2, 0.5, 0.1};
+//
+//	Contact * first_hop = *(route->hops.begin());
+//	int route_initial_ts = get_ts_for_contact(first_hop); // At which time stamp route starts
+//	vector<Contact *> first_ts_contacts;
+//	for(vector<Contact *>::iterator it = route->hops.begin(); it != route->hops.end(); it++)
+//		if (route_initial_ts == get_ts_for_contact(*it))
+//			first_ts_contacts.push_back(*it);
+//		else
+//			break; // When a contact does not belong to the same time stamp that first then the following contacts neither.
+//
+//
+//	int last_hop_destination_in_initial = first_ts_contacts.back()->getDestinationEid(); //At which node this bundle will arrive in current timestamp is all go well
+//
+//	double route_successful_probability = get_node_future_delivery_probability(source_eid, target_eid, last_hop_destination_in_initial, route_initial_ts + 1);
+//	for(vector<Contact *>::iterator it = first_ts_contacts.begin(); it != first_ts_contacts.end(); it++)
+//	{
+//		route_successful_probability *= 1 - failure_pr[(*it)->getId()];
+//	}
+//
+//	for(unsigned int i=0; i<first_ts_contacts.size(); i++)
+//	{
+//		double case_pr = failure_pr[first_ts_contacts.at(i)->getId()];
+//		for(unsigned int j=0; j<i; j++)
+//			case_pr *= 1 - failure_pr[first_ts_contacts.at(j)->getId()];
+//
+//		route_successful_probability += case_pr * get_node_future_delivery_probability(source_eid, target_eid, first_ts_contacts.at(i)->getSourceEid(), route_initial_ts + 1);
+//	}
+//
+//	return route_successful_probability;
+//}

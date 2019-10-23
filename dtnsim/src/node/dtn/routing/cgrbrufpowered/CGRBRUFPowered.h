@@ -27,7 +27,7 @@ using json = nlohmann::json;
 class CGRBRUFPowered: public RoutingDeterministic
 {
 public:
-	CGRBRUFPowered(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug, double probability_of_failure, int ts_duration, int numOfNodes, string pathPrefix, string pathPosfix);
+	CGRBRUFPowered(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug, double probability_of_failure, int ts_duration, std::vector<int> ts_start_times, int numOfNodes, string pathPrefix, string pathPosfix);
 	virtual ~CGRBRUFPowered();
 	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
 	virtual CgrRoute* getCgrBestRoute(BundlePkt * bundle, double simTime);
@@ -48,10 +48,12 @@ private:
 
 	json bruf_function;
 	double contact_failure_probability;
-	double ts_duration;
+	int ts_duration;
+	std::vector<int> ts_start_times;
 
 	double get_node_future_delivery_probability(int source_eid, int target_eid, int carrier_eid, int ts);
 	double get_probability_if_this_route_is_chosed(int source_eid, int target_eid, CgrRoute * route);
+	int get_ts_for_contact(Contact * c);
 
 	/////////////////////////////////////////////////
 	// Ion Cgr Functions based in libcgr.c (v 3.5.0):
