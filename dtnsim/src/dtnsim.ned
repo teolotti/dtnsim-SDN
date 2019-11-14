@@ -1,7 +1,7 @@
-package dtnsim;
+package src;
 
-import dtnsim.node.Node;
-import dtnsim.central.Central;
+import src.node.Node;
+import src.central.Central;
 
 network dtnsim
 {

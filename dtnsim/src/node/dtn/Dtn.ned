@@ -1,4 +1,4 @@
-package dtnsim.node.dtn;
+package src.node.dtn;
 
 simple Dtn
 {

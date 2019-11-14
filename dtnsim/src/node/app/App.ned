@@ -1,4 +1,4 @@
-package dtnsim.node.app;
+package src.node.app;
 
 simple App
 {

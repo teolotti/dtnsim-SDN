@@ -1,4 +1,4 @@
-package dtnsim.node.graphics;
+package src.node.graphics;
 
 simple Graphics
 {

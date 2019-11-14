@@ -1,4 +1,4 @@
-package dtnsim.central;
+package src.central;
 
 simple Central
 {

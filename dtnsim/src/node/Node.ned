@@ -1,10 +1,10 @@
-package dtnsim.node;
+package src.node;
 
-import dtnsim.node.fault.Fault;
-import dtnsim.node.graphics.Graphics;
-import dtnsim.node.app.App;
-import dtnsim.node.dtn.Dtn;
-import dtnsim.node.com.Com;
+import src.node.fault.Fault;
+import src.node.graphics.Graphics;
+import src.node.app.App;
+import src.node.dtn.Dtn;
+import src.node.com.Com;
 
 module Node
 {

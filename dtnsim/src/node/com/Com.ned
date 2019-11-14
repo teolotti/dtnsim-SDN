@@ -1,4 +1,4 @@
-package dtnsim.node.com;
+package src.node.com;
 
 simple Com
 {
