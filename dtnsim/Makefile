@@ -32,6 +32,65 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 # Object files for local .cc, .msg and .sm files
 OBJS = \
     $O/src/central/Central.o \
+    $O/src/ion/bp/cgr/libcgr.o \
+    $O/src/ion/bp/library/bei.o \
+    $O/src/ion/bp/library/dtn2fw.o \
+    $O/src/ion/bp/library/eureka.o \
+    $O/src/ion/bp/library/libbp.o \
+    $O/src/ion/bp/library/libbpnm.o \
+    $O/src/ion/bp/library/libbpP.o \
+    $O/src/ion/bp/library/libdtn2fw.o \
+    $O/src/ion/bp/library/libipnfw.o \
+    $O/src/ion/bp/library/acs/acsappend.o \
+    $O/src/ion/bp/library/acs/acsid.o \
+    $O/src/ion/bp/library/acs/acsrx.o \
+    $O/src/ion/bp/library/acs/acsserialize.o \
+    $O/src/ion/bp/library/acs/acstx.o \
+    $O/src/ion/bp/library/ext/bpextensions.o \
+    $O/src/ion/bp/library/ext/bae/bae.o \
+    $O/src/ion/bp/library/ext/bpsec/bpsec_bcb.o \
+    $O/src/ion/bp/library/ext/bpsec/bpsec_bib.o \
+    $O/src/ion/bp/library/ext/bpsec/bpsec_instr.o \
+    $O/src/ion/bp/library/ext/bpsec/bpsec_util.o \
+    $O/src/ion/bp/library/ext/bpsec/profiles.o \
+    $O/src/ion/bp/library/ext/bsp/bspbab.o \
+    $O/src/ion/bp/library/ext/bsp/bspbcb.o \
+    $O/src/ion/bp/library/ext/bsp/bspbib.o \
+    $O/src/ion/bp/library/ext/bsp/bsputil.o \
+    $O/src/ion/bp/library/ext/bsp/ciphersuites.o \
+    $O/src/ion/bp/library/ext/bsp/extbspbab.o \
+    $O/src/ion/bp/library/ext/bsp/extbsppcb.o \
+    $O/src/ion/bp/library/ext/bsp/extbsppib.o \
+    $O/src/ion/bp/library/ext/bsp/extbsputil.o \
+    $O/src/ion/bp/library/ext/bsp/ciphersuites/bab_hmac_sha1.o \
+    $O/src/ion/bp/library/ext/bsp/ciphersuites/bcb_arc4.o \
+    $O/src/ion/bp/library/ext/bsp/ciphersuites/bib_hmac_sha256.o \
+    $O/src/ion/bp/library/ext/cteb/cteb.o \
+    $O/src/ion/bp/library/ext/ecos/ecos.o \
+    $O/src/ion/bp/library/ext/meb/meb.o \
+    $O/src/ion/bp/library/ext/phn/phn.o \
+    $O/src/ion/bp/library/ext/snid/snid.o \
+    $O/src/ion/bp/utils/bpadmin.o \
+    $O/src/ion/ici/library/bulk.o \
+    $O/src/ion/ici/library/ion.o \
+    $O/src/ion/ici/library/ionsec.o \
+    $O/src/ion/ici/library/lyst.o \
+    $O/src/ion/ici/library/memmgr.o \
+    $O/src/ion/ici/library/platform.o \
+    $O/src/ion/ici/library/psm.o \
+    $O/src/ion/ici/library/rfx.o \
+    $O/src/ion/ici/library/smlist.o \
+    $O/src/ion/ici/library/smrbt.o \
+    $O/src/ion/ici/library/sptrace.o \
+    $O/src/ion/ici/library/zco.o \
+    $O/src/ion/ici/sdr/sdrcatlg.o \
+    $O/src/ion/ici/sdr/sdrhash.o \
+    $O/src/ion/ici/sdr/sdrlist.o \
+    $O/src/ion/ici/sdr/sdrmgt.o \
+    $O/src/ion/ici/sdr/sdrstring.o \
+    $O/src/ion/ici/sdr/sdrtable.o \
+    $O/src/ion/ici/sdr/sdrxn.o \
+    $O/src/ion/ici/utils/ionadmin.o \
     $O/src/node/app/App.o \
     $O/src/node/com/Com.o \
     $O/src/node/dtn/Contact.o \
@@ -40,6 +99,7 @@ OBJS = \
     $O/src/node/dtn/Dtn.o \
     $O/src/node/dtn/SdrModel.o \
     $O/src/node/dtn/SdrStatus.o \
+    $O/src/node/dtn/routing/RoutingCgrIon350.o \
     $O/src/node/dtn/routing/RoutingCgrModel350.o \
     $O/src/node/dtn/routing/RoutingCgrModel350_2Copies.o \
     $O/src/node/dtn/routing/RoutingCgrModel350_Hops.o \
@@ -54,6 +114,8 @@ OBJS = \
     $O/src/node/fault/Fault.o \
     $O/src/node/graphics/Graphics.o \
     $O/src/utils/ContactPlanUtils.o \
+    $O/src/utils/Lp.o \
+    $O/src/utils/LpUtils.o \
     $O/src/utils/RouterUtils.o \
     $O/src/utils/Subject.o \
     $O/src/utils/TopologyUtils.o \
