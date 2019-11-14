@@ -1,5 +1,5 @@
-#include <dtn/Dtn.h>
-#include "App.h"
+#include "src/node/dtn/Dtn.h"
+#include "src/node/app/App.h"
 
 Define_Module (Dtn);
 
@@ -100,19 +100,14 @@ void Dtn::initialize(int stage)
 			routing = new RoutingDirect(eid_, &sdr_, &contactPlan_);
 		else if (routeString.compare("cgrModel350") == 0)
 			routing = new RoutingCgrModel350(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"));
-		else if (routeString.compare("cgrModel350_3") == 0)
-			routing = new RoutingCgrModel350_3(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"));
+		else if (routeString.compare("cgrModel350_Hops") == 0)
+			routing = new RoutingCgrModel350_Hops(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"));
 		else if (routeString.compare("cgrModelYen") == 0)
 			routing = new RoutingCgrModelYen(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"));
 		else if (routeString.compare("cgrModelRev17") == 0)
 		{
 			ContactPlan * globalContactPlan = ((Dtn *) this->getParentModule()->getParentModule()->getSubmodule("node", 0)->getSubmodule("dtn"))->getContactPlanPointer();
 			routing = new RoutingCgrModelRev17(eid_, this->getParentModule()->getVectorSize(), &sdr_, &contactPlan_, globalContactPlan, par("routingType"), par("printRoutingDebug"));
-		}
-		else if (routeString.compare("cgrIon350") == 0)
-		{
-			int nodesNumber = this->getParentModule()->getParentModule()->par("nodesNumber");
-			routing = new RoutingCgrIon350(eid_, &sdr_, &contactPlan_, nodesNumber);
 		}
 		else if (routeString.compare("epidemic") == 0)
 		{
@@ -128,8 +123,8 @@ void Dtn::initialize(int stage)
 			int bundlesCopies = par("bundlesCopies");
 			routing = new RoutingSprayAndWait(eid_, &sdr_, this, bundlesCopies, true);
 		}
-		else if (routeString.compare("cgrModel350_Proactive") == 0)
-			routing = new RoutingCgrModel350_Proactive(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"), this);
+		else if (routeString.compare("cgrModel350_2Copies") == 0)
+			routing = new RoutingCgrModel350_2Copies(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"), this);
 		else if (routeString.compare("cgrModel350_Probabilistic") == 0)
 		{
 			double sContactProb = par("sContactProb");
@@ -445,9 +440,9 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 		}
 		if (routeString.compare("cgrModel350_3") == 0)
 		{
-			emit(routeCgrDijkstraCalls, ((RoutingCgrModel350_3*) routing)->getDijkstraCalls());
-			emit(routeCgrDijkstraLoops, ((RoutingCgrModel350_3*) routing)->getDijkstraLoops());
-			emit(routeCgrRouteTableEntriesExplored, ((RoutingCgrModel350_3*) routing)->getRouteTableEntriesExplored());
+			emit(routeCgrDijkstraCalls, ((RoutingCgrModel350_Hops*) routing)->getDijkstraCalls());
+			emit(routeCgrDijkstraLoops, ((RoutingCgrModel350_Hops*) routing)->getDijkstraLoops());
+			emit(routeCgrRouteTableEntriesExplored, ((RoutingCgrModel350_Hops*) routing)->getRouteTableEntriesExplored());
 		}
 		if (routeString.compare("cgrModelRev17") == 0)
 		{

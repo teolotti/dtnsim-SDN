@@ -1,11 +1,4 @@
-/*
- * Subject.cpp
- *
- *  Created on: Jul 25, 2017
- *      Author: nando
- */
-
-#include <Subject.h>
+#include <src/utils/Subject.h>
 
 Subject::Subject()
 {

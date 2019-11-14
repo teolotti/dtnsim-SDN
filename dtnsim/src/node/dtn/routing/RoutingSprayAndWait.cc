@@ -1,12 +1,5 @@
-/*
- * RoutingSprayAndWait.cc
- *
- *  Created on: July 13, 2017
- *      Author: fraverta
- */
-
-#include <dtn/routing/RoutingSprayAndWait.h>
-#include <dtn/Dtn.h>
+#include "src/node/dtn/routing/RoutingSprayAndWait.h"
+#include "src/node/dtn/Dtn.h"
 
 RoutingSprayAndWait::RoutingSprayAndWait(int eid, SdrModel * sdr, cModule * dtn, int amountOfCopies, bool binary)
 	:RoutingStochastic(eid,sdr,dtn)

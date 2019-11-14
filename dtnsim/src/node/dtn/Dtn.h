@@ -1,20 +1,17 @@
 #ifndef _DTN_H_
 #define _DTN_H_
 
-#include <dtn/ContactPlan.h>
-#include <dtn/CustodyModel.h>
-#include <dtn/routing/Routing.h>
-#include <dtn/routing/RoutingCgrIon350.h>
-#include <dtn/routing/RoutingCgrModel350.h>
-#include <dtn/routing/RoutingCgrModel350_3.h>
-#include <dtn/routing/RoutingCgrModelRev17.h>
-#include <dtn/routing/RoutingCgrModelYen.h>
-#include <dtn/routing/RoutingDirect.h>
-#include <dtn/routing/RoutingEpidemic.h>
-#include <dtn/routing/RoutingSprayAndWait.h>
-#include <dtn/routing/RoutingCgrModel350_Proactive.h>
-#include <dtn/routing/RoutingCgrModel350_Probabilistic.h>
-#include <dtn/SdrModel.h>
+#include <src/node/dtn/ContactPlan.h>
+#include <src/node/dtn/CustodyModel.h>
+#include <src/node/dtn/routing/Routing.h>
+#include <src/node/dtn/routing/RoutingCgrModel350.h>
+#include <src/node/dtn/routing/RoutingCgrModelRev17.h>
+#include <src/node/dtn/routing/RoutingCgrModelYen.h>
+#include <src/node/dtn/routing/RoutingDirect.h>
+#include <src/node/dtn/routing/RoutingEpidemic.h>
+#include <src/node/dtn/routing/RoutingSprayAndWait.h>
+#include <src/node/dtn/routing/RoutingCgrModel350_Probabilistic.h>
+#include <src/node/dtn/SdrModel.h>
 #include <cstdio>
 #include <string>
 #include <omnetpp.h>
@@ -23,21 +20,23 @@
 #include <map>
 #include <queue>
 
-#include "MsgTypes.h"
-#include "dtnsim_m.h"
+#include "src/node/MsgTypes.h"
+#include "src/dtnsim_m.h"
 
-#include "Graphics.h"
-#include "Routing.h"
-#include "Config.h"
-#include "RouterUtils.h"
-#include "utils/TopologyUtils.h"
-#include "utils/RouterUtils.h"
-#include "utils/ContactPlanUtils.h"
-#include "utils/Observer.h"
+#include "src/node/graphics/Graphics.h"
+#include "src/node/dtn/routing/Routing.h"
+#include "src/utils/RouterUtils.h"
+#include "src/utils/TopologyUtils.h"
+#include "src/utils/RouterUtils.h"
+#include "src/utils/ContactPlanUtils.h"
+#include "src/utils/Observer.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#include "routing/RoutingCgrModel350_2Copies.h"
+#include "routing/RoutingCgrModel350_Hops.h"
 
 using namespace omnetpp;
 using namespace std;

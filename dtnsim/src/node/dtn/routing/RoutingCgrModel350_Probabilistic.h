@@ -2,9 +2,9 @@
 #ifndef SRC_NODE_DTN_ROUTINGCGRMODEL_PROBABILISTIC_H_
 #define SRC_NODE_DTN_ROUTINGCGRMODEL_PROBABILISTIC_H_
 
-#include <dtn/routing/CgrRoute.h>
-#include <dtn/routing/RoutingDeterministic.h>
-#include <dtn/SdrModel.h>
+#include <src/node/dtn/routing/CgrRoute.h>
+#include <src/node/dtn/routing/RoutingDeterministic.h>
+#include <src/node/dtn/SdrModel.h>
 
 class RoutingCgrModel350_Probabilistic: public RoutingDeterministic
 {

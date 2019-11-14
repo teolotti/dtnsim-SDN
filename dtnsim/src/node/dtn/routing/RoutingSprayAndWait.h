@@ -28,7 +28,7 @@
 #ifndef SRC_NODE_DTN_ROUTINGSPRAYANDWAIT_H_
 #define SRC_NODE_DTN_ROUTINGSPRAYANDWAIT_H_
 
-#include <dtn/routing/RoutingStochastic.h>
+#include <src/node/dtn/routing/RoutingStochastic.h>
 
 class RoutingSprayAndWait : public RoutingStochastic
 {

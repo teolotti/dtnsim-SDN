@@ -1,7 +1,7 @@
 #ifndef CONTACTPLAN_H_
 #define CONTACTPLAN_H_
 
-#include <dtn/Contact.h>
+#include <src/node/dtn/Contact.h>
 #include <omnetpp.h>
 #include <vector>
 #include <fstream>

@@ -1,9 +1,9 @@
 #ifndef __CENTRAL_H_
 #define __CENTRAL_H_
 
-#include <dtn/ContactPlan.h>
-#include <dtn/Dtn.h>
-#include <com/Com.h>
+#include <src/node/dtn/ContactPlan.h>
+#include <src/node/dtn/Dtn.h>
+#include <src/node/com/Com.h>
 #include <omnetpp.h>
 #include <string>
 #include <iostream>
@@ -12,17 +12,15 @@
 #include <limits>
 #include <vector>
 
-#include "../utils/Lp.h"
-#include "utils/TopologyUtils.h"
-#include "utils/RouterUtils.h"
-#include "utils/LpUtils.h"
-#include "App.h"
+#include "src/utils/TopologyUtils.h"
+#include "src/utils/RouterUtils.h"
+#include "src/node/app/App.h"
 
-#include "dtn/routing/RoutingCgrModel350.h"
-#include "dtn/SdrModel.h"
+#include "src/node/dtn/routing/RoutingCgrModel350.h"
+#include "src/node/dtn/SdrModel.h"
 
-#include "MsgTypes.h"
-#include "dtnsim_m.h"
+#include "src/node/MsgTypes.h"
+#include "src/dtnsim_m.h"
 
 using namespace omnetpp;
 using namespace std;

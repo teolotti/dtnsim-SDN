@@ -1,4 +1,4 @@
-#include <dtn/routing/RoutingCgrModelRev17.h>
+#include <src/node/dtn/routing/RoutingCgrModelRev17.h>
 
 // This function initializes the routing class:
 // To this end, local eid_, the total number of nodes nodeNum_,

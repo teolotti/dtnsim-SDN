@@ -2,7 +2,7 @@
 #ifndef SRC_NODE_DTN_ROUTING_CGRROUTE_H_
 #define SRC_NODE_DTN_ROUTING_CGRROUTE_H_
 
-#include <dtn/Contact.h>
+#include <src/node/dtn/Contact.h>
 #include <vector>
 
 using namespace std;

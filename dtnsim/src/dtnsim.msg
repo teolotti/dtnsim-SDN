@@ -2,7 +2,7 @@
 
 cplusplus {{
     // Include Contact and CgrRoute structures
-    #include "CgrRoute.h"
+    #include "src/node/dtn/routing/CgrRoute.h"
     
     typedef std::list<int> intList;
     typedef std::list<CgrRoute> cgrRouteList;

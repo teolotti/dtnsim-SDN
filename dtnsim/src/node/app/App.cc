@@ -1,4 +1,4 @@
-#include "App.h"
+#include "src/node/app/App.h"
 
 Define_Module (App);
 
@@ -102,8 +102,8 @@ void App::handleMessage(cMessage *msg)
 		bundle->setSchedulingPriority(BUNDLE);
 
 		// Bundle properties
-		char bundleName[10];
-		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, trafficGenMsg->getDestinationEid(), (int) bundle->getId());
+		char bundleName[200];
+		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", (int)this->eid_, (int)trafficGenMsg->getDestinationEid(), (int) bundle->getId());
 		bundle->setBundleId(bundle->getId());
 		bundle->setName(bundleName);
 		bundle->setBitLength(trafficGenMsg->getSize() * 8);

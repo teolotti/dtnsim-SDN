@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.5 from dtnsim.msg.
+// Generated file, do not edit! Created by nedtool 5.5 from src/dtnsim.msg.
 //
 
 #ifndef __DTNSIM_M_H
@@ -20,14 +20,14 @@
 
 // cplusplus {{
     // Include Contact and CgrRoute structures
-    #include "CgrRoute.h"
+    #include "src/node/dtn/routing/CgrRoute.h"
     
     typedef std::list<int> intList;
     typedef std::list<CgrRoute> cgrRouteList;
 // }}
 
 /**
- * Class generated from <tt>dtnsim.msg:15</tt> by nedtool.
+ * Class generated from <tt>src/dtnsim.msg:15</tt> by nedtool.
  * <pre>
  * packet BundlePkt
  * {
@@ -167,7 +167,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const BundlePkt& obj) {obj.
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BundlePkt& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:60</tt> by nedtool.
+ * Class generated from <tt>src/dtnsim.msg:60</tt> by nedtool.
  * <pre>
  * message TrafficGeneratorMsg
  * {
@@ -221,7 +221,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const TrafficGeneratorMsg& 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, TrafficGeneratorMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:68</tt> by nedtool.
+ * Class generated from <tt>src/dtnsim.msg:68</tt> by nedtool.
  * <pre>
  * message ContactMsg
  * {
@@ -283,7 +283,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ContactMsg& obj) {obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ContactMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:78</tt> by nedtool.
+ * Class generated from <tt>src/dtnsim.msg:78</tt> by nedtool.
  * <pre>
  * message ForwardingMsgEnd
  * {
@@ -333,7 +333,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ForwardingMsgEnd& obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ForwardingMsgEnd& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:85</tt> by nedtool.
+ * Class generated from <tt>src/dtnsim.msg:85</tt> by nedtool.
  * <pre>
  * message ForwardingMsgStart
  * {
@@ -375,7 +375,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ForwardingMsgStart& o
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ForwardingMsgStart& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>dtnsim.msg:90</tt> by nedtool.
+ * Class generated from <tt>src/dtnsim.msg:90</tt> by nedtool.
  * <pre>
  * message CustodyTimout
  * {

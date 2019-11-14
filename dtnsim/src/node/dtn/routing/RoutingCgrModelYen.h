@@ -8,8 +8,8 @@
 #ifndef SRC_NODE_DTN_ROUTINGCGRMODELYEN_H_
 #define SRC_NODE_DTN_ROUTINGCGRMODELYEN_H_
 
-#include <dtn/routing/RoutingDeterministic.h>
-#include <dtn/SdrModel.h>
+#include <src/node/dtn/routing/RoutingDeterministic.h>
+#include <src/node/dtn/SdrModel.h>
 
 class RoutingCgrModelYen: public RoutingDeterministic
 {

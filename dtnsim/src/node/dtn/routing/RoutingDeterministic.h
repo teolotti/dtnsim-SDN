@@ -1,9 +1,4 @@
 /*
- * RoutingDeterministic.h
- *
- *  Created on: Jul 18, 2017
- *      Author: FRaverta
- *
  * According to Zhang's taxonomy which classifies routing protocols based on the availability
  * of knowledge about the network topology, We have two different kind of them:
  *
@@ -28,7 +23,7 @@
 #ifndef SRC_NODE_DTN_ROUTING_ROUTINGDETERMINISTIC_H_
 #define SRC_NODE_DTN_ROUTING_ROUTINGDETERMINISTIC_H_
 
-#include <Routing.h>
+#include <src/node/dtn/routing/Routing.h>
 
 class RoutingDeterministic: public Routing
 {

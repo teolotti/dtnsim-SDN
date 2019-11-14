@@ -1,20 +1,18 @@
-#include <RoutingCgrModel350_3.h>
+#include <src/node/dtn/Dtn.h>
+#include "RoutingCgrModel350_2Copies.h"
 
-RoutingCgrModel350_3::RoutingCgrModel350_3(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug) :
-RoutingDeterministic(eid, sdr, contactPlan)
+RoutingCgrModel350_2Copies::RoutingCgrModel350_2Copies(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug,cModule * dtn) :
+		RoutingDeterministic(eid, sdr, contactPlan)
 {
-	eid_ = eid;
-	sdr_ = sdr;
-	contactPlan_ = contactPlan;
 	printDebug_ = printDebug;
+	dtn_ = dtn;
 }
 
-RoutingCgrModel350_3::~RoutingCgrModel350_3()
+RoutingCgrModel350_2Copies::~RoutingCgrModel350_2Copies()
 {
-
 }
 
-void RoutingCgrModel350_3::routeAndQueueBundle(BundlePkt * bundle, double simTime)
+void RoutingCgrModel350_2Copies::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
 	if (!printDebug_) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);
@@ -23,10 +21,90 @@ void RoutingCgrModel350_3::routeAndQueueBundle(BundlePkt * bundle, double simTim
 	dijkstraCalls = 0;
 	dijkstraLoops = 0;
 	tableEntriesExplored = 0;
-	changedRoutes = 0;
 
-	// Call cgrForward from ion (route and forwarding)
-	cgrForward(bundle, simTime);
+	if( bundle->getQos() == 0 || bundle->getQos() == 1)
+	{
+		ProximateNode * selectedNeighbor;
+		// Call cgrForward from ion (route and forwarding)
+		selectedNeighbor = cgrForward(bundle, simTime, (bundle->getQos() == 0)? arrivalTime : hopCount);
+
+		if(selectedNeighbor == NULL)
+		{
+			cout << "  no chosen neighbor and delivery confidence not reached, enqueueing to limbo" << endl;
+			enqueueToLimbo(bundle);
+		}
+		else
+		{
+			cout << "Best: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighbor->neighborNodeNbr << "]: nextHop: " << selectedNeighbor->neighborNodeNbr << " (cId:" << selectedNeighbor->contactId << ", resCap:"
+					<< contactPlan_->getContactById(selectedNeighbor->contactId)->getResidualVolume() << "Bytes) arrivalConf:" << selectedNeighbor->confidence << " arrivalT:" << selectedNeighbor->arrivalTime << " hopCnt:"
+					<< selectedNeighbor->hopCount << " forfT:" << selectedNeighbor->forfeitTime << endl;
+			enqueueToNeighbor(bundle, selectedNeighbor);
+			delete selectedNeighbor;
+		}
+
+	}
+	else if(bundle->getQos() == 2){
+		ProximateNode * selectedNeighborAT;
+		ProximateNode * selectedNeighborH;
+
+		//Elegir vecino para fw por delivery time
+		selectedNeighborAT = cgrForward(bundle, simTime, arrivalTime);
+
+		if (selectedNeighborAT == NULL){
+			//If it doesn't have route by arrival time it doesn't have route by hops neither.
+			cout << "  no chosen neighbor and delivery confidence not reached, enqueueing to limbo" << endl;
+			enqueueToLimbo(bundle);
+			return;
+		}
+
+		/**
+		 * If it has route by arrival time then it has route by hops
+		 * If we find route to send by arrival time then there always will be
+		 * a route to forward by hops (ie. the arrival time route exists or another one better.)
+		 * Also We don't have problem with contact capacity because we will send only one bundle.
+		 **/
+		selectedNeighborH = cgrForward(bundle, simTime, hopCount);
+		if(selectedNeighborH==NULL)
+		{
+			cout<<"RoutingCGRModel350_Proactive::routeAndQueueBundle(BundlePkt * bundle, double simTime) - Route by arrival time exist but no by hops!!."<<endl;
+			exit(0);
+		}
+
+		if(selectedNeighborAT->neighborNodeNbr == selectedNeighborH->neighborNodeNbr){
+			cout << "Best: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighborAT->neighborNodeNbr << "]: nextHop: " << selectedNeighborAT->neighborNodeNbr << " (cId:" << selectedNeighborAT->contactId << ", resCap:"
+					<< contactPlan_->getContactById(selectedNeighborAT->contactId)->getResidualVolume() << "Bytes) arrivalConf:" << selectedNeighborAT->confidence << " arrivalT:" << selectedNeighborAT->arrivalTime << " hopCnt:"
+					<< selectedNeighborAT->hopCount << " forfT:" << selectedNeighborAT->forfeitTime << endl;
+			enqueueToNeighbor(bundle, selectedNeighborAT);
+
+			delete selectedNeighborAT;
+			delete selectedNeighborH;
+			return;
+		}
+		else{
+			//Send bundle using best arrival time route
+			bundle->setQos(0);
+			cout << "Best: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighborAT->neighborNodeNbr << "]: nextHop: " << selectedNeighborAT->neighborNodeNbr << " (cId:" << selectedNeighborAT->contactId << ", resCap:"
+					<< contactPlan_->getContactById(selectedNeighborAT->contactId)->getResidualVolume() << "Bytes) arrivalConf:" << selectedNeighborAT->confidence << " arrivalT:" << selectedNeighborAT->arrivalTime << " hopCnt:"
+					<< selectedNeighborAT->hopCount << " forfT:" << selectedNeighborAT->forfeitTime << endl;
+			enqueueToNeighbor(bundle, selectedNeighborAT);
+
+			//Send bundle using the least hop route
+			BundlePkt * bundleCopy = bundle->dup();
+			bundleCopy->setQos(1);
+			cout << "Best: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighborH->neighborNodeNbr << "]: nextHop: " << selectedNeighborH->neighborNodeNbr << " (cId:" << selectedNeighborH->contactId << ", resCap:"
+					<< contactPlan_->getContactById(selectedNeighborH->contactId)->getResidualVolume() << "Bytes) arrivalConf:" << selectedNeighborH->confidence << " arrivalT:" << selectedNeighborH->arrivalTime << " hopCnt:"
+					<< selectedNeighborH->hopCount << " forfT:" << selectedNeighborH->forfeitTime << endl;
+			enqueueToNeighbor(bundleCopy, selectedNeighborH);
+
+			delete selectedNeighborAT;
+			delete selectedNeighborH;
+		}
+	}
+	else
+	{
+		cout<<"RoutingCGRModel350_Proactive::routeAndQueueBundle(BundlePkt * bundle, double simTime) - Bundle QoS parameter has invalid value."<<endl;
+		exit(0);
+	}
 
 	if (!printDebug_)
 		cout.clear();
@@ -37,7 +115,7 @@ void RoutingCgrModel350_3::routeAndQueueBundle(BundlePkt * bundle, double simTim
 // Ion Cgr Functions based in libcgr.c (v 3.5.0):
 /////////////////////////////////////////////////
 
-void RoutingCgrModel350_3::cgrForward(BundlePkt * bundle, double simTime)
+RoutingCgrModel350_2Copies::ProximateNode* RoutingCgrModel350_2Copies::cgrForward(BundlePkt * bundle, double simTime, Mode mode)
 {
 	cout << "TIME: " << simTime << "s, NODE: " << eid_ << ", routing bundle to dst: " << bundle->getDestinationEid() << " (" << bundle->getByteLength() << "Bytes)" << endl;
 
@@ -57,7 +135,7 @@ void RoutingCgrModel350_3::cgrForward(BundlePkt * bundle, double simTime)
 
 	// Populate proximateNodes
 	// cout << "  calling identifyProximateNodes: " << endl;
-	identifyProximateNodes(bundle, simTime, excludedNodes, &proximateNodes);
+	identifyProximateNodes(bundle, simTime, excludedNodes, &proximateNodes, mode);
 
 	// TODO: send critical bundle to all proximateNodes
 	if (bundle->getCritical())
@@ -106,92 +184,74 @@ void RoutingCgrModel350_3::cgrForward(BundlePkt * bundle, double simTime)
 			//cout << " Not Chosen, bad arrival confidence" << endl;
 			continue;
 		}
-		else if (it->hopCount < selectedNeighbor->hopCount)
+		else
 		{
-			//cout << " Chosen, best hop count" << endl;
-			selectedNeighbor = &(*it);
+			switch(mode)
+			{
+				case hopCount:
+					if (it->hopCount < selectedNeighbor->hopCount)
+					{
+						//cout << " Chosen, best hop count" << endl;
+						selectedNeighbor = &(*it);
+					}
+					else if (it->hopCount > selectedNeighbor->hopCount)
+					{
+						//cout << " Not Chosen, bad hop count" << endl;
+						continue;
+					}
+					else if (it->arrivalTime < selectedNeighbor->arrivalTime)
+					{
+						//cout << " Chosen, best arrival time" << endl;
+						selectedNeighbor = &(*it);
+					}
+					else if (it->arrivalTime > selectedNeighbor->arrivalTime)
+					{
+						//cout << " Not Chosen, bad arrival time" << endl;
+						continue;
+					}
+					break;
+				case arrivalTime:
+				default:
+					if (it->arrivalTime < selectedNeighbor->arrivalTime)
+					{
+						//cout << " Chosen, best arrival time" << endl;
+						selectedNeighbor = &(*it);
+					}
+					else if (it->arrivalTime > selectedNeighbor->arrivalTime)
+					{
+						//cout << " Not Chosen, bad arrival time" << endl;
+						continue;
+					}
+					else if (it->hopCount < selectedNeighbor->hopCount)
+					{
+						//cout << " Chosen, best hop count" << endl;
+						selectedNeighbor = &(*it);
+					}
+					else if (it->hopCount > selectedNeighbor->hopCount)
+					{
+						//cout << " Not Chosen, bad hop count" << endl;
+						continue;
+					}
+			}
 		}
-		else if (it->hopCount > selectedNeighbor->hopCount)
-		{
-			//cout << " Not Chosen, bad hop count" << endl;
-			continue;
-		}
-		else if (it->arrivalTime < selectedNeighbor->arrivalTime)
-		{
-			//cout << " Chosen, best arrival time" << endl;
-			selectedNeighbor = &(*it);
-		}
-		else if (it->arrivalTime > selectedNeighbor->arrivalTime)
-		{
-			//cout << " Not Chosen, bad arrival time" << endl;
-			continue;
-		}
-//		else if(it->meanStartTime < selectedNeighbor->meanStartTime)
-//		{
-//			selectedNeighbor = &(*it);
-//		}
-//		else if(it->meanStartTime > selectedNeighbor->meanStartTime)
-//		{
-//			continue;
-//		}
-		else if (it->neighborNodeNbr < selectedNeighbor->neighborNodeNbr)
+		if (it->neighborNodeNbr < selectedNeighbor->neighborNodeNbr)
 		{
 			//cout << " Chosen, best node number" << endl;
 			selectedNeighbor = &(*it);
 		}
 	}
 
-	if (selectedNeighbor != NULL)
-	{
-		// enqueueToNeighbor() function in ion
-		// cout << "  enqueueing to chosen Neighbor" << endl;
-		cout << "Best: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighbor->neighborNodeNbr << "]: nextHop: " << selectedNeighbor->neighborNodeNbr << " (cId:" << selectedNeighbor->contactId << ", resCap:"
-				<< contactPlan_->getContactById(selectedNeighbor->contactId)->getResidualVolume() << "Bytes) arrivalConf:" << selectedNeighbor->confidence << " arrivalT:" << selectedNeighbor->arrivalTime << " hopCnt:"
-				<< selectedNeighbor->hopCount << " forfT:" << selectedNeighbor->forfeitTime << endl;
-		enqueueToNeighbor(bundle, selectedNeighbor);
-
-		// TODO: manageOverbooking() function
-		// Only necesary for bundles with priority > bulk.
-		return;
-	}else
-	{
-		if ((bundle->getCgrRoute().nextHop != EMPTY_ROUTE))
-		{
-			changedRoutes++;
-		}
-	}
-
-	// if the expected confidence level is reached, done
-	if (bundle->getDlvConfidence() >= MIN_DTN_DELIVERY_CONFIDENCE)
-	{
-		cout << "  delivery confidence reached, end cgrForward" << endl;
-		// TODO: delete bundle if not forwarded!
-		return;
-	}
-
-	// if no routes to destination, done
-	// TODO: shouldnt send to limbo?
-	if (routeList_[bundle->getDestinationEid()].size() == 0)
-	{
-		// cout << "  delivery confidence not reached but no routes to dst, end cgrForward" << endl;
-		//return;
-	}
-
-	if (selectedNeighbor != NULL)
-	{ // if bundle was enqueued (bundle ->ductXmitElt)
-	  // TODO: clone bundle and send it for routing (enqueueToLimbo in ion)
-	  // Here we should clone and call cgrForward again (while), Im a genious :)
-		cout << "  delivery confidence not reached, clone and repeat forward" << endl;
-	}
-	else
-	{
-		cout << "  no chosen neighbor and delivery confidence not reached, enqueueing to limbo" << endl;
-		enqueueToLimbo(bundle);
-		return;
+	if (selectedNeighbor == NULL)
+		return selectedNeighbor;
+	else{
+		ProximateNode * res = new ProximateNode;
+		*res = *selectedNeighbor;
+		return res;
 	}
 }
 
-void RoutingCgrModel350_3::identifyProximateNodes(BundlePkt * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes)
+
+void RoutingCgrModel350_2Copies::identifyProximateNodes(BundlePkt * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes, Mode mode)
 {
 	int terminusNode = bundle->getDestinationEid();
 
@@ -278,11 +338,11 @@ void RoutingCgrModel350_3::identifyProximateNodes(BundlePkt * bundle, double sim
 		// If we got to this point, the route might be
 		// considered. However, some final tests must be
 		// donde before evaluating the node for the proxNodes.
-		tryRoute(bundle, &(*it), proximateNodes);
+		tryRoute(bundle, &(*it), proximateNodes, mode);
 	}
 }
 
-void RoutingCgrModel350_3::tryRoute(BundlePkt * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes)
+void RoutingCgrModel350_2Copies::tryRoute(BundlePkt * bundle, CgrRoute * route, vector<ProximateNode> * proximateNodes, Mode mode)
 {
 
 	// First, ion test if outduct is blocked,
@@ -303,65 +363,135 @@ void RoutingCgrModel350_3::tryRoute(BundlePkt * bundle, CgrRoute * route, vector
 		return;
 	}
 
-	// Last, we go through proximateNodes to add the route
-	for (vector<ProximateNode>::iterator it = (*proximateNodes).begin(); it != (*proximateNodes).end(); ++it)
+	switch (mode)
 	{
-		if ((*it).neighborNodeNbr == route->nextHop)
+	case hopCount:
+
+		// Last, we go through proximateNodes to add the route
+		for (vector<ProximateNode>::iterator it = (*proximateNodes).begin(); it != (*proximateNodes).end(); ++it)
 		{
-			// The next-hop is already among proximateNodes.
-			// Test if we should update this node metrics.
-			// Confidence criteria to be removed in post 3.5.0
-			if (route->confidence > (*it).confidence)
+			if ((*it).neighborNodeNbr == route->nextHop)
 			{
-				//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
-				(*it).confidence = route->confidence;
-				(*it).arrivalTime = route->arrivalTime;
-				(*it).hopCount = route->hops.size();
-				(*it).forfeitTime = route->toTime;
-				(*it).contactId = route->hops[0]->getId();
-				(*it).route = route;
-			}
-			else if (route->confidence < (*it).confidence)
-			{
-				//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival confidence" << endl;
+				// The next-hop is already among proximateNodes.
+				// Test if we should update this node metrics.
+				// Confidence criteria to be removed in post 3.5.0
+				if (route->confidence > (*it).confidence)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).confidence = route->confidence;
+					(*it).arrivalTime = route->arrivalTime;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->confidence < (*it).confidence)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival confidence" << endl;
+					return;
+				}
+				else if (route->hops.size() < (*it).hopCount)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->hops.size() > (*it).hopCount)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better hop count" << endl;
+					return;
+				}
+				else if (route->arrivalTime < (*it).arrivalTime)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).arrivalTime = route->arrivalTime;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->arrivalTime > (*it).arrivalTime)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival time" << endl;
+					return;
+				}
+				else if (route->nextHop < (*it).neighborNodeNbr)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				//cout << " route through node " << route->toNodeNbr << " in proxNodes has same metrics" << endl;
 				return;
 			}
-			else if (route->hops.size() < (*it).hopCount)
+		}
+
+	case arrivalTime:
+	default:
+
+		// Last, we go through proximateNodes to add the route
+		for (vector<ProximateNode>::iterator it = (*proximateNodes).begin(); it != (*proximateNodes).end(); ++it)
+		{
+			if ((*it).neighborNodeNbr == route->nextHop)
 			{
-				//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
-				(*it).hopCount = route->hops.size();
-				(*it).forfeitTime = route->toTime;
-				(*it).contactId = route->hops[0]->getId();
-				(*it).route = route;
-			}
-			else if (route->hops.size() > (*it).hopCount)
-			{
-				//cout << " route through node " << route->toNodeNbr << " in proxNodes has better hop count" << endl;
+				// The next-hop is already among proximateNodes.
+				// Test if we should update this node metrics.
+				// Confidence criteria to be removed in post 3.5.0
+				if (route->confidence > (*it).confidence)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).confidence = route->confidence;
+					(*it).arrivalTime = route->arrivalTime;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->confidence < (*it).confidence)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival confidence" << endl;
+					return;
+				}
+				else if (route->arrivalTime < (*it).arrivalTime)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).arrivalTime = route->arrivalTime;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->arrivalTime > (*it).arrivalTime)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival time" << endl;
+					return;
+				}
+				else if (route->hops.size() < (*it).hopCount)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).hopCount = route->hops.size();
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				else if (route->hops.size() > (*it).hopCount)
+				{
+					//cout << " route through node " << route->toNodeNbr << " in proxNodes has better hop count" << endl;
+					return;
+				}
+				else if (route->nextHop < (*it).neighborNodeNbr)
+				{
+					//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
+					(*it).forfeitTime = route->toTime;
+					(*it).contactId = route->hops[0]->getId();
+					(*it).route = route;
+				}
+				//cout << " route through node " << route->toNodeNbr << " in proxNodes has same metrics" << endl;
 				return;
 			}
-			else if (route->arrivalTime < (*it).arrivalTime)
-			{
-				//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
-				(*it).arrivalTime = route->arrivalTime;
-				(*it).hopCount = route->hops.size();
-				(*it).forfeitTime = route->toTime;
-				(*it).contactId = route->hops[0]->getId();
-				(*it).route = route;
-			}
-			else if (route->arrivalTime > (*it).arrivalTime)
-			{
-				//cout << " route through node " << route->toNodeNbr << " in proxNodes has better arrival time" << endl;
-				return;
-			}
-			else if (route->nextHop < (*it).neighborNodeNbr)
-			{
-				//cout << " good route, replace node " << route->toNodeNbr << " in proxNodes" << endl;
-				(*it).forfeitTime = route->toTime;
-				(*it).contactId = route->hops[0]->getId();
-				(*it).route = route;
-			}
-			//cout << " route through node " << route->toNodeNbr << " in proxNodes has same metrics" << endl;
-			return;
 		}
 	}
 
@@ -379,7 +509,7 @@ void RoutingCgrModel350_3::tryRoute(BundlePkt * bundle, CgrRoute * route, vector
 	proximateNodes->push_back(node);
 }
 
-void RoutingCgrModel350_3::loadRouteList(int terminusNode, double simTime)
+void RoutingCgrModel350_2Copies::loadRouteList(int terminusNode, double simTime)
 {
 	// Create rootContact and its corresponding rootWork
 	Contact rootContact(0, 0, 0, eid_, eid_, 0, 1.0, 0);
@@ -491,7 +621,7 @@ void RoutingCgrModel350_3::loadRouteList(int terminusNode, double simTime)
 
 }
 
-void RoutingCgrModel350_3::findNextBestRoute(Contact * rootContact, int terminusNode, CgrRoute * route)
+void RoutingCgrModel350_2Copies::findNextBestRoute(Contact * rootContact, int terminusNode, CgrRoute * route)
 {
 	// increment counter
 	dijkstraCalls++;
@@ -653,12 +783,12 @@ void RoutingCgrModel350_3::findNextBestRoute(Contact * rootContact, int terminus
 	}
 }
 
-void RoutingCgrModel350_3::recomputeRouteForContact()
+void RoutingCgrModel350_2Copies::recomputeRouteForContact()
 {
 	//cout << "***RecomputeRouteForContact not implemented yet!, ignoring route***" << endl;
 }
 
-void RoutingCgrModel350_3::enqueueToNeighbor(BundlePkt * bundle, ProximateNode * selectedNeighbor)
+void RoutingCgrModel350_2Copies::enqueueToNeighbor(BundlePkt * bundle, ProximateNode * selectedNeighbor)
 {
 
 	if (bundle->getXmitCopiesCount() == MAX_XMIT_COPIES)
@@ -674,7 +804,7 @@ void RoutingCgrModel350_3::enqueueToNeighbor(BundlePkt * bundle, ProximateNode *
 	bpEnqueue(bundle, selectedNeighbor);
 }
 
-void RoutingCgrModel350_3::enqueueToLimbo(BundlePkt * bundle)
+void RoutingCgrModel350_2Copies::enqueueToLimbo(BundlePkt * bundle)
 {
 	ProximateNode limboNode;
 	limboNode.contactId = 0;
@@ -686,75 +816,41 @@ void RoutingCgrModel350_3::enqueueToLimbo(BundlePkt * bundle)
 	bpEnqueue(bundle, &limboNode);
 }
 
-void RoutingCgrModel350_3::bpEnqueue(BundlePkt * bundle, ProximateNode * selectedNeighbor)
+void RoutingCgrModel350_2Copies::bpEnqueue(BundlePkt * bundle, ProximateNode * selectedNeighbor)
 {
 	bundle->setNextHopEid(selectedNeighbor->neighborNodeNbr);
+	bool enqueued = sdr_->enqueueBundleToContact(bundle, selectedNeighbor->contactId);
 
-	if (selectedNeighbor->contactId != 0)
+	if (enqueued)
 	{
-		// if the bundle does not has a route in the header
-		// set route in header for statistical purposes
-		if ((bundle->getCgrRoute().nextHop == EMPTY_ROUTE))
+		if (selectedNeighbor->contactId != 0)
 		{
-			bundle->setCgrRoute(*(selectedNeighbor->route));
+			// Decrease first contact capacity:
+			selectedNeighbor->route->hops[0]->setResidualVolume(selectedNeighbor->route->hops[0]->getResidualVolume() - bundle->getByteLength());
+
+			cout << "RVol: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighbor->neighborNodeNbr << "]: new resCap: (cId:" << selectedNeighbor->contactId << ", resCap:"
+					<< contactPlan_->getContactById(selectedNeighbor->contactId)->getResidualVolume() << "Bytes)" << endl;
+
+			// Decrease route capacity:
+			// It seems this does not happen in ION. In fact, the
+			// queiung process considers the local outbound capacity, which
+			// is analogous to consider the first contact capacity. However,
+			// there is chance to also consider remote contact capacity as
+			// in PA-CGR. Furthermore, the combined effect of routeList
+			// and PA-CGR need to be investigated because an update from
+			// one route might impact other routes that uses the same contacts.
+			selectedNeighbor->route->maxVolume -= bundle->getByteLength();
+
+			EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued in queueId: " << selectedNeighbor->contactId << " (next hop: " << selectedNeighbor->neighborNodeNbr << ")" << endl;
 		}
-		// else, check if the selected neighbor belongs to the previously assigned route
 		else
 		{
-			bool changedRoute = false;
-
-			vector<Contact *> hops = bundle->getCgrRoute().hops;
-
-			for (size_t i = 0; i < hops.size(); i++)
-			{
-				Contact *contact = hops.at(i);
-				if (contact->getSourceEid() == this->eid_)
-				{
-					if (contact->getId() != selectedNeighbor->contactId)
-					{
-						changedRoute = true;
-					}
-					break;
-				}
-			}
-
-			if (changedRoute)
-			{
-				bundle->setCgrRoute(*(selectedNeighbor->route));
-				changedRoutes++;
-			}
+			EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued to limbo!" << endl;
 		}
-	}
-
-	sdr_->enqueueBundleToContact(bundle, selectedNeighbor->contactId);
-
-	if (selectedNeighbor->contactId != 0)
-	{
-		// Decrease first contact capacity:
-		selectedNeighbor->route->hops[0]->setResidualVolume(selectedNeighbor->route->hops[0]->getResidualVolume() - bundle->getByteLength());
-
-		cout << "RVol: routeTable[" << bundle->getDestinationEid() << "][" << selectedNeighbor->neighborNodeNbr << "]: new resCap: (cId:" << selectedNeighbor->contactId << ", resCap:"
-				<< contactPlan_->getContactById(selectedNeighbor->contactId)->getResidualVolume() << "Bytes)" << endl;
-
-		// Decrease route capacity:
-		// It seems this does not happen in ION. In fact, the
-		// queiung process considers the local outbound capacity, which
-		// is analogous to consider the first contact capacity. However,
-		// there is chance to also consider remote contact capacity as
-		// in PA-CGR. Furthermore, the combined effect of routeList
-		// and PA-CGR need to be investigated because an update from
-		// one route might impact other routes that uses the same contacts.
-		selectedNeighbor->route->maxVolume -= bundle->getByteLength();
-
-		EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued in queueId: " << selectedNeighbor->contactId << " (next hop: " << selectedNeighbor->neighborNodeNbr << ")" << endl;
-	}
-	else
-	{
-		EV << "Node " << eid_ << ": bundle to node " << bundle->getDestinationEid() << " enqueued to limbo!" << endl;
 	}
 }
 
-CgrRoute* RoutingCgrModel350_3::getCgrBestRoute(BundlePkt * bundle, double simTime)
+CgrRoute* RoutingCgrModel350_2Copies::getCgrBestRoute(BundlePkt * bundle, double simTime)
 {
 	// modified from method cgrForward()
 
@@ -776,7 +872,7 @@ CgrRoute* RoutingCgrModel350_3::getCgrBestRoute(BundlePkt * bundle, double simTi
 
 	// Populate proximateNodes
 	// cout << "  calling identifyProximateNodes: " << endl;
-	identifyProximateNodes(bundle, simTime, excludedNodes, &proximateNodes);
+	identifyProximateNodes(bundle, simTime, excludedNodes, &proximateNodes, arrivalTime);
 
 	// TODO: send critical bundle to all proximateNodes
 	if (bundle->getCritical())
@@ -860,7 +956,7 @@ CgrRoute* RoutingCgrModel350_3::getCgrBestRoute(BundlePkt * bundle, double simTi
 	return bestRoute;
 }
 
-vector<CgrRoute> RoutingCgrModel350_3::getCgrRoutes(BundlePkt * bundle, double simTime)
+vector<CgrRoute> RoutingCgrModel350_2Copies::getCgrRoutes(BundlePkt * bundle, double simTime)
 {
 	if (!printDebug_) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);
@@ -890,23 +986,74 @@ vector<CgrRoute> RoutingCgrModel350_3::getCgrRoutes(BundlePkt * bundle, double s
 // Stats recollection
 //////////////////////
 
-int RoutingCgrModel350_3::getDijkstraCalls()
+int RoutingCgrModel350_2Copies::getDijkstraCalls()
 {
 	return dijkstraCalls;
 }
 
-int RoutingCgrModel350_3::getDijkstraLoops()
+int RoutingCgrModel350_2Copies::getDijkstraLoops()
 {
 	return dijkstraLoops;
 }
 
-int RoutingCgrModel350_3::getRouteTableEntriesExplored()
+int RoutingCgrModel350_2Copies::getRouteTableEntriesExplored()
 {
 	return tableEntriesExplored;
 }
 
-int RoutingCgrModel350_3::getChangedRoutes()
+bool RoutingCgrModel350_2Copies::msgToMeArrive(BundlePkt * bundle)
 {
-	return changedRoutes;
+	/*
+	*Check if current bundle has already sent to app, if not
+	*it tells to dtn that bundle should be delivered to app and
+	*save it as delivered bundle.
+	*/
+	if (!isDeliveredBundle(bundle->getBundleId()))
+	{
+		deliveredBundles_.push_back(bundle->getBundleId());
+		return true;
+	}
+	return false;
 }
 
+void RoutingCgrModel350_2Copies::contactStart(Contact *c)
+{
+	RoutingCgrModel350_2Copies * other = check_and_cast<RoutingCgrModel350_2Copies *>(check_and_cast<Dtn *>(
+																dtn_->getParentModule()->getParentModule()->getSubmodule("node", c->getDestinationEid())
+																->getSubmodule("dtn"))->getRouting());
+
+	list<BundlePkt *> nonReceived;
+	while( sdr_->isBundleForContact(c->getId()))
+	{
+		BundlePkt * bundle = sdr_->getNextBundleForContact(c->getId());
+		sdr_->popNextBundleForContact(c->getId());
+		if( !other->isDeliveredBundle(bundle->getBundleId()))
+			nonReceived.push_back(bundle);
+		else
+			delete bundle;
+	}
+
+	for(list<BundlePkt *>::iterator it = nonReceived.begin(); it != nonReceived.end(); ++it)
+		sdr_->enqueueBundleToContact(*it, c->getId());
+}
+
+/***
+ * If bundle successful forwarded is delivered to its destination,
+ * remember that to avoid re-send bundle
+ */
+void RoutingCgrModel350_2Copies::successfulBundleForwarded(long bundleId, Contact * contact,  bool sentToDestination)
+{
+	if(sentToDestination)
+		deliveredBundles_.push_back(bundleId);
+}
+
+/**
+ * Check if bundleId has been delivered to App or its destination.
+ */
+bool RoutingCgrModel350_2Copies::isDeliveredBundle(long bundleId)
+{
+	for(list<int>::iterator it = deliveredBundles_.begin(); it != deliveredBundles_.end(); ++it)
+		if( (*it) == bundleId )
+			return true;
+	return false;
+}

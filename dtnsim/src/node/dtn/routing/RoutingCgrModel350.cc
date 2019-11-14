@@ -1,4 +1,4 @@
-#include <dtn/routing/RoutingCgrModel350.h>
+#include <src/node/dtn/routing/RoutingCgrModel350.h>
 
 RoutingCgrModel350::RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug) :
 		RoutingDeterministic(eid, sdr, contactPlan)

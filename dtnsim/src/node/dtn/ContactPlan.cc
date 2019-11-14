@@ -1,4 +1,4 @@
-#include <dtn/ContactPlan.h>
+#include <src/node/dtn/ContactPlan.h>
 
 ContactPlan::~ContactPlan()
 {

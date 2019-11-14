@@ -1,11 +1,4 @@
-/*
- * SdrModel.cpp
- *
- *  Created on: Nov 25, 2016
- *      Author: juanfraire
- */
-
-#include <dtn/SdrModel.h>
+#include "src/node/dtn/SdrModel.h"
 
 SdrModel::SdrModel()
 {

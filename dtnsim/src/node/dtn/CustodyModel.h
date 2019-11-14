@@ -8,8 +8,8 @@
 #ifndef SRC_NODE_DTN_CUSTODYMODEL_H_
 #define SRC_NODE_DTN_CUSTODYMODEL_H_
 
-#include <dtn/SdrModel.h>
-#include "MsgTypes.h"
+#include <src/node/dtn/SdrModel.h>
+#include "src/node/MsgTypes.h"
 #include <omnetpp.h>
 
 using namespace omnetpp;

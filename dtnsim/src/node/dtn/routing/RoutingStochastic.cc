@@ -1,12 +1,4 @@
-/*
- * RoutingStochastic.cc
- *
- *  Created on: Jul 18, 2017
- *      Author: FRaverta
- *
- */
-
-#include <RoutingStochastic.h>
+#include "src/node/dtn/routing/RoutingStochastic.h"
 
 RoutingStochastic::RoutingStochastic(int eid, SdrModel * sdr, cModule * dtn)
 	:Routing(eid,sdr)
