@@ -4,6 +4,7 @@
 #include <src/node/dtn/ContactPlan.h>
 #include <src/node/dtn/CustodyModel.h>
 #include <src/node/dtn/routing/Routing.h>
+#include <src/node/dtn/routing/RoutingCgrCentralized.h>
 #include <src/node/dtn/routing/RoutingCgrModel350.h>
 #include <src/node/dtn/routing/RoutingCgrModelRev17.h>
 #include <src/node/dtn/routing/RoutingCgrModelYen.h>
