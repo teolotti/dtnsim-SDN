@@ -339,8 +339,9 @@ void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, 
     Contact * finalContact = NULL;
     double earliestFinalArrivalTime = numeric_limits<double>::max();
 
-    //cout << "  surfing contact-graph:";
     while (currentContact != NULL) {
+        Work * currentContactWork = (Work *) (currentContact->work);
+
         // increment counter
         // dijkstraLoops++;
 
@@ -348,62 +349,61 @@ void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, 
 
         // Get local neighbor set and evaluate them
         vector<Contact> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
-        for (vector<Contact>::iterator it = currentNeighbors.begin(); it != currentNeighbors.end(); ++it) {
-            Work *neighborWork = (Work *) (*it).work;
+        for (vector<Contact>::iterator neighbor = currentNeighbors.begin(); neighbor != currentNeighbors.end(); ++neighbor) {
+            Work *neighborWork = (Work *) (*neighbor).work;
 
             // If this contact is suppressed/visited, ignore it.
             if (neighborWork->suppressed || neighborWork->visited)
                 continue;
 
             // If this contact is finished, ignore it.
-            if ((*it).getEnd() <= ((Work *) (currentContact->work))->arrivalTime)
+            if ((*neighbor).getEnd() <= currentContactWork->arrivalTime)
                 continue;
 
             // If the residual volume is 0, ignore it.
-            if ((*it).getResidualVolume() == 0)
+            if ((*neighbor).getResidualVolume() == 0)
                 continue;
 
             // If this contact leads to visited node, ignore it.
-            vector<int> * v = &((Work *) (currentContact->work))->visitedNodes;
-            if (std::find(v->begin(), v->end(), (*it).getDestinationEid()) != v->end())
+            vector<int> * v = &currentContactWork->visitedNodes;
+            if (std::find(v->begin(), v->end(), (*neighbor).getDestinationEid()) != v->end())
                 continue;
 
             // Get owlt (one way light time). If none found, ignore contact
-            double owlt = contactPlan_->getRangeBySrcDst((*it).getSourceEid(), (*it).getDestinationEid());
+            double owlt = contactPlan_->getRangeBySrcDst((*neighbor).getSourceEid(), (*neighbor).getDestinationEid());
             if (owlt == -1)
             {
-                cout << "warning, range not available for nodes " << (*it).getSourceEid() << "-" << (*it).getDestinationEid() << ", assuming range=0" << endl;
+                cout << "warning, range not available for nodes " << (*neighbor).getSourceEid() << "-" << (*neighbor).getDestinationEid() << ", assuming range=0" << endl;
                 owlt = 0;
             }
             //double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
             //owlt += owltMargin;
 
             // Calculate the cost for this contact (Arrival Time)
-            double arrivalTime;
-            if ((*it).getStart() < ((Work *) (currentContact->work))->arrivalTime)
-                arrivalTime = ((Work *) (currentContact->work))->arrivalTime;
-            else
-                arrivalTime = (*it).getStart();
+            double arrivalTime = std::max(
+                    (*neighbor).getStart(),
+                    currentContactWork->arrivalTime
+                );
             arrivalTime += owlt;
 
             // Update the cost if better or equal
             if (arrivalTime < neighborWork->arrivalTime) {
                 neighborWork->arrivalTime = arrivalTime;
                 neighborWork->predecessor = currentContact;
-                neighborWork->visitedNodes = ((Work *) (currentContact->work))->visitedNodes;
-                neighborWork->visitedNodes.push_back((*it).getDestinationEid());
+                neighborWork->visitedNodes = currentContactWork->visitedNodes;
+                neighborWork->visitedNodes.push_back((*neighbor).getDestinationEid());
 
                 // Mark if destination reached
-                if ((*it).getDestinationEid() == terminusNode)
+                if ((*neighbor).getDestinationEid() == terminusNode)
                     if (neighborWork->arrivalTime < earliestFinalArrivalTime) {
                         earliestFinalArrivalTime = neighborWork->arrivalTime;
-                        finalContact = contactPlan_->getContactById((*it).getId());
+                        finalContact = contactPlan_->getContactById((*neighbor).getId());
                     }
             }
         }
 
         // End exploring next hop contact, mark current as visited
-        ((Work *) (currentContact->work))->visited = true;
+        currentContactWork->visited = true;
 
         // Select next (best) contact to move to in next iteration
         Contact * nextContact = NULL;
