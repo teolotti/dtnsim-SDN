@@ -24,8 +24,13 @@ void RoutingCgrCentralized::routeAndQueueBundle(BundlePkt *bundle, double simTim
         this->cgrForward(bundle);
 
     } else {
-        // Non-empty EB: Use EB Route to route bundle
         CgrRoute ebRoute = bundle->getCgrRoute();
+        if (bundle->getCgrRoute().nextHop == EMPTY_ROUTE) {
+            this->cgrForward(bundle);
+            return;
+        }
+
+        // Non-empty EB: Use EB Route to route bundle
         // Check if encoded path is valid, update local contacts and route hops
         bool ebRouteIsValid = true;
 
