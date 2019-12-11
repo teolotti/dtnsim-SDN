@@ -160,7 +160,7 @@ void RoutingCgrCentralized::cgrEnqueue(BundlePkt *bundle, CgrRoute *bestRoute) {
             << bestRoute->fromTime << " to " << bestRoute->toTime << ", arrival time: " << bestRoute->arrivalTime
             << ", volume: " << bestRoute->residualVolume << "/" << bestRoute->maxVolume << "Bytes" << endl;
 
-    // Update route's residual volume
+    // Update route's contacts residual volume
     for (vector<Contact *>::iterator hop = bestRoute->hops.begin(); hop != bestRoute->hops.end(); ++hop) {
         (*hop)->setResidualVolume((*hop)->getResidualVolume() - bundle->getByteLength());
 
@@ -171,25 +171,17 @@ void RoutingCgrCentralized::cgrEnqueue(BundlePkt *bundle, CgrRoute *bestRoute) {
             exit(1);
     }
 
-    // TODO: check whether this can be optimized. Probably just iterate
-    // over all routes and get the minimum residual volume among all contacts.
-
-    // Update residualVolume of all routes that uses the updated hops (including those
-    // routes that leads to other destinations). This is a very expensive routine
+    // Update residual volume of all routes. This is a very expensive routine
     // that scales with large routes tables that need to happen in forwarding time.
     for (int n = 1; n < neighborsNum_; n++)
         for (unsigned int r = 0; r < routeTable_.at(n).size(); r++)
             for (vector<Contact *>::iterator hop1 = routeTable_.at(n).at(r).hops.begin();
                     hop1 != routeTable_.at(n).at(r).hops.end(); ++hop1)
-                for (vector<Contact *>::iterator hop2 = bestRoute->hops.begin();
-                        hop2 != bestRoute->hops.end(); ++hop2)
-                    if ((*hop1)->getId() == (*hop2)->getId())
-                        // Does the reduction of this contact volume requires a route volume update?
-                        if (routeTable_.at(n).at(r).residualVolume > (*hop1)->getResidualVolume()) {
-                            routeTable_.at(n).at(r).residualVolume = (*hop1)->getResidualVolume();
-                            cout << "*Rvol: routeTable[" << n << "][" << r << "]: updated to "
-                                    << (*hop1)->getResidualVolume() << "Bytes (all contacts)" << endl;
-                        }
+                if (routeTable_.at(n).at(r).residualVolume > (*hop1)->getResidualVolume()) {
+                    routeTable_.at(n).at(r).residualVolume = (*hop1)->getResidualVolume();
+                    cout << "*Rvol: routeTable[" << n << "][" << r << "]: updated to "
+                            << (*hop1)->getResidualVolume() << "Bytes (all contacts)" << endl;
+                }
 
     // Save CgrRoute in header
     if (routingType_.find("extensionBlock:on") != std::string::npos)
