@@ -126,10 +126,6 @@ void RoutingCgrCentralized::cgrForward(BundlePkt *bundle) {
         }
     }
 
-    cout << routeTable_.at(terminusNode).size() << " " << endl;
-//            << routeTable_.at(terminusNode).at(0).filtered << " "
-//            << routeTable_.at(terminusNode).at(0).nextHop << endl;
-
     if (!routeTable_.at(terminusNode).empty()) {
 
         // Select best route
@@ -322,7 +318,6 @@ void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, 
             ++it) {
         Work *contactWork = new Work;
         (*it).work = contactWork;
-        contactWork->visitedNodes.clear();
         contactWork->arrivalTime = numeric_limits<double>::max();
         contactWork->predecessor = 0;
         contactWork->visited = false;
@@ -364,11 +359,6 @@ void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, 
             if ((*neighbor).getResidualVolume() == 0)
                 continue;
 
-            // If this contact leads to visited node, ignore it.
-            vector<int> * v = &currentContactWork->visitedNodes;
-            if (std::find(v->begin(), v->end(), (*neighbor).getDestinationEid()) != v->end())
-                continue;
-
             // Get owlt (one way light time). If none found, ignore contact
             double owlt = contactPlan_->getRangeBySrcDst((*neighbor).getSourceEid(), (*neighbor).getDestinationEid());
             if (owlt == -1)
@@ -390,8 +380,6 @@ void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, 
             if (arrivalTime < neighborWork->arrivalTime) {
                 neighborWork->arrivalTime = arrivalTime;
                 neighborWork->predecessor = currentContact;
-                neighborWork->visitedNodes = currentContactWork->visitedNodes;
-                neighborWork->visitedNodes.push_back((*neighbor).getDestinationEid());
 
                 // Mark if destination reached
                 if ((*neighbor).getDestinationEid() == terminusNode)

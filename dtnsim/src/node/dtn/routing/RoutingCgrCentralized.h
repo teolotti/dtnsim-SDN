@@ -24,7 +24,6 @@ private:
 
     typedef struct {
         Contact * predecessor;      // Predecessor Contact
-        vector<int> visitedNodes;   // Dijkstra exploration: list of visited nodes
         double arrivalTime;         // Dijkstra exploration: best arrival time so far
         bool visited;               // Dijkstra exploration: visited
         bool suppressed;            // Dijkstra exploration: suppressed
