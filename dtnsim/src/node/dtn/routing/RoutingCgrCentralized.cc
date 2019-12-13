@@ -50,27 +50,12 @@ void RoutingCgrCentralized::routeAndQueueBundle(BundlePkt *bundle, double simTim
                 continue;
             }
 
-            if (routingType_.find("volumeAware:1stContact") != std::string::npos) {
-                // Only check first contact volume
-                if ((*hop)->getSourceEid() == eid_) {
-                    if (contactPlan_->getContactById((*hop)->getId())->getResidualVolume()
-                            < bundle->getByteLength()) {
-                        // Not enough residual capacity from local view of the path
-                        ebRouteIsValid = false;
-                        // TODO: this break could be out of this if-statement
-                        break;
-                    }
-                }
-            }
-
-            if (routingType_.find("volumeAware:allContacts") != std::string::npos) {
-                // Check all contacts volume
-                if (contactPlan_->getContactById((*hop)->getId())->getResidualVolume()
-                        < bundle->getByteLength()) {
-                    // Not enough residual capacity from local view of the path
-                    ebRouteIsValid = false;
-                    break;
-                }
+            // Check all contacts volume
+            if (contactPlan_->getContactById((*hop)->getId())->getResidualVolume()
+                    < bundle->getByteLength()) {
+                // Not enough residual capacity from local view of the path
+                ebRouteIsValid = false;
+                break;
             }
 
             newHops.push_back(contactPlan_->getContactById((*hop)->getId()));
