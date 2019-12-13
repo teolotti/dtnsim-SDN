@@ -15,8 +15,6 @@ RoutingCgrCentralized::~RoutingCgrCentralized()
 {
 }
 
-// TODO: refactor route capacity check, used both in routeAndQueueBundle() and cgrForward().
-
 void RoutingCgrCentralized::routeAndQueueBundle(BundlePkt *bundle, double simTime) {
 
     // If no extensionBlock, find the best route for this bundle
@@ -90,7 +88,6 @@ void RoutingCgrCentralized::cgrForward(BundlePkt *bundle) {
 
         routeTable_.at(terminusNode).at(r).filtered = false;
 
-        // TODO: modify contact.getResidualVolume() to include current time in the formula.
         // criteria 1) filter route: capacity is depleted
         if (routeTable_.at(terminusNode).at(r).residualVolume < bundle->getByteLength()) {
             routeTable_.at(terminusNode).at(r).filtered = true;
@@ -122,8 +119,6 @@ void RoutingCgrCentralized::cgrForward(BundlePkt *bundle) {
         vector<CgrRoute>::iterator bestRoute;
         bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(),
                 this->compareRoutes);
-
-        // TODO: add table entries explored metrics
 
         // if route is plausible (i.e. such route exists and is not filtered), enqueue bundle
         if (bestRoute->nextHop != NO_ROUTE_FOUND && !bestRoute->filtered) {
@@ -219,7 +214,6 @@ bool RoutingCgrCentralized::compareRoutes(CgrRoute i, CgrRoute j) {
 
 // This is the procedure that should be done on earth to initialize the route table of each node.
 void RoutingCgrCentralized::initializeRouteTable() {
-    // TODO: check parameters to select/filter nodes
 
     // Find all routes to the i-th node
     for (int terminusNode = 1; terminusNode <= routeTable_.size(); terminusNode++) {
