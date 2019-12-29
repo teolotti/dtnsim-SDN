@@ -17,6 +17,8 @@ RoutingCgrCentralized::~RoutingCgrCentralized()
 
 void RoutingCgrCentralized::routeAndQueueBundle(BundlePkt *bundle, double simTime) {
 
+	simTime_ = simTime;
+
     // If no extensionBlock, find the best route for this bundle
     if (routingType_.find("extensionBlock:off") != std::string::npos) {
         this->cgrForward(bundle);
@@ -96,7 +98,7 @@ void RoutingCgrCentralized::cgrForward(BundlePkt *bundle) {
         }
 
         // criteria 2) filter route: due time is passed
-        if (routeTable_.at(terminusNode).at(r).toTime <= simTime().dbl()) {
+        if (routeTable_.at(terminusNode).at(r).toTime <= simTime_) {
             routeTable_.at(terminusNode).at(r).filtered = true;
             cout << "setting filtered true due to time to route next hop = "
                     << routeTable_.at(terminusNode).at(r).nextHop << endl;
@@ -155,12 +157,12 @@ void RoutingCgrCentralized::cgrEnqueue(BundlePkt *bundle, CgrRoute *bestRoute) {
     // that scales with large routes tables that need to happen in forwarding time.
     for (int n = 1; n < neighborsNum_; n++)
         for (unsigned int r = 0; r < routeTable_.at(n).size(); r++)
-            for (vector<Contact *>::iterator hop1 = routeTable_.at(n).at(r).hops.begin();
-                    hop1 != routeTable_.at(n).at(r).hops.end(); ++hop1)
-                if (routeTable_.at(n).at(r).residualVolume > (*hop1)->getResidualVolume()) {
-                    routeTable_.at(n).at(r).residualVolume = (*hop1)->getResidualVolume();
+            for (vector<Contact *>::iterator contact = routeTable_.at(n).at(r).hops.begin();
+            		contact != routeTable_.at(n).at(r).hops.end(); ++contact)
+                if (routeTable_.at(n).at(r).residualVolume > (*contact)->getResidualVolume()) {
+                    routeTable_.at(n).at(r).residualVolume = (*contact)->getResidualVolume();
                     cout << "*Rvol: routeTable[" << n << "][" << r << "]: updated to "
-                            << (*hop1)->getResidualVolume() << "Bytes (all contacts)" << endl;
+                            << (*contact)->getResidualVolume() << "Bytes (all contacts)" << endl;
                 }
 
     // Save CgrRoute in header
@@ -286,7 +288,7 @@ void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, 
     // id=0, start=0, end=inf, src=me, dst=me, rate=0, conf=1
     Contact * rootContact = new Contact(0, 0, numeric_limits<double>::max(), eid_, eid_, 0, 1.0, 0);
     Work rootWork;
-    rootWork.arrivalTime = simTime().dbl();
+    rootWork.arrivalTime = simTime_;
     rootContact->work = &rootWork;
 
     // Create and initialize working area in each contact.

@@ -21,6 +21,7 @@ private:
     int neighborsNum_;
     string routingType_;
     vector<vector<CgrRoute>> routeTable_;
+    double simTime_;
 
     typedef struct {
         Contact * predecessor;      // Predecessor Contact
