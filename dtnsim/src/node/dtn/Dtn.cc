@@ -41,6 +41,21 @@ void Dtn::initialize(int stage)
 		this->custodyModel_.setSdr(&sdr_);
 		this->custodyModel_.setCustodyReportByteSize(par("custodyReportByteSize"));
 
+		// Register signals
+		dtnBundleSentToCom = registerSignal("dtnBundleSentToCom");
+		dtnBundleSentToApp = registerSignal("dtnBundleSentToApp");
+		dtnBundleSentToAppHopCount = registerSignal("dtnBundleSentToAppHopCount");
+		dtnBundleSentToAppRevisitedHops = registerSignal("dtnBundleSentToAppRevisitedHops");
+		dtnBundleReceivedFromCom = registerSignal("dtnBundleReceivedFromCom");
+		dtnBundleReceivedFromApp = registerSignal("dtnBundleReceivedFromApp");
+		dtnBundleReRouted = registerSignal("dtnBundleReRouted");
+		sdrBundleStored = registerSignal("sdrBundleStored");
+		sdrBytesStored = registerSignal("sdrBytesStored");
+		routeCgrDijkstraCalls = registerSignal("routeCgrDijkstraCalls");
+		routeCgrDijkstraLoops = registerSignal("routeCgrDijkstraLoops");
+		routeCgrRouteTableEntriesCreated = registerSignal("routeCgrRouteTableEntriesCreated");
+		routeCgrRouteTableEntriesExplored = registerSignal("routeCgrRouteTableEntriesExplored");
+
 		// Get a pointer to graphics module
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
 		// Register this object as sdr obsever, in order to display bundles stored in sdr properly.
@@ -130,28 +145,15 @@ void Dtn::initialize(int stage)
 			double sContactProb = par("sContactProb");
 			routing = new RoutingCgrModel350_Probabilistic(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"), this, sContactProb);
 		}
-		else if (routeString.compare("cgrCentralized") == 0)
+		else if (routeString.compare("cgrCentralized") == 0) {
 		    routing = new RoutingCgrCentralized(eid_, this->getParentModule()->getVectorSize(), &sdr_, &contactPlan_, par("routingType"));
+		    if (eid_ != 0) emit(routeCgrDijkstraCalls, ((RoutingCgrCentralized *) routing)->getDijkstraCalls());
+		}
 		else
 		{
 			cout << "dtnsim error: unknown routing type: " << routeString << endl;
 			exit(1);
 		}
-
-		// Register signals
-		dtnBundleSentToCom = registerSignal("dtnBundleSentToCom");
-		dtnBundleSentToApp = registerSignal("dtnBundleSentToApp");
-		dtnBundleSentToAppHopCount = registerSignal("dtnBundleSentToAppHopCount");
-		dtnBundleSentToAppRevisitedHops = registerSignal("dtnBundleSentToAppRevisitedHops");
-		dtnBundleReceivedFromCom = registerSignal("dtnBundleReceivedFromCom");
-		dtnBundleReceivedFromApp = registerSignal("dtnBundleReceivedFromApp");
-		dtnBundleReRouted = registerSignal("dtnBundleReRouted");
-		sdrBundleStored = registerSignal("sdrBundleStored");
-		sdrBytesStored = registerSignal("sdrBytesStored");
-		routeCgrDijkstraCalls = registerSignal("routeCgrDijkstraCalls");
-		routeCgrDijkstraLoops = registerSignal("routeCgrDijkstraLoops");
-		routeCgrRouteTableEntriesCreated = registerSignal("routeCgrRouteTableEntriesCreated");
-		routeCgrRouteTableEntriesExplored = registerSignal("routeCgrRouteTableEntriesExplored");
 
 		if (eid_ != 0)
 		{

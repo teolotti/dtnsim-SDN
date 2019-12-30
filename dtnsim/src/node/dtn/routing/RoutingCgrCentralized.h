@@ -11,12 +11,17 @@ public:
     virtual ~RoutingCgrCentralized();
     void initializeRouteTable();
 
+    int getDijkstraCalls();
+
 private:
     void cgrForward(BundlePkt * bundle);
     void routeAndQueueBundle(BundlePkt * bundle, double simTime);
     void cgrEnqueue(BundlePkt * bundle, CgrRoute * bestRoute);
     static bool compareRoutes(CgrRoute i, CgrRoute j);
     void findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route);
+
+    // stats
+    int dijkstraCalls;
 
     int neighborsNum_;
     string routingType_;
