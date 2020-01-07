@@ -217,7 +217,7 @@ bool RoutingCgrCentralized::compareRoutes(CgrRoute i, CgrRoute j) {
 // This is the procedure that should be done on earth to initialize the route table of each node.
 void RoutingCgrCentralized::initializeRouteTable() {
 
-    dijkstraCalls = 0;
+    dijkstraCalls_ = 0;
 
     // Find all routes to the i-th node
     for (int terminusNode = 1; terminusNode <= routeTable_.size(); terminusNode++) {
@@ -264,6 +264,7 @@ void RoutingCgrCentralized::initializeRouteTable() {
                     suppressedContactIds.push_back((*hop)->getId());
                 }
             }
+            routeLengthVector_.push_back(route.hops.size());
             // tableEntriesCreated++;
         }
 
@@ -284,7 +285,7 @@ void RoutingCgrCentralized::initializeRouteTable() {
 // valid and related to the current Dijkstra search is stored.
 void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route) {
     // increment metrics counter
-    dijkstraCalls++;
+    dijkstraCalls_++;
 
     // Create rootContact and its corresponding rootWork
     // id=0, start=0, end=inf, src=me, dst=me, rate=0, conf=1
@@ -456,6 +457,9 @@ void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, 
 }
 
 int RoutingCgrCentralized::getDijkstraCalls() {
-	return dijkstraCalls;
+	return dijkstraCalls_;
 }
 
+vector<int> RoutingCgrCentralized::getRouteLengthVector() {
+	return routeLengthVector_;
+}

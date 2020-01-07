@@ -12,6 +12,7 @@ public:
     void initializeRouteTable();
 
     int getDijkstraCalls();
+    vector<int> getRouteLengthVector();
 
 private:
     void cgrForward(BundlePkt * bundle);
@@ -21,7 +22,8 @@ private:
     void findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route);
 
     // stats
-    int dijkstraCalls;
+    int dijkstraCalls_;
+    vector<int> routeLengthVector_;
 
     int neighborsNum_;
     string routingType_;

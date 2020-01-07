@@ -55,6 +55,7 @@ void Dtn::initialize(int stage)
 		routeCgrDijkstraLoops = registerSignal("routeCgrDijkstraLoops");
 		routeCgrRouteTableEntriesCreated = registerSignal("routeCgrRouteTableEntriesCreated");
 		routeCgrRouteTableEntriesExplored = registerSignal("routeCgrRouteTableEntriesExplored");
+		routeCgrRouteLength = registerSignal("routeCgrRouteLength");
 
 		// Get a pointer to graphics module
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
@@ -147,7 +148,14 @@ void Dtn::initialize(int stage)
 		}
 		else if (routeString.compare("cgrCentralized") == 0) {
 		    routing = new RoutingCgrCentralized(eid_, this->getParentModule()->getVectorSize(), &sdr_, &contactPlan_, par("routingType"));
+
+		    // Emit signals
 		    if (eid_ != 0) emit(routeCgrDijkstraCalls, ((RoutingCgrCentralized *) routing)->getDijkstraCalls());
+		    if (eid_ != 0) {
+		    	for (int i = 0; i < ((RoutingCgrCentralized *) routing)->getRouteLengthVector().size(); i++) {
+		    		emit(routeCgrRouteLength, ((RoutingCgrCentralized *) routing)->getRouteLengthVector().at(i));
+		    	}
+		    }
 		}
 		else
 		{

@@ -110,6 +110,7 @@ private:
 	simsignal_t routeCgrDijkstraLoops;
 	simsignal_t routeCgrRouteTableEntriesCreated;
 	simsignal_t routeCgrRouteTableEntriesExplored;
+	simsignal_t routeCgrRouteLength;
 };
 
 #endif /* DTN_H_ */
