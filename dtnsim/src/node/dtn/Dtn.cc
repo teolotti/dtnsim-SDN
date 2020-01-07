@@ -462,6 +462,11 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 			emit(routeCgrDijkstraLoops, ((RoutingCgrModelRev17*) routing)->getDijkstraLoops());
 			emit(routeCgrRouteTableEntriesCreated, ((RoutingCgrModelRev17*) routing)->getRouteTableEntriesCreated());
 			emit(routeCgrRouteTableEntriesExplored, ((RoutingCgrModelRev17*) routing)->getRouteTableEntriesExplored());
+			vector<int> routeLength = ((RoutingCgrModelRev17*) routing)->getRouteLengthVector();
+			for (vector<int>::iterator iter = routeLength.begin(); iter != routeLength.end(); iter++) {
+				emit(routeCgrRouteLength, *iter);
+			}
+			((RoutingCgrModelRev17*) routing)->clearRouteLengthVector();
 		}
 		emit(sdrBundleStored, sdr_.getBundlesCountInSdr());
 		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());

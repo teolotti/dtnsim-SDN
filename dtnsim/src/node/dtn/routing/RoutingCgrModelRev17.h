@@ -18,6 +18,8 @@ public:
 	int getDijkstraLoops();
 	int getRouteTableEntriesCreated();
 	int getRouteTableEntriesExplored();
+	vector<int> getRouteLengthVector();
+	void clearRouteLengthVector();
 
 	bool printDebug_ = true;
 
@@ -28,6 +30,7 @@ private:
 	int dijkstraLoops;
 	int tableEntriesCreated;
 	int tableEntriesExplored;
+	vector<int> routeLengthVector;
 
 	// Basic variables
 	string routingType_;

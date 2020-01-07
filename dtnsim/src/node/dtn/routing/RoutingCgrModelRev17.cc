@@ -396,6 +396,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 					}
 				}
 				tableEntriesCreated++;
+				routeLengthVector.push_back(route.hops.size());
 			}
 
 			// Restore original residual capacities in the contact plan
@@ -1085,4 +1086,12 @@ int RoutingCgrModelRev17::getRouteTableEntriesCreated() {
 
 int RoutingCgrModelRev17::getRouteTableEntriesExplored() {
 	return tableEntriesExplored;
+}
+
+vector<int> RoutingCgrModelRev17::getRouteLengthVector() {
+	return routeLengthVector;
+}
+
+void RoutingCgrModelRev17::clearRouteLengthVector() {
+	routeLengthVector.clear();
 }
