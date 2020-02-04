@@ -10,6 +10,7 @@ simple Central
         bool saveFlows = default(false);
         bool saveLpFlows = default(false);
         string contactsFile = default("contacts.txt");
+        int contactsToProcess = default(-1);
         
         bool enableAvailableRoutesCalculation = default(false);
         int deleteNContacts = default(0);

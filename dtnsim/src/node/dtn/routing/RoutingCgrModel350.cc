@@ -517,26 +517,27 @@ void RoutingCgrModel350::findNextBestRoute(Contact * rootContact, int terminusNo
 		// node is the currentWork destination node)
 
 		// cout << currentContact->getDestinationEid() << ",";
-		vector<Contact> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
-		for (vector<Contact>::iterator it = currentNeighbors.begin(); it != currentNeighbors.end(); ++it)
+		vector<int> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
+		for (vector<int>::iterator it = currentNeighbors.begin(); it != currentNeighbors.end(); ++it)
 		{
+		    Contact *neighbor = contactPlan_->getContactById(*it);
 			// First, check if contact needs to be considered
 			// in ion an if (contact->fromNode > arg.fromNode)
 			// is necesary due to the red-black tree stuff. Not here :)
 
 			// This contact is finished, ignore it.
-			if ((*it).getEnd() <= ((Work *) (currentContact->work))->arrivalTime)
+			if (neighbor->getEnd() <= ((Work *) (currentContact->work))->arrivalTime)
 				continue;
 
 			// This contact is suppressed/visited, ignore it.
-			if (((Work *) (*it).work)->suppressed || ((Work *) (*it).work)->visited)
+			if (((Work *) neighbor->work)->suppressed || ((Work *) neighbor->work)->visited)
 				continue;
 
 			// Get owlt (one way light time). If none found, ignore contact
-			double owlt = contactPlan_->getRangeBySrcDst((*it).getSourceEid(), (*it).getDestinationEid());
+			double owlt = contactPlan_->getRangeBySrcDst(neighbor->getSourceEid(), neighbor->getDestinationEid());
 			if (owlt == -1)
 			{
-				cout << "warning, range not available for nodes " << (*it).getSourceEid() << "-" << (*it).getDestinationEid() << ", assuming range=0" << endl;
+				cout << "warning, range not available for nodes " << neighbor->getSourceEid() << "-" << neighbor->getDestinationEid() << ", assuming range=0" << endl;
 				owlt = 0;
 			}
 			//double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
@@ -546,38 +547,38 @@ void RoutingCgrModel350::findNextBestRoute(Contact * rootContact, int terminusNo
 			// TODO: This capacity calculation should be then
 			// updated based on the start of the effective
 			// usage of the contact
-			if (((Work *) (*it).work)->capacity == 0)
-				((Work *) (*it).work)->capacity = (*it).getDataRate() * (*it).getDuration();
+			if (((Work *) neighbor->work)->capacity == 0)
+				((Work *) neighbor->work)->capacity = neighbor->getDataRate() * neighbor->getDuration();
 
 			// Calculate the cost for this contact (Arrival Time)
 			double arrivalTime;
-			if ((*it).getStart() < ((Work *) (currentContact->work))->arrivalTime)
+			if (neighbor->getStart() < ((Work *) (currentContact->work))->arrivalTime)
 				arrivalTime = ((Work *) (currentContact->work))->arrivalTime;
 			else
-				arrivalTime = (*it).getStart();
+				arrivalTime = neighbor->getStart();
 			arrivalTime += owlt;
 
 			// Update the cost of this contact
-			if (arrivalTime < ((Work *) (*it).work)->arrivalTime)
+			if (arrivalTime < ((Work *) neighbor->work)->arrivalTime)
 			{
-				((Work *) (*it).work)->arrivalTime = arrivalTime;
-				((Work *) (*it).work)->predecessor = currentContact;
+				((Work *) neighbor->work)->arrivalTime = arrivalTime;
+				((Work *) neighbor->work)->predecessor = currentContact;
 
 				// If this contact reaches the terminus node
 				// consider it as final contact
-				if ((*it).getDestinationEid() == terminusNode)
+				if (neighbor->getDestinationEid() == terminusNode)
 				{
 
 					// Confidence criteria to be removed in post 3.5.0
-					if ((*it).getConfidence() > highestConfidence || (((*it).getConfidence() == highestConfidence) && ((Work *) (*it).work)->arrivalTime < earliestFinalArrivalTime))
+					if (neighbor->getConfidence() > highestConfidence || ((neighbor->getConfidence() == highestConfidence) && ((Work *) neighbor->work)->arrivalTime < earliestFinalArrivalTime))
 					{
-						highestConfidence = (*it).getConfidence();
-						earliestFinalArrivalTime = ((Work *) (*it).work)->arrivalTime;
+						highestConfidence = neighbor->getConfidence();
+						earliestFinalArrivalTime = ((Work *) neighbor->work)->arrivalTime;
 						// Warning: we need to point finalContact to
 						// the real contact in contactPlan. This iteration
 						// goes over a copy of the original contact plan
 						// returned by getContactsBySrc().
-						finalContact = contactPlan_->getContactById((*it).getId());
+						finalContact = contactPlan_->getContactById(neighbor->getId());
 					}
 				}
 			}

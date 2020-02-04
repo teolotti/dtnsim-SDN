@@ -15,27 +15,27 @@ ContactPlan::ContactPlan(ContactPlan &contactPlan)
 	this->lastEditTime = contactPlan.lastEditTime;
 	this->contactsFile_ = contactPlan.contactsFile_;
 	this->contacts_ = contactPlan.contacts_;
-	this->ranges_ = contactPlan.ranges_;
+	this->contactsBySrc_ = contactPlan.contactsBySrc_;
+	this->rangesBySrcDst_ = contactPlan.rangesBySrcDst_;
 
 	for (size_t i = 0; i < contacts_.size(); i++)
 	{
 		contacts_.at(i).work = NULL;
 	}
-
-	for (size_t i = 0; i < ranges_.size(); i++)
-	{
-		ranges_.at(i).work = NULL;
-	}
 }
 
-void ContactPlan::parseContactPlanFile(string fileName)
+void ContactPlan::parseContactPlanFile(string fileName, int nodesNum, int contactsToProcess)
 {
-	int id = 1;
+	int id = 0;
 	double start = 0.0;
 	double end = 0.0;
 	int sourceEid = 0;
 	int destinationEid = 0;
 	double dataRateOrRange = 0.0;
+	contactsBySrc_.resize(nodesNum + 1);
+
+	for (int i = 0; i <= nodesNum; i++) { contactsBySrc_.at(i).clear(); }
+
 
 	string fileLine = "#";
 	string a;
@@ -55,6 +55,8 @@ void ContactPlan::parseContactPlanFile(string fileName)
 		if (fileLine.at(0) == '#')
 			continue;
 
+
+
 		// This seems to be a valid command line, parse it
 		stringstream stringLine(fileLine);
 		stringLine >> a >> command >> start >> end >> sourceEid >> destinationEid >> dataRateOrRange;
@@ -63,13 +65,17 @@ void ContactPlan::parseContactPlanFile(string fileName)
 		{
 			if ((command.compare("contact") == 0))
 			{
+			    if (contactsToProcess == 0)
+			        continue;
+
+			    contactsToProcess--;
+
 				this->addContact(id, start, end, sourceEid, destinationEid, dataRateOrRange, (float) 1.0);
 				id++;
 			}
 			else if ((command.compare("range") == 0))
 			{
 				this->addRange(id, start, end, sourceEid, destinationEid, dataRateOrRange, (float) 1.0);
-				id++;
 			}
 			else
 			{
@@ -100,55 +106,35 @@ void ContactPlan::parseContactPlanFile(string fileName)
 void ContactPlan::addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
 {
 	Contact contact(id, start, end, sourceEid, destinationEid, dataRate, confidence, 0);
-
 	contacts_.push_back(contact);
+	contactsBySrc_.at(sourceEid).push_back(id);
 
 	lastEditTime = simTime();
 }
 
 void ContactPlan::addRange(int id, double start, double end, int sourceEid, int destinationEid, double range, float confidence)
 {
-	// Ranges can be declared in a single direction, but they are bidirectional
-	// In the worst case they are repeated
-	Contact contact1(id, start, end, sourceEid, destinationEid, 0, confidence, range);
-	Contact contact2(id, start, end, destinationEid, sourceEid, 0, confidence, range);
-
-	ranges_.push_back(contact1);
-	ranges_.push_back(contact2);
+	rangesBySrcDst_[sourceEid][destinationEid] = range;
+	rangesBySrcDst_[destinationEid][sourceEid] = range;
 
 	lastEditTime = simTime();
 }
 
 double ContactPlan::getRangeBySrcDst(int Src, int Dst)
 {
-
-	double rangeFirstContact = -1;
-
-	for (size_t i = 0; i < ranges_.size(); i++)
-	{
-		if ((ranges_.at(i).getSourceEid() == Src) && (ranges_.at(i).getDestinationEid() == Dst))
-		{
-			rangeFirstContact = ranges_.at(i).getRange();
+	map<int, map<int, double> >::iterator rBySrc = rangesBySrcDst_.find(Src);
+	if (rBySrc != rangesBySrcDst_.end()) {
+		map<int, double>::iterator rBySrcDst = rBySrc->second.find(Dst);
+		if (rBySrcDst != rBySrc->second.end()) {
+			return rBySrcDst->second;
 		}
 	}
-
-	return rangeFirstContact;
+	return -1;
 }
 
 Contact *ContactPlan::getContactById(int id)
 {
-	Contact *contactPtr = NULL;
-
-	for (size_t i = 0; i < contacts_.size(); i++)
-	{
-		if (contacts_.at(i).getId() == id)
-		{
-			contactPtr = &contacts_.at(i);
-			break;
-		}
-	}
-
-	return contactPtr;
+	return &contacts_.at(id);
 }
 
 vector<Contact> * ContactPlan::getContacts()
@@ -156,39 +142,9 @@ vector<Contact> * ContactPlan::getContacts()
 	return &contacts_;
 }
 
-vector<Contact> * ContactPlan::getRanges()
+vector<int> ContactPlan::getContactsBySrc(int Src)
 {
-	return &ranges_;
-}
-
-vector<Contact> ContactPlan::getContactsBySrc(int Src)
-{
-	vector<Contact> contacts;
-
-	for (size_t i = 0; i < contacts_.size(); i++)
-	{
-		if (contacts_.at(i).getSourceEid() == Src)
-		{
-			contacts.push_back(contacts_.at(i));
-		}
-	}
-
-	return contacts;
-}
-
-vector<Contact> ContactPlan::getContactsByDst(int Dst)
-{
-	vector<Contact> contacts;
-
-	for (size_t i = 0; i < contacts_.size(); i++)
-	{
-		if (contacts_.at(i).getDestinationEid() == Dst)
-		{
-			contacts.push_back(contacts_.at(i));
-		}
-	}
-
-	return contacts;
+	return contactsBySrc_.at(Src);
 }
 
 vector<Contact> ContactPlan::getContactsBySrcDst(int Src, int Dst)
@@ -227,22 +183,15 @@ void ContactPlan::printContactPlan()
 	for (it = this->getContacts()->begin(); it != this->getContacts()->end(); ++it)
 		cout << "a contact +" << (*it).getStart() << " +" << (*it).getEnd() << " " << (*it).getSourceEid() << " " << (*it).getDestinationEid() << " " << (*it).getResidualVolume() << "/" << (*it).getVolume() << endl;
 
-	for (it = this->getRanges()->begin(); it != this->getRanges()->end(); ++it)
-			cout << "a range +" << (*it).getStart() << " +" << (*it).getEnd() << " " << (*it).getSourceEid() << " " << (*it).getDestinationEid() << " " << (*it).getRange() << endl;
 	cout << endl;
 }
 
-vector<Contact>::iterator ContactPlan::deleteContactById(int contactId)
+void ContactPlan::deleteContactById(int contactId)
 {
-	vector<Contact>::iterator itReturn;
+    cout << "Warning: ContactPlan.cc:deleteContactById() has been changed: contacts are not " <<
+            "removed anymore, a flag is set to tell whether they have been deleted. " <<
+            "Make sure the algorithms using deleted contacts are properly modified." << endl;
+    exit(1);
 
-	vector<Contact>::iterator it;
-	for (it = this->getContacts()->begin(); it != this->getContacts()->end(); ++it)
-		if (it->getId() == contactId)
-		{
-			itReturn = contacts_.erase(it);
-			break;
-		}
-
-	return itReturn;
+	contacts_.at(contactId).setDeleted(true);
 }

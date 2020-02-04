@@ -286,12 +286,14 @@ void RoutingCgrCentralized::initializeRouteTable() {
 void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route) {
     // increment metrics counter
     dijkstraCalls_++;
+	cout << "Calculating route from " << eid_ << " to " << terminusNode << ", call: " << dijkstraCalls_ << endl;
 
     // Create rootContact and its corresponding rootWork
     // id=0, start=0, end=inf, src=me, dst=me, rate=0, conf=1
     Contact * rootContact = new Contact(0, 0, numeric_limits<double>::max(), eid_, eid_, 0, 1.0, 0);
     Work rootWork;
     rootWork.arrivalTime = simTime_;
+    rootWork.visited = false;
     rootContact->work = &rootWork;
 
     // Create and initialize working area in each contact.
@@ -315,17 +317,31 @@ void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, 
     Contact * finalContact = NULL;
     double earliestFinalArrivalTime = numeric_limits<double>::max();
 
-    while (currentContact != NULL) {
+    priority_queue<Contact *, vector<Contact *>, Work> pq;
+    pq.push(currentContact);
+
+    while (!pq.empty()) {
         Work * currentContactWork = (Work *) (currentContact->work);
 
         // increment counter
         // dijkstraLoops++;
+        currentContact = pq.top();
+        if (currentContact->getDestinationEid() == terminusNode) {
+        	break;
+        }
+        pq.pop();
+        if (((Work *) (currentContact->work))->visited)
+        	continue;
+
+        ((Work *) currentContact->work)->visited = true;
+
 
         //cout << currentContact->getDestinationEid() << ",";
 
         // Get local neighbor set and evaluate them
-        vector<Contact> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
-        for (vector<Contact>::iterator neighbor = currentNeighbors.begin(); neighbor != currentNeighbors.end(); ++neighbor) {
+        vector<int> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
+        for (vector<int>::iterator neighborId = currentNeighbors.begin(); neighborId != currentNeighbors.end(); ++neighborId) {
+        	Contact *neighbor = contactPlan_->getContactById(*neighborId);
             Work *neighborWork = (Work *) (*neighbor).work;
 
             // If this contact is suppressed/visited, ignore it.
@@ -366,35 +382,12 @@ void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, 
                 if ((*neighbor).getDestinationEid() == terminusNode)
                     if (neighborWork->arrivalTime < earliestFinalArrivalTime) {
                         earliestFinalArrivalTime = neighborWork->arrivalTime;
-                        finalContact = contactPlan_->getContactById((*neighbor).getId());
+                        finalContact = contactPlan_->getContactById(neighbor->getId());
                     }
+
+				pq.push(neighbor);
             }
         }
-
-        // End exploring next hop contact, mark current as visited
-        currentContactWork->visited = true;
-
-        // Select next (best) contact to move to in next iteration
-        Contact * nextContact = NULL;
-        double earliestArrivalTime = numeric_limits<double>::max();
-        for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
-                it != contactPlan_->getContacts()->end(); ++it) {
-            // Do not evaluate suppressed or visited contacts
-            if (((Work *) (*it).work)->suppressed || ((Work *) (*it).work)->visited)
-                continue;
-
-            // If the arrival time is worst than the best found so far, ignore
-            if (((Work *) (*it).work)->arrivalTime > earliestFinalArrivalTime)
-                continue;
-
-            // Then this might be the best candidate contact
-            if (((Work *) (*it).work)->arrivalTime < earliestArrivalTime) {
-                nextContact = &(*it);
-                earliestArrivalTime = ((Work *) (*it).work)->arrivalTime;
-            }
-        }
-
-        currentContact = nextContact;
     }
 
     // End contact graph exploration

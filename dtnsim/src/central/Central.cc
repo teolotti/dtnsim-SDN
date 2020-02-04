@@ -19,10 +19,10 @@ void Central::initialize()
 	nodesNumber_ = this->getParentModule()->par("nodesNumber");
 
 	// Initialize contact plan
-	contactPlan_.parseContactPlanFile(par("contactsFile"));
+	contactPlan_.parseContactPlanFile(par("contactsFile"), nodesNumber_, par("contactsToProcess"));
 
 	// Initialize topology
-	contactTopology_.parseContactPlanFile(par("contactsFile"));
+	contactTopology_.parseContactPlanFile(par("contactsFile"), nodesNumber_, par("contactsToProcess"));
 
 	// schedule dummy event to make time pass until
 	// last potential contact. This is mandatory in order for nodes

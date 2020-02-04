@@ -26,6 +26,9 @@ public:
 	float getConfidence() const;
 	double getRange() const;
 
+	bool isDeleted();
+	void setDeleted(bool d);
+
 	// Get and Set residual capacity (Bytes)
 	double getResidualVolume() const;
 	void setResidualVolume(double residualVolume);
@@ -45,6 +48,7 @@ private:
 	double residualVolume_; // In Bytes
 	float confidence_;
 	double range_;
+	bool deleted_;
 };
 
 #endif /* CONTACT_H_ */

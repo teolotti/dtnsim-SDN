@@ -26,8 +26,8 @@ public:
 private:
 
 	// Stats collection
-	int dijkstraCalls;
-	int dijkstraLoops;
+	int dijkstraCalls_;
+	int dijkstraLoops_;
 	int tableEntriesCreated;
 	int tableEntriesExplored;
 	vector<int> routeLengthVector;
@@ -44,12 +44,14 @@ private:
 	double routeTableLastEditTime = -1;
 
 	typedef struct {
-		Contact * contact;			// The owner contact of this Work
-		Contact * predecessor;		// Predecessor Contact
-		vector<int> visitedNodes;	// Dijkstra exploration: list of visited nodes
-		double arrivalTime;			// Dijkstra exploration: best arrival time so far
-		bool visited;				// Dijkstra exploration: visited
-		bool suppressed;			// Dijkstra exploration: suppressed
+	    Contact * predecessor;      // Predecessor Contact
+	    double arrivalTime;         // Dijkstra exploration: best arrival time so far
+	    bool visited;               // Dijkstra exploration: visited
+	    bool suppressed;            // Dijkstra exploration: suppressed
+
+	    bool operator()(Contact const *a, Contact const *b) {
+	        return ((Work *) a->work)->arrivalTime > ((Work *) b->work)->arrivalTime;
+	    }
 	} Work;
 
 	void cgrForward(BundlePkt * bundle);

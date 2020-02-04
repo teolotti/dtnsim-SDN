@@ -23,6 +23,7 @@ private:
 
     // stats
     int dijkstraCalls_;
+    int dijkstraLoops_;
     vector<int> routeLengthVector_;
 
     int neighborsNum_;
@@ -35,6 +36,10 @@ private:
         double arrivalTime;         // Dijkstra exploration: best arrival time so far
         bool visited;               // Dijkstra exploration: visited
         bool suppressed;            // Dijkstra exploration: suppressed
+
+        bool operator()(Contact const *a, Contact const *b) {
+            return ((Work *) a->work)->arrivalTime > ((Work *) b->work)->arrivalTime;
+        }
     } Work;
 };
 

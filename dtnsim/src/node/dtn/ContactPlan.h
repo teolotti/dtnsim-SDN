@@ -4,6 +4,7 @@
 #include <src/node/dtn/Contact.h>
 #include <omnetpp.h>
 #include <vector>
+#include <map>
 #include <fstream>
 
 using namespace std;
@@ -24,18 +25,16 @@ public:
 	// Contact plan exploration functions
 	Contact *getContactById(int id);
 	vector<Contact> * getContacts();
-	vector<Contact> * getRanges();
-	vector<Contact> getContactsBySrc(int Src);
-	vector<Contact> getContactsByDst(int Dst);
+	vector<int> getContactsBySrc(int Src);
 	vector<Contact> getContactsBySrcDst(int Src, int Dst);
 	double getRangeBySrcDst(int Src, int Dst);
-	void parseContactPlanFile(string fileName);
+	void parseContactPlanFile(string fileName, int nodesNum, int contactsToProcess);
 	void setContactsFile(string contactsFile);
 	const string& getContactsFile() const;
 	simtime_t getLastEditTime();
 
 	// delete contact function
-	vector<Contact>::iterator deleteContactById(int contactId);
+	void deleteContactById(int contactId);
 
 	// debug function
 	void printContactPlan();
@@ -43,7 +42,8 @@ public:
 private:
 
 	vector<Contact> contacts_;
-	vector<Contact> ranges_;
+	vector<vector<int> > contactsBySrc_;
+	map<int, map<int, double> > rangesBySrcDst_;
 	simtime_t lastEditTime;
 	string contactsFile_;
 

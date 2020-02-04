@@ -11,6 +11,7 @@ Contact::Contact(int id, double start, double end, int sourceEid, int destinatio
 	this->confidence_ = confidence;
 	this->residualVolume_ = (end - start) * dataRate;
 	this->range_ = range;
+	this->deleted_ = false;
 }
 
 Contact::~Contact()
@@ -76,4 +77,12 @@ float Contact::getConfidence() const
 double Contact::getRange() const
 {
 	return range_;
+}
+
+bool Contact::isDeleted() {
+    return deleted_;
+}
+
+void Contact::setDeleted(bool d) {
+    deleted_ = d;
 }
