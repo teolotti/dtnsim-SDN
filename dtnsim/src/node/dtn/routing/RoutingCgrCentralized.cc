@@ -132,7 +132,7 @@ void RoutingCgrCentralized::cgrForward(BundlePkt *bundle) {
 
     // If the route is not plausible, enqueue to limbo
     bundle->setNextHopEid(NO_ROUTE_FOUND);
-    sdr_->enqueueBundleToContact(bundle, 0);
+    sdr_->enqueueBundleToContact(bundle, -1);
 
     cout << "*BestRoute not found (enqueing to limbo)" << endl;
 }

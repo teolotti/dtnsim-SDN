@@ -650,7 +650,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 	} else {
 		// Enqueue to limbo
 		bundle->setNextHopEid(NO_ROUTE_FOUND);
-		sdr_->enqueueBundleToContact(bundle, 0);
+		sdr_->enqueueBundleToContact(bundle, -1);
 
 		cout << "*BestRoute not found (enqueing to limbo)" << endl;
 	}
@@ -753,7 +753,7 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 	} else {
 		// Enqueue to limbo
 		bundle->setNextHopEid(bestRoute->nextHop);
-		sdr_->enqueueBundleToContact(bundle, 0);
+		sdr_->enqueueBundleToContact(bundle, -1);
 
 		cout << "!*BestRoute not found (enqueing to limbo)" << endl;
 	}
