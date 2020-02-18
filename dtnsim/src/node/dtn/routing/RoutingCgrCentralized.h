@@ -11,8 +11,10 @@ public:
     virtual ~RoutingCgrCentralized();
     void initializeRouteTable();
 
+    // stats recollection
     int getDijkstraCalls();
     vector<int> getRouteLengthVector();
+    double getTimeToComputeRoutes();
 
 private:
     void cgrForward(BundlePkt * bundle);
@@ -25,6 +27,7 @@ private:
     int dijkstraCalls_;
     int dijkstraLoops_;
     vector<int> routeLengthVector_;
+    double timeToComputeRoutes_;
 
     int neighborsNum_;
     string routingType_;

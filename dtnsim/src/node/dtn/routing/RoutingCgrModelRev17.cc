@@ -51,6 +51,7 @@ void RoutingCgrModelRev17::routeAndQueueBundle(BundlePkt * bundle, double simTim
 	dijkstraLoops_ = 0;
 	tableEntriesCreated = 0;
 	tableEntriesExplored = 0;
+	timeToComputeRoutes_ = -1;
 
 	cout << "TIME: " << simTime_ << "s, NODE: " << eid_ << ", routing bundle : " << bundle->getSourceEid() << "-"
 			<< bundle->getDestinationEid() << " (" << bundle->getByteLength() << "Bytes)" << endl;
@@ -355,6 +356,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		// populate it with all paths to the destination. This
 		// should only happen once per contact plan update.
 		if (routeTable_.at(terminusNode).empty()) {
+		    time_t clock_start = clock();
 
 			// Temporarily store the residual capacity of each
 			// contact so we can use in the route calculation
@@ -404,8 +406,9 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 			it2 = contactPlan_->getContacts()->begin();
 			for (; it1 != contactVolume.end(); ++it1, ++it2)
 				(*it2).setResidualVolume(*it1);
-		}
 
+			timeToComputeRoutes_ = (double) (clock() - clock_start) / CLOCKS_PER_SEC;
+		}
 	}
 	if (routingType_.find("routeListType:oneBestPath") != std::string::npos) {
 		//////////////////////////////////////////////////
@@ -1077,4 +1080,8 @@ vector<int> RoutingCgrModelRev17::getRouteLengthVector() {
 
 void RoutingCgrModelRev17::clearRouteLengthVector() {
 	routeLengthVector.clear();
+}
+
+double RoutingCgrModelRev17::getTimeToComputeRoutes() {
+    return timeToComputeRoutes_;
 }

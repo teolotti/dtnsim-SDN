@@ -20,6 +20,7 @@ public:
 	int getRouteTableEntriesExplored();
 	vector<int> getRouteLengthVector();
 	void clearRouteLengthVector();
+	double getTimeToComputeRoutes();
 
 	bool printDebug_ = true;
 
@@ -31,6 +32,7 @@ private:
 	int tableEntriesCreated;
 	int tableEntriesExplored;
 	vector<int> routeLengthVector;
+	double timeToComputeRoutes_;
 
 	// Basic variables
 	string routingType_;

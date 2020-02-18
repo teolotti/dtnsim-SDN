@@ -56,6 +56,7 @@ void Dtn::initialize(int stage)
 		routeCgrRouteTableEntriesCreated = registerSignal("routeCgrRouteTableEntriesCreated");
 		routeCgrRouteTableEntriesExplored = registerSignal("routeCgrRouteTableEntriesExplored");
 		routeCgrRouteLength = registerSignal("routeCgrRouteLength");
+		routeCgrTimeToComputeRoutes = registerSignal("routeCgrTimeToComputeRoutes");
 
 		// Get a pointer to graphics module
 		graphicsModule = (Graphics *) this->getParentModule()->getSubmodule("graphics");
@@ -150,12 +151,14 @@ void Dtn::initialize(int stage)
 		}
 		else if (routeString.compare("cgrCentralized") == 0) {
 		    routing = new RoutingCgrCentralized(eid_, this->getParentModule()->getVectorSize(), &sdr_, &contactPlan_, par("routingType"));
+		    RoutingCgrCentralized *cgr = (RoutingCgrCentralized *) routing;
 
 		    // Emit signals
-		    if (eid_ != 0) emit(routeCgrDijkstraCalls, ((RoutingCgrCentralized *) routing)->getDijkstraCalls());
 		    if (eid_ != 0) {
-		    	for (int i = 0; i < ((RoutingCgrCentralized *) routing)->getRouteLengthVector().size(); i++) {
-		    		emit(routeCgrRouteLength, ((RoutingCgrCentralized *) routing)->getRouteLengthVector().at(i));
+		        emit(routeCgrDijkstraCalls, cgr->getDijkstraCalls());
+		        emit(routeCgrTimeToComputeRoutes, cgr->getTimeToComputeRoutes());
+		    	for (int i = 0; i < cgr->getRouteLengthVector().size(); i++) {
+		    		emit(routeCgrRouteLength, cgr->getRouteLengthVector().at(i));
 		    	}
 		    }
 		}
@@ -460,15 +463,20 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 		}
 		if (routeString.compare("cgrModelRev17") == 0)
 		{
-			emit(routeCgrDijkstraCalls, ((RoutingCgrModelRev17*) routing)->getDijkstraCalls());
-			emit(routeCgrDijkstraLoops, ((RoutingCgrModelRev17*) routing)->getDijkstraLoops());
-			emit(routeCgrRouteTableEntriesCreated, ((RoutingCgrModelRev17*) routing)->getRouteTableEntriesCreated());
-			emit(routeCgrRouteTableEntriesExplored, ((RoutingCgrModelRev17*) routing)->getRouteTableEntriesExplored());
-			vector<int> routeLength = ((RoutingCgrModelRev17*) routing)->getRouteLengthVector();
+		    RoutingCgrModelRev17* cgr = (RoutingCgrModelRev17*) routing;
+
+			emit(routeCgrDijkstraCalls, cgr->getDijkstraCalls());
+			emit(routeCgrDijkstraLoops, cgr->getDijkstraLoops());
+			emit(routeCgrRouteTableEntriesCreated, cgr->getRouteTableEntriesCreated());
+			emit(routeCgrRouteTableEntriesExplored, cgr->getRouteTableEntriesExplored());
+			vector<int> routeLength = cgr->getRouteLengthVector();
 			for (vector<int>::iterator iter = routeLength.begin(); iter != routeLength.end(); iter++) {
 				emit(routeCgrRouteLength, *iter);
 			}
-			((RoutingCgrModelRev17*) routing)->clearRouteLengthVector();
+			cgr->clearRouteLengthVector();
+			if (cgr->getTimeToComputeRoutes() != -1) {
+			    emit(routeCgrTimeToComputeRoutes, cgr->getTimeToComputeRoutes());
+			}
 		}
 		emit(sdrBundleStored, sdr_.getBundlesCountInSdr());
 		emit(sdrBytesStored, sdr_.getBytesStoredInSdr());

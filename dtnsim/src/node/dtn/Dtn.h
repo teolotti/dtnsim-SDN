@@ -20,6 +20,7 @@
 #include <sstream>
 #include <map>
 #include <queue>
+#include <ctime>
 
 #include "src/node/MsgTypes.h"
 #include "src/dtnsim_m.h"
@@ -104,13 +105,14 @@ private:
 	simsignal_t dtnBundleReceivedFromCom;
 	simsignal_t dtnBundleReceivedFromApp;
 	simsignal_t dtnBundleReRouted;
-	simsignal_t sdrBundleStored;
-	simsignal_t sdrBytesStored;
 	simsignal_t routeCgrDijkstraCalls;
 	simsignal_t routeCgrDijkstraLoops;
+	simsignal_t routeCgrRouteLength;
 	simsignal_t routeCgrRouteTableEntriesCreated;
 	simsignal_t routeCgrRouteTableEntriesExplored;
-	simsignal_t routeCgrRouteLength;
+	simsignal_t routeCgrTimeToComputeRoutes;
+	simsignal_t sdrBundleStored;
+	simsignal_t sdrBytesStored;
 };
 
 #endif /* DTN_H_ */

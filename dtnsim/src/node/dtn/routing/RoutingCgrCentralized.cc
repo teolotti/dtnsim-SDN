@@ -8,7 +8,9 @@ RoutingCgrCentralized::RoutingCgrCentralized(int eid, int neighborsNum, SdrModel
     neighborsNum_ = neighborsNum;
     routeTable_.resize(neighborsNum);
 
+    double clock_start = clock();
     this->initializeRouteTable();
+    timeToComputeRoutes_ = (double) (clock() - clock_start) / CLOCKS_PER_SEC;
 }
 
 RoutingCgrCentralized::~RoutingCgrCentralized()
@@ -449,10 +451,15 @@ void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, 
     }
 }
 
+// stats recollection
 int RoutingCgrCentralized::getDijkstraCalls() {
 	return dijkstraCalls_;
 }
 
 vector<int> RoutingCgrCentralized::getRouteLengthVector() {
 	return routeLengthVector_;
+}
+
+double RoutingCgrCentralized::getTimeToComputeRoutes() {
+    return timeToComputeRoutes_;
 }
