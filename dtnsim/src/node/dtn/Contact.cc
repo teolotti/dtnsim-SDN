@@ -86,3 +86,7 @@ bool Contact::isDeleted() {
 void Contact::setDeleted(bool d) {
     deleted_ = d;
 }
+
+void Contact::setRange(double range) {
+    range_ = range;
+}

@@ -21,6 +21,7 @@ public:
 	// Contact plan population functions
 	void addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence);
 	void addRange(int id, double start, double end, int sourceEid, int destinationEid, double range, float confidence);
+	void updateContactRanges();
 
 	// Contact plan exploration functions
 	Contact *getContactById(int id);
@@ -43,6 +44,7 @@ private:
 
 	vector<Contact> contacts_;
 	vector<vector<int> > contactsBySrc_;
+	vector<Contact> ranges_;
 	map<int, map<int, double> > rangesBySrcDst_;
 	simtime_t lastEditTime;
 	string contactsFile_;

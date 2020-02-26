@@ -359,14 +359,12 @@ void RoutingCgrCentralized::findNextBestRoute(vector<int> suppressedContactIds, 
                 continue;
 
             // Get owlt (one way light time). If none found, ignore contact
-            double owlt = contactPlan_->getRangeBySrcDst(neighbor->getSourceEid(), neighbor->getDestinationEid());
+            double owlt = neighbor->getRange();
             if (owlt == -1)
             {
                 cout << "warning, range not available for nodes " << neighbor->getSourceEid() << "-" << neighbor->getDestinationEid() << ", assuming range=0" << endl;
                 owlt = 0;
             }
-            //double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
-            //owlt += owltMargin;
 
             // Calculate the cost for this contact (Arrival Time)
             double arrivalTime = std::max(

@@ -84,6 +84,9 @@ void ContactPlan::parseContactPlanFile(string fileName, int nodesNum, int contac
 		}
 	}
 
+	updateContactRanges();
+	ranges_.clear();
+
 	if (cin.bad())
 	{
 		// IO error
@@ -105,7 +108,7 @@ void ContactPlan::parseContactPlanFile(string fileName, int nodesNum, int contac
 
 void ContactPlan::addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
 {
-	Contact contact(id, start, end, sourceEid, destinationEid, dataRate, confidence, 0);
+	Contact contact(id, start, end, sourceEid, destinationEid, dataRate, confidence, -1);
 	contacts_.push_back(contact);
 	contactsBySrc_.at(sourceEid).push_back(id);
 
@@ -114,21 +117,35 @@ void ContactPlan::addContact(int id, double start, double end, int sourceEid, in
 
 void ContactPlan::addRange(int id, double start, double end, int sourceEid, int destinationEid, double range, float confidence)
 {
-	rangesBySrcDst_[sourceEid][destinationEid] = range;
-	rangesBySrcDst_[destinationEid][sourceEid] = range;
+    Contact rangeContact(id, start, end, sourceEid, destinationEid, 0, confidence, range);
+    ranges_.push_back(rangeContact);
 
 	lastEditTime = simTime();
 }
 
+void ContactPlan::updateContactRanges() {
+    for (vector<Contact>::iterator rangeContact = ranges_.begin(); rangeContact != ranges_.end(); rangeContact++) {
+        int sourceEid = rangeContact->getSourceEid();
+        int destinationEid = rangeContact->getDestinationEid();
+        double start = rangeContact->getStart();
+        double end = rangeContact->getEnd();
+
+        vector<int> contactsBySrc = getContactsBySrc(sourceEid);
+        for (vector<int>::iterator contactId = contactsBySrc.begin(); contactId != contactsBySrc.end(); contactId++) {
+            Contact* contact = getContactById(*contactId);
+            if (contact->getDestinationEid() == destinationEid &&
+                    contact->getStart() >= start &&
+                    contact->getEnd() <= end) {
+
+                contact->setRange(rangeContact->getRange());
+            }
+        }
+    }
+}
+
 double ContactPlan::getRangeBySrcDst(int Src, int Dst)
 {
-	map<int, map<int, double> >::iterator rBySrc = rangesBySrcDst_.find(Src);
-	if (rBySrc != rangesBySrcDst_.end()) {
-		map<int, double>::iterator rBySrcDst = rBySrc->second.find(Dst);
-		if (rBySrcDst != rBySrc->second.end()) {
-			return rBySrcDst->second;
-		}
-	}
+	cout << "WARNING: ContactPlan::getRangeBySrcDst() deprecated. Use Contact::getRange() instead." << endl;
 	return -1;
 }
 

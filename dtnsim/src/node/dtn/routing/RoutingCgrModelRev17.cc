@@ -843,7 +843,7 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
                 continue;
 
             // Get owlt (one way light time). If none found, ignore contact
-            double owlt = contactPlan_->getRangeBySrcDst((*neighbor).getSourceEid(), (*neighbor).getDestinationEid());
+            double owlt = neighbor->getRange();
             if (owlt == -1)
             {
                 cout << "warning, range not available for nodes " << (*neighbor).getSourceEid() << "-" << (*neighbor).getDestinationEid() << ", assuming range=0" << endl;
