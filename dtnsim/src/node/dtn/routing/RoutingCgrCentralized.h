@@ -15,6 +15,7 @@ public:
     int getDijkstraCalls();
     vector<int> getRouteLengthVector();
     double getTimeToComputeRoutes();
+    vector<CgrRoute> getAllRoutesFromNode(int source);
 
 private:
     void cgrForward(BundlePkt * bundle);
