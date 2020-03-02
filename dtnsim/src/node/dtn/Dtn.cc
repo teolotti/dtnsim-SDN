@@ -171,6 +171,40 @@ void Dtn::initialize(int stage)
 
 		       routing = new CGRBRUFPowered(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"), pf, ts_duration, ts_start_times, numOfNodes, prefix.str(), posfix.str());
 		}
+		else if (routeString.compare("IRUCoPn") == 0)
+		{
+		       string frouting = par("frouting");
+		       int numOfNodes = this->getParentModule()->getParentModule()->par("nodesNumber");
+		       double pf = this->getParentModule()->getParentModule()->getSubmodule("central")->par("failureProbability");
+		       int ts_duration = par("ts_duration");
+		       int bundlesCopies = par("bundlesCopies");
+
+		       //Parse parameter ts_start_times
+		       const char *str_ts_start_times = par("ts_start_times");
+		       cStringTokenizer ts_start_Tokenizer(str_ts_start_times, ",");
+
+		       ostringstream prefix; prefix << frouting << "pf="<<fixed << setprecision(2) << pf <<"/todtnsim-";
+		       ostringstream posfix; posfix << "-" << fixed << setprecision(2) << pf << ".json";
+
+		       routing = new RoutingIRUCoPn(eid_, &sdr_, &contactPlan_, this, bundlesCopies, pf, ts_duration, numOfNodes, prefix.str(), posfix.str());
+		}
+		else if (routeString.compare("IRUCoPn2") == 0)
+		{
+		       string frouting = par("frouting");
+		       int numOfNodes = this->getParentModule()->getParentModule()->par("nodesNumber");
+		       double pf = this->getParentModule()->getParentModule()->getSubmodule("central")->par("failureProbability");
+		       int ts_duration = par("ts_duration");
+		       int bundlesCopies = par("bundlesCopies");
+
+		       //Parse parameter ts_start_times
+		       const char *str_ts_start_times = par("ts_start_times");
+		       cStringTokenizer ts_start_Tokenizer(str_ts_start_times, ",");
+
+		       ostringstream prefix; prefix << frouting << "pf="<<fixed << setprecision(2) << pf <<"/todtnsim-";
+		       ostringstream posfix; posfix << "-" << fixed << setprecision(2) << pf << ".json";
+
+		       routing = new RoutingIRUCoPn2(eid_, &sdr_, &contactPlan_, this, bundlesCopies, pf, ts_duration, numOfNodes, prefix.str(), posfix.str());
+		}
 		else
 		{
 			cout << "dtnsim error: unknown routing type: " << routeString << endl;

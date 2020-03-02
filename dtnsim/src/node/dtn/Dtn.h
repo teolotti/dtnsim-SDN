@@ -18,6 +18,8 @@
 #include <dtn/routing/RoutingBRUF1T.h>
 #include <brufncopies/RoutingBRUFNCopies.h>
 #include <cgrbrufpowered/CGRBRUFPowered.h>
+#include <RoutingIRUCoPn.h>
+#include <RoutingIRUCoPn2.h>
 #include <dtn/SdrModel.h>
 #include <cstdio>
 #include <string>
