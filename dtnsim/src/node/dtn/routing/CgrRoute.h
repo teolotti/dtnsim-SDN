@@ -32,7 +32,7 @@ typedef struct CgrRoute
 	    route.fromTime = contact->getStart();
 	    route.toTime = contact->getEnd();
 	    route.confidence = contact->getConfidence();
-	    route.arrivalTime = contact->getStart(); // TODO: owlt should be considered here
+	    route.arrivalTime = contact->getStart() + contact->getRange();
 	    route.maxVolume = contact->getVolume();
 	    route.residualVolume = contact->getResidualVolume();
 	    route.hops = vector<Contact *> { contact };
@@ -48,7 +48,7 @@ typedef struct CgrRoute
 	    // No need to set newRoute.nextHop
 	    newRoute.toTime = std::min(newRoute.toTime, contact->getEnd());
 	    newRoute.confidence *= contact->getConfidence();
-	    newRoute.arrivalTime = std::max(newRoute.arrivalTime, contact->getStart()); // TODO: owlt should be considered here
+	    newRoute.arrivalTime = std::max(newRoute.arrivalTime, contact->getStart()) + contact->getRange();
 	    newRoute.maxVolume = std::min(newRoute.maxVolume, contact->getVolume());
 	    newRoute.residualVolume = std::min(newRoute.residualVolume, contact->getResidualVolume());
 	    newRoute.hops.push_back(contact);
