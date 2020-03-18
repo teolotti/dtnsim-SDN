@@ -22,7 +22,6 @@ private:
     void cgrForward(BundlePkt * bundle);
     void routeAndQueueBundle(BundlePkt * bundle, double simTime);
     void cgrEnqueue(BundlePkt * bundle, CgrRoute * bestRoute);
-    static bool compareRoutes(CgrRoute i, CgrRoute j);
     void findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route);
 
     // stats

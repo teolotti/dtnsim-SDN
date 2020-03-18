@@ -63,7 +63,6 @@ private:
 
 	void clearRouteTable();
 	void printRouteTable(int terminusNode);
-	static bool compareRoutes(CgrRoute i, CgrRoute j);
 	void printContactPlan();
 };
 

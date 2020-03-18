@@ -641,8 +641,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 	if (!routeTable_.at(terminusNode).empty()) {
 		// Select best route
 		vector<CgrRoute>::iterator bestRoute;
-		bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(),
-				this->compareRoutes);
+		bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end());
 
 		// Save tableEntriesExplored metric. Notice that
 		// explored also includes filtered routes (i.e., pessimistic)
@@ -968,44 +967,6 @@ void RoutingCgrModelRev17::printRouteTable(int terminusNode) {
 						<< (*hop)->getVolume() << "Bytes)" << ", toTime: " << route.toTime;
 
 			cout << endl;
-		}
-	}
-}
-
-// This functions is used to determine the best route out of a route list.
-// Must returns true if first argument is better (i.e., minor)
-bool RoutingCgrModelRev17::compareRoutes(CgrRoute i, CgrRoute j) {
-
-	// If one is filtered, the other is the best
-	if (i.filtered && !j.filtered)
-		return false;
-	if (!i.filtered && j.filtered)
-		return true;
-
-	// If both are not filtered, then compare criteria,
-	// If both are filtered, return any of them.
-
-	// criteria 1) lowest arrival time
-	if (i.arrivalTime < j.arrivalTime)
-		return true;
-	else if (i.arrivalTime > j.arrivalTime)
-		return false;
-	else {
-		// if equal, criteria 2) lowest hop count
-		if (i.hops.size() < j.hops.size())
-			return true;
-		else if (i.hops.size() > j.hops.size())
-			return false;
-		else {
-			// if equal, criteria 3) larger residual volume
-			if (i.residualVolume > j.residualVolume)
-				return true;
-			else if (i.residualVolume < j.residualVolume)
-				return false;
-			else {
-				// if equal, first is better.
-				return true;
-			}
 		}
 	}
 }

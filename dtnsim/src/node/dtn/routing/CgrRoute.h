@@ -68,7 +68,37 @@ typedef struct CgrRoute
 	}
 
     bool operator<(const CgrRoute& other) const {
-        return arrivalTime < other.arrivalTime;
+        if (!filtered && other.filtered)
+            return true;
+        if (filtered && !other.filtered)
+            return false;
+
+        // If both are not filtered, then compare criteria,
+        // If both are filtered, return any of them.
+
+        // criteria 1) lowest arrival time
+        if (arrivalTime < other.arrivalTime)
+            return true;
+        else if (arrivalTime > other.arrivalTime)
+            return false;
+        else {
+            // if equal, criteria 2) lowest hop count
+            if (hops.size() < other.hops.size())
+                return true;
+            else if (hops.size() > other.hops.size())
+                return false;
+            else {
+                // if equal, criteria 3) larger residual volume
+                if (residualVolume > other.residualVolume)
+                    return true;
+                else if (residualVolume < other.residualVolume)
+                    return false;
+                else {
+                    // if equal, first is better.
+                    return true;
+                }
+            }
+        }
     }
 
 } CgrRoute;
