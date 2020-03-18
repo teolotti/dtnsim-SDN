@@ -150,7 +150,9 @@ void Dtn::initialize(int stage)
 			routing = new RoutingCgrModel350_Probabilistic(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"), this, sContactProb);
 		}
 		else if (routeString.compare("cgrCentralized") == 0) {
-		    routing = new RoutingCgrCentralized(eid_, this->getParentModule()->getVectorSize(), &sdr_, &contactPlan_, par("routingType"));
+		    routing = new RoutingCgrCentralized(eid_, this->getParentModule()->getVectorSize(),
+		            &sdr_, &contactPlan_, par("routingType"), par("maxRouteHops"),
+		            par("maxRoutesWithSameDst"));
 		    RoutingCgrCentralized *cgr = (RoutingCgrCentralized *) routing;
 
 		    // Emit signals

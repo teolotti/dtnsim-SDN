@@ -1,13 +1,15 @@
 #ifndef SRC_NODE_DTN_ROUTINGCGRCENTRALIZED_H_
 #define SRC_NODE_DTN_ROUTINGCGRCENTRALIZED_H_
 
+#include <list>
+#include <set>
 #include <src/node/dtn/routing/CgrRoute.h>
 #include <src/node/dtn/routing/RoutingDeterministic.h>
 
 class RoutingCgrCentralized : public RoutingDeterministic
 {
 public:
-    RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan, string routingType);
+    RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan, string routingType, int maxRouteLength, int maxRoutesWithSameDst);
     virtual ~RoutingCgrCentralized();
     void initializeRouteTable();
 
@@ -15,7 +17,6 @@ public:
     int getDijkstraCalls();
     vector<int> getRouteLengthVector();
     double getTimeToComputeRoutes();
-    vector<CgrRoute> getAllRoutesFromNode(int source);
 
 private:
     void cgrForward(BundlePkt * bundle);
@@ -34,6 +35,8 @@ private:
     string routingType_;
     vector<vector<CgrRoute>> routeTable_;
     double simTime_;
+    int maxRouteHops_;
+    int maxRoutesWithSameDst_;
 
     typedef struct {
         Contact * predecessor;      // Predecessor Contact

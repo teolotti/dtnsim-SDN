@@ -1,12 +1,14 @@
 #include <src/node/dtn/routing/RoutingCgrCentralized.h>
 
 RoutingCgrCentralized::RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan,
-        string routingType)
+        string routingType, int maxRouteHops, int maxRoutesWithSameDst)
     : RoutingDeterministic(eid, sdr, localContactPlan)
 {
     routingType_ = routingType;
     neighborsNum_ = neighborsNum;
-    routeTable_.resize(neighborsNum);
+    routeTable_.resize(neighborsNum + 1);
+    maxRouteHops_ = maxRouteHops;
+    maxRoutesWithSameDst_ = maxRoutesWithSameDst;
 
     double clock_start = clock();
     this->initializeRouteTable();
@@ -218,36 +220,76 @@ bool RoutingCgrCentralized::compareRoutes(CgrRoute i, CgrRoute j) {
 
 // This is the procedure that should be done on earth to initialize the route table of each node.
 void RoutingCgrCentralized::initializeRouteTable() {
+    cout << "Initializing node " << eid_ << endl;
 
-    vector<CgrRoute> allRoutes = getAllRoutesFromNode(eid_);
-    for (int i = 0; i < allRoutes.size(); i++) {
-        routeTable_.at(allRoutes[i].terminusNode).push_back(allRoutes[i]);
-    }
-
-}
-
-vector<CgrRoute> RoutingCgrCentralized::getAllRoutesFromNode(int source) {
-    vector<CgrRoute> routes;
+    /*** Find all routes ***/
+    list<CgrRoute> routes;
+    set<CgrRoute> routesToNode[neighborsNum_ + 1];
 
     vector<int> directContacts = contactPlan_->getContactsBySrc(eid_);
     for (vector<int>::iterator contactId = directContacts.begin(); contactId != directContacts.end(); contactId++) {
         Contact* directContact = contactPlan_->getContactById(*contactId);
-        routes.push_back(CgrRoute::RouteFromContact(directContact));
+        CgrRoute newRoute = CgrRoute::RouteFromContact(directContact);
+
+        set<CgrRoute>* routesToDst = &routesToNode[newRoute.terminusNode];
+        if (maxRoutesWithSameDst_ > 0 &&
+                routesToDst->size() == maxRoutesWithSameDst_ &&
+                newRoute < *(routesToDst->rbegin())) {
+
+            // The capacity is full and the new route is better than
+            // the worst route to this destination. Remove the worst one.
+            routesToDst->erase(--routesToDst->end());
+        }
+
+        if (maxRoutesWithSameDst_ == -1 || routesToDst->size() < maxRoutesWithSameDst_) {
+            routes.push_back(newRoute);
+            routesToDst->insert(newRoute);
+        }
     }
 
-    for (int i = 0; i < routes.size(); i++) {
-        CgrRoute currentRoute = routes[i];
+    while (!routes.empty()) {
+        CgrRoute currentRoute = routes.front();
+        routes.pop_front();
+
+        if (maxRouteHops_ != -1 && currentRoute.hops.size() == maxRouteHops_)
+            continue;
+
         vector<int> neighborIds = contactPlan_->getContactsBySrc(currentRoute.terminusNode);
         for (vector<int>::iterator neighborId = neighborIds.begin(); neighborId != neighborIds.end(); neighborId++) {
             Contact* neighbor = contactPlan_->getContactById(*neighborId);
+
             if (currentRoute.nodeIsNotVisited(neighbor->getDestinationEid())) {
-                if (currentRoute.arrivalTime < neighbor->getEnd())
-                    routes.push_back(currentRoute.extendWithContact(neighbor));
+                if (currentRoute.arrivalTime < neighbor->getEnd()) {
+                    set<CgrRoute>* routesToDst = &routesToNode[neighbor->getDestinationEid()];
+                    CgrRoute newRoute = currentRoute.extendWithContact(neighbor);
+
+                    if (maxRoutesWithSameDst_ > 0 &&
+                            routesToDst->size() == maxRoutesWithSameDst_ &&
+                            newRoute < *(routesToDst->rbegin())) {
+
+                        routesToDst->erase(--routesToDst->end());
+                    }
+
+                    if (maxRoutesWithSameDst_ == -1 || routesToDst->size() < maxRoutesWithSameDst_) {
+                        routes.push_back(newRoute);
+                        routesToDst->insert(newRoute);
+                    }
+                }
             }
         }
     }
 
-    return routes;
+    /*** Set route table with routes found ***/
+    for (int i = 1; i <= neighborsNum_; i++) {
+        routeTable_.at(i).resize(routesToNode[i].size());
+        vector<CgrRoute>::iterator it1 = routeTable_.at(i).begin();
+        set<CgrRoute>::iterator it2 = routesToNode[i].begin();
+        while (it2 != routesToNode[i].end()) {
+            *it1 = *it2;
+            it1++;
+            it2++;
+        }
+    }
 }
 
 // stats recollection

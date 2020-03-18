@@ -13,6 +13,8 @@ simple Dtn
         bool printRoutingDebug = default(false);
         bool saveBundleMap = default(false);
         int sdrSize = default(0); // SDR Memory Size in Bytes (0 = infinite)
+        int maxRouteHops = default(-1); // CGR Centralized route filtering
+        int maxRoutesWithSameDst = default(-1); // CGR Centralized route filtering
         
         // Custody
         int custodyReportByteSize = default(20);

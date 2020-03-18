@@ -67,6 +67,10 @@ typedef struct CgrRoute
 	    return result;
 	}
 
+    bool operator<(const CgrRoute& other) const {
+        return arrivalTime < other.arrivalTime;
+    }
+
 } CgrRoute;
 
 #endif /* SRC_NODE_DTN_ROUTING_CGRROUTE_H_ */
