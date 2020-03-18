@@ -185,26 +185,28 @@ void RoutingCgrCentralized::initializeRouteTable() {
 
     /*** Find all routes ***/
     list<CgrRoute> routes;
-    set<CgrRoute> routesToNode[neighborsNum_ + 1];
+
+    // Use priority queue to sort routes from worst to best, so the worst is always at the top.
+    priority_queue<CgrRoute> routesToNode[neighborsNum_ + 1];
 
     vector<int> directContacts = contactPlan_->getContactsBySrc(eid_);
     for (vector<int>::iterator contactId = directContacts.begin(); contactId != directContacts.end(); contactId++) {
         Contact* directContact = contactPlan_->getContactById(*contactId);
         CgrRoute newRoute = CgrRoute::RouteFromContact(directContact);
 
-        set<CgrRoute>* routesToDst = &routesToNode[newRoute.terminusNode];
+        priority_queue<CgrRoute>* routesToDst = &routesToNode[newRoute.terminusNode];
         if (maxRoutesWithSameDst_ > 0 &&
                 routesToDst->size() == maxRoutesWithSameDst_ &&
-                newRoute < *(routesToDst->rbegin())) {
+                newRoute < routesToDst->top()) {
 
             // The capacity is full and the new route is better than
             // the worst route to this destination. Remove the worst one.
-            routesToDst->erase(--routesToDst->end());
+            routesToDst->pop();
         }
 
         if (maxRoutesWithSameDst_ == -1 || routesToDst->size() < maxRoutesWithSameDst_) {
             routes.push_back(newRoute);
-            routesToDst->insert(newRoute);
+            routesToDst->push(newRoute);
         }
     }
 
@@ -221,19 +223,19 @@ void RoutingCgrCentralized::initializeRouteTable() {
 
             if (currentRoute.nodeIsNotVisited(neighbor->getDestinationEid())) {
                 if (currentRoute.arrivalTime < neighbor->getEnd()) {
-                    set<CgrRoute>* routesToDst = &routesToNode[neighbor->getDestinationEid()];
+                    priority_queue<CgrRoute>* routesToDst = &routesToNode[neighbor->getDestinationEid()];
                     CgrRoute newRoute = currentRoute.extendWithContact(neighbor);
 
                     if (maxRoutesWithSameDst_ > 0 &&
                             routesToDst->size() == maxRoutesWithSameDst_ &&
-                            newRoute < *(routesToDst->rbegin())) {
+                            newRoute < routesToDst->top()) {
 
-                        routesToDst->erase(--routesToDst->end());
+                        routesToDst->pop();
                     }
 
                     if (maxRoutesWithSameDst_ == -1 || routesToDst->size() < maxRoutesWithSameDst_) {
                         routes.push_back(newRoute);
-                        routesToDst->insert(newRoute);
+                        routesToDst->push(newRoute);
                     }
                 }
             }
@@ -243,12 +245,13 @@ void RoutingCgrCentralized::initializeRouteTable() {
     /*** Set route table with routes found ***/
     for (int i = 1; i <= neighborsNum_; i++) {
         routeTable_.at(i).resize(routesToNode[i].size());
-        vector<CgrRoute>::iterator it1 = routeTable_.at(i).begin();
-        set<CgrRoute>::iterator it2 = routesToNode[i].begin();
-        while (it2 != routesToNode[i].end()) {
-            *it1 = *it2;
-            it1++;
-            it2++;
+
+        // Fill with reverse iter, since routes are in reverse order (priority_queue)
+        vector<CgrRoute>::reverse_iterator it = routeTable_.at(i).rbegin();
+        while (it != routeTable_.at(i).rend()) {
+            *it = routesToNode[i].top();
+            routesToNode[i].pop();
+            it++;
         }
     }
 }

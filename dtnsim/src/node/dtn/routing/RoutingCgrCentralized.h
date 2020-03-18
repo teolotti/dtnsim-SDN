@@ -2,7 +2,7 @@
 #define SRC_NODE_DTN_ROUTINGCGRCENTRALIZED_H_
 
 #include <list>
-#include <set>
+#include <queue>
 #include <src/node/dtn/routing/CgrRoute.h>
 #include <src/node/dtn/routing/RoutingDeterministic.h>
 
