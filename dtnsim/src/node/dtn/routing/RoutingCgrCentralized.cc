@@ -184,7 +184,7 @@ void RoutingCgrCentralized::initializeRouteTable() {
     cout << "Initializing node " << eid_ << endl;
 
     /*** Find all routes ***/
-    list<CgrRoute> routes;
+    list<CgrRoute> routesToExplore;
 
     // Use priority queue to sort routes from worst to best, so the worst is always at the top.
     priority_queue<CgrRoute> routesToNode[neighborsNum_ + 1];
@@ -205,14 +205,14 @@ void RoutingCgrCentralized::initializeRouteTable() {
         }
 
         if (maxRoutesWithSameDst_ == -1 || routesToDst->size() < maxRoutesWithSameDst_) {
-            routes.push_back(newRoute);
+            routesToExplore.push_back(newRoute);
             routesToDst->push(newRoute);
         }
     }
 
-    while (!routes.empty()) {
-        CgrRoute currentRoute = routes.front();
-        routes.pop_front();
+    while (!routesToExplore.empty()) {
+        CgrRoute currentRoute = routesToExplore.front();
+        routesToExplore.pop_front();
 
         if (maxRouteHops_ != -1 && currentRoute.hops.size() == maxRouteHops_)
             continue;
@@ -234,7 +234,7 @@ void RoutingCgrCentralized::initializeRouteTable() {
                     }
 
                     if (maxRoutesWithSameDst_ == -1 || routesToDst->size() < maxRoutesWithSameDst_) {
-                        routes.push_back(newRoute);
+                        routesToExplore.push_back(newRoute);
                         routesToDst->push(newRoute);
                     }
                 }
