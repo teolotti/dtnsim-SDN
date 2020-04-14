@@ -214,7 +214,8 @@ void RoutingCgrCentralized::initializeRouteTable() {
         CgrRoute currentRoute = routesToExplore.front();
         routesToExplore.pop_front();
 
-        if (maxRouteHops_ != -1 && currentRoute.hops.size() == maxRouteHops_)
+        if (routesToNode[currentRoute.terminusNode].top() < currentRoute)
+            // No need to explore a route which is already worse than the best K routes.
             continue;
 
         vector<int> neighborIds = contactPlan_->getContactsBySrc(currentRoute.terminusNode);
@@ -234,8 +235,11 @@ void RoutingCgrCentralized::initializeRouteTable() {
                     }
 
                     if (maxRoutesWithSameDst_ == -1 || routesToDst->size() < maxRoutesWithSameDst_) {
-                        routesToExplore.push_back(newRoute);
                         routesToDst->push(newRoute);
+
+                        if (maxRouteHops_ == -1 || currentRoute.hops.size() < maxRouteHops_) {
+                            routesToExplore.push_back(newRoute);
+                        }
                     }
                 }
             }
