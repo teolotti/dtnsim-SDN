@@ -771,7 +771,7 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route) {
     // increment metrics counter
     dijkstraCalls_++;
-    cout << "Calculating route from " << eid_ << " to " << terminusNode << ", call: " << dijkstraCalls_ << endl;
+    //cout << "Calculating route from " << eid_ << " to " << terminusNode << ", call: " << dijkstraCalls_ << endl;
 
     // Create rootContact and its corresponding rootWork
     // id=0, start=0, end=inf, src=me, dst=me, rate=0, conf=1

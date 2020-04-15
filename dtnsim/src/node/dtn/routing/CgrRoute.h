@@ -41,7 +41,7 @@ typedef struct CgrRoute
 	}
 
 	CgrRoute extendWithContact(Contact* contact) {
-	    assert(this.arrivalTime < contact->getEnd());
+	    assert(this->arrivalTime < contact->getEnd());
 
 	    CgrRoute newRoute = *this;
 	    newRoute.terminusNode = contact->getDestinationEid();

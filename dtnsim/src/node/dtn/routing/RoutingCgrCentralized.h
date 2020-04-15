@@ -14,7 +14,7 @@ public:
     void initializeRouteTable();
 
     // stats recollection
-    int getDijkstraCalls();
+    int getComputedRoutes();
     vector<int> getRouteLengthVector();
     double getTimeToComputeRoutes();
 
@@ -24,9 +24,7 @@ private:
     void cgrEnqueue(BundlePkt * bundle, CgrRoute * bestRoute);
     void findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route);
 
-    // stats
-    int dijkstraCalls_;
-    int dijkstraLoops_;
+    int computedRoutes_;
     vector<int> routeLengthVector_;
     double timeToComputeRoutes_;
 

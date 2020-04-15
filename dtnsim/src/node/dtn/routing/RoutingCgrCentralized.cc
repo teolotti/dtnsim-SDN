@@ -9,6 +9,7 @@ RoutingCgrCentralized::RoutingCgrCentralized(int eid, int neighborsNum, SdrModel
     routeTable_.resize(neighborsNum + 1);
     maxRouteHops_ = maxRouteHops;
     maxRoutesWithSameDst_ = maxRoutesWithSameDst;
+    computedRoutes_ = 0;
 
     double clock_start = clock();
     this->initializeRouteTable();
@@ -257,12 +258,14 @@ void RoutingCgrCentralized::initializeRouteTable() {
             routesToNode[i].pop();
             it++;
         }
+
+        computedRoutes_ += routeTable_.at(i).size();
     }
 }
 
 // stats recollection
-int RoutingCgrCentralized::getDijkstraCalls() {
-	return dijkstraCalls_;
+int RoutingCgrCentralized::getComputedRoutes() {
+	return computedRoutes_;
 }
 
 vector<int> RoutingCgrCentralized::getRouteLengthVector() {
