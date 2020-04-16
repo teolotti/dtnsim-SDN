@@ -820,6 +820,9 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 
         ((Work *) currentContact->work)->visited = true;
 
+        // If the arrival time is worst than the best found so far, ignore
+        if (((Work *) currentContact->work)->arrivalTime > earliestFinalArrivalTime)
+            continue;
 
         //cout << currentContact->getDestinationEid() << ",";
 
