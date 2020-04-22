@@ -238,7 +238,7 @@ void RoutingCgrCentralized::initializeRouteTable() {
                     if (maxRoutesWithSameDst_ == -1 || routesToDst->size() < maxRoutesWithSameDst_) {
                         routesToDst->push(newRoute);
 
-                        if (maxRouteHops_ == -1 || currentRoute.hops.size() < maxRouteHops_) {
+                        if (maxRouteHops_ == -1 || newRoute.hops.size() < maxRouteHops_) {
                             routesToExplore.push_back(newRoute);
                         }
                     }
