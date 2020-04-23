@@ -162,6 +162,7 @@ void Dtn::initialize(int stage)
 		    	for (int i = 0; i < cgr->getRouteLengthVector().size(); i++) {
 		    		emit(routeCgrRouteLength, cgr->getRouteLengthVector().at(i));
 		    	}
+		    	cgr->clearRouteLengthVector();
 		    }
 		}
 		else

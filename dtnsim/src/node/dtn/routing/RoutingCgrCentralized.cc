@@ -10,7 +10,6 @@ RoutingCgrCentralized::RoutingCgrCentralized(int eid, int neighborsNum, SdrModel
     maxRouteHops_ = maxRouteHops;
     maxRoutesWithSameDst_ = maxRoutesWithSameDst;
     computedRoutes_ = 0;
-
     double clock_start = clock();
     this->initializeRouteTable();
     timeToComputeRoutes_ = (double) (clock() - clock_start) / CLOCKS_PER_SEC;
@@ -247,6 +246,12 @@ void RoutingCgrCentralized::initializeRouteTable() {
         }
     }
 
+    for (int i = 1; i <= neighborsNum_; i++) {
+        computedRoutes_ += routesToNode[i].size();
+    }
+    routeLengthVector_.resize(computedRoutes_);
+    vector<int>::iterator routeLengthIt = routeLengthVector_.begin();
+
     /*** Set route table with routes found ***/
     for (int i = 1; i <= neighborsNum_; i++) {
         routeTable_.at(i).resize(routesToNode[i].size());
@@ -256,10 +261,11 @@ void RoutingCgrCentralized::initializeRouteTable() {
         while (it != routeTable_.at(i).rend()) {
             *it = routesToNode[i].top();
             routesToNode[i].pop();
+
+            *routeLengthIt = it->hops.size();
+            routeLengthIt++;
             it++;
         }
-
-        computedRoutes_ += routeTable_.at(i).size();
     }
 }
 
@@ -274,4 +280,8 @@ vector<int> RoutingCgrCentralized::getRouteLengthVector() {
 
 double RoutingCgrCentralized::getTimeToComputeRoutes() {
     return timeToComputeRoutes_;
+}
+
+void RoutingCgrCentralized::clearRouteLengthVector() {
+    routeLengthVector_.clear();
 }

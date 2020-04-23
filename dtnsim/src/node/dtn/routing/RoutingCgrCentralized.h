@@ -13,10 +13,11 @@ public:
     virtual ~RoutingCgrCentralized();
     void initializeRouteTable();
 
-    // stats recollection
+    // stats
     int getComputedRoutes();
     vector<int> getRouteLengthVector();
     double getTimeToComputeRoutes();
+    void clearRouteLengthVector();
 
 private:
     void cgrForward(BundlePkt * bundle);
@@ -24,9 +25,10 @@ private:
     void cgrEnqueue(BundlePkt * bundle, CgrRoute * bestRoute);
     void findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route);
 
+    // stats
     int computedRoutes_;
-    vector<int> routeLengthVector_;
     double timeToComputeRoutes_;
+    vector<int> routeLengthVector_;
 
     int neighborsNum_;
     string routingType_;
