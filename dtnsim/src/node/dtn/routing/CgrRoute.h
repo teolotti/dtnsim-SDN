@@ -79,26 +79,17 @@ typedef struct CgrRoute
         // criteria 1) lowest arrival time
         if (arrivalTime < other.arrivalTime)
             return true;
-        else if (arrivalTime > other.arrivalTime)
-            return false;
-        else {
+        else if (arrivalTime == other.arrivalTime) {
             // if equal, criteria 2) lowest hop count
             if (hops.size() < other.hops.size())
                 return true;
-            else if (hops.size() > other.hops.size())
-                return false;
-            else {
+            else if (hops.size() == other.hops.size()) {
                 // if equal, criteria 3) larger residual volume
                 if (residualVolume > other.residualVolume)
-                    return true;
-                else if (residualVolume < other.residualVolume)
-                    return false;
-                else {
-                    // if equal, first is better.
-                    return true;
-                }
+                    return true;;
             }
         }
+        return false;
     }
 
 } CgrRoute;
