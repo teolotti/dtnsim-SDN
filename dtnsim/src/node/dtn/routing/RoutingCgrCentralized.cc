@@ -188,33 +188,16 @@ void RoutingCgrCentralized::initializeRouteTable() {
 
     // Use priority queue to sort routes from worst to best, so the worst is always at the top.
     priority_queue<CgrRoute> routesToNode[neighborsNum_ + 1];
-
-    vector<int> directContacts = contactPlan_->getContactsBySrc(eid_);
-    for (vector<int>::iterator contactId = directContacts.begin(); contactId != directContacts.end(); contactId++) {
-        Contact* directContact = contactPlan_->getContactById(*contactId);
-        CgrRoute newRoute = CgrRoute::RouteFromContact(directContact);
-
-        priority_queue<CgrRoute>* routesToDst = &routesToNode[newRoute.terminusNode];
-        if (maxRoutesWithSameDst_ > 0 &&
-                routesToDst->size() == maxRoutesWithSameDst_ &&
-                newRoute < routesToDst->top()) {
-
-            // The capacity is full and the new route is better than
-            // the worst route to this destination. Remove the worst one.
-            routesToDst->pop();
-        }
-
-        if (maxRoutesWithSameDst_ == -1 || routesToDst->size() < maxRoutesWithSameDst_) {
-            routesToExplore.push_back(newRoute);
-            routesToDst->push(newRoute);
-        }
-    }
+    Contact selfContact = Contact(-1, 0, numeric_limits<double>::max(), eid_, eid_, 1.0, 1.0, 0);
+    CgrRoute baseRoute = CgrRoute::RouteFromContact(&selfContact);
+    routesToExplore.push_back(baseRoute);
 
     while (!routesToExplore.empty()) {
         CgrRoute currentRoute = routesToExplore.front();
         routesToExplore.pop_front();
 
-        if (routesToNode[currentRoute.terminusNode].top() < currentRoute)
+        if (!routesToNode[currentRoute.terminusNode].empty() &&
+            routesToNode[currentRoute.terminusNode].top() < currentRoute)
             // No need to explore a route which is already worse than the best K routes.
             continue;
 

@@ -41,16 +41,21 @@ typedef struct CgrRoute
 	}
 
 	CgrRoute extendWithContact(Contact* contact) {
-	    assert(this->arrivalTime < contact->getEnd());
+	    assert(arrivalTime < contact->getEnd());
+	    assert(!hops.empty());
 
 	    CgrRoute newRoute = *this;
 	    newRoute.terminusNode = contact->getDestinationEid();
-	    // No need to set newRoute.nextHop
 	    newRoute.toTime = std::min(newRoute.toTime, contact->getEnd());
 	    newRoute.confidence *= contact->getConfidence();
 	    newRoute.arrivalTime = std::max(newRoute.arrivalTime, contact->getStart()) + contact->getRange();
 	    newRoute.maxVolume = std::min(newRoute.maxVolume, contact->getVolume());
 	    newRoute.residualVolume = std::min(newRoute.residualVolume, contact->getResidualVolume());
+	    if (hops[0]->getSourceEid() == hops[0]->getDestinationEid()) {
+	        // This means the contact was the self contact. Remove it.
+	        newRoute.nextHop = contact->getDestinationEid();
+	        newRoute.hops.clear();
+	    }
 	    newRoute.hops.push_back(contact);
 	    return newRoute;
 	}
