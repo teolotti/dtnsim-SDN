@@ -85,7 +85,6 @@ void ContactPlan::parseContactPlanFile(string fileName, int nodesNum, int contac
 	}
 
 	updateContactRanges();
-	ranges_.clear();
 
 	if (cin.bad())
 	{
@@ -145,8 +144,15 @@ void ContactPlan::updateContactRanges() {
 
 double ContactPlan::getRangeBySrcDst(int Src, int Dst)
 {
-	cout << "WARNING: ContactPlan::getRangeBySrcDst() deprecated. Use Contact::getRange() instead." << endl;
-	return -1;
+    // This function should only be called if the contact id
+    // is unknown. Else, use contact->getRange().
+	double range = -1;
+	for (int i = 0; i < ranges_.size(); i++) {
+	    if (ranges_.at(i).getSourceEid() == Src && ranges_.at(i).getDestinationEid() == Dst) {
+	        range = ranges_.at(i).getRange();
+	    }
+	}
+    return range;
 }
 
 Contact *ContactPlan::getContactById(int id)

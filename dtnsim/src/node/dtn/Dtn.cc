@@ -305,11 +305,10 @@ void Dtn::handleMessage(cMessage * msg)
 				BundlePkt* bundle = sdr_.getNextBundleForContact(contactId);
 
 				// Calculate data rate and Tx duration
-				double dataRate = contactTopology_.getContactById(contactId)->getDataRate();
+				Contact* contact = contactTopology_.getContactById(contactId);
+				double dataRate = contact->getDataRate();
 				double txDuration = (double) bundle->getByteLength() / dataRate;
-				double linkDelay = contactTopology_.getRangeBySrcDst(eid_, neighborEid);
-
-				Contact * contact = contactTopology_.getContactById(contactId);
+				double linkDelay = contact->getRange();
 
 				// if the message can be fully transmitted before the end of the contact, transmit it
 				if ((simTime() + txDuration + linkDelay) <= contact->getEnd())
