@@ -420,6 +420,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		// If this is the route list to this terminus is empty,
 		// create a single entry place to hold the route
 		if (routeTable_.at(terminusNode).empty()) {
+		    // A second route will be considered in case returnToSender is set to false.
 			routeTable_.at(terminusNode).resize(2);
 			CgrRoute route;
 			route.nextHop = EMPTY_ROUTE;
@@ -463,54 +464,43 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 			this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
 			routeTable_.at(terminusNode).at(0) = route;
 
-			// Also create a secondary route thorugh a different entry node
-			// in order to have an alternative when return to sender is forbidden
-			// through this entry node. set not found if not primary route found.
-
 			if (route.nextHop != NO_ROUTE_FOUND) {
 				tableEntriesCreated++;
-
-				// Suppress all contacts which connect this node with the entry node of
-				// the route found. All other neighbors should be considered
-				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
-						it != contactPlan_->getContacts()->end(); ++it)
-					if ((*it).getSourceEid() == eid_ && (*it).getDestinationEid() == route.nextHop)
-						suppressedContactIds.push_back((*it).getId());
-				CgrRoute route2;
-				this->findNextBestRoute(suppressedContactIds, terminusNode, &route2);
-				routeTable_.at(terminusNode).at(1) = route2;
-
-				if (route2.nextHop != NO_ROUTE_FOUND)
-					tableEntriesCreated++;
-
 			} else {
-				routeTable_.at(terminusNode).at(1).nextHop = NO_ROUTE_FOUND;
+			    routeTable_.at(terminusNode).at(1).nextHop = NO_ROUTE_FOUND;
 			}
-		} else {
-			// Principal route is still valid. Now check if
-			// secondary (backup) route needs recalculation
-			bool needRecalculation = false;
+		}
 
-			// Empty route condition
-			if (routeTable_.at(terminusNode).at(1).nextHop == EMPTY_ROUTE)
-				needRecalculation = true;
+		// Compute backup route which does not have next hop equal to bundle->getSenderEid().
+		if (routeTable_.at(terminusNode).at(0).nextHop == bundle->getSenderEid() &&
+		        bundle->getReturnToSender() == false) {
+		    // Check if secondary (backup) route needs recalculation.
+		    bool needRecalculation = false;
 
-			// Due route condition
-			// todo
-			if (routeTable_.at(terminusNode).at(1).toTime <= simTime_)
-				needRecalculation = true;
+		    // Empty route condition
+		    if (routeTable_.at(terminusNode).at(1).nextHop == EMPTY_ROUTE)
+		        needRecalculation = true;
 
-			// Depleted route condition
-			if (routeTable_.at(terminusNode).at(1).residualVolume < bundle->getByteLength()) {
-				// Make sure that the capacity-limiting contact is marked as depleted
-				vector<Contact *>::iterator hop;
-				for (hop = routeTable_.at(terminusNode).at(1).hops.begin();
-						hop != routeTable_.at(terminusNode).at(1).hops.end(); ++hop)
-					if (routeTable_.at(terminusNode).at(1).residualVolume == (*hop)->getResidualVolume())
-						(*hop)->setResidualVolume(0);
+		    // Due route condition
+		    // todo
+		    if (routeTable_.at(terminusNode).at(1).toTime <= simTime_)
+		        needRecalculation = true;
 
-				needRecalculation = true;
-			}
+		    // Depleted route condition
+		    if (routeTable_.at(terminusNode).at(1).residualVolume < bundle->getByteLength()) {
+		        // Make sure that the capacity-limiting contact is marked as depleted
+		        vector<Contact *>::iterator hop;
+		        for (hop = routeTable_.at(terminusNode).at(1).hops.begin();
+		                hop != routeTable_.at(terminusNode).at(1).hops.end(); ++hop)
+		            if (routeTable_.at(terminusNode).at(1).residualVolume == (*hop)->getResidualVolume())
+		                (*hop)->setResidualVolume(0);
+
+		        needRecalculation = true;
+		    }
+
+		    if (routeTable_.at(terminusNode).at(1).nextHop == bundle->getSenderEid()) {
+		        needRecalculation = true;
+		    }
 
 			if (needRecalculation) {
 				// Suppress all contacts which connect this node with the entry node of
