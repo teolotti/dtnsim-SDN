@@ -105,7 +105,7 @@ private:
 	simsignal_t dtnBundleReceivedFromCom;
 	simsignal_t dtnBundleReceivedFromApp;
 	simsignal_t dtnBundleReRouted;
-	simsignal_t routeCgrComputedRoutes;
+	simsignal_t routeCgrDijkstraCalls;
 	simsignal_t routeCgrDijkstraLoops;
 	simsignal_t routeCgrRouteLength;
 	simsignal_t routeCgrRouteTableEntriesCreated;

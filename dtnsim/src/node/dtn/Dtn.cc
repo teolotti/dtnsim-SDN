@@ -51,7 +51,7 @@ void Dtn::initialize(int stage)
 		dtnBundleReRouted = registerSignal("dtnBundleReRouted");
 		sdrBundleStored = registerSignal("sdrBundleStored");
 		sdrBytesStored = registerSignal("sdrBytesStored");
-		routeCgrComputedRoutes = registerSignal("routeCgrComputedRoutes");
+		routeCgrDijkstraCalls = registerSignal("routeCgrDijkstraCalls");
 		routeCgrDijkstraLoops = registerSignal("routeCgrDijkstraLoops");
 		routeCgrRouteTableEntriesCreated = registerSignal("routeCgrRouteTableEntriesCreated");
 		routeCgrRouteTableEntriesExplored = registerSignal("routeCgrRouteTableEntriesExplored");
@@ -157,7 +157,7 @@ void Dtn::initialize(int stage)
 
 		    // Emit signals
 		    if (eid_ != 0) {
-		        emit(routeCgrComputedRoutes, cgr->getComputedRoutes());
+		        emit(routeCgrRouteTableEntriesCreated, cgr->getComputedRoutes());
 		        emit(routeCgrTimeToComputeRoutes, cgr->getTimeToComputeRoutes());
 		    	for (int i = 0; i < cgr->getRouteLengthVector().size(); i++) {
 		    		emit(routeCgrRouteLength, cgr->getRouteLengthVector().at(i));
@@ -453,13 +453,13 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 		string routeString = par("routing");
 		if (routeString.compare("cgrModel350") == 0)
 		{
-			emit(routeCgrComputedRoutes, ((RoutingCgrModel350*) routing)->getDijkstraCalls());
+			emit(routeCgrDijkstraCalls, ((RoutingCgrModel350*) routing)->getDijkstraCalls());
 			emit(routeCgrDijkstraLoops, ((RoutingCgrModel350*) routing)->getDijkstraLoops());
 			emit(routeCgrRouteTableEntriesExplored, ((RoutingCgrModel350*) routing)->getRouteTableEntriesExplored());
 		}
 		if (routeString.compare("cgrModel350_3") == 0)
 		{
-			emit(routeCgrComputedRoutes, ((RoutingCgrModel350_Hops*) routing)->getDijkstraCalls());
+			emit(routeCgrDijkstraCalls, ((RoutingCgrModel350_Hops*) routing)->getDijkstraCalls());
 			emit(routeCgrDijkstraLoops, ((RoutingCgrModel350_Hops*) routing)->getDijkstraLoops());
 			emit(routeCgrRouteTableEntriesExplored, ((RoutingCgrModel350_Hops*) routing)->getRouteTableEntriesExplored());
 		}
@@ -467,7 +467,7 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 		{
 		    RoutingCgrModelRev17* cgr = (RoutingCgrModelRev17*) routing;
 
-			emit(routeCgrComputedRoutes, cgr->getDijkstraCalls());
+			emit(routeCgrDijkstraCalls, cgr->getDijkstraCalls());
 			emit(routeCgrDijkstraLoops, cgr->getDijkstraLoops());
 			emit(routeCgrRouteTableEntriesCreated, cgr->getRouteTableEntriesCreated());
 			emit(routeCgrRouteTableEntriesExplored, cgr->getRouteTableEntriesExplored());
