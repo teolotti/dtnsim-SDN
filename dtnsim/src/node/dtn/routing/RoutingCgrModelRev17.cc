@@ -459,6 +459,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		}
 
 		if (needRecalculation) {
+		    clock_t start = clock();
 			vector<int> suppressedContactIds; // no suppressed contacts here
 			CgrRoute route;
 			this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
@@ -466,9 +467,11 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 
 			if (route.nextHop != NO_ROUTE_FOUND) {
 				tableEntriesCreated++;
+				routeLengthVector.push_back(route.hops.size());
 			} else {
 			    routeTable_.at(terminusNode).at(1).nextHop = NO_ROUTE_FOUND;
 			}
+			timeToComputeRoutes_ = (double) (clock() - start) / CLOCKS_PER_SEC;
 		}
 
 		// Compute backup route which does not have next hop equal to bundle->getSenderEid().
@@ -503,6 +506,9 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		    }
 
 			if (needRecalculation) {
+			    // whether the first route was recomputed or not, we need to time this second route
+			    timeToComputeRoutes_ = std::max(0.0, timeToComputeRoutes_);
+			    clock_t start = clock();
 				// Suppress all contacts which connect this node with the entry node of
 				// the route found. All other neighbors should be considered
 				vector<int> suppressedContactIds;
@@ -515,8 +521,13 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				this->findNextBestRoute(suppressedContactIds, terminusNode, &route2);
 				routeTable_.at(terminusNode).at(1) = route2;
 
-				if (route2.nextHop != NO_ROUTE_FOUND)
+				timeToComputeRoutes_ += (double) (clock() - start) / CLOCKS_PER_SEC;
+
+				if (route2.nextHop != NO_ROUTE_FOUND) {
 					tableEntriesCreated++;
+                    routeLengthVector.push_back(route2.hops.size());
+				}
+
 			}
 		}
 	}
