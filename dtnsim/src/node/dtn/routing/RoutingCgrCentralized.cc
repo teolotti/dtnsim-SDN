@@ -1,7 +1,7 @@
 #include <src/node/dtn/routing/RoutingCgrCentralized.h>
 
 RoutingCgrCentralized::RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan,
-        string routingType, int maxRouteHops, int maxRoutesWithSameDst)
+        bool printDebug, string routingType, int maxRouteHops, int maxRoutesWithSameDst)
     : RoutingDeterministic(eid, sdr, localContactPlan)
 {
     routingType_ = routingType;
@@ -10,6 +10,8 @@ RoutingCgrCentralized::RoutingCgrCentralized(int eid, int neighborsNum, SdrModel
     maxRouteHops_ = maxRouteHops;
     maxRoutesWithSameDst_ = maxRoutesWithSameDst;
     computedRoutes_ = 0;
+    printDebug_ = printDebug;
+
     double clock_start = clock();
     this->initializeRouteTable();
     timeToComputeRoutes_ = (double) (clock() - clock_start) / CLOCKS_PER_SEC;
@@ -20,6 +22,8 @@ RoutingCgrCentralized::~RoutingCgrCentralized()
 }
 
 void RoutingCgrCentralized::routeAndQueueBundle(BundlePkt *bundle, double simTime) {
+    if (!printDebug_)
+        cout.setstate(std::ios_base::failbit);
 
 	simTime_ = simTime;
 
@@ -79,6 +83,10 @@ void RoutingCgrCentralized::routeAndQueueBundle(BundlePkt *bundle, double simTim
             this->cgrForward(bundle);
         }
     }
+
+    // Re-enable cout if debug disabled
+    if (!printDebug_)
+        cout.clear();
 }
 
 void RoutingCgrCentralized::cgrForward(BundlePkt *bundle) {
@@ -181,6 +189,9 @@ void RoutingCgrCentralized::cgrEnqueue(BundlePkt *bundle, CgrRoute *bestRoute) {
 
 // This is the procedure that should be done on earth to initialize the route table of each node.
 void RoutingCgrCentralized::initializeRouteTable() {
+    if (!printDebug_)
+        cout.setstate(std::ios_base::failbit);
+
     cout << "Initializing node " << eid_ << endl;
 
     /*** Find all routes ***/
@@ -250,6 +261,9 @@ void RoutingCgrCentralized::initializeRouteTable() {
             it++;
         }
     }
+
+    if (!printDebug_)
+        cout.clear();
 }
 
 // stats recollection

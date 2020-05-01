@@ -9,7 +9,7 @@
 class RoutingCgrCentralized : public RoutingDeterministic
 {
 public:
-    RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan, string routingType, int maxRouteLength, int maxRoutesWithSameDst);
+    RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan, bool printDebug, string routingType, int maxRouteLength, int maxRoutesWithSameDst);
     virtual ~RoutingCgrCentralized();
     void initializeRouteTable();
 
@@ -30,6 +30,7 @@ private:
     double timeToComputeRoutes_;
     vector<int> routeLengthVector_;
 
+    bool printDebug_;
     int neighborsNum_;
     string routingType_;
     vector<vector<CgrRoute>> routeTable_;
