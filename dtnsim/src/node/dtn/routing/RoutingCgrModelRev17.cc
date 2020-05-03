@@ -417,6 +417,9 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		// is updated by the ending or depletion of a contact in the path
 		//////////////////////////////////////////////////
 
+        // Explore list and recalculate if necessary
+        bool needRecalculation = false;
+
 		// If this is the route list to this terminus is empty,
 		// create a single entry place to hold the route
 		if (routeTable_.at(terminusNode).empty()) {
@@ -427,15 +430,8 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 			route.arrivalTime = numeric_limits<double>::max(); // never chosen as best route
 			routeTable_.at(terminusNode).at(0) = route;
 			routeTable_.at(terminusNode).at(1) = route;
-		}
-
-		// Explore list and recalculate if necessary
-		bool needRecalculation = false;
-
-		// Empty route condition
-		if (routeTable_.at(terminusNode).at(0).nextHop == EMPTY_ROUTE) {
-			cout << "needRecalculation = true 1" << endl;
 			needRecalculation = true;
+			cout << "needRecalculation = true 1" << endl;
 		}
 
 		// Due route condition
@@ -458,7 +454,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 			needRecalculation = true;
 		}
 
-		if (needRecalculation) {
+		if (needRecalculation && routeTable_.at(terminusNode).at(0).nextHop != NO_ROUTE_FOUND) {
 		    clock_t start = clock();
 			vector<int> suppressedContactIds; // no suppressed contacts here
 			CgrRoute route;
