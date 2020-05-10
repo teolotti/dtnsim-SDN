@@ -11,7 +11,7 @@ class RoutingCgrCentralized : public RoutingDeterministic
 public:
     RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan, bool printDebug, string routingType, int maxRouteLength, int maxRoutesWithSameDst);
     virtual ~RoutingCgrCentralized();
-    void initializeRouteTable();
+    void initializeRouteTable(double minEndTime);
 
     // stats
     int getComputedRoutes();

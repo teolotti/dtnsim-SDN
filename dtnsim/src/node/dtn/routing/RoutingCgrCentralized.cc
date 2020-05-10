@@ -13,7 +13,7 @@ RoutingCgrCentralized::RoutingCgrCentralized(int eid, int neighborsNum, SdrModel
     printDebug_ = printDebug;
 
     double clock_start = clock();
-    this->initializeRouteTable();
+    this->initializeRouteTable(0);
     timeToComputeRoutes_ = (double) (clock() - clock_start) / CLOCKS_PER_SEC;
 }
 
@@ -188,7 +188,7 @@ void RoutingCgrCentralized::cgrEnqueue(BundlePkt *bundle, CgrRoute *bestRoute) {
 }
 
 // This is the procedure that should be done on earth to initialize the route table of each node.
-void RoutingCgrCentralized::initializeRouteTable() {
+void RoutingCgrCentralized::initializeRouteTable(double minEndTime) {
     if (!printDebug_)
         cout.setstate(std::ios_base::failbit);
 
@@ -199,7 +199,7 @@ void RoutingCgrCentralized::initializeRouteTable() {
 
     // Use priority queue to sort routes from worst to best, so the worst is always at the top.
     priority_queue<CgrRoute> routesToNode[neighborsNum_ + 1];
-    Contact selfContact = Contact(-1, 0, numeric_limits<double>::max(), eid_, eid_, 1.0, 1.0, 0);
+    Contact selfContact = Contact(-1, minEndTime, numeric_limits<double>::max(), eid_, eid_, 1.0, 1.0, 0);
     CgrRoute baseRoute = CgrRoute::RouteFromContact(&selfContact);
     routesToExplore.push_back(baseRoute);
 
@@ -248,11 +248,11 @@ void RoutingCgrCentralized::initializeRouteTable() {
 
     /*** Set route table with routes found ***/
     for (int i = 1; i <= neighborsNum_; i++) {
-        routeTable_.at(i).resize(routesToNode[i].size());
+        routeTable_.at(i).resize(routesToNode[i].size() + routeTable_.at(i).size());
 
         // Fill with reverse iter, since routes are in reverse order (priority_queue)
         vector<CgrRoute>::reverse_iterator it = routeTable_.at(i).rbegin();
-        while (it != routeTable_.at(i).rend()) {
+        while (!routesToNode[i].empty()) {
             *it = routesToNode[i].top();
             routesToNode[i].pop();
 
