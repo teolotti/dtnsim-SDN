@@ -207,7 +207,7 @@ void RoutingCgrCentralized::initializeRouteTable() {
         CgrRoute currentRoute = routesToExplore.front();
         routesToExplore.pop_front();
 
-        if (!routesToNode[currentRoute.terminusNode].empty() &&
+        if (routesToNode[currentRoute.terminusNode].size() == maxRoutesWithSameDst_ &&
             routesToNode[currentRoute.terminusNode].top() < currentRoute)
             // No need to explore a route which is already worse than the best K routes.
             continue;
