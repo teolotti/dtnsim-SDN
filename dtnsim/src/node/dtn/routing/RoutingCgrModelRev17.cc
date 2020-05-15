@@ -828,25 +828,25 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
         vector<int> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
         for (vector<int>::iterator neighborId = currentNeighbors.begin(); neighborId != currentNeighbors.end(); ++neighborId) {
             Contact *neighbor = contactPlan_->getContactById(*neighborId);
-            Work *neighborWork = (Work *) (*neighbor).work;
+            Work *neighborWork = (Work *) (neighbor->work);
 
             // If this contact is suppressed/visited, ignore it.
             if (neighborWork->suppressed || neighborWork->visited)
                 continue;
 
             // If this contact is finished, ignore it.
-            if ((*neighbor).getEnd() <= currentContactWork->arrivalTime)
+            if (neighbor->getEnd() <= currentContactWork->arrivalTime)
                 continue;
 
             // If the residual volume is 0, ignore it.
-            if ((*neighbor).getResidualVolume() == 0)
+            if (neighbor->getResidualVolume() == 0)
                 continue;
 
             // Get owlt (one way light time). If none found, ignore contact
             double owlt = neighbor->getRange();
             if (owlt == -1)
             {
-                cout << "warning, range not available for nodes " << (*neighbor).getSourceEid() << "-" << (*neighbor).getDestinationEid() << ", assuming range=0" << endl;
+                cout << "warning, range not available for nodes " << neighbor->getSourceEid() << "-" << neighbor->getDestinationEid() << ", assuming range=0" << endl;
                 owlt = 0;
             }
             //double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
@@ -854,7 +854,7 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 
             // Calculate the cost for this contact (Arrival Time)
             double arrivalTime = std::max(
-                    (*neighbor).getStart(),
+                    neighbor->getStart(),
                     currentContactWork->arrivalTime
                 );
             arrivalTime += owlt;
@@ -865,7 +865,7 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
                 neighborWork->predecessor = currentContact;
 
                 // Mark if destination reached
-                if ((*neighbor).getDestinationEid() == terminusNode)
+                if (neighbor->getDestinationEid() == terminusNode)
                     if (neighborWork->arrivalTime < earliestFinalArrivalTime) {
                         earliestFinalArrivalTime = neighborWork->arrivalTime;
                         finalContact = contactPlan_->getContactById(neighbor->getId());
@@ -892,7 +892,7 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 
         // Go through all contacts in the path
         for (Contact * contact = finalContact; contact != rootContact; contact =
-                ((Work *) (*contact).work)->predecessor) {
+                ((Work *) contact->work)->predecessor) {
             // Get earliest end time
             if (contact->getEnd() < earliestEndTime)
                 earliestEndTime = contact->getEnd();
@@ -931,7 +931,7 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
     // Delete working area in each contact.
     for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end();
             ++it) {
-        delete ((Work *) (*it).work);
+        delete ((Work *) it->work);
     }
 }
 
