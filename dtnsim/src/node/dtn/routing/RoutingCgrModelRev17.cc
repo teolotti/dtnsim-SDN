@@ -803,22 +803,23 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
     pq.push(currentContact);
 
     while (!pq.empty()) {
-        Work * currentContactWork = (Work *) (currentContact->work);
 
         // increment counter
-        // dijkstraLoops++;
+        dijkstraLoops_++;
+
         currentContact = pq.top();
         if (currentContact->getDestinationEid() == terminusNode) {
             break;
         }
         pq.pop();
-        if (((Work *) (currentContact->work))->visited)
-            continue;
+        Work * currentContactWork = (Work *) (currentContact->work);
+        if (currentContactWork->visited)
+             continue;
 
-        ((Work *) currentContact->work)->visited = true;
+        currentContactWork->visited = true;
 
         // If the arrival time is worst than the best found so far, ignore
-        if (((Work *) currentContact->work)->arrivalTime > earliestFinalArrivalTime)
+        if (currentContactWork->arrivalTime > earliestFinalArrivalTime)
             continue;
 
         //cout << currentContact->getDestinationEid() << ",";
