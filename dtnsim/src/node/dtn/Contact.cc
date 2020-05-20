@@ -90,3 +90,7 @@ void Contact::setDeleted(bool d) {
 void Contact::setRange(double range) {
     range_ = range;
 }
+
+bool Contact::endTimeComparison(const Contact *a, const Contact *b) {
+    return a->end_ < b->end_;
+}

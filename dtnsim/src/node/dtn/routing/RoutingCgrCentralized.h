@@ -11,7 +11,11 @@ class RoutingCgrCentralized : public RoutingDeterministic
 public:
     RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan, bool printDebug, string routingType, int maxRouteLength, int maxRoutesWithSameDst);
     virtual ~RoutingCgrCentralized();
-    void initializeRouteTable(double minEndTime);
+    void initializeRouteTable();
+
+    void fillRouteTableBfs(double minEndTime);
+    void fillRouteTableWithContactFilter(bool comparisonFunc (const Contact*, const Contact*));
+    CgrRoute findBestRoute(int terminusNode);
 
     // stats
     int getComputedRoutes();
@@ -24,6 +28,11 @@ private:
     void routeAndQueueBundle(BundlePkt * bundle, double simTime);
     void cgrEnqueue(BundlePkt * bundle, CgrRoute * bestRoute);
     void findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route);
+
+    void createContactsWork();
+    void initializeContactsWork();
+    void resetContactsWork();
+    void clearContactsWork();
 
     // stats
     int computedRoutes_;

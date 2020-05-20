@@ -34,6 +34,7 @@ public:
 	double getResidualVolume() const;
 	void setResidualVolume(double residualVolume);
 
+	static bool endTimeComparison(const Contact *a, const Contact *b);
 	// A pointer to external structures
 	// (used by routing algorithms)
 	void * work;
