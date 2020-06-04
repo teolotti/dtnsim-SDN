@@ -436,7 +436,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 
 		// Due route condition
 		// todo
-		if (routeTable_.at(terminusNode).at(0).toTime < simTime_) {
+		if (routeTable_.at(terminusNode).at(0).toTime <= simTime_) {
 			cout << "needRecalculation = true 2" << endl;
 			needRecalculation = true;
 		}
