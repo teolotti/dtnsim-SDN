@@ -97,6 +97,10 @@ typedef struct CgrRoute
         return false;
     }
 
+    bool operator==(const CgrRoute& other) {
+        return this->hops == other.hops;
+    }
+
 } CgrRoute;
 
 #endif /* SRC_NODE_DTN_ROUTING_CGRROUTE_H_ */

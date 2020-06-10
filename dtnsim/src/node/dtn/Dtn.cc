@@ -152,7 +152,8 @@ void Dtn::initialize(int stage)
 		else if (routeString.compare("cgrCentralized") == 0) {
 		    routing = new RoutingCgrCentralized(eid_, this->getParentModule()->getVectorSize(),
 		            &sdr_, &contactPlan_, par("printRoutingDebug"), par("routingType"),
-		            par("maxRouteHops"), par("maxRoutesWithSameDst"));
+		            par("maxRouteHops"), par("maxRoutesWithSameDst"), par("bfsIntervalTime"),
+		            par("bfsIntervalNum"));
 		    RoutingCgrCentralized *cgr = (RoutingCgrCentralized *) routing;
 
 		    // Emit signals

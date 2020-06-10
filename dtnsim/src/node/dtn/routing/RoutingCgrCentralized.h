@@ -9,11 +9,13 @@
 class RoutingCgrCentralized : public RoutingDeterministic
 {
 public:
-    RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan, bool printDebug, string routingType, int maxRouteLength, int maxRoutesWithSameDst);
+    RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan,
+            bool printDebug, string routingType, int maxRouteLength, int maxRoutesWithSameDst,
+            double bfsIntervalTime, int bfsIntervalNum);
     virtual ~RoutingCgrCentralized();
     void initializeRouteTable();
 
-    void fillRouteTableBfs(double minEndTime);
+    void fillRouteTableBfs(double minEndTimeFilter, double* outRouteMinEndTime);
     void fillRouteTableWithContactFilter(bool comparisonFunc (const Contact*, const Contact*));
     CgrRoute findBestRoute(int terminusNode);
 
@@ -46,6 +48,8 @@ private:
     double simTime_;
     int maxRouteHops_;
     int maxRoutesWithSameDst_;
+    double bfsIntervalTime_;
+    int bfsIntervalNum_;
 
     typedef struct {
         Contact * predecessor;      // Predecessor Contact
