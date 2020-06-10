@@ -213,7 +213,7 @@ void RoutingCgrCentralized::fillRouteTableBfs(double minEndTime) {
 
     // Use priority queue to sort routes from worst to best, so the worst is always at the top.
     priority_queue<CgrRoute> routesToNode[neighborsNum_ + 1];
-    Contact selfContact = Contact(-1, minEndTime, numeric_limits<double>::max(), eid_, eid_, 1.0, 1.0, 0);
+    Contact selfContact = Contact(-1, 0, numeric_limits<double>::max(), eid_, eid_, 1.0, 1.0, 0);
     CgrRoute baseRoute = CgrRoute::RouteFromContact(&selfContact);
     routesToExplore.push_back(baseRoute);
 
@@ -229,6 +229,12 @@ void RoutingCgrCentralized::fillRouteTableBfs(double minEndTime) {
         vector<int> neighborIds = contactPlan_->getContactsBySrc(currentRoute.terminusNode);
         for (vector<int>::iterator neighborId = neighborIds.begin(); neighborId != neighborIds.end(); neighborId++) {
             Contact* neighbor = contactPlan_->getContactById(*neighborId);
+
+            if (neighbor->getEnd() <= minEndTime)
+                continue;
+
+            if (neighbor->getDestinationEid() == eid_)
+                continue;
 
             if (currentRoute.nodeIsNotVisited(neighbor->getDestinationEid())) {
                 if (currentRoute.arrivalTime < neighbor->getEnd()) {
