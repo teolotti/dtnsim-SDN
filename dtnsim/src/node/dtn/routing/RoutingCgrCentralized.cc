@@ -375,10 +375,6 @@ CgrRoute RoutingCgrCentralized::findBestRoute(int terminusNode) {
 
             // Get owlt (one way light time)
             double owlt = neighbor->getRange();
-            if (owlt == -1) {
-                cout << "warning, range not available for nodes " << neighbor->getSourceEid() << "-" << neighbor->getDestinationEid() << ", assuming range=0" << endl;
-                owlt = 0;
-            }
 
             // Calculate the cost for this contact (Arrival Time)
             double arrivalTime = std::max(
@@ -429,7 +425,7 @@ CgrRoute RoutingCgrCentralized::findBestRoute(int terminusNode) {
             bestRoute.toTime = std::min(bestRoute.toTime,
                     bestRoute.hops.at(i)->getEnd() - accumulatedRange);
 
-            accumulatedRange += std::max(bestRoute.hops.at(i)->getRange(), 0.0);
+            accumulatedRange += bestRoute.hops.at(i)->getRange();
         }
 
         bestRoute.nextHop = bestRoute.hops[0]->getDestinationEid();

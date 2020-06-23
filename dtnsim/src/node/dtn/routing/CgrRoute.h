@@ -22,6 +22,7 @@ typedef struct CgrRoute
 	double arrivalTime;
 	double maxVolume; 			// In Bytes
 	double residualVolume;		// In Bytes
+	double totalPropagationDelay;
 	vector<Contact *> hops;	 	// Contact list
 
 	static CgrRoute RouteFromContact(Contact* contact) {
@@ -36,6 +37,7 @@ typedef struct CgrRoute
 	    route.maxVolume = contact->getVolume();
 	    route.residualVolume = contact->getResidualVolume();
 	    route.hops = vector<Contact *> { contact };
+	    route.totalPropagationDelay = contact->getRange();
 
 	    return route;
 	}
@@ -46,7 +48,11 @@ typedef struct CgrRoute
 
 	    CgrRoute newRoute = *this;
 	    newRoute.terminusNode = contact->getDestinationEid();
-	    newRoute.toTime = std::min(newRoute.toTime, contact->getEnd());
+
+	    // This two lines must be in this order (definition of toTime)
+	    newRoute.toTime = std::min(newRoute.toTime, contact->getEnd() - totalPropagationDelay);
+	    newRoute.totalPropagationDelay += contact->getRange();
+
 	    newRoute.confidence *= contact->getConfidence();
 	    newRoute.arrivalTime = std::max(newRoute.arrivalTime, contact->getStart()) + contact->getRange();
 	    newRoute.maxVolume = std::min(newRoute.maxVolume, contact->getVolume());

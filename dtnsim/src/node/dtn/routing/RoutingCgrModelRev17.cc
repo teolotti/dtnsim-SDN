@@ -818,7 +818,7 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 
         currentContactWork->visited = true;
 
-        // If the arrival time is worst than the best found so far, ignore
+        // If the arrival time is worse than the best found so far, ignore
         if (currentContactWork->arrivalTime > earliestFinalArrivalTime)
             continue;
 
@@ -844,11 +844,6 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
 
             // Get owlt (one way light time). If none found, ignore contact
             double owlt = neighbor->getRange();
-            if (owlt == -1)
-            {
-                cout << "warning, range not available for nodes " << neighbor->getSourceEid() << "-" << neighbor->getDestinationEid() << ", assuming range=0" << endl;
-                owlt = 0;
-            }
             //double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
             //owlt += owltMargin;
 
