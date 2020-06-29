@@ -5,6 +5,7 @@ RoutingCgrCentralized::RoutingCgrCentralized(int eid, int neighborsNum, SdrModel
         double bfsIntervalTime, int bfsIntervalNum)
     : RoutingDeterministic(eid, sdr, localContactPlan)
 {
+    simTime_ = 0.0;
     routingType_ = routingType;
     neighborsNum_ = neighborsNum;
     routeTable_.resize(neighborsNum + 1);
