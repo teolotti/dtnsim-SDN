@@ -204,32 +204,38 @@ void RoutingCgrCentralized::initializeRouteTable() {
     cout << "Initializing node " << eid_ << endl;
 
     if (routingType_.find("routeListType:bfs") != std::string::npos) {
-        double filterTime = 0.0;
-        for (int i = 0; i < bfsIntervalNum_; i++, filterTime += bfsIntervalTime_) {
-            double minEndTime = numeric_limits<double>::max();
-            fillRouteTableBfs(filterTime, &minEndTime);
-
-            // Skip all steps that would yield the same result
-            if (minEndTime == numeric_limits<double>::max())
-                continue;
-            while (minEndTime - filterTime > bfsIntervalTime_) {
-                filterTime += bfsIntervalTime_;
-                i++;
-            }
-        }
+        fillRouteTableWithBfs();
     } else if (routingType_.find("routeListType:firstEnded") != std::string::npos) {
-        fillRouteTableWithContactFilter(Contact::endTimeComparison);
+        fillRouteTableWithFirstEnded();
     } else {
         cerr << "Centralized error while initializing routing table: unknown route list type." << endl;
         exit(1);
     }
+    if (routeTable_.at(eid_).size() != 0) exit(1);
 
     if (!printDebug_)
         cout.clear();
 }
 
 
-void RoutingCgrCentralized::fillRouteTableBfs(double minEndTimeFilter, double* outRouteMinEndTime) {
+void RoutingCgrCentralized::fillRouteTableWithBfs() {
+    double filterTime = 0.0;
+    for (int i = 0; i < bfsIntervalNum_; i++, filterTime += bfsIntervalTime_) {
+        double minEndTime = numeric_limits<double>::max();
+        findRoutesBfs(filterTime, &minEndTime);
+
+        // Skip all steps that would yield the same result
+        if (minEndTime == numeric_limits<double>::max())
+            continue;
+        while (minEndTime - filterTime > bfsIntervalTime_) {
+            filterTime += bfsIntervalTime_;
+            i++;
+        }
+    }
+}
+
+
+void RoutingCgrCentralized::findRoutesBfs(double minEndTimeFilter, double* outRouteMinEndTime) {
     list<CgrRoute> routesToExplore;
 
     // Use priority queue to sort routes from worst to best, so the worst is always at the top.
@@ -300,146 +306,131 @@ void RoutingCgrCentralized::fillRouteTableBfs(double minEndTimeFilter, double* o
 }
 
 
-void RoutingCgrCentralized::fillRouteTableWithContactFilter(bool comparisonFunc (const Contact*, const Contact*)) {
+void RoutingCgrCentralized::fillRouteTableWithFirstEnded() {
     createContactsWork();
+    Contact* minEndContact = NULL;
 
-    for (int i = 1; i <= neighborsNum_; i++) {
-        if (i == eid_) continue;
-
-        initializeContactsWork();
-        CgrRoute bestRoute = findBestRoute(i);
-        while (bestRoute.nextHop != NO_ROUTE_FOUND) {
-            routeTable_.at(i).push_back(bestRoute);
-            computedRoutes_++;
-            routeLengthVector_.push_back(bestRoute.hops.size());
-
-            vector<Contact*>::iterator leastEnd;
-            leastEnd = min_element(bestRoute.hops.begin(),
-                bestRoute.hops.end(), comparisonFunc);
-
-            ((Work*) (*leastEnd)->work)->suppressed = true;
-            resetContactsWork();
-            bestRoute = findBestRoute(i);
-        }
+    findRoutesDijkstra(&minEndContact);
+    while (minEndContact != NULL) {
+        ((Work*) minEndContact->work)->suppressed = true;
+        minEndContact = NULL;
+        findRoutesDijkstra(&minEndContact);
     }
-
     clearContactsWork();
 }
 
 
-CgrRoute RoutingCgrCentralized::findBestRoute(int terminusNode) {
+void RoutingCgrCentralized::findRoutesDijkstra(Contact** outMinEndContact) {
     Contact selfContact = Contact(-1, 0, numeric_limits<double>::max(), eid_, eid_, 1.0, 1.0, 0);
-    Work selfWork;
-    selfWork.visited = false;
-    selfWork.arrivalTime = simTime_;
-    selfContact.work = &selfWork;
 
-    Contact* finalContact = NULL;
-    Contact* currentContact = &selfContact;
-    double earliestFinalArrivalTime = numeric_limits<double>::max();
+    Contact* finalContacts[neighborsNum_ + 1];
+    double arrivalTimes[neighborsNum_ + 1];
+    bool visitedNodes[neighborsNum_ + 1];
+    for (int i = 1; i <= neighborsNum_; i++) {
+        finalContacts[i] = NULL;
+        arrivalTimes[i] = numeric_limits<double>::max();
+        visitedNodes[i] = false;
+    }
 
-    priority_queue<Contact*, vector<Contact*>, Work> pq;
-    pq.push(currentContact);
+    arrivalTimes[eid_] = 0.0;
+    finalContacts[eid_] = &selfContact;
+    priority_queue<std::pair<double, int> > pq;
+    pq.push(std::make_pair(0, eid_));
 
     // Begin Dijkstra
     while (!pq.empty()) {
-        currentContact = pq.top();
-        if (currentContact->getDestinationEid() == terminusNode) {
-            break;
-        }
+        double arrivalTime = -pq.top().first; // Queue negative value to sort from low to high
+        int currentNode = pq.top().second;
         pq.pop();
 
-        Work* currentContactWork = (Work*) (currentContact->work);
-        if (currentContactWork->visited)
+        if (visitedNodes[currentNode])
+            continue;
+        visitedNodes[currentNode] = true;
+
+        if (arrivalTime > arrivalTimes[currentNode])
             continue;
 
-        currentContactWork->visited = true;
-
-        // If the arrival time is worst than the best found so far, ignore
-        if (currentContactWork->arrivalTime > earliestFinalArrivalTime)
-            continue;
-
-        vector<int> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
+        vector<int> currentNeighbors = contactPlan_->getContactsBySrc(currentNode);
         for (vector<int>::iterator neighborId = currentNeighbors.begin(); neighborId != currentNeighbors.end(); ++neighborId) {
-            Contact* neighbor = contactPlan_->getContactById(*neighborId);
-            Work* neighborWork = (Work*) (neighbor->work);
+            Contact* neighborEdge = contactPlan_->getContactById(*neighborId);
+            int neighborNode = neighborEdge->getDestinationEid();
 
-            if (neighborWork->suppressed || neighborWork->visited)
+            if (visitedNodes[neighborNode])
                 continue;
 
-            // If this contact is finished, ignore it.
-            if (neighbor->getEnd() <= currentContactWork->arrivalTime)
+            if (neighborEdge->getEnd() <= arrivalTime || ((Work*) neighborEdge->work)->suppressed)
                 continue;
 
-            if (neighbor->getResidualVolume() == 0)
-                continue;
+            double owlt = neighborEdge->getRange();
+            double nArrivalTime = std::max(arrivalTime, neighborEdge->getStart()) + owlt;
 
-            // Get owlt (one way light time)
-            double owlt = neighbor->getRange();
+            if (nArrivalTime < arrivalTimes[neighborNode]) {
+                arrivalTimes[neighborNode] = nArrivalTime;
+                finalContacts[neighborNode] = neighborEdge;
 
-            // Calculate the cost for this contact (Arrival Time)
-            double arrivalTime = std::max(
-                    neighbor->getStart(),
-                    currentContactWork->arrivalTime
-                );
-            arrivalTime += owlt;
-
-            // Update the cost if better or equal
-            if (arrivalTime < neighborWork->arrivalTime) {
-                neighborWork->arrivalTime = arrivalTime;
-                neighborWork->predecessor = currentContact;
-
-                // Mark if destination reached
-                if (neighbor->getDestinationEid() == terminusNode) {
-                    if (neighborWork->arrivalTime < earliestFinalArrivalTime) {
-                        earliestFinalArrivalTime = neighborWork->arrivalTime;
-                        finalContact = contactPlan_->getContactById(neighbor->getId());
-                    }
-                }
-
-                pq.push(neighbor);
+                pq.push(make_pair(-nArrivalTime, neighborNode));
             }
         }
+
     } // End Dijkstra
 
-    // Build route
-    CgrRoute bestRoute;
-    if (finalContact != NULL) {
-        bestRoute.arrivalTime = earliestFinalArrivalTime;
-        bestRoute.confidence = 1.0;
-        bestRoute.toTime = numeric_limits<double>::max();
-        bestRoute.maxVolume = numeric_limits<double>::max();
-        bestRoute.residualVolume = numeric_limits<double>::max();
+    // Build routes
+    for (int dstNode = 1; dstNode <= neighborsNum_; dstNode++) {
 
-        for (Contact* contact = finalContact; contact != &selfContact;
-                contact = ((Work*) contact->work)->predecessor) {
+        if (dstNode == eid_) continue;
 
-            bestRoute.maxVolume = std::min(bestRoute.maxVolume, contact->getVolume());
-            bestRoute.residualVolume = std::min(bestRoute.residualVolume,
-                contact->getResidualVolume());
-            bestRoute.confidence *= contact->getConfidence();
-            bestRoute.hops.insert(bestRoute.hops.begin(), contact);
+        CgrRoute bestRoute;
+        bestRoute.filtered = false;
+        bestRoute.hops.clear();
+        if (finalContacts[dstNode] != NULL) {
+            bestRoute.arrivalTime = arrivalTimes[dstNode];
+            bestRoute.confidence = 1.0;
+            bestRoute.toTime = numeric_limits<double>::max();
+            bestRoute.maxVolume = numeric_limits<double>::max();
+            bestRoute.residualVolume = numeric_limits<double>::max();
+
+            for (Contact* contact = finalContacts[dstNode]; contact != &selfContact;
+                    contact = finalContacts[contact->getSourceEid()]) {
+
+                bestRoute.maxVolume = std::min(bestRoute.maxVolume, contact->getVolume());
+                bestRoute.residualVolume = std::min(bestRoute.residualVolume,
+                        contact->getResidualVolume());
+                bestRoute.confidence *= contact->getConfidence();
+                bestRoute.hops.insert(bestRoute.hops.begin(), contact);
+
+                if (*outMinEndContact == NULL || contact->getEnd() < (*outMinEndContact)->getEnd()) {
+                    *outMinEndContact = contact;
+                }
+            }
+
+            double accumulatedRange = 0;
+            for (int i = 0; i < bestRoute.hops.size(); i++) {
+                bestRoute.toTime = std::min(bestRoute.toTime,
+                        bestRoute.hops.at(i)->getEnd() - accumulatedRange);
+
+                accumulatedRange += bestRoute.hops.at(i)->getRange();
+            }
+
+            bestRoute.nextHop = bestRoute.hops[0]->getDestinationEid();
+            bestRoute.fromTime = bestRoute.hops[0]->getStart();
+            bestRoute.terminusNode = dstNode;
+
+        } else {
+            bestRoute.terminusNode = NO_ROUTE_FOUND;
+            bestRoute.nextHop = NO_ROUTE_FOUND;
+            bestRoute.arrivalTime = numeric_limits<double>::max();
         }
 
-        double accumulatedRange = 0;
-        for (int i = 0; i < bestRoute.hops.size(); i++) {
-            bestRoute.toTime = std::min(bestRoute.toTime,
-                    bestRoute.hops.at(i)->getEnd() - accumulatedRange);
+        if (bestRoute.nextHop != NO_ROUTE_FOUND &&
+                std::find(routeTable_.at(dstNode).begin(), routeTable_.at(dstNode).end(),
+                bestRoute) == routeTable_.at(dstNode).end()) {
 
-            accumulatedRange += bestRoute.hops.at(i)->getRange();
+            routeTable_.at(dstNode).push_back(bestRoute);
+            routeLengthVector_.push_back(bestRoute.hops.size());
+            computedRoutes_++;
         }
-
-        bestRoute.nextHop = bestRoute.hops[0]->getDestinationEid();
-        bestRoute.fromTime = bestRoute.hops[0]->getStart();
-        bestRoute.terminusNode = terminusNode;
-
-    } else {
-        bestRoute.terminusNode = NO_ROUTE_FOUND;
-        bestRoute.nextHop = NO_ROUTE_FOUND;
-        bestRoute.arrivalTime = numeric_limits<double>::max();
     }
 
-    return bestRoute;
 }
 
 
@@ -448,27 +439,6 @@ void RoutingCgrCentralized::createContactsWork() {
     for (int i = 0; i < contacts->size(); i++) {
         contacts->at(i).work = new Work();
         ((Work*) contacts->at(i).work)->suppressed = false;
-    }
-}
-
-
-void RoutingCgrCentralized::initializeContactsWork() {
-    vector<Contact> * contacts = contactPlan_->getContacts();
-    for (int i = 0; i < contacts->size(); i++) {
-        ((Work*) contacts->at(i).work)->suppressed = false;
-    }
-
-    resetContactsWork();
-}
-
-
-void RoutingCgrCentralized::resetContactsWork() {
-    vector<Contact> * contacts = contactPlan_->getContacts();
-    for (int i = 0; i < contacts->size(); i++) {
-        Work* contactWork = (Work*) (contacts->at(i).work);
-        contactWork->visited = false;
-        contactWork->arrivalTime = numeric_limits<double>::max();
-        contactWork->predecessor = NULL;
     }
 }
 

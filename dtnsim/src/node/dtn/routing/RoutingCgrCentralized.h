@@ -6,6 +6,7 @@
 #include <src/node/dtn/routing/CgrRoute.h>
 #include <src/node/dtn/routing/RoutingDeterministic.h>
 
+
 class RoutingCgrCentralized : public RoutingDeterministic
 {
 public:
@@ -15,9 +16,10 @@ public:
     virtual ~RoutingCgrCentralized();
     void initializeRouteTable();
 
-    void fillRouteTableBfs(double minEndTimeFilter, double* outRouteMinEndTime);
-    void fillRouteTableWithContactFilter(bool comparisonFunc (const Contact*, const Contact*));
-    CgrRoute findBestRoute(int terminusNode);
+    void fillRouteTableWithBfs();
+    void findRoutesBfs(double minEndTimeFilter, double* outRouteMinEndTime);
+    void fillRouteTableWithFirstEnded();
+    void findRoutesDijkstra(Contact** outMinEndContact);
 
     // stats
     int getComputedRoutes();
@@ -29,11 +31,8 @@ private:
     void cgrForward(BundlePkt * bundle);
     void routeAndQueueBundle(BundlePkt * bundle, double simTime);
     void cgrEnqueue(BundlePkt * bundle, CgrRoute * bestRoute);
-    void findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route);
 
     void createContactsWork();
-    void initializeContactsWork();
-    void resetContactsWork();
     void clearContactsWork();
 
     // stats
