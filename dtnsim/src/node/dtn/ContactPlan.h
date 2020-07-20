@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 using namespace omnetpp;
@@ -21,7 +22,6 @@ public:
 	// Contact plan population functions
 	void addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence);
 	void addRange(int id, double start, double end, int sourceEid, int destinationEid, double range, float confidence);
-	void updateContactRanges();
 
 	// Contact plan exploration functions
 	Contact *getContactById(int id);
@@ -41,6 +41,8 @@ public:
 	void printContactPlan();
 
 private:
+	void updateContactRanges();
+	void sortContactsByArrivalTime();
 
 	vector<Contact> contacts_;
 	vector<vector<int> > contactsBySrc_;

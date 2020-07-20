@@ -85,6 +85,7 @@ void ContactPlan::parseContactPlanFile(string fileName, int nodesNum, int contac
 	}
 
 	updateContactRanges();
+	sortContactsByArrivalTime();
 
 	if (cin.bad())
 	{
@@ -120,6 +121,16 @@ void ContactPlan::addRange(int id, double start, double end, int sourceEid, int 
     ranges_.push_back(rangeContact);
 
 	lastEditTime = simTime();
+}
+
+void ContactPlan::sortContactsByArrivalTime() {
+    for (int node = 1; node < contactsBySrc_.size(); node++) {
+        std::sort(contactsBySrc_.at(node).begin(), contactsBySrc_.at(node).end(),
+            [this](int a, int b) {
+                return this->getContactById(a)->getStart() <
+                       this->getContactById(b)->getStart();
+            });
+    }
 }
 
 void ContactPlan::updateContactRanges() {
