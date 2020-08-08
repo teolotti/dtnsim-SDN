@@ -20,6 +20,28 @@ RoutingIRUCoPn2::RoutingIRUCoPn2(int eid, SdrModel * sdr, ContactPlan * contactP
 	this->ts_duration = ts_duration;
 	this->max_copies = max_copies;
 
+	if (ts_duration < 0)
+	{
+		ostringstream stream;
+		stream << pathPrefix << "contact-to-ts" << pathPosfix;
+		string pathToTSStartTimes = stream.str();
+		cout<<"RoutingIRUCoPn2::RoutingIRUCoPn2 check if exist file: " << pathToTSStartTimes << endl;
+		ifstream infile(pathToTSStartTimes);
+		if (infile.good())
+		{
+			cout<<pathToTSStartTimes<<endl;
+			this->tsStartTimes = json::parse(infile);
+			//cout<<this->bruf_function.dump();
+			infile.close();
+		}
+		else
+		{
+			cout<<"RoutingIRUCoPn2::RoutingIRUCoPn2 when ts_duration < 0  there must exist file  "<< pathToTSStartTimes << endl;
+			exit(1);
+		}
+
+	}
+
 	//It looks up for all routing files  {pathPrefix}{target}-{copies}{pathPosfix}
 	for(int target=1; target <= numOfNodes; target++)
 	{
@@ -94,7 +116,16 @@ void RoutingIRUCoPn2::msgToOtherArrive(BundlePkt * bundle, double simTime)
 		if (route->terminusNode == eid_)
 		{
 			// Bundle has to be stored
-			simTime =  ts_duration * (int(simTime/this->ts_duration) + 1); // To make a decision for this bundle but in the next time stamp
+			if (ts_duration >= 0)
+				simTime =  ts_duration * (int(simTime/this->ts_duration) + 1); // To make a decision for this bundle but in the next time stamp
+			else
+			{
+				int ts = 0;
+				while (simTime < this->tsStartTimes[ts])
+					ts+=1;
+				cout<<endl<<"SimTime = "<< simTime << "-next-start= "<< this->tsStartTimes[ts]<<endl<<endl;
+				simTime = this->tsStartTimes[ts];
+			}
 			routeAndQueueBundle(bundle, simTime);
 		}
 		else
@@ -208,7 +239,15 @@ void RoutingIRUCoPn2::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	int source = bb->getSourceEid();
 	int target = bb->getDestinationEid();
 	int copies = bb->getBundlesCopies();
-	int ts = simTime / this->ts_duration;
+	int ts;
+	if (this->ts_duration >= 0)
+		ts = simTime / this->ts_duration;
+	else
+	{
+		ts = 0;
+		while (simTime < this->tsStartTimes[ts])
+			ts+=1;
+	}
 
 	string key = to_string(this->eid_) + ":" + to_string(bb->getBundlesCopies());
 
@@ -217,7 +256,17 @@ void RoutingIRUCoPn2::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	{
 		cout<<"RoutingIRUCoPn2::routeAndQueueBundl searching "<<source <<" - "<<target<<" - "<<copies<<" - "<<ts<<" - "<<key<<endl;
 		if(this->bruf_function[to_string(target)][to_string(copies)][to_string(ts)].value(key, list<RoutingDecision>()).size() > 0)
+		{
 			routing_decisions = this->bruf_function[to_string(target)][to_string(copies)][to_string(ts)][key].get<list<RoutingDecision>>(); //La clave podria no estar y puedo tener que buscarla 1 ts mas adelante
+			//Check if some contact in the routing decision has finished if that happend re-route considering the next timestamp
+			//This is necessary to deal with those cases in which a contact can finish before the end of the time stamp
+			bool finishedContact = false;
+			for(list<RoutingDecision>::iterator routingDecisionsIt = routing_decisions.begin(); routingDecisionsIt != routing_decisions.end(); routingDecisionsIt++)
+				finishedContact = finishedContact or find(finishedContacts.begin(), finishedContacts.end(), *(routingDecisionsIt->contact_ids_.begin())) != finishedContacts.end();
+
+			if (finishedContact)
+				routing_decisions.clear();
+		}
 		ts++;
 	}
 

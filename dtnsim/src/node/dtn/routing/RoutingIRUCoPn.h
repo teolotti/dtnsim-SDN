@@ -1,6 +1,6 @@
 
-#ifndef SRC_NODE_DTN_ROUTINGIRUCOPN2_H_
-#define SRC_NODE_DTN_ROUTINGIRUCOPN2_H_
+#ifndef SRC_NODE_DTN_ROUTINGIRUCOPN_H_
+#define SRC_NODE_DTN_ROUTINGIRUCOPN_H_
 
 #include <dtn/routing/RoutingDeterministic.h>
 #include <dtn/SdrModel.h>
@@ -9,21 +9,12 @@
 
 using json = nlohmann::json;
 
-class RoutingDecision{
-	public:
-		int copies_;
-		vector<int> contact_ids_;
-
-		RoutingDecision(){}
-		~RoutingDecision(){}
-};
-
-class RoutingIRUCoPn2 : public RoutingDeterministic
+class RoutingIRUCoPn : public RoutingDeterministic
 {
 
 public:
-	RoutingIRUCoPn2(int eid, SdrModel * sdr, ContactPlan * contactPlan,  cModule * dtn, int max_copies, double probability_of_failure, int ts_duration, int numOfNodes, string pathPrefix, string pathPosfix);
-	virtual ~RoutingIRUCoPn2();
+	RoutingIRUCoPn(int eid, SdrModel * sdr, ContactPlan * contactPlan,  cModule * dtn, int max_copies, double probability_of_failure, int ts_duration, int numOfNodes, string pathPrefix, string pathPosfix);
+	virtual ~RoutingIRUCoPn();
 
 	virtual void msgToOtherArrive(BundlePkt * bundle, double simTime);
 	virtual bool msgToMeArrive(BundlePkt * bundle);
@@ -33,13 +24,15 @@ public:
 	virtual bool isDeliveredBundle(long bundleId);
 	virtual void successfulBundleForwarded(long bundleId, Contact * contact,  bool sentToDestination);
 
+
+
+
 private:
 	json bruf_function;
 	double contact_failure_probability;
 	int ts_duration;
 	int max_copies;
-	map<long, list<RoutingDecision>> bag; //BundleId -> Contacts to send each copy
-	json tsStartTimes;
+	map<long, list<int>> bag; //BundleId -> Contacts to send each copy
 	list<int> currentContacts;
 	list<int> finishedContacts;
 
@@ -49,9 +42,6 @@ private:
 
 	virtual void queueBundles();
 	virtual void removeBundleFromBag(long bundleId);
-	virtual void reportErrorAndExit(string method, string msg);
-	virtual void routeBundle(BundlePkt * bundle, int copies, vector<int> route);
-
 };
 
 #endif /* SRC_NODE_DTN_ROUTINGIRUCOPN_H_ */
