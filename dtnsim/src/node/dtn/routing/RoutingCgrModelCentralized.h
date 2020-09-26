@@ -7,13 +7,13 @@
 #include <src/node/dtn/routing/RoutingDeterministic.h>
 
 
-class RoutingCgrCentralized : public RoutingDeterministic
+class RoutingCgrModelCentralized : public RoutingDeterministic
 {
 public:
-    RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan,
+    RoutingCgrModelCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan,
             bool printDebug, string routingType, int maxRouteLength, int maxRoutesWithSameDst,
             double bfsIntervalTime, int bfsIntervalNum);
-    virtual ~RoutingCgrCentralized();
+    virtual ~RoutingCgrModelCentralized();
     void initializeRouteTable();
 
     void fillRouteTableWithBfs();

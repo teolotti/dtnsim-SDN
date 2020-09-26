@@ -1,6 +1,6 @@
-#include <src/node/dtn/routing/RoutingCgrCentralized.h>
+#include "RoutingCgrModelCentralized.h"
 
-RoutingCgrCentralized::RoutingCgrCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan,
+RoutingCgrModelCentralized::RoutingCgrModelCentralized(int eid, int neighborsNum, SdrModel *sdr, ContactPlan *localContactPlan,
         bool printDebug, string routingType, int maxRouteHops, int maxRoutesWithSameDst,
         double bfsIntervalTime, int bfsIntervalNum)
     : RoutingDeterministic(eid, sdr, localContactPlan)
@@ -22,12 +22,12 @@ RoutingCgrCentralized::RoutingCgrCentralized(int eid, int neighborsNum, SdrModel
 }
 
 
-RoutingCgrCentralized::~RoutingCgrCentralized()
+RoutingCgrModelCentralized::~RoutingCgrModelCentralized()
 {
 }
 
 
-void RoutingCgrCentralized::routeAndQueueBundle(BundlePkt *bundle, double simTime) {
+void RoutingCgrModelCentralized::routeAndQueueBundle(BundlePkt *bundle, double simTime) {
     if (!printDebug_)
         cout.setstate(std::ios_base::failbit);
 
@@ -96,7 +96,7 @@ void RoutingCgrCentralized::routeAndQueueBundle(BundlePkt *bundle, double simTim
 }
 
 
-void RoutingCgrCentralized::cgrForward(BundlePkt *bundle) {
+void RoutingCgrModelCentralized::cgrForward(BundlePkt *bundle) {
     // Since we are running centralized CGR, all possible routes are computed
     // on earth and distributed to the corresponding nodes. So routing in a node is
     // just filtering the routes that cannot deliver the bundle and select the best
@@ -156,7 +156,7 @@ void RoutingCgrCentralized::cgrForward(BundlePkt *bundle) {
 }
 
 
-void RoutingCgrCentralized::cgrEnqueue(BundlePkt *bundle, CgrRoute *bestRoute) {
+void RoutingCgrModelCentralized::cgrEnqueue(BundlePkt *bundle, CgrRoute *bestRoute) {
     cout << "*Best: routeTable[" << bestRoute->terminusNode << "][ ]: nextHop: " << bestRoute->nextHop << ", frm "
             << bestRoute->fromTime << " to " << bestRoute->toTime << ", arrival time: " << bestRoute->arrivalTime
             << ", volume: " << bestRoute->residualVolume << "/" << bestRoute->maxVolume << "Bytes" << endl;
@@ -197,7 +197,7 @@ void RoutingCgrCentralized::cgrEnqueue(BundlePkt *bundle, CgrRoute *bestRoute) {
 
 
 // This is the procedure that should be done on earth to initialize the route table of each node.
-void RoutingCgrCentralized::initializeRouteTable() {
+void RoutingCgrModelCentralized::initializeRouteTable() {
     if (!printDebug_)
         cout.setstate(std::ios_base::failbit);
 
@@ -218,7 +218,7 @@ void RoutingCgrCentralized::initializeRouteTable() {
 }
 
 
-void RoutingCgrCentralized::fillRouteTableWithBfs() {
+void RoutingCgrModelCentralized::fillRouteTableWithBfs() {
     double filterTime = 0.0;
     for (int i = 0; i < bfsIntervalNum_; i++, filterTime += bfsIntervalTime_) {
         double minEndTime = numeric_limits<double>::max();
@@ -235,7 +235,7 @@ void RoutingCgrCentralized::fillRouteTableWithBfs() {
 }
 
 
-void RoutingCgrCentralized::findRoutesBfs(double minEndTimeFilter, double* outRouteMinEndTime) {
+void RoutingCgrModelCentralized::findRoutesBfs(double minEndTimeFilter, double* outRouteMinEndTime) {
     list<CgrRoute> routesToExplore;
 
     // Use priority queue to sort routes from worst to best, so the worst is always at the top.
@@ -306,7 +306,7 @@ void RoutingCgrCentralized::findRoutesBfs(double minEndTimeFilter, double* outRo
 }
 
 
-void RoutingCgrCentralized::fillRouteTableWithFirstEnded() {
+void RoutingCgrModelCentralized::fillRouteTableWithFirstEnded() {
     createContactsWork();
     Contact* minEndContact = NULL;
 
@@ -320,7 +320,7 @@ void RoutingCgrCentralized::fillRouteTableWithFirstEnded() {
 }
 
 
-void RoutingCgrCentralized::findRoutesDijkstra(Contact** outMinEndContact) {
+void RoutingCgrModelCentralized::findRoutesDijkstra(Contact** outMinEndContact) {
     Contact selfContact = Contact(-1, 0, numeric_limits<double>::max(), eid_, eid_, 1.0, 1.0, 0);
 
     Contact* finalContacts[neighborsNum_ + 1];
@@ -434,7 +434,7 @@ void RoutingCgrCentralized::findRoutesDijkstra(Contact** outMinEndContact) {
 }
 
 
-void RoutingCgrCentralized::createContactsWork() {
+void RoutingCgrModelCentralized::createContactsWork() {
     vector<Contact> * contacts = contactPlan_->getContacts();
     for (int i = 0; i < contacts->size(); i++) {
         contacts->at(i).work = new Work();
@@ -443,7 +443,7 @@ void RoutingCgrCentralized::createContactsWork() {
 }
 
 
-void RoutingCgrCentralized::clearContactsWork() {
+void RoutingCgrModelCentralized::clearContactsWork() {
     vector<Contact> * contacts = contactPlan_->getContacts();
     for (int i = 0; i < contacts->size(); i++) {
         delete((Work*) (contacts->at(i).work));
@@ -453,21 +453,21 @@ void RoutingCgrCentralized::clearContactsWork() {
 
 
 // stats gathering
-int RoutingCgrCentralized::getComputedRoutes() {
+int RoutingCgrModelCentralized::getComputedRoutes() {
 	return computedRoutes_;
 }
 
 
-vector<int> RoutingCgrCentralized::getRouteLengthVector() {
+vector<int> RoutingCgrModelCentralized::getRouteLengthVector() {
 	return routeLengthVector_;
 }
 
 
-double RoutingCgrCentralized::getTimeToComputeRoutes() {
+double RoutingCgrModelCentralized::getTimeToComputeRoutes() {
     return timeToComputeRoutes_;
 }
 
 
-void RoutingCgrCentralized::clearRouteLengthVector() {
+void RoutingCgrModelCentralized::clearRouteLengthVector() {
     routeLengthVector_.clear();
 }
