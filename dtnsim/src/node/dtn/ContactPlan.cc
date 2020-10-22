@@ -123,7 +123,8 @@ void ContactPlan::addRange(int id, double start, double end, int sourceEid, int 
 	lastEditTime = simTime();
 }
 
-void ContactPlan::sortContactsByArrivalTime() {
+void ContactPlan::sortContactsByArrivalTime()
+{
     for (int node = 1; node < contactsBySrc_.size(); node++) {
         std::sort(contactsBySrc_.at(node).begin(), contactsBySrc_.at(node).end(),
             [this](int a, int b) {
@@ -133,15 +134,16 @@ void ContactPlan::sortContactsByArrivalTime() {
     }
 }
 
-void ContactPlan::updateContactRanges() {
+void ContactPlan::updateContactRanges()
+{
     for (vector<Contact>::iterator rangeContact = ranges_.begin(); rangeContact != ranges_.end(); rangeContact++) {
         int sourceEid = rangeContact->getSourceEid();
         int destinationEid = rangeContact->getDestinationEid();
         double start = rangeContact->getStart();
         double end = rangeContact->getEnd();
 
-        vector<int> contactsBySrc = getContactsBySrc(sourceEid);
-        for (vector<int>::iterator contactId = contactsBySrc.begin(); contactId != contactsBySrc.end(); contactId++) {
+        vector<int> * contactsBySrc = getContactIdsBySrc(sourceEid);
+        for (vector<int>::iterator contactId = contactsBySrc->begin(); contactId != contactsBySrc->end(); contactId++) {
             Contact* contact = getContactById(*contactId);
             if (contact->getDestinationEid() == destinationEid &&
                     contact->getStart() >= start &&
@@ -176,9 +178,9 @@ vector<Contact> * ContactPlan::getContacts()
 	return &contacts_;
 }
 
-vector<int> ContactPlan::getContactsBySrc(int Src)
+vector<int> * ContactPlan::getContactIdsBySrc(int Src)
 {
-	return contactsBySrc_.at(Src);
+	return &contactsBySrc_.at(Src);
 }
 
 vector<Contact> ContactPlan::getContactsBySrcDst(int Src, int Dst)

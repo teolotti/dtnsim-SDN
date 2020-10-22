@@ -253,8 +253,8 @@ void RoutingCgrModelCentralized::findRoutesBfs(double minEndTimeFilter, double* 
             // No need to explore a route which is already worse than the best K routes.
             continue;
 
-        vector<int> neighborIds = contactPlan_->getContactsBySrc(currentRoute.terminusNode);
-        for (vector<int>::iterator neighborId = neighborIds.begin(); neighborId != neighborIds.end(); neighborId++) {
+        vector<int> * neighborIds = contactPlan_->getContactIdsBySrc(currentRoute.terminusNode);
+        for (vector<int>::iterator neighborId = neighborIds->begin(); neighborId != neighborIds->end(); neighborId++) {
             Contact* neighbor = contactPlan_->getContactById(*neighborId);
 
             if (neighbor->getEnd() <= minEndTimeFilter)
@@ -350,8 +350,8 @@ void RoutingCgrModelCentralized::findRoutesDijkstra(Contact** outMinEndContact) 
         if (arrivalTime > arrivalTimes[currentNode])
             continue;
 
-        vector<int> currentNeighbors = contactPlan_->getContactsBySrc(currentNode);
-        for (vector<int>::iterator neighborId = currentNeighbors.begin(); neighborId != currentNeighbors.end(); ++neighborId) {
+        vector<int> * currentNeighbors = contactPlan_->getContactIdsBySrc(currentNode);
+        for (vector<int>::iterator neighborId = currentNeighbors->begin(); neighborId != currentNeighbors->end(); ++neighborId) {
             Contact* neighborEdge = contactPlan_->getContactById(*neighborId);
             int neighborNode = neighborEdge->getDestinationEid();
 

@@ -825,8 +825,8 @@ void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, i
         //cout << currentContact->getDestinationEid() << ",";
 
         // Get local neighbor set and evaluate them
-        vector<int> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
-        for (vector<int>::iterator neighborId = currentNeighbors.begin(); neighborId != currentNeighbors.end(); ++neighborId) {
+        vector<int> * currentNeighbors = contactPlan_->getContactIdsBySrc(currentContact->getDestinationEid());
+        for (vector<int>::iterator neighborId = currentNeighbors->begin(); neighborId != currentNeighbors->end(); ++neighborId) {
             Contact *neighbor = contactPlan_->getContactById(*neighborId);
             Work *neighborWork = (Work *) (neighbor->work);
 

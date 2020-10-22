@@ -66,8 +66,8 @@ void Dtn::initialize(int stage)
 
 		// Schedule local starts contact messages.
 		// Only contactTopology starts contacts are scheduled.
-		vector<int> localContacts1 = contactTopology_.getContactsBySrc(this->eid_);
-		for (vector<int>::iterator i = localContacts1.begin(); i != localContacts1.end(); ++i)
+		vector<int> * localContacts1 = contactTopology_.getContactIdsBySrc(this->eid_);
+		for (vector<int>::iterator i = localContacts1->begin(); i != localContacts1->end(); ++i)
 		{
 			Contact * it = contactTopology_.getContactById(*i);
 			ContactMsg *contactMsgStart = new ContactMsg("contactStart", CONTACT_START_TIMER);
@@ -88,8 +88,8 @@ void Dtn::initialize(int stage)
 		// Schedule local ends contact messages.
 		// All ends contacts of the contactPlan are scheduled.
 		// to trigger re-routings of bundles queued in contacts that did not happen.
-		vector<int> localContacts2 = contactPlan_.getContactsBySrc(this->eid_);
-		for (vector<int>::iterator i = localContacts2.begin(); i != localContacts2.end(); ++i)
+		vector<int> * localContacts2 = contactPlan_.getContactIdsBySrc(this->eid_);
+		for (vector<int>::iterator i = localContacts2->begin(); i != localContacts2->end(); ++i)
 		{
 			Contact * it = contactPlan_.getContactById(*i);
 			ContactMsg *contactMsgEnd = new ContactMsg("contactEnd", CONTACT_END_TIMER);

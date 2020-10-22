@@ -517,8 +517,8 @@ void RoutingCgrModel350::findNextBestRoute(Contact * rootContact, int terminusNo
 		// node is the currentWork destination node)
 
 		// cout << currentContact->getDestinationEid() << ",";
-		vector<int> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
-		for (vector<int>::iterator it = currentNeighbors.begin(); it != currentNeighbors.end(); ++it)
+		vector<int> * currentNeighbors = contactPlan_->getContactIdsBySrc(currentContact->getDestinationEid());
+		for (vector<int>::iterator it = currentNeighbors->begin(); it != currentNeighbors->end(); ++it)
 		{
 		    Contact *neighbor = contactPlan_->getContactById(*it);
 			// First, check if contact needs to be considered

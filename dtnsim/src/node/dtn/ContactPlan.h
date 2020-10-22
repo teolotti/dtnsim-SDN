@@ -26,7 +26,7 @@ public:
 	// Contact plan exploration functions
 	Contact *getContactById(int id);
 	vector<Contact> * getContacts();
-	vector<int> getContactsBySrc(int Src);
+	vector<int> * getContactIdsBySrc(int Src);
 	vector<Contact> getContactsBySrcDst(int Src, int Dst);
 	double getRangeBySrcDst(int Src, int Dst);
 	void parseContactPlanFile(string fileName, int nodesNum, int contactsToProcess);
