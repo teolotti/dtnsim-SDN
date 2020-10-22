@@ -227,7 +227,6 @@ void ContactPlan::deleteContactById(int contactId)
     cout << "Warning: ContactPlan.cc:deleteContactById() has been changed: contacts are not " <<
             "removed anymore, a flag is set to tell whether they have been deleted. " <<
             "Make sure the algorithms using deleted contacts are properly modified." << endl;
-    exit(1);
 
 	contacts_.at(contactId).setDeleted(true);
 }
