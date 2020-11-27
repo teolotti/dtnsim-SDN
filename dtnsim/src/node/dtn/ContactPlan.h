@@ -18,8 +18,8 @@ public:
 	ContactPlan(ContactPlan &contactPlan);
 
 	// Contact plan population functions
-	void addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence);
-	void addRange(int id, double start, double end, int sourceEid, int destinationEid, double range, float confidence);
+	int addContact(double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence);
+	void addRange(double start, double end, int sourceEid, int destinationEid, double range, float confidence);
 
 	// Contact plan exploration functions
 	Contact *getContactById(int id);
@@ -42,8 +42,11 @@ public:
 
 private:
 
+	static const int DELETED_CONTACT = -1;
+	int nextContactId = 0;
 	vector<Contact> contacts_;
 	vector<Contact> ranges_;
+	vector<int> contactIdShift_;
 	simtime_t lastEditTime;
 	string contactsFile_;
 

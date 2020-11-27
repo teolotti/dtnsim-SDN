@@ -12,10 +12,12 @@ ContactPlan::ContactPlan()
 
 ContactPlan::ContactPlan(ContactPlan &contactPlan)
 {
+	this->nextContactId = contactPlan.nextContactId;
 	this->lastEditTime = contactPlan.lastEditTime;
 	this->contactsFile_ = contactPlan.contactsFile_;
 	this->contacts_ = contactPlan.contacts_;
 	this->ranges_ = contactPlan.ranges_;
+	this->contactIdShift_ = contactPlan.contactIdShift_;
 
 	for (size_t i = 0; i < contacts_.size(); i++)
 	{
@@ -30,7 +32,6 @@ ContactPlan::ContactPlan(ContactPlan &contactPlan)
 
 void ContactPlan::parseContactPlanFile(string fileName)
 {
-	int id = 1;
 	double start = 0.0;
 	double end = 0.0;
 	int sourceEid = 0;
@@ -63,13 +64,11 @@ void ContactPlan::parseContactPlanFile(string fileName)
 		{
 			if ((command.compare("contact") == 0))
 			{
-				this->addContact(id, start, end, sourceEid, destinationEid, dataRateOrRange, (float) 1.0);
-				id++;
+				this->addContact(start, end, sourceEid, destinationEid, dataRateOrRange, (float) 1.0);
 			}
 			else if ((command.compare("range") == 0))
 			{
-				this->addRange(id, start, end, sourceEid, destinationEid, dataRateOrRange, (float) 1.0);
-				id++;
+				this->addRange(start, end, sourceEid, destinationEid, dataRateOrRange, (float) 1.0);
 			}
 			else
 			{
@@ -97,21 +96,24 @@ void ContactPlan::parseContactPlanFile(string fileName)
 	this->setContactsFile(fileName);
 }
 
-void ContactPlan::addContact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
+int ContactPlan::addContact(double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
 {
+	int id = this->nextContactId++;
 	Contact contact(id, start, end, sourceEid, destinationEid, dataRate, confidence, 0);
 
+	contactIdShift_.push_back(id - contacts_.size());
 	contacts_.push_back(contact);
 
 	lastEditTime = simTime();
+	return id;
 }
 
-void ContactPlan::addRange(int id, double start, double end, int sourceEid, int destinationEid, double range, float confidence)
+void ContactPlan::addRange(double start, double end, int sourceEid, int destinationEid, double range, float confidence)
 {
 	// Ranges can be declared in a single direction, but they are bidirectional
 	// In the worst case they are repeated
-	Contact contact1(id, start, end, sourceEid, destinationEid, 0, confidence, range);
-	Contact contact2(id, start, end, destinationEid, sourceEid, 0, confidence, range);
+	Contact contact1(-1, start, end, sourceEid, destinationEid, 0, confidence, range);
+	Contact contact2(-1, start, end, destinationEid, sourceEid, 0, confidence, range);
 
 	ranges_.push_back(contact1);
 	ranges_.push_back(contact2);
@@ -135,17 +137,14 @@ double ContactPlan::getRangeBySrcDst(int Src, int Dst)
 	return rangeFirstContact;
 }
 
+// Each contact matches its position in the vector with the formula:
+// position = id - contactIdShift[id]
 Contact *ContactPlan::getContactById(int id)
 {
 	Contact *contactPtr = NULL;
 
-	for (size_t i = 0; i < contacts_.size(); i++)
-	{
-		if (contacts_.at(i).getId() == id)
-		{
-			contactPtr = &contacts_.at(i);
-			break;
-		}
+	if (contactIdShift_.at(id) != DELETED_CONTACT) {
+		contactPtr = &contacts_.at(id - contactIdShift_.at(id));
 	}
 
 	return contactPtr;
@@ -236,13 +235,21 @@ vector<Contact>::iterator ContactPlan::deleteContactById(int contactId)
 {
 	vector<Contact>::iterator itReturn;
 
-	vector<Contact>::iterator it;
-	for (it = this->getContacts()->begin(); it != this->getContacts()->end(); ++it)
-		if (it->getId() == contactId)
-		{
-			itReturn = contacts_.erase(it);
-			break;
-		}
+	if (contactIdShift_.at(contactId) == DELETED_CONTACT) {
+		cout << "Warning: Trying to delete a contact already deleted" << endl;
+		return itReturn;
+	}
+
+	// Erase contact
+	int contactIndex = contactId - contactIdShift_.at(contactId);
+	itReturn = contacts_.erase(contacts_.begin() + contactIndex);
+
+	// Update shift indices
+	contactIdShift_.at(contactId) = DELETED_CONTACT;
+	for (size_t shiftIndex = contactId + 1; shiftIndex < contactIdShift_.size(); shiftIndex++) {
+		if (contactIdShift_[shiftIndex] != DELETED_CONTACT)
+			contactIdShift_[shiftIndex]++;
+	}
 
 	return itReturn;
 }
