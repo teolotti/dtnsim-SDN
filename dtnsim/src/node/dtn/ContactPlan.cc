@@ -98,6 +98,7 @@ void ContactPlan::parseContactPlanFile(string fileName, int nodesNumber)
 
 	this->setContactsFile(fileName);
 	this->updateContactRanges();
+	this->sortContactIdsBySrcByStartTime();
 }
 
 int ContactPlan::addContact(double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
@@ -288,5 +289,17 @@ void ContactPlan::updateContactRanges()
 				contact->setRange(rangeContact.getRange());
 			}
 		}
+	}
+}
+
+void ContactPlan::sortContactIdsBySrcByStartTime()
+{
+	for (auto& vectorOfIds : this->contactIdsBySrc_) {
+		std::sort(vectorOfIds.begin(), vectorOfIds.end(),
+			[this](int id1, int id2) {
+				return this->getContactById(id1)->getStart() <
+						this->getContactById(id2)->getStart();
+			}
+		);
 	}
 }

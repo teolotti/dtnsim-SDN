@@ -45,6 +45,7 @@ public:
 private:
 
 	void updateContactRanges();
+	void sortContactIdsBySrcByStartTime();
 
 	static const int DELETED_CONTACT = -1;
 	int nextContactId = 0;
