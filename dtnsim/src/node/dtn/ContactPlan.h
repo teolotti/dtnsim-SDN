@@ -3,6 +3,7 @@
 
 #include <src/node/dtn/Contact.h>
 #include <omnetpp.h>
+#include <algorithm>
 #include <vector>
 #include <fstream>
 
@@ -26,10 +27,11 @@ public:
 	vector<Contact> * getContacts();
 	vector<Contact> * getRanges();
 	vector<Contact> getContactsBySrc(int Src);
+	vector<int> * getContactIdsBySrc(int Src);
 	vector<Contact> getContactsByDst(int Dst);
 	vector<Contact> getContactsBySrcDst(int Src, int Dst);
 	double getRangeBySrcDst(int Src, int Dst);
-	void parseContactPlanFile(string fileName);
+	void parseContactPlanFile(string fileName, int nodesNumber);
 	void setContactsFile(string contactsFile);
 	const string& getContactsFile() const;
 	simtime_t getLastEditTime();
@@ -46,6 +48,7 @@ private:
 	int nextContactId = 0;
 	vector<Contact> contacts_;
 	vector<Contact> ranges_;
+	vector<vector<int>> contactIdsBySrc_;
 	vector<int> contactIdShift_;
 	simtime_t lastEditTime;
 	string contactsFile_;

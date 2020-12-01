@@ -18,6 +18,7 @@ ContactPlan::ContactPlan(ContactPlan &contactPlan)
 	this->contacts_ = contactPlan.contacts_;
 	this->ranges_ = contactPlan.ranges_;
 	this->contactIdShift_ = contactPlan.contactIdShift_;
+	this->contactIdsBySrc_ = contactPlan.contactIdsBySrc_;
 
 	for (size_t i = 0; i < contacts_.size(); i++)
 	{
@@ -30,8 +31,10 @@ ContactPlan::ContactPlan(ContactPlan &contactPlan)
 	}
 }
 
-void ContactPlan::parseContactPlanFile(string fileName)
+void ContactPlan::parseContactPlanFile(string fileName, int nodesNumber)
 {
+	this->contactIdsBySrc_.resize(nodesNumber + 1);
+
 	double start = 0.0;
 	double end = 0.0;
 	int sourceEid = 0;
@@ -104,6 +107,8 @@ int ContactPlan::addContact(double start, double end, int sourceEid, int destina
 	contactIdShift_.push_back(id - contacts_.size());
 	contacts_.push_back(contact);
 
+	contactIdsBySrc_[sourceEid].push_back(id);
+
 	lastEditTime = simTime();
 	return id;
 }
@@ -158,6 +163,11 @@ vector<Contact> * ContactPlan::getContacts()
 vector<Contact> * ContactPlan::getRanges()
 {
 	return &ranges_;
+}
+
+vector<int> * ContactPlan::getContactIdsBySrc(int Src)
+{
+	return &contactIdsBySrc_.at(Src);
 }
 
 vector<Contact> ContactPlan::getContactsBySrc(int Src)
@@ -239,6 +249,12 @@ vector<Contact>::iterator ContactPlan::deleteContactById(int contactId)
 		cout << "Warning: Trying to delete a contact already deleted" << endl;
 		return itReturn;
 	}
+
+	// Update contactIdsBySrc
+	int src = getContactById(contactId)->getSourceEid();
+	auto it = std::find(contactIdsBySrc_[src].begin(), contactIdsBySrc_[src].end(), contactId);
+	if (it != contactIdsBySrc_[src].end())
+		contactIdsBySrc_[src].erase(it);
 
 	// Erase contact
 	int contactIndex = contactId - contactIdShift_.at(contactId);
