@@ -80,5 +80,9 @@ void Contact::setRange(double range)
 
 double Contact::getRange() const
 {
+	if (range_ < 0) {
+		cout << "Contact.cc: warning, range not available for nodes " << sourceEid_ << "-" << destinationEid_ << ", assuming range=0" << endl;
+		return 0.0;
+	}
 	return range_;
 }
