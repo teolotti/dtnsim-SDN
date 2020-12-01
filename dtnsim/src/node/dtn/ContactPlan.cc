@@ -97,6 +97,7 @@ void ContactPlan::parseContactPlanFile(string fileName, int nodesNumber)
 	file.close();
 
 	this->setContactsFile(fileName);
+	this->updateContactRanges();
 }
 
 int ContactPlan::addContact(double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence)
@@ -268,4 +269,24 @@ vector<Contact>::iterator ContactPlan::deleteContactById(int contactId)
 	}
 
 	return itReturn;
+}
+
+void ContactPlan::updateContactRanges()
+{
+	for (auto& rangeContact : ranges_) {
+		int sourceEid = rangeContact.getSourceEid();
+		int destinationEid = rangeContact.getDestinationEid();
+		double start = rangeContact.getStart();
+		double end = rangeContact.getEnd();
+
+		for (auto& contactId : *getContactIdsBySrc(sourceEid)) {
+			Contact* contact = getContactById(contactId);
+			if (contact->getDestinationEid() == destinationEid &&
+					contact->getStart() >= start &&
+					contact->getEnd() <= end) {
+
+				contact->setRange(rangeContact.getRange());
+			}
+		}
+	}
 }

@@ -73,6 +73,11 @@ float Contact::getConfidence() const
 	return confidence_;
 }
 
+void Contact::setRange(double range)
+{
+	this->range_ = range;
+}
+
 double Contact::getRange() const
 {
 	return range_;
