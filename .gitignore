@@ -1,0 +1,7 @@
+# Message files are generated at compile time from .msg files
+**/*_m.cc
+**/*_m.h
+
+# Ignore binaries
+dtnsim/out/
+dtnsim/dtnsim
