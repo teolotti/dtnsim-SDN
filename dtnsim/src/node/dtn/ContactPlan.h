@@ -48,11 +48,11 @@ private:
 	void sortContactIdsBySrcByStartTime();
 
 	static const int DELETED_CONTACT = -1;
-	int nextContactId = 0;
+	int nextContactId = 1;
 	vector<Contact> contacts_;
 	vector<Contact> ranges_;
 	vector<vector<int>> contactIdsBySrc_;
-	vector<int> contactIdShift_;
+	vector<int> contactIdShift_ = {0}; // create dummy element for limbo contact
 	simtime_t lastEditTime;
 	string contactsFile_;
 
