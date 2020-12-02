@@ -758,193 +758,114 @@ void RoutingCgrModelRev17::cgrEnqueue(BundlePkt * bundle, CgrRoute *bestRoute) {
 	}
 }
 
-// This function is the Dijkstra search over the contact-graph.
-// It is based on current implementation in ION but adds a few corrections
-// such as visited nodes list to avoid topological loops. From the implementation
-// perspective it needs severe improvements as it currently overutilizes pointer
-// operations which render the code very difficult to read and to debug.
-// In general, each contact has a work pointer where temporal information only
-// valid and related to the current Dijkstra search is stored.
+// This function is the Dijkstra search over the network graph, not the contact graph.
 void RoutingCgrModelRev17::findNextBestRoute(vector<int> suppressedContactIds, int terminusNode, CgrRoute * route) {
 	// increment metrics counter
 	dijkstraCalls++;
 
-	// Create rootContact and its corresponding rootWork
-	// id=0, start=0, end=inf, src=me, dst=me, rate=0, conf=1
-	Contact * rootContact = new Contact(0, 0, numeric_limits<double>::max(), eid_, eid_, 0, 1.0, 0);
-	Work rootWork;
-	rootWork.contact = rootContact;
-	rootWork.arrivalTime = simTime_;
-	rootContact->work = &rootWork;
-
-	// Create and initialize working area in each contact.
-	for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end();
-			++it) {
-		(*it).work = new Work;
-		((Work *) (*it).work)->contact = &(*it);
-		((Work *) (*it).work)->visitedNodes.clear();
-		((Work *) (*it).work)->arrivalTime = numeric_limits<double>::max();
-		((Work *) (*it).work)->predecessor = 0;
-		((Work *) (*it).work)->visited = false;
-
-		// Suppress contacts as indicated in the suppressed list
-		if (find(suppressedContactIds.begin(), suppressedContactIds.end(), (*it).getId()) != suppressedContactIds.end())
-			((Work *) (*it).work)->suppressed = true;
-		else
-			((Work *) (*it).work)->suppressed = false;
+	// Suppress edges
+	for (auto& contact : *contactPlan_->getContacts()) {
+		contact.work = new Work();
+		auto it = std::find(suppressedContactIds.begin(), suppressedContactIds.end(), contact.getId());
+		((Work *) contact.work)->suppressed = it != suppressedContactIds.end();
 	}
+
+	// Initialize Dijkstra
+	double arrivalTimes[nodeNum_ + 1];
+	bool visitedNodes[nodeNum_ + 1];
+	Contact * predecesors[nodeNum_ + 1];
+	for (int i = 1; i <= nodeNum_; i++) {
+		arrivalTimes[i] = std::numeric_limits<double>::max();
+		visitedNodes[i] = false;
+		predecesors[i] = NULL;
+	}
+	arrivalTimes[eid_] = simTime_;
+
+	// Queue for queueing (arrival time, node) in order to get best node first
+	// Use std::greater to sort arrival time from low to high
+	priority_queue<pair<double, int>, vector<pair<double, int>>, std::greater<pair<double, int>>> pq;
+	pq.push(make_pair(arrivalTimes[eid_], eid_));
 
 	// Start Dijkstra
-	Contact * currentContact = rootContact;
-	Contact * finalContact = NULL;
-	double earliestFinalArrivalTime = numeric_limits<double>::max();
-
-	//cout << "  surfing contact-graph:";
-	while (1) {
-		// increment counter
+	while (!pq.empty() && pq.top().second != terminusNode) {
 		dijkstraLoops++;
 
-		//cout << currentContact->getDestinationEid() << ",";
+		double arrivalTime = pq.top().first;
+		int currentNode = pq.top().second;
+		pq.pop();
 
-		// Get local neighbor set and evaluate them
-		vector<Contact> currentNeighbors = contactPlan_->getContactsBySrc(currentContact->getDestinationEid());
-		for (vector<Contact>::iterator it = currentNeighbors.begin(); it != currentNeighbors.end(); ++it) {
-			// If this contact is suppressed/visited, ignore it.
-			if (((Work *) (*it).work)->suppressed || ((Work *) (*it).work)->visited)
+		if (visitedNodes[currentNode])
+			continue;
+		visitedNodes[currentNode] = true;
+
+		// Explore current node's neighbors
+		for (auto& edgeId : *contactPlan_->getContactIdsBySrc(currentNode)) {
+			Contact * edgeToNeighbor = contactPlan_->getContactById(edgeId);
+			int neighbor = edgeToNeighbor->getDestinationEid();
+
+			if (visitedNodes[neighbor])
 				continue;
 
-			// If this contact is finished, ignore it.
-			if ((*it).getEnd() <= ((Work *) (currentContact->work))->arrivalTime)
+			// If edge is suppressed or has already ended, ignore
+			if (((Work *) edgeToNeighbor->work)->suppressed  || edgeToNeighbor->getEnd() <= arrivalTime)
 				continue;
 
-			// If the residual volume is 0, ignore it.
-			if ((*it).getResidualVolume() == 0)
-				continue;
+			double owlt = edgeToNeighbor->getRange();
+			double newArrivalTime = max(arrivalTime, edgeToNeighbor->getStart());
+			newArrivalTime += owlt;
 
-			// If this contact leads to visited node, ignore it.
-			vector<int> * v = &((Work *) (currentContact->work))->visitedNodes;
-			if (std::find(v->begin(), v->end(), (*it).getDestinationEid()) != v->end())
-				continue;
+			if (newArrivalTime < arrivalTimes[neighbor]) {
+				arrivalTimes[neighbor] = newArrivalTime;
+				predecesors[neighbor] = edgeToNeighbor;
 
-			// Get owlt (one way light time). If none found, ignore contact
-			double owlt = contactPlan_->getRangeBySrcDst((*it).getSourceEid(), (*it).getDestinationEid());
-			if (owlt == -1)
-			{
-				cout << "warning, range not available for nodes " << (*it).getSourceEid() << "-" << (*it).getDestinationEid() << ", assuming range=0" << endl;
-				owlt = 0;
-			}
-			//double owltMargin = ((MAX_SPEED_MPH / 3600) * owlt) / 186282;
-			//owlt += owltMargin;
-
-			// Calculate the cost for this contact (Arrival Time)
-			double arrivalTime;
-			if ((*it).getStart() < ((Work *) (currentContact->work))->arrivalTime)
-				arrivalTime = ((Work *) (currentContact->work))->arrivalTime;
-			else
-				arrivalTime = (*it).getStart();
-			arrivalTime += owlt;
-
-			// Update the cost if better or equal
-			if (arrivalTime < ((Work *) (*it).work)->arrivalTime) {
-				((Work *) (*it).work)->arrivalTime = arrivalTime;
-				((Work *) (*it).work)->predecessor = currentContact;
-				((Work *) (*it).work)->visitedNodes = ((Work *) (currentContact->work))->visitedNodes;
-				((Work *) (*it).work)->visitedNodes.push_back((*it).getDestinationEid());
-
-				// Mark if destination reached
-				if ((*it).getDestinationEid() == terminusNode)
-					if (((Work *) (*it).work)->arrivalTime < earliestFinalArrivalTime) {
-						earliestFinalArrivalTime = ((Work *) (*it).work)->arrivalTime;
-						finalContact = contactPlan_->getContactById((*it).getId());
-					}
+				pq.push(make_pair(newArrivalTime, neighbor));
 			}
 		}
-
-		// End exploring next hop contact, mark current as visited
-		((Work *) (currentContact->work))->visited = true;
-
-		// Select next (best) contact to move to in next iteration
-		Contact * nextContact = NULL;
-		double earliestArrivalTime = numeric_limits<double>::max();
-		for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
-				it != contactPlan_->getContacts()->end(); ++it) {
-			// Do not evaluate suppressed or visited contacts
-			if (((Work *) (*it).work)->suppressed || ((Work *) (*it).work)->visited)
-				continue;
-
-			// If the arrival time is worst than the best found so far, ignore
-			if (((Work *) (*it).work)->arrivalTime > earliestFinalArrivalTime)
-				continue;
-
-			// Then this might be the best candidate contact
-			if (((Work *) (*it).work)->arrivalTime < earliestArrivalTime) {
-				nextContact = &(*it);
-				earliestArrivalTime = ((Work *) (*it).work)->arrivalTime;
-			}
-		}
-		if (nextContact == NULL)
-			break; // No next contact found, exit search (while(1))
-
-		// Update next contact and go with next iteration
-		currentContact = nextContact;
 	}
-
-	// End contact graph exploration
-	//cout << endl;
+	// End Dijkstra
 
 	// If we got a final contact to destination
 	// then it is the best route and we need to
-	// recover the data from the work area
-	if (finalContact != NULL) {
-		route->arrivalTime = earliestFinalArrivalTime;
-		route->confidence = 1.0;
-
-		double earliestEndTime = numeric_limits<double>::max();
-		double maxVolume = numeric_limits<double>::max();
-		double maxResidualVolume = numeric_limits<double>::max();
-
-		// Go through all contacts in the path
-		for (Contact * contact = finalContact; contact != rootContact; contact =
-				((Work *) (*contact).work)->predecessor) {
-			// Get earliest end time
-			if (contact->getEnd() < earliestEndTime)
-				earliestEndTime = contact->getEnd();
-
-			// Get the minimal capacity
-			// (TODO: this calculation assumes non-overlapped contacts
-			// can be made more accurate. Indeed it is always assumed
-			// that contacts are booked from the beginning (time=0), but
-			// in fact long contacts might be booked from intermediate
-			// points which is not currently reflected in this calculation)
-			if (contact->getVolume() < maxVolume)
-				maxVolume = contact->getVolume();
-			if (contact->getResidualVolume() < maxResidualVolume)
-				maxResidualVolume = contact->getResidualVolume();
-
-			// Update confidence
-			route->confidence *= contact->getConfidence();
-
-			// Store hop
-			route->hops.insert(route->hops.begin(), contact);
+	// recover the route
+	if (predecesors[terminusNode]!= NULL) {
+		// Add all contacts in the path
+		route->hops.clear();
+		for (Contact * contact = predecesors[terminusNode]; contact != NULL; contact =
+				predecesors[contact->getSourceEid()]) {
+			route->hops.push_back(contact);
 		}
+		std::reverse(route->hops.begin(), route->hops.end());
 
+		// Set route metrics
+		route->filtered = false;
 		route->terminusNode = terminusNode;
+		route->arrivalTime = arrivalTimes[terminusNode];
+		route->confidence = 1.0;
 		route->nextHop = route->hops[0]->getDestinationEid();
 		route->fromTime = route->hops[0]->getStart();
-		route->toTime = earliestEndTime;
-		route->maxVolume = maxVolume;
-		route->residualVolume = maxResidualVolume;
+		route->maxVolume = numeric_limits<double>::max();
+		route->residualVolume = numeric_limits<double>::max();
+		route->toTime = numeric_limits<double>::max();
+		double accumulatedRange = 0;
+		for (Contact * contact : route->hops) {
+			route->toTime = std::min(route->toTime,
+					contact->getEnd() - accumulatedRange);
+			accumulatedRange += contact->getRange();
+
+			route->maxVolume = std::min(route->maxVolume, contact->getVolume());
+			route->residualVolume = std::min(route->residualVolume, contact->getResidualVolume());
+			route->confidence *= contact->getConfidence();
+		}
 	} else {
 		// No route found
 		route->terminusNode = NO_ROUTE_FOUND;
 		route->nextHop = NO_ROUTE_FOUND;
-		route->arrivalTime = numeric_limits<double>::max();			// never chosen as best route
+		route->arrivalTime = numeric_limits<double>::max();	// never chosen as best route
 	}
 
 	// Delete working area in each contact.
-	for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin(); it != contactPlan_->getContacts()->end();
-			++it) {
-		delete ((Work *) (*it).work);
+	for (auto& contact: *contactPlan_->getContacts()) {
+		delete ((Work *) contact.work);
 	}
 }
 
