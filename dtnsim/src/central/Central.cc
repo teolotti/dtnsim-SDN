@@ -50,10 +50,10 @@ void Central::initialize()
 //	}
 
 	// Initialize contact plan
-	contactPlan_.parseContactPlanFile(par("contactsFile"));
+	contactPlan_.parseContactPlanFile(par("contactsFile"), nodesNumber_);
 
 	// Initialize topology
-	contactTopology_.parseContactPlanFile(par("contactsFile"));
+	contactTopology_.parseContactPlanFile(par("contactsFile"), nodesNumber_);
 
 	// schedule dummy event to make time pass until
 	// last potential contact. This is mandatory in order for nodes

@@ -25,6 +25,7 @@ public:
 	double getDuration() const;
 	float getConfidence() const;
 	double getRange() const;
+	void setRange(double range);
 
 	// Get and Set residual capacity (Bytes)
 	double getResidualVolume() const;
