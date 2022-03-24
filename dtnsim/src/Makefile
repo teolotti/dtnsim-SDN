@@ -121,6 +121,7 @@ OBJS = \
     $O/node/dtn/Dtn.o \
     $O/node/dtn/SdrModel.o \
     $O/node/dtn/SdrStatus.o \
+    $O/node/dtn/routing/RoutingBRUF1T.o \
     $O/node/dtn/routing/RoutingCgrIon350.o \
     $O/node/dtn/routing/RoutingCgrModel350.o \
     $O/node/dtn/routing/RoutingCgrModel350_3.o \
@@ -131,8 +132,16 @@ OBJS = \
     $O/node/dtn/routing/RoutingDeterministic.o \
     $O/node/dtn/routing/RoutingDirect.o \
     $O/node/dtn/routing/RoutingEpidemic.o \
+    $O/node/dtn/routing/RoutingIRUCoPn.o \
+    $O/node/dtn/routing/RoutingIRUCoPn2.o \
+    $O/node/dtn/routing/RoutingIRUCoPnCongestionSupport.o \
     $O/node/dtn/routing/RoutingSprayAndWait.o \
     $O/node/dtn/routing/RoutingStochastic.o \
+    $O/node/dtn/routing/brufncopies/BRUFNCopies1TOracle.o \
+    $O/node/dtn/routing/brufncopies/BRUFNCopiesOracle.o \
+    $O/node/dtn/routing/brufncopies/RoutingBRUFNCopies.o \
+    $O/node/dtn/routing/cgrbrufpowered/CGRBRUFPowered.o \
+    $O/node/dtn/routing/cgrucop/CGRUCoP.o \
     $O/node/fault/Fault.o \
     $O/node/graphics/Graphics.o \
     $O/utils/ContactPlanUtils.o \
