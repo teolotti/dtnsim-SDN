@@ -5,7 +5,7 @@
  *  Author: FRaverta
  */
 
-#include <brufncopies/RoutingBRUFNCopies.h>
+#include <src/node/dtn/routing/brufncopies/RoutingBRUFNCopies.h>
 
 RoutingBRUFNCopies::RoutingBRUFNCopies(int eid, SdrModel * sdr, ContactPlan * contactPlan, int bundlesCopies, int numOfNodes, string pathPrefix, string pathPosfix)
 	: RoutingDeterministic(eid, sdr, contactPlan)
@@ -116,9 +116,9 @@ void RoutingBRUFNCopies::contactEnd(Contact *c)
 
 /**
  * This method enqueue the bundle in node's sdr_ and make bundle copies,
- * which could be send in the future. 
- * 
- * Note: The bundle must not be used after calling this method because 
+ * which could be send in the future.
+ *
+ * Note: The bundle must not be used after calling this method because
  * it might be deleted.
  */
 void RoutingBRUFNCopies::enqueueToCarryingBundles(BundlePkt * bundle)

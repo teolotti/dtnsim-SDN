@@ -5,9 +5,9 @@
  *      Author: fraverta
  */
 
-#include <brufncopies/BRUFNCopiesOracle.h>
+#include <src/node/dtn/routing/brufncopies/BRUFNCopiesOracle.h>
 
-BRUFNCopiesOracle* BRUFNCopiesOracle::instance_ = nullptr;
+BRUFNCopiesOracle* BRUFNCopiesOracle::instance_ = NULL;
 
 BRUFNCopiesOracle::BRUFNCopiesOracle(int numOfNodes, int numOfCopies, string pathPrefix, string pathPosfix)
 {
@@ -134,5 +134,4 @@ void BRUFNCopiesOracle::finish(){
 		instance_ = nullptr;
 	}
 }
-
 

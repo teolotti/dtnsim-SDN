@@ -1,11 +1,4 @@
-/*
- * CustodyModel.cpp
- *
- *  Created on: Dec 5, 2017
- *      Author: juanfraire
- */
-
-#include <CustodyModel.h>
+#include "src/node/dtn/CustodyModel.h"
 
 CustodyModel::CustodyModel()
 {
@@ -116,7 +109,7 @@ BundlePkt * CustodyModel::getNewCustodyReport(bool accept, BundlePkt *bundleInCu
 	custodyReport->setSchedulingPriority(BUNDLE_CUSTODY_REPORT);
 
 	// Bundle properties
-	char bundleName[15];
+	char bundleName[100];
 	sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, bundleInCustody->getCustodianEid(), (int) custodyReport->getId());
 	custodyReport->setBundleId(custodyReport->getId());
 	custodyReport->setName(bundleName);

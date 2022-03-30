@@ -1,11 +1,4 @@
-/*
- * RoutingDirect.cpp
- *
- *  Created on: Nov 8, 2016
- *      Author: juanfraire
- */
-
-#include <dtn/routing/RoutingDirect.h>
+#include "src/node/dtn/routing/RoutingDirect.h"
 
 RoutingDirect::RoutingDirect(int eid, SdrModel * sdr, ContactPlan * contactPlan)
 	: RoutingDeterministic(eid, sdr, contactPlan)

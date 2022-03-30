@@ -16,12 +16,12 @@
 #ifndef __DTNSIM_FAULT_H_
 #define __DTNSIM_FAULT_H_
 
-#include <dtn/Dtn.h>
+#include "src/node/dtn/Dtn.h"
 #include <omnetpp.h>
 
-#include "Graphics.h"
-#include "MsgTypes.h"
-#include "dtnsim_m.h"
+#include "src/node/graphics/Graphics.h"
+#include "src/node/MsgTypes.h"
+#include "src/dtnsim_m.h"
 
 using namespace omnetpp;
 

@@ -1,4 +1,4 @@
-package dtnsim.node.fault;
+package src.node.fault;
 
 simple Fault
 {

@@ -1,9 +1,4 @@
 /*
- * RoutingStochastic.h
- *
- *  Created on: Jul 18, 2017
- *      Author: FRaverta
- *
  * According to Zhang's taxonomy which classifies routing protocols based on the availability
  * of knowledge about the network topology, We have two different kind of them:
  *
@@ -29,7 +24,7 @@
 #ifndef SRC_NODE_DTN_ROUTING_ROUTINGSTOCHASTIC_H_
 #define SRC_NODE_DTN_ROUTING_ROUTINGSTOCHASTIC_H_
 
-#include <Routing.h>
+#include <src/node/dtn/routing/Routing.h>
 
 class RoutingStochastic: public Routing
 {
@@ -46,6 +41,8 @@ public:
 	virtual void contactEnd(Contact *c);
 
 	virtual void successfulBundleForwarded(long bundleId, Contact * contact,  bool sentToDestination);
+
+	virtual void updateContactPlan(Contact* c);
 
 	virtual void  refreshForwarding(Contact * c);
 

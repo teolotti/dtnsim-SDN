@@ -1,4 +1,4 @@
-#include "Config.h"
+#include "../Config.h"
 
 #ifdef USE_CPLEX_LIBRARY
 #ifdef USE_BOOST_LIBRARIES

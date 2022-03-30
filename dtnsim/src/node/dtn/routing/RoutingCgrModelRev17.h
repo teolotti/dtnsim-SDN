@@ -1,8 +1,8 @@
 #ifndef SRC_NODE_DTN_ROUTING_ROUTINGCGRMODELREV17_H_
 #define SRC_NODE_DTN_ROUTING_ROUTINGCGRMODELREV17_H_
 
-#include <dtn/routing/CgrRoute.h>
-#include <dtn/routing/RoutingDeterministic.h>
+#include <src/node/dtn/routing/CgrRoute.h>
+#include <src/node/dtn/routing/RoutingDeterministic.h>
 
 #define	MAX_SPEED_MPH	(150000)
 
@@ -41,11 +41,7 @@ private:
 	double routeTableLastEditTime = -1;
 
 	typedef struct {
-		Contact * contact;			// The owner contact of this Work
 		Contact * predecessor;		// Predecessor Contact
-		vector<int> visitedNodes;	// Dijkstra exploration: list of visited nodes
-		double arrivalTime;			// Dijkstra exploration: best arrival time so far
-		bool visited;				// Dijkstra exploration: visited
 		bool suppressed;			// Dijkstra exploration: suppressed
 	} Work;
 

@@ -1,5 +1,5 @@
-#include <com/Com.h>
-#include "App.h"
+#include "src/node/com/Com.h"
+#include "src/node/app/App.h"
 
 Define_Module (Com);
 

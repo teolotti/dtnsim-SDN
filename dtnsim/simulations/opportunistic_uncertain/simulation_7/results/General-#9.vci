@@ -1,0 +1,251 @@
+file 10023 1648207061                                           
+version 2
+run General-9-20220325-12:17:41-2941276
+attr configname General
+attr datetime 20220325-12:17:41
+attr experiment General
+attr inifile sim.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network src.dtnsim
+attr processid 2941276
+attr repetition 9
+attr replication #9
+attr resultdir results
+attr runnumber 9
+attr seedset 9
+param dtnsim.nodesNumber 15
+param dtnsim.node[1..3].icon "\"satellite\""
+param dtnsim.node[*].fault.enable false
+param dtnsim.node[*].fault.faultSeed 9*10
+param dtnsim.node[*].fault.meanTTF 20s
+param dtnsim.node[*].fault.meanTTR 5s
+param dtnsim.node[*].dtn.routingType "\"routeListType:allPaths-initial+anchor,volumeAware:allContacts,extensionBlock:on,contactPlan:local\""
+param dtnsim.node[*].dtn.printRoutingDebug true
+param dtnsim.central.contactsFile "\"contactPlan/contactPlan.txt\""
+param dtnsim.central.useSpecificFailureProbabilities true
+param dtnsim.central.repetition 9
+param dtnsim.node[*].dtn.saveBundleMap true
+param dtnsim.central.saveTopology true
+param dtnsim.central.saveFlows true
+param dtnsim.central.failureProbability -1
+param dtnsim.central.mode 2
+param dtnsim.central.useUncertainty true
+param dtnsim.node[*].dtn.routing "\"uncertainUniboCgr\""
+param dtnsim.central.collectorPath "\"/home/simon/Schreibtisch/experiment_results/simulation_7\""
+param dtnsim.node[8].app.enable true
+param dtnsim.node[8].app.returnToSender false
+param dtnsim.node[8].app.bundlesNumber "\"1\""
+param dtnsim.node[8].app.start "\"15\""
+param dtnsim.node[8].app.destinationEid "\"3\""
+param dtnsim.node[8].app.size "\"0\""
+param dtnsim.node[11].app.enable true
+param dtnsim.node[11].app.returnToSender false
+param dtnsim.node[11].app.bundlesNumber "\"1\""
+param dtnsim.node[11].app.start "\"45\""
+param dtnsim.node[11].app.destinationEid "\"6\""
+param dtnsim.node[11].app.size "\"0\""
+param dtnsim.node[10].app.enable true
+param dtnsim.node[10].app.returnToSender false
+param dtnsim.node[10].app.bundlesNumber "\"1\""
+param dtnsim.node[10].app.start "\"35\""
+param dtnsim.node[10].app.destinationEid "\"5\""
+param dtnsim.node[10].app.size "\"0\""
+param dtnsim.node[1].app.enable true
+param dtnsim.node[1].app.returnToSender false
+param dtnsim.node[1].app.bundlesNumber "\"1\""
+param dtnsim.node[1].app.start "\"55\""
+param dtnsim.node[1].app.destinationEid "\"9\""
+param dtnsim.node[1].app.size "\"0\""
+param dtnsim.node[7].app.enable true
+param dtnsim.node[7].app.returnToSender false
+param dtnsim.node[7].app.bundlesNumber "\"1\""
+param dtnsim.node[7].app.start "\"75\""
+param dtnsim.node[7].app.destinationEid "\"12\""
+param dtnsim.node[7].app.size "\"0\""
+param dtnsim.node[3].app.enable true
+param dtnsim.node[3].app.returnToSender false
+param dtnsim.node[3].app.bundlesNumber "\"1\""
+param dtnsim.node[3].app.start "\"25\""
+param dtnsim.node[3].app.destinationEid "\"11\""
+param dtnsim.node[3].app.size "\"0\""
+param dtnsim.node[2].app.enable true
+param dtnsim.node[2].app.returnToSender false
+param dtnsim.node[2].app.bundlesNumber "\"1\""
+param dtnsim.node[2].app.start "\"15\""
+param dtnsim.node[2].app.destinationEid "\"10\""
+param dtnsim.node[2].app.size "\"0\""
+param dtnsim.node[12].app.enable true
+param dtnsim.node[12].app.returnToSender false
+param dtnsim.node[12].app.bundlesNumber "\"1\""
+param dtnsim.node[12].app.start "\"25\""
+param dtnsim.node[12].app.destinationEid "\"10\""
+param dtnsim.node[12].app.size "\"0\""
+
+vector 0 dtnsim.node[1].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 1 dtnsim.node[1].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 2 dtnsim.node[2].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 3 dtnsim.node[2].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 4 dtnsim.node[3].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 5 dtnsim.node[3].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 6 dtnsim.node[4].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 7 dtnsim.node[4].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 8 dtnsim.node[5].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 9 dtnsim.node[5].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 10 dtnsim.node[6].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 11 dtnsim.node[6].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 12 dtnsim.node[7].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 13 dtnsim.node[7].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 14 dtnsim.node[8].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 15 dtnsim.node[8].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 16 dtnsim.node[9].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 17 dtnsim.node[9].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 18 dtnsim.node[10].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 19 dtnsim.node[10].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 20 dtnsim.node[11].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 21 dtnsim.node[11].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 22 dtnsim.node[12].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 23 dtnsim.node[12].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 24 dtnsim.node[13].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 25 dtnsim.node[13].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 26 dtnsim.node[14].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 27 dtnsim.node[14].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 28 dtnsim.node[15].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 29 dtnsim.node[15].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 30 dtnsim.node[11].dtn dtnBundleSentToAppHopCount:vector ETV
+attr interpolationmode none
+attr source dtnBundleSentToAppHopCount
+attr title "dtnBundleSentToAppHopCount, vector"
+vector 31 dtnsim.node[6].dtn dtnBundleSentToAppHopCount:vector ETV
+attr interpolationmode none
+attr source dtnBundleSentToAppHopCount
+attr title "dtnBundleSentToAppHopCount, vector"
+vector 32 dtnsim.node[5].dtn dtnBundleSentToAppHopCount:vector ETV
+attr interpolationmode none
+attr source dtnBundleSentToAppHopCount
+attr title "dtnBundleSentToAppHopCount, vector"
+0	8368 31 0 401 0 180 3 0 1 2 2
+1	8399 31 0 401 0 180 3 0 0 0 0
+2	8430 71 0 401 0 180 7 0 2 6 8
+3	8501 71 0 401 0 180 7 0 0 0 0
+4	8572 40 0 401 0 180 4 0 1 1 1
+5	8612 40 0 401 0 180 4 0 0 0 0
+6	8652 31 0 401 0 180 3 0 1 2 2
+7	8683 31 0 401 0 180 3 0 0 0 0
+8	8714 42 0 401 0 180 4 0 1 1 1
+9	8756 42 0 401 0 180 4 0 0 0 0
+10	8798 22 0 401 0 180 2 0 0 0 0
+11	8820 22 0 401 0 180 2 0 0 0 0
+12	8842 46 0 401 0 180 4 0 1 1 1
+13	8888 46 0 401 0 180 4 0 0 0 0
+14	8934 127 0 401 0 180 11 0 3 14 26
+15	9061 127 0 401 0 180 11 0 0 0 0
+16	9188 22 0 401 0 180 2 0 0 0 0
+17	9210 22 0 401 0 180 2 0 0 0 0
+18	9232 56 0 401 0 180 5 0 1 3 3
+19	9288 56 0 401 0 180 5 0 0 0 0
+20	9344 70 0 401 0 180 6 0 1 2 2
+21	9414 70 0 401 0 180 6 0 0 0 0
+22	9484 45 0 401 0 180 4 0 1 1 1
+23	9529 45 0 401 0 180 4 0 0 0 0
+24	9574 90 0 401 0 180 8 0 2 5 7
+25	9664 90 0 401 0 180 8 0 0 0 0
+26	9754 70 0 401 0 180 6 0 1 2 2
+27	9824 70 0 401 0 180 6 0 0 0 0
+28	9894 46 0 401 0 180 4 0 1 1 1
+29	9940 46 0 401 0 180 4 0 0 0 0
+30	9986 12 213 213 60 60 1 4 4 4 16
+31	9998 12 266 266 80 80 1 3 3 3 9
+32	10010 12 284 284 80 80 1 4 4 4 16
+

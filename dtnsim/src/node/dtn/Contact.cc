@@ -1,6 +1,7 @@
-#include <dtn/Contact.h>
+#include <src/node/dtn/Contact.h>
 
-Contact::Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, float confidence, double range)
+
+Contact::Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, double confidence, double range)
 {
 	this->id_ = id;
 	this->start_ = start;
@@ -11,6 +12,57 @@ Contact::Contact(int id, double start, double end, int sourceEid, int destinatio
 	this->confidence_ = confidence;
 	this->residualVolume_ = (end - start) * dataRate;
 	this->range_ = range;
+	this->discovered_ = false;
+	this->predicted_= false;
+	this->failureProbability_ = 0.0;
+}
+
+Contact::Contact(int id, double start, double end, double failureProbability, int sourceEid, int destinationEid, double dataRate, double confidence, double range)
+{
+	this->id_ = id;
+	this->start_ = start;
+	this->end_ = end;
+	this->sourceEid_ = sourceEid;
+	this->destinationEid_ = destinationEid;
+	this->dataRate_ = dataRate;
+	this->confidence_ = confidence;
+	this->residualVolume_ = (end - start) * dataRate;
+	this->range_ = range;
+	this->discovered_ = false;
+	this->predicted_= false;
+	this->failureProbability_ = failureProbability;
+}
+
+Contact::Contact(int id, double start, double end, int sourceEid, int destinationEid, double dataRate, double confidence, double range, bool discovered, bool predicted)
+{
+	this->id_ = id;
+	this->start_ = start;
+	this->end_ = end;
+	this->sourceEid_ = sourceEid;
+	this->destinationEid_ = destinationEid;
+	this->dataRate_ = dataRate;
+	this->confidence_ = confidence;
+	this->residualVolume_ = (end - start) * dataRate;
+	this->range_ = range;
+	this->discovered_ = discovered;
+	this->predicted_ = predicted;
+	this->failureProbability_ = 0.0;
+}
+
+Contact::Contact(int id, double start, double end, double failureProbability, int sourceEid, int destinationEid, double dataRate, double confidence, double range, bool discovered, bool predicted)
+{
+	this->id_ = id;
+	this->start_ = start;
+	this->end_ = end;
+	this->sourceEid_ = sourceEid;
+	this->destinationEid_ = destinationEid;
+	this->dataRate_ = dataRate;
+	this->confidence_ = confidence;
+	this->residualVolume_ = (end - start) * dataRate;
+	this->range_ = range;
+	this->discovered_ = discovered;
+	this->predicted_ = predicted;
+	this->failureProbability_ = failureProbability;
 }
 
 Contact::~Contact()
@@ -63,17 +115,89 @@ double Contact::getDuration() const
 	return (end_ - start_);
 }
 
+double Contact::getFailureProbability() const
+{
+	return this->failureProbability_;
+}
+
+double Contact::setFailureProbability(double failureProbability)
+{
+	this->failureProbability_ = failureProbability;
+}
+
 double Contact::getVolume() const
 {
 	return (end_ - start_) * dataRate_;
 }
 
-float Contact::getConfidence() const
+double Contact::getConfidence() const
 {
 	return confidence_;
 }
 
+void Contact::setRange(double range)
+{
+	this->range_ = range;
+}
+
+bool Contact::isDiscovered() const
+{
+	return this->discovered_;
+}
+
+bool Contact::isPredicted() const
+{
+	return this->predicted_;
+}
+
 double Contact::getRange() const
 {
+	if (range_ < 0) {
+		cout << "Contact.cc: warning, range not available for nodes " << sourceEid_ << "-" << destinationEid_ << ", assuming range=0" << endl;
+		return 0.0;
+	}
 	return range_;
 }
+
+vector<int> Contact::getForeignSources()
+{
+	return this->foreignSources_;
+}
+
+void Contact::addForeignSource(int foreignEid)
+{
+	this->foreignSources_.push_back(foreignEid);
+}
+
+void Contact::removeForeignSource(int foreignEid)
+{
+	int position = -1;
+
+	for (size_t i = 0; i < this->foreignSources_.size(); i++) {
+		if (this->foreignSources_[i] == foreignEid) {
+			position = i;
+		}
+	}
+
+	if (position > -1) {
+		this->foreignSources_.erase(this->foreignSources_.begin() + position);
+	}
+}
+
+bool Contact::hasForeignSource(int foreignEid)
+{
+	if (this->foreignSources_.size() == 0) {
+		return false;
+	} else {
+		for (auto it = this->foreignSources_.begin(); it != this->foreignSources_.end(); it++) {
+			if (foreignEid == (*it)) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+
+}
+
+

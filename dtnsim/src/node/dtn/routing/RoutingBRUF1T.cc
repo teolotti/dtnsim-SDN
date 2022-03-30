@@ -5,7 +5,7 @@
  *      Author: FRaverta
  */
 
-#include <RoutingBRUF1T.h>
+#include <src/node/dtn/routing/RoutingBRUF1T.h>
 
 
 
@@ -81,5 +81,3 @@ void RoutingBRUF1T::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 
 	sdr_->enqueueBundleToContact(bundle, contactId);
 }
-
-

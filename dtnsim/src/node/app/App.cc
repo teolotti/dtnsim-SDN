@@ -1,4 +1,4 @@
-#include "App.h"
+#include "src/node/app/App.h"
 
 Define_Module (App);
 
@@ -52,8 +52,8 @@ void App::initialize()
 			trafficGenMsg->setBundlesNumber(bundlesNumberVec_.at(i));
 			trafficGenMsg->setDestinationEid(destinationEidVec_.at(i));
 			trafficGenMsg->setSize(sizeVec_.at(i));
-			trafficGenMsg->setInterval(par("interval").doubleValue());
-			trafficGenMsg->setTtl(par("ttl").doubleValue());
+			trafficGenMsg->setInterval(par("interval"));
+			trafficGenMsg->setTtl(par("ttl"));
 			scheduleAt(startVec_.at(i), trafficGenMsg);
 		}
 	}
@@ -102,8 +102,8 @@ void App::handleMessage(cMessage *msg)
 		bundle->setSchedulingPriority(BUNDLE);
 
 		// Bundle properties
-		char bundleName[10];
-		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, trafficGenMsg->getDestinationEid(), (int) bundle->getId());
+		char bundleName[200];
+		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", (int)this->eid_, (int)trafficGenMsg->getDestinationEid(), (int) bundle->getId());
 		bundle->setBundleId(bundle->getId());
 		bundle->setName(bundleName);
 		bundle->setBitLength(trafficGenMsg->getSize() * 8);

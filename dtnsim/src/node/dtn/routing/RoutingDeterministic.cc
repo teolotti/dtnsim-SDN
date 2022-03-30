@@ -1,11 +1,4 @@
-/*
- * RoutingDeterministic.cpp
- *
- *  Created on: Jul 18, 2017
- *      Author: FRaverta
- */
-
-#include <dtn/routing/RoutingDeterministic.h>
+#include "src/node/dtn/routing/RoutingDeterministic.h"
 
 RoutingDeterministic::RoutingDeterministic(int eid, SdrModel * sdr, ContactPlan * contactPlan)
 	:Routing(eid,sdr)
@@ -34,6 +27,11 @@ void RoutingDeterministic::contactStart(Contact *c)
 }
 
 void RoutingDeterministic::successfulBundleForwarded(long bundleId, Contact * c,  bool sentToDestination)
+{
+
+}
+
+void RoutingDeterministic::updateContactPlan(Contact* c)
 {
 
 }

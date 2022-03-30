@@ -1,7 +1,5 @@
-#include <dtn/routing/RoutingCgrModel350_Probabilistic.h>
-#include <dtn/Dtn.h>
-
-
+#include <src/node/dtn/routing/RoutingCgrModel350_Probabilistic.h>
+#include <src/node/dtn/Dtn.h>
 
 RoutingCgrModel350_Probabilistic::RoutingCgrModel350_Probabilistic(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug,cModule * dtn, double sContactProb) :
 		RoutingDeterministic(eid, sdr, contactPlan)

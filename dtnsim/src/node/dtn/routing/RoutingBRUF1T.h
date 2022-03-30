@@ -1,9 +1,8 @@
-
 #ifndef SRC_NODE_DTN_ROUTINGBRUF1T_H_
 #define SRC_NODE_DTN_ROUTINGBRUF1T_H_
 
-#include <dtn/routing/RoutingDeterministic.h>
-#include <dtn/SdrModel.h>
+#include <src/node/dtn/routing/RoutingDeterministic.h>
+#include <src/node/dtn/SdrModel.h>
 
 
 class RoutingBRUF1T: public RoutingDeterministic

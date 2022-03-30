@@ -8,13 +8,13 @@
 #ifndef SRC_NODE_DTN_SDRMODEL_H_
 #define SRC_NODE_DTN_SDRMODEL_H_
 
-#include <dtn/ContactPlan.h>
-#include <dtn/SdrStatus.h>
+#include <src/node/dtn/ContactPlan.h>
+#include <src/node/dtn/SdrStatus.h>
 #include <map>
 #include <omnetpp.h>
-#include "utils/Subject.h"
+#include "src/utils/Subject.h"
 
-#include "dtnsim_m.h"
+#include "src/dtnsim_m.h"
 #include "assert.h"
 
 using namespace omnetpp;
@@ -40,6 +40,8 @@ public:
 	virtual list<BundlePkt*> * getBundlesInLimbo();
 	virtual int getBytesStoredInSdr();
 	virtual int getBytesStoredToNeighbor(int eid);
+	virtual vector<int> getBundleSizesStoredToNeighbor(int eid);
+	virtual vector<int> getBundleSizesStoredToNeighborWithHigherPriority(int eid, bool critical);
 	virtual SdrStatus getSdrStatus();
 	virtual BundlePkt * getEnqueuedBundle(long bundleId);
 	bool isSdrFreeSpace(int sizeNewPacket);

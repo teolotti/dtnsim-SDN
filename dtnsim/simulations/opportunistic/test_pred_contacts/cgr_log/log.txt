@@ -1,0 +1,44 @@
+[              0]: Unibo-CGR Version 1.0.
+[              0]: Anti-loop mechanism disabled.
+[              0]: One route per neighbor disabled.
+[              0]: ETO only on the first hop.
+[              0]: Own node: 1.
+[              0]: Unibo-CGR Version 1.0.
+[              0]: Anti-loop mechanism disabled.
+[              0]: One route per neighbor disabled.
+[              0]: ETO only on the first hop.
+[              0]: Own node: 2.
+[              0]: Unibo-CGR Version 1.0.
+[              0]: Anti-loop mechanism disabled.
+[              0]: One route per neighbor disabled.
+[              0]: ETO only on the first hop.
+[              0]: Own node: 3.
+[             25]: Destination node: 3.
+[             25]: Region number: 1.
+[             25]: Best routes found: 1.
+[             25]: Used route to neighbor 3.
+[             35]: Destination node: 3.
+[             35]: Region number: 1.
+[             35]: Contact plan modified, all routes will be discarded.
+[             35]: Best routes found: 0.
+[             65]: Destination node: 3.
+[             65]: Region number: 1.
+[             65]: Contact plan modified, all routes will be discarded.
+[             65]: Best routes found: 1.
+[             65]: Used route to neighbor 3.
+[             85]: Destination node: 3.
+[             85]: Region number: 1.
+[             85]: Best routes found: 1.
+[             85]: Used route to neighbor 2.
+[             90]: Destination node: 3.
+[             90]: Region number: 1.
+[             90]: Contact plan modified, all routes will be discarded.
+[             90]: Best routes found: 0.
+[             95]: Destination node: 3.
+[             95]: Region number: 1.
+[             95]: Contact plan modified, all routes will be discarded.
+[             95]: Best routes found: 1.
+[             95]: Used route to neighbor 2.
+[             95]: Destination node: 3.
+[             95]: Region number: 1.
+[             95]: Best routes found: 0.

@@ -1,52 +1,58 @@
 #ifndef _DTN_H_
 #define _DTN_H_
 
-#include <iomanip>
-#include <dtn/ContactPlan.h>
-#include <dtn/CustodyModel.h>
-#include <dtn/routing/Routing.h>
-#include <dtn/routing/RoutingCgrIon350.h>
-#include <dtn/routing/RoutingCgrModel350.h>
-#include <dtn/routing/RoutingCgrModel350_3.h>
-#include <dtn/routing/RoutingCgrModelRev17.h>
-#include <dtn/routing/RoutingCgrModelYen.h>
-#include <dtn/routing/RoutingDirect.h>
-#include <dtn/routing/RoutingEpidemic.h>
-#include <dtn/routing/RoutingSprayAndWait.h>
-#include <dtn/routing/RoutingCgrModel350_Proactive.h>
-#include <dtn/routing/RoutingCgrModel350_Probabilistic.h>
-#include <dtn/routing/RoutingBRUF1T.h>
-#include <brufncopies/RoutingBRUFNCopies.h>
-#include <cgrbrufpowered/CGRBRUFPowered.h>
-#include <RoutingIRUCoPn.h>
-#include <RoutingIRUCoPn2.h>
-#include <dtn/SdrModel.h>
+#include <src/node/dtn/ContactPlan.h>
+#include <src/node/dtn/ContactHistory.h>
+#include <src/node/dtn/CustodyModel.h>
+#include <src/node/dtn/routing/Routing.h>
+#include <src/node/dtn/routing/RoutingCgrModel350.h>
+#include <src/node/dtn/routing/RoutingCgrModelRev17.h>
+#include <src/node/dtn/routing/RoutingCgrModelYen.h>
+#include <src/node/dtn/routing/RoutingDirect.h>
+#include <src/node/dtn/routing/RoutingEpidemic.h>
+#include <src/node/dtn/routing/RoutingSprayAndWait.h>
+#include <src/node/dtn/routing/RoutingCgrModel350_Probabilistic.h>
+#include <src/node/dtn/routing/RoutingOpportunistic.h>
+#include <src/node/dtn/routing/RoutingUniboCgr.h>
+#include <src/node/dtn/routing/RoutingUncertainUniboCgr.h>
+#include <src/node/dtn/routing/RoutingBRUF1T.h>
+#include <src/node/dtn/routing/RoutingORUCOP.h>
+#include <src/node/dtn/routing/brufncopies/RoutingBRUFNCopies.h>
+#include <src/node/dtn/routing/cgrbrufpowered/CGRBRUFPowered.h>
+#include <src/node/dtn/SdrModel.h>
 #include <cstdio>
 #include <string>
 #include <omnetpp.h>
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <set>
 #include <queue>
 
-#include "MsgTypes.h"
-#include "dtnsim_m.h"
+#include "src/node/MsgTypes.h"
+#include "src/Config.h"
+#include "src/dtnsim_m.h"
 
-#include "Graphics.h"
-#include "Routing.h"
-#include "Config.h"
-#include "RouterUtils.h"
-#include "utils/TopologyUtils.h"
-#include "utils/RouterUtils.h"
-#include "utils/ContactPlanUtils.h"
-#include "utils/Observer.h"
+#include "src/node/graphics/Graphics.h"
+#include "src/node/dtn/routing/Routing.h"
+#include "src/utils/RouterUtils.h"
+#include "src/utils/TopologyUtils.h"
+#include "src/utils/RouterUtils.h"
+#include "src/utils/ContactPlanUtils.h"
+#include "src/utils/Observer.h"
+#include "src/utils/MetricCollector.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include "routing/RoutingCgrModel350_2Copies.h"
+#include "routing/RoutingCgrModel350_Hops.h"
+
 using namespace omnetpp;
 using namespace std;
+
+
 
 class Dtn: public cSimpleModule, public Observer
 {
@@ -59,9 +65,29 @@ public:
 	ContactPlan * getContactPlanPointer();
 	virtual void setContactPlan(ContactPlan &contactPlan);
 	virtual void setContactTopology(ContactPlan &contactTopology);
+	virtual void setMetricCollector(MetricCollector* metricCollector);
 	virtual Routing * getRouting();
 
 	virtual void update(void);
+
+	//Opportunistic procedures
+	void syncDiscoveredContact(Contact* c, bool start);
+	void syncDiscoveredContactFromNeighbor(Contact* c, bool start, int ownEid, int neighborEid);
+	void scheduleDiscoveredContactStart(Contact* c);
+	void scheduleDiscoveredContactEnd(Contact* c);
+	ContactHistory* getContactHistory();
+	void addDiscoveredContact(Contact c);
+	void removeDiscoveredContact(Contact c);
+	void predictAllContacts(double currentTime);
+	void coordinateContactStart(Contact* c);
+	void coordinateContactEnd(Contact* c);
+	void notifyNeighborsAboutDiscoveredContact(Contact* c, bool start, map<int,int>* alreadyInformed);
+	void updateDiscoveredContacts(Contact* c);
+	map<int,int> getReachableNodes();
+	void addCurrentNeighbor(int neighborEid);
+	void removeCurrentNeighbor(int neighborEid);
+	int checkExistenceOfContact(int sourceEid, int destinationEid, int start);
+
 
 protected:
 	virtual void initialize(int stage);
@@ -89,12 +115,19 @@ private:
 	// and get transmission rates
 	ContactPlan contactPlan_;
 
+	// Contact History used to collect all
+	// discovered contacts;
+	ContactHistory contactHistory_;
+
+	//An observer that collects and evaluates all the necessary simulation metrics
+	MetricCollector* metricCollector_;
+
 	// Contact Topology to schedule Contacts
 	// and get transmission rates
 	ContactPlan contactTopology_;
 
 	CustodyModel custodyModel_;
-	int custodyTimeout_;
+	double custodyTimeout_;
 
 	SdrModel sdr_;
 
@@ -119,4 +152,5 @@ private:
 };
 
 #endif /* DTN_H_ */
+
 

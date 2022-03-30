@@ -1,7 +1,7 @@
 #ifndef COM_H_
 #define COM_H_
 
-#include <dtn/ContactPlan.h>
+#include <src/node/dtn/ContactPlan.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -9,8 +9,8 @@
 #include <fstream>
 #include <iomanip>
 
-#include "MsgTypes.h"
-#include "dtnsim_m.h"
+#include "src/node/MsgTypes.h"
+#include "src/dtnsim_m.h"
 
 using namespace std;
 using namespace omnetpp;

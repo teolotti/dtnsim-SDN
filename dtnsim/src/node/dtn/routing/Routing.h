@@ -11,13 +11,13 @@
 #ifndef SRC_NODE_NET_ROUTING_H_
 #define SRC_NODE_NET_ROUTING_H_
 
-#include <dtn/ContactPlan.h>
-#include <dtn/SdrModel.h>
+#include <src/node/dtn/ContactPlan.h>
+#include <src/node/dtn/SdrModel.h>
 #include <map>
 #include <queue>
 #include <limits>
 #include <algorithm>
-#include "dtnsim_m.h"
+#include "src/dtnsim_m.h"
 
 using namespace omnetpp;
 using namespace std;
@@ -58,6 +58,11 @@ public:
 	virtual void contactEnd(Contact *c) = 0;
 
 	virtual void  refreshForwarding(Contact * c) = 0;
+
+	/**
+	 * Method to be called in case a contact plan was updated for opp. routing.
+	 */
+	virtual void updateContactPlan(Contact* c) = 0;
 
 	/**
 	 * Method that will be called by Dtn module when some bundle is forwarded successfully

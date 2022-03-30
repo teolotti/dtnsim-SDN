@@ -1,8 +1,7 @@
-
 #ifndef LP_H_
 #define LP_H_
 
-#include "Config.h"
+#include "src/Config.h"
 
 #ifdef USE_CPLEX_LIBRARY
 #ifdef USE_BOOST_LIBRARIES
@@ -141,3 +140,4 @@ private:
 #endif /* LP_H_ */
 #endif /* USE_BOOST_LIBRARIES */
 #endif /* USE_CPLEX_LIBRARY */
+

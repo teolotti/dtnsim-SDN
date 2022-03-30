@@ -1,9 +1,9 @@
 #ifndef __CENTRAL_H_
 #define __CENTRAL_H_
 
-#include <dtn/ContactPlan.h>
-#include <dtn/Dtn.h>
-#include <com/Com.h>
+#include <src/node/dtn/ContactPlan.h>
+#include <src/node/dtn/Dtn.h>
+#include <src/node/com/Com.h>
 #include <omnetpp.h>
 #include <string>
 #include <iostream>
@@ -13,19 +13,21 @@
 #include <vector>
 
 #include "../utils/Lp.h"
-#include "utils/TopologyUtils.h"
-#include "utils/RouterUtils.h"
-#include "utils/LpUtils.h"
-#include "App.h"
+#include "src/utils/TopologyUtils.h"
+#include "src/utils/RouterUtils.h"
+#include "src/utils/LpUtils.h"
+#include "src/utils/MetricCollector.h"
+#include "src/node/app/App.h"
 
-#include "dtn/routing/RoutingCgrModel350.h"
-#include "dtn/SdrModel.h"
+#include "src/node/dtn/routing/RoutingCgrModel350.h"
+#include "src/node/dtn/SdrModel.h"
 
-#include "MsgTypes.h"
-#include "dtnsim_m.h"
+#include "src/node/MsgTypes.h"
+#include "src/dtnsim_m.h"
 
 using namespace omnetpp;
 using namespace std;
+
 
 namespace dtnsim
 {
@@ -72,6 +74,10 @@ private:
 	/// @return vector of contact ids
 	vector<int> getRandomContactIdsWithFProb(double failureProbability);
 
+	/// @brief goes to the available contacts from the network topology and chooses their id, in case they have to be deleted
+	/// @return the ids of the chosen contacts to be deleted
+	vector<int> getContactIdsWithSpecificFProb();
+
 	/// @brief get nContacts by iteratively erasing contacts
 	/// with highest centrality
 	/// @return vector of contact ids
@@ -94,6 +100,9 @@ private:
 	// Contact Plan passed to all nodes to schedule Contacts
 	// and get transmission rates
 	ContactPlan contactTopology_;
+
+	//Observer used to collect and evaluate all the necessary metrics
+	MetricCollector metricCollector_;
 
 	// specify if there are ion nodes in the simulation
 	bool ionNodes_;

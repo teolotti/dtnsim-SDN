@@ -1,0 +1,372 @@
+version 2
+run General-27-20220325-13:19:54-3099206
+attr configname General
+attr datetime 20220325-13:19:54
+attr experiment General
+attr inifile sim.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network src.dtnsim
+attr processid 3099206
+attr repetition 27
+attr replication #27
+attr resultdir results
+attr runnumber 27
+attr seedset 27
+param dtnsim.nodesNumber 15
+param dtnsim.node[1..3].icon "\"satellite\""
+param dtnsim.node[*].fault.enable false
+param dtnsim.node[*].fault.faultSeed 27*10
+param dtnsim.node[*].fault.meanTTF 20s
+param dtnsim.node[*].fault.meanTTR 5s
+param dtnsim.node[*].dtn.routingType "\"routeListType:allPaths-initial+anchor,volumeAware:allContacts,extensionBlock:on,contactPlan:local\""
+param dtnsim.node[*].dtn.printRoutingDebug true
+param dtnsim.central.contactsFile "\"contactPlan/contactPlan.txt\""
+param dtnsim.central.useSpecificFailureProbabilities true
+param dtnsim.central.repetition 27
+param dtnsim.node[*].dtn.saveBundleMap true
+param dtnsim.central.saveTopology true
+param dtnsim.central.saveFlows true
+param dtnsim.central.failureProbability -1
+param dtnsim.central.mode 2
+param dtnsim.central.useUncertainty true
+param dtnsim.node[*].dtn.routing "\"uncertainUniboCgr\""
+param dtnsim.central.collectorPath "\"/home/simon/Schreibtisch/experiment_results/simulation_8\""
+param dtnsim.node[4].app.enable true
+param dtnsim.node[4].app.returnToSender false
+param dtnsim.node[4].app.bundlesNumber "\"1\""
+param dtnsim.node[4].app.start "\"55\""
+param dtnsim.node[4].app.destinationEid "\"9\""
+param dtnsim.node[4].app.size "\"0\""
+param dtnsim.node[11].app.enable true
+param dtnsim.node[11].app.returnToSender false
+param dtnsim.node[11].app.bundlesNumber "\"1\""
+param dtnsim.node[11].app.start "\"95\""
+param dtnsim.node[11].app.destinationEid "\"2\""
+param dtnsim.node[11].app.size "\"0\""
+param dtnsim.node[10].app.enable true
+param dtnsim.node[10].app.returnToSender false
+param dtnsim.node[10].app.bundlesNumber "\"1, 1\""
+param dtnsim.node[10].app.start "\"65, 140\""
+param dtnsim.node[10].app.destinationEid "\"3, 6\""
+param dtnsim.node[10].app.size "\"0, 0\""
+param dtnsim.node[3].app.enable true
+param dtnsim.node[3].app.returnToSender false
+param dtnsim.node[3].app.bundlesNumber "\"1\""
+param dtnsim.node[3].app.start "\"25\""
+param dtnsim.node[3].app.destinationEid "\"7\""
+param dtnsim.node[3].app.size "\"0\""
+param dtnsim.node[9].app.enable true
+param dtnsim.node[9].app.returnToSender false
+param dtnsim.node[9].app.bundlesNumber "\"1\""
+param dtnsim.node[9].app.start "\"115\""
+param dtnsim.node[9].app.destinationEid "\"4\""
+param dtnsim.node[9].app.size "\"0\""
+param dtnsim.node[5].app.enable true
+param dtnsim.node[5].app.returnToSender false
+param dtnsim.node[5].app.bundlesNumber "\"1\""
+param dtnsim.node[5].app.start "\"125\""
+param dtnsim.node[5].app.destinationEid "\"12\""
+param dtnsim.node[5].app.size "\"0\""
+param dtnsim.node[12].app.enable true
+param dtnsim.node[12].app.returnToSender false
+param dtnsim.node[12].app.bundlesNumber "\"1\""
+param dtnsim.node[12].app.start "\"45\""
+param dtnsim.node[12].app.destinationEid "\"1\""
+param dtnsim.node[12].app.size "\"0\""
+
+vector 0 dtnsim.node[1].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 1 dtnsim.node[1].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 2 dtnsim.node[2].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 3 dtnsim.node[2].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 4 dtnsim.node[3].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 5 dtnsim.node[3].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 6 dtnsim.node[4].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 7 dtnsim.node[4].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 8 dtnsim.node[5].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 9 dtnsim.node[5].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 10 dtnsim.node[6].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 11 dtnsim.node[6].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 12 dtnsim.node[7].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 13 dtnsim.node[7].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 14 dtnsim.node[8].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 15 dtnsim.node[8].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 16 dtnsim.node[9].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 17 dtnsim.node[9].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 18 dtnsim.node[10].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 19 dtnsim.node[10].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 20 dtnsim.node[11].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 21 dtnsim.node[11].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 22 dtnsim.node[12].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 23 dtnsim.node[12].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 24 dtnsim.node[13].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 25 dtnsim.node[13].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 26 dtnsim.node[14].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 27 dtnsim.node[14].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 28 dtnsim.node[15].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 29 dtnsim.node[15].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 30 dtnsim.node[7].dtn dtnBundleSentToAppHopCount:vector ETV
+attr interpolationmode none
+attr source dtnBundleSentToAppHopCount
+attr title "dtnBundleSentToAppHopCount, vector"
+vector 31 dtnsim.node[9].dtn dtnBundleSentToAppHopCount:vector ETV
+attr interpolationmode none
+attr source dtnBundleSentToAppHopCount
+attr title "dtnBundleSentToAppHopCount, vector"
+vector 32 dtnsim.node[12].dtn dtnBundleSentToAppHopCount:vector ETV
+attr interpolationmode none
+attr source dtnBundleSentToAppHopCount
+attr title "dtnBundleSentToAppHopCount, vector"
+0	0	0	0
+0	67	40	1
+0	82	40	0
+0	444	190	0
+1	0	0	0
+1	67	40	0
+1	82	40	0
+1	444	190	0
+2	0	0	0
+2	44	30	1
+2	64	40	0
+2	227	80	1
+2	444	190	1
+3	0	0	0
+3	44	30	0
+3	64	40	0
+3	227	80	0
+3	444	190	0
+4	0	0	0
+4	38	25	1
+4	41	30	0
+4	444	190	0
+5	0	0	0
+5	38	25	0
+5	41	30	0
+5	444	190	0
+6	0	0	0
+6	129	55	1
+6	130	55	0
+6	444	190	0
+7	0	0	0
+7	129	55	0
+7	130	55	0
+7	444	190	0
+8	0	0	0
+8	113	45	1
+8	133	55	2
+8	136	55	1
+8	252	95	2
+8	328	125	3
+8	331	125	2
+8	420	160	3
+8	444	190	3
+9	0	0	0
+9	113	45	0
+9	133	55	0
+9	136	55	0
+9	252	95	0
+9	328	125	0
+9	331	125	0
+9	420	160	0
+9	444	190	0
+10	0	0	0
+10	139	55	1
+10	164	60	0
+10	444	190	0
+11	0	0	0
+11	139	55	0
+11	164	60	0
+11	444	190	0
+12	0	0	0
+12	444	190	0
+13	0	0	0
+13	444	190	0
+14	0	0	0
+14	177	65	1
+14	217	80	0
+14	288	115	1
+14	444	190	1
+15	0	0	0
+15	177	65	0
+15	217	80	0
+15	288	115	0
+15	444	190	0
+16	0	0	0
+16	284	115	1
+16	285	115	0
+16	444	190	0
+17	0	0	0
+17	284	115	0
+17	285	115	0
+17	444	190	0
+18	0	0	0
+18	173	65	1
+18	174	65	0
+18	372	140	1
+18	373	140	0
+18	444	190	0
+19	0	0	0
+19	173	65	0
+19	174	65	0
+19	372	140	0
+19	373	140	0
+19	444	190	0
+20	0	0	0
+20	101	45	1
+20	104	45	0
+20	242	95	1
+20	243	95	0
+20	341	125	1
+20	376	140	2
+20	378	140	1
+20	408	160	0
+20	444	190	0
+21	0	0	0
+21	101	45	0
+21	104	45	0
+21	242	95	0
+21	243	95	0
+21	341	125	0
+21	376	140	0
+21	378	140	0
+21	408	160	0
+21	444	190	0
+22	0	0	0
+22	97	45	1
+22	98	45	0
+22	444	190	0
+23	0	0	0
+23	97	45	0
+23	98	45	0
+23	444	190	0
+24	0	0	0
+24	220	80	1
+24	224	80	0
+24	444	190	0
+25	0	0	0
+25	220	80	0
+25	224	80	0
+25	444	190	0
+26	0	0	0
+26	85	40	1
+26	89	40	0
+26	444	190	0
+27	0	0	0
+27	85	40	0
+27	89	40	0
+27	444	190	0
+28	0	0	0
+28	107	45	1
+28	110	45	0
+28	246	95	1
+28	249	95	0
+28	334	125	1
+28	338	125	0
+28	411	160	1
+28	417	160	0
+28	444	190	0
+29	0	0	0
+29	107	45	0
+29	110	45	0
+29	246	95	0
+29	249	95	0
+29	334	125	0
+29	338	125	0
+29	411	160	0
+29	417	160	0
+29	444	190	0
+30	92	40	4
+31	167	60	3
+32	381	140	3
+

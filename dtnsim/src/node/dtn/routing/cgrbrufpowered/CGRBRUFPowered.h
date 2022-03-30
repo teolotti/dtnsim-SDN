@@ -9,16 +9,16 @@
 #define SRC_NODE_DTN_ROUTING_CGRBRUFPOWERED_CGRBRUFPOWERED_H_
 
 
-#include <dtn/routing/RoutingDeterministic.h>
-#include "bp/include/cgr.h"
-#include "ici/include/psm.h"
-#include "ici/include/ion.h"
-#include "dtnsim_m.h"
-#include "ionadmin.h"
-#include "bpadmin.h"
-#include <dtn/SdrStatus.h>
-#include "json.hpp"
-#include "dtnsim_m.h"
+#include <src/node/dtn/routing/RoutingDeterministic.h>
+//#include "bp/include/cgr.h"
+//#include "ici/include/psm.h"
+//#include "ici/include/ion.h"
+#include "src/dtnsim_m.h"
+//#include "ionadmin.h"
+//#include "bpadmin.h"
+#include <src/node/dtn/SdrStatus.h>
+#include "src/utils/json.hpp"
+#include "src/dtnsim_m.h"
 
 
 using namespace std;

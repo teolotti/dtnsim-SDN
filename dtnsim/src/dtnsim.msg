@@ -2,7 +2,7 @@
 
 cplusplus {{
     // Include Contact and CgrRoute structures
-    #include "CgrRoute.h"
+    #include "src/node/dtn/routing/CgrRoute.h"
     
     typedef std::list<int> intList;
     typedef std::list<CgrRoute> cgrRouteList;
@@ -61,8 +61,8 @@ message TrafficGeneratorMsg{
     int bundlesNumber;
     int destinationEid;
     int size;
-    int ttl;
-    int interval;
+    double ttl;
+    double interval;
 };
 
 message ContactMsg{

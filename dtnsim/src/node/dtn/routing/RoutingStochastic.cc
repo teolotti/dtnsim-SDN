@@ -1,12 +1,4 @@
-/*
- * RoutingStochastic.cc
- *
- *  Created on: Jul 18, 2017
- *      Author: FRaverta
- *
- */
-
-#include <RoutingStochastic.h>
+#include "src/node/dtn/routing/RoutingStochastic.h"
 
 RoutingStochastic::RoutingStochastic(int eid, SdrModel * sdr, cModule * dtn)
 	:Routing(eid,sdr)
@@ -78,6 +70,11 @@ void RoutingStochastic::successfulBundleForwarded(long bundleId, Contact * conta
 		sdr_->removeBundle(bundleId);
 		deliveredBundles_.push_back(bundleId);
 	}
+}
+
+void RoutingStochastic::updateContactPlan(Contact* c)
+{
+
 }
 
 void  RoutingStochastic::refreshForwarding(Contact * c)

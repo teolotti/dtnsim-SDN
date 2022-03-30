@@ -2,7 +2,7 @@
 #ifndef CONTACTPLANUTILS_H_
 #define CONTACTPLANUTILS_H_
 
-#include "ContactPlan.h"
+#include "src/node/dtn/ContactPlan.h"
 
 using namespace std;
 

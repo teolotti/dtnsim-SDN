@@ -5,7 +5,7 @@
  *      Author: fraverta
  */
 
-#include <cgrbrufpowered/CGRBRUFPowered.h>
+#include <src/node/dtn/routing/cgrbrufpowered/CGRBRUFPowered.h>
 
 CGRBRUFPowered::CGRBRUFPowered(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug, double probability_of_failure, int ts_duration, std::vector<int> ts_start_times, int numOfNodes, string pathPrefix, string pathPosfix) :
 		RoutingDeterministic(eid, sdr, contactPlan)
@@ -1031,3 +1031,4 @@ int CGRBRUFPowered::get_ts_for_contact(Contact * c){
 //
 //	return route_successful_probability;
 //}
+

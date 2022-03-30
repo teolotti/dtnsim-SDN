@@ -2,10 +2,11 @@
 #ifndef SRC_NODE_DTN_ROUTING_CGRROUTE_H_
 #define SRC_NODE_DTN_ROUTING_CGRROUTE_H_
 
-#include <dtn/Contact.h>
+#include <src/node/dtn/Contact.h>
 #include <vector>
 
 using namespace std;
+
 
 #define NO_ROUTE_FOUND (-1)
 #define EMPTY_ROUTE (-2)

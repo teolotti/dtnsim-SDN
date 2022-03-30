@@ -1,11 +1,4 @@
-/*
- * RoutingCgrModelYen.cpp
- *
- *  Created on: Jan 24, 2017
- *      Author: juanfraire
- */
-
-#include <dtn/routing/RoutingCgrModelYen.h>
+#include "src/node/dtn/routing/RoutingCgrModelYen.h"
 
 RoutingCgrModelYen::RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug)
 	: RoutingDeterministic(eid, sdr, contactPlan)

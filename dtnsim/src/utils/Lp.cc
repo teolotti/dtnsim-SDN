@@ -894,4 +894,3 @@ ContactPlan* Lp::getContactPlan()
 
 #endif /* USE_BOOST_LIBRARIES */
 #endif /* USE_CPLEX_LIBRARY */
-

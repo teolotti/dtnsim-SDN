@@ -1,3 +1,3 @@
-package dtnsim;
+package src;
 
 @license(LGPL);

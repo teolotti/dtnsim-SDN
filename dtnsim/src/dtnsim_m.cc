@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.1 from dtnsim.msg.
+// Generated file, do not edit! Created by nedtool 5.6 from src/dtnsim.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -944,22 +944,22 @@ void TrafficGeneratorMsg::setSize(int size)
     this->size = size;
 }
 
-int TrafficGeneratorMsg::getTtl() const
+double TrafficGeneratorMsg::getTtl() const
 {
     return this->ttl;
 }
 
-void TrafficGeneratorMsg::setTtl(int ttl)
+void TrafficGeneratorMsg::setTtl(double ttl)
 {
     this->ttl = ttl;
 }
 
-int TrafficGeneratorMsg::getInterval() const
+double TrafficGeneratorMsg::getInterval() const
 {
     return this->interval;
 }
 
-void TrafficGeneratorMsg::setInterval(int interval)
+void TrafficGeneratorMsg::setInterval(double interval)
 {
     this->interval = interval;
 }
@@ -1092,8 +1092,8 @@ const char *TrafficGeneratorMsgDescriptor::getFieldTypeString(int field) const
         "int",
         "int",
         "int",
-        "int",
-        "int",
+        "double",
+        "double",
     };
     return (field>=0 && field<5) ? fieldTypeStrings[field] : nullptr;
 }
@@ -1165,8 +1165,8 @@ std::string TrafficGeneratorMsgDescriptor::getFieldValueAsString(void *object, i
         case 0: return long2string(pp->getBundlesNumber());
         case 1: return long2string(pp->getDestinationEid());
         case 2: return long2string(pp->getSize());
-        case 3: return long2string(pp->getTtl());
-        case 4: return long2string(pp->getInterval());
+        case 3: return double2string(pp->getTtl());
+        case 4: return double2string(pp->getInterval());
         default: return "";
     }
 }
@@ -1184,8 +1184,8 @@ bool TrafficGeneratorMsgDescriptor::setFieldValueAsString(void *object, int fiel
         case 0: pp->setBundlesNumber(string2long(value)); return true;
         case 1: pp->setDestinationEid(string2long(value)); return true;
         case 2: pp->setSize(string2long(value)); return true;
-        case 3: pp->setTtl(string2long(value)); return true;
-        case 4: pp->setInterval(string2long(value)); return true;
+        case 3: pp->setTtl(string2double(value)); return true;
+        case 4: pp->setInterval(string2double(value)); return true;
         default: return false;
     }
 }

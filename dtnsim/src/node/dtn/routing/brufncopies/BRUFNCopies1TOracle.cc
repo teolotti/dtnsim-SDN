@@ -5,7 +5,7 @@
  *      Author: fraverta
  */
 
-#include <brufncopies/BRUFNCopies1TOracle.h>
+#include <src/node/dtn/routing/brufncopies/BRUFNCopies1TOracle.h>
 
 void from_json(const json& j, Action& a) {
     j.at("copies").get_to(a.copies_);
@@ -163,6 +163,4 @@ void BRUFNCopies1TOracle::printEstado()
 		cout<<" " << *it;
 	cout<<" ]";
 }
-
-
 

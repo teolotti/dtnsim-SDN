@@ -5,8 +5,8 @@
 #include <vector>
 #include <sstream>
 
-#include "MsgTypes.h"
-#include "dtnsim_m.h"
+#include "src/node/MsgTypes.h"
+#include "src/dtnsim_m.h"
 
 using namespace omnetpp;
 using namespace std;

@@ -13,8 +13,8 @@
 #include <tuple>
 #include <fstream>
 #include <numeric>
-#include "json.hpp"
-#include "dtnsim_m.h"
+#include "src/utils/json.hpp"
+#include "src/dtnsim_m.h"
 
 
 using namespace std;

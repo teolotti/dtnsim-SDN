@@ -1,5 +1,3 @@
-#include "Config.h"
-
 #ifdef USE_BOOST_LIBRARIES
 
 #ifndef TOPOLOGYUTILS_H_
