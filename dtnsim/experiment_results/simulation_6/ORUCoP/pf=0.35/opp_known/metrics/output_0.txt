@@ -1,0 +1,68 @@
+The bundles with the following ids have been sent: 
+206(1 to 11), 214(3 to 10), 215(4 to 6), 216(7 to 9), 232(12 to 4), 233(12 to 5), 281(8 to 1), 298(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(206: 60.000000), (214: 15.000000), (215: 55.000000), (216: 25.000000), (298: 0.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(206: 6), (214: 7), (215: 9), (216: 7), (232: 13), (233: 5), (281: 6), (298: 6), 
+--------------------
+Overall, the computation required 16 calls to RUCoP, which took 236 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 206: (to: 13, time: 40.000000), (to: 13, time: 40.000000), 
+Bundle 214: (to: 13, time: 40.000000), (to: 13, time: 40.000000), 
+Bundle 232: (to: 2, time: 40.000000), (to: 2, time: 40.000000), 
+Bundle 233: (to: 2, time: 40.000000), 
+Node 2: 
+Bundle 214: (to: 1, time: 25.000000), (to: 1, time: 25.000000), 
+Bundle 232: (to: 6, time: 50.000000), 
+Node 3: 
+Bundle 214: (to: 2, time: 25.000000), (to: 2, time: 25.000000), 
+Node 4: 
+Bundle 215: (to: 7, time: 25.000000), (to: 14, time: 40.000000), (to: 14, time: 40.000000), 
+Bundle 216: (to: 14, time: 40.000000), 
+Bundle 281: (to: 14, time: 45.000000), (to: 14, time: 45.000000), 
+Bundle 298: (to: 3, time: 55.000000), 
+Node 5: 
+Bundle 215: (to: 6, time: 80.000000), (to: 6, time: 80.000000), 
+Bundle 298: (to: 14, time: 55.000000), 
+Node 6: 
+Bundle 232: (to: 15, time: 80.000000), 
+Node 7: 
+Bundle 215: (to: 8, time: 25.000000), 
+Bundle 216: (to: 8, time: 25.000000), (to: 11, time: 25.000000), 
+Node 8: 
+Bundle 215: (to: 4, time: 40.000000), 
+Bundle 216: (to: 4, time: 40.000000), 
+Bundle 281: (to: 4, time: 45.000000), (to: 4, time: 45.000000), 
+Node 9: 
+Bundle 298: (to: 5, time: 55.000000), (to: 10, time: 55.000000), 
+Node 10: 
+Bundle 206: (to: 11, time: 60.000000), (to: 11, time: 60.000000), 
+Bundle 216: (to: 9, time: 50.000000), 
+Bundle 232: (to: 13, time: 40.000000), (to: 13, time: 40.000000), 
+Bundle 233: (to: 13, time: 40.000000), 
+Bundle 298: (to: 7, time: 55.000000), 
+Node 11: 
+Bundle 216: (to: 10, time: 30.000000), 
+Bundle 232: (to: 10, time: 35.000000), (to: 10, time: 35.000000), 
+Bundle 233: (to: 10, time: 35.000000), 
+Node 12: 
+Bundle 232: (to: 11, time: 35.000000), (to: 11, time: 35.000000), 
+Bundle 233: (to: 11, time: 35.000000), 
+Node 13: 
+Bundle 206: (to: 10, time: 40.000000), (to: 10, time: 40.000000), 
+Bundle 214: (to: 10, time: 40.000000), 
+Bundle 232: (to: 1, time: 40.000000), (to: 1, time: 40.000000), 
+Bundle 233: (to: 1, time: 40.000000), 
+Node 14: 
+Bundle 215: (to: 5, time: 40.000000), (to: 5, time: 40.000000), 
+Bundle 216: (to: 5, time: 40.000000), 
+Bundle 281: (to: 5, time: 45.000000), (to: 5, time: 45.000000), 
+Bundle 298: (to: 4, time: 55.000000), 
+Node 15: 
+Bundle 232: (to: 12, time: 80.000000), 

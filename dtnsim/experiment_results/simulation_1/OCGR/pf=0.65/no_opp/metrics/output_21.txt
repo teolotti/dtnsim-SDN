@@ -1,0 +1,41 @@
+The bundles with the following ids have been sent: 
+168(10 to 6), 170(1 to 11), 174(1 to 6), 175(5 to 10), 178(4 to 1), 179(9 to 12), 186(3 to 9), 188(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+
+--------------------
+That means, that overall 0 (0/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(168: 1), (170: 2), (174: 1), (175: 1), (178: 1), (179: 3), (186: 3), (188: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 22 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 170: (to: 3, time: 20.000000), (to: 3, time: 50.000000), 
+Bundle 174: (to: 3, time: 50.000000), 
+Node 2: 
+Node 3: 
+Bundle 186: (to: 4, time: 60.000000), (to: 6, time: 100.000000), 
+Node 4: 
+Bundle 178: (to: 5, time: 70.000000), 
+Bundle 179: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 175: (to: 4, time: 30.000000), 
+Node 6: 
+Bundle 186: (to: 5, time: 100.000000), 
+Bundle 188: (to: 1, time: 110.000000), 
+Node 7: 
+Node 8: 
+Bundle 179: (to: 4, time: 60.000000), 
+Node 9: 
+Bundle 179: (to: 8, time: 50.000000), 
+Node 10: 
+Bundle 168: (to: 4, time: 0.000000), 
+Node 11: 
+Node 12: 
+Bundle 188: (to: 6, time: 110.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

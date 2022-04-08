@@ -1,0 +1,45 @@
+The bundles with the following ids have been sent: 
+572(1 to 11), 577(3 to 10), 578(4 to 6), 579(7 to 9), 584(12 to 4), 585(12 to 5), 590(8 to 1), 598(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+
+--------------------
+That means, that overall 0 (0/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(572: 2), (577: 3), (578: 3), (579: 3), (584: 3), (585: 1), (590: 1), (598: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 26 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 572: (to: 2, time: 40.000000), 
+Bundle 577: (to: 5, time: 30.000000), 
+Node 2: 
+Bundle 572: (to: 6, time: 50.000000), 
+Bundle 577: (to: 1, time: 20.000000), 
+Bundle 578: (to: 6, time: 50.000000), 
+Node 3: 
+Bundle 577: (to: 2, time: 20.000000), 
+Bundle 578: (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 578: (to: 3, time: 50.000000), 
+Node 5: 
+Node 6: 
+Bundle 579: (to: 9, time: 70.000000), 
+Node 7: 
+Bundle 579: (to: 11, time: 20.000000), (to: 6, time: 70.000000), 
+Node 8: 
+Bundle 590: (to: 4, time: 40.000000), 
+Node 9: 
+Bundle 598: (to: 10, time: 50.000000), 
+Node 10: 
+Bundle 598: (to: 7, time: 50.000000), 
+Node 11: 
+Bundle 584: (to: 7, time: 40.000000), 
+Node 12: 
+Bundle 584: (to: 11, time: 30.000000), (to: 11, time: 40.000000), 
+Bundle 585: (to: 11, time: 30.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

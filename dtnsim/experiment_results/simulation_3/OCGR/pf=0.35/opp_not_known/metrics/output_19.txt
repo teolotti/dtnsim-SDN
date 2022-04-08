@@ -1,0 +1,58 @@
+The bundles with the following ids have been sent: 
+2073(7 to 5), 2075(12 to 5), 2093(8 to 4), 2096(8 to 3), 2097(10 to 7), 2133(3 to 7), 2187(11 to 1), 2190(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(2075: 10.000000), (2096: 130.000000), (2187: 20.000000), (2190: 0.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(2073: 5), (2075: 3), (2093: 2), (2096: 5), (2097: 1), (2133: 4), (2187: 3), (2190: 6), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 46 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 2073: (to: 9, time: 20.000000), 
+Bundle 2190: (to: 9, time: 80.000000), 
+Node 2: 
+Bundle 2093: (to: 12, time: 60.000000), 
+Bundle 2096: (to: 12, time: 60.000000), 
+Node 3: 
+Bundle 2133: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 2190: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Bundle 2073: (to: 5, time: 40.000000), 
+Node 7: 
+Bundle 2073: (to: 1, time: 0.000000), 
+Bundle 2187: (to: 1, time: 100.000000), 
+Bundle 2190: (to: 15, time: 80.000000), 
+Node 8: 
+Bundle 2093: (to: 2, time: 40.000000), 
+Bundle 2096: (to: 2, time: 40.000000), 
+Node 9: 
+Bundle 2073: (to: 14, time: 40.000000), 
+Bundle 2190: (to: 7, time: 80.000000), 
+Node 10: 
+Bundle 2075: (to: 5, time: 20.000000), 
+Bundle 2096: (to: 3, time: 160.000000), 
+Bundle 2097: (to: 3, time: 40.000000), 
+Bundle 2133: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 2187: (to: 15, time: 80.000000), 
+Bundle 2190: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 2075: (to: 13, time: 0.000000), 
+Bundle 2096: (to: 13, time: 160.000000), 
+Bundle 2133: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 2075: (to: 10, time: 0.000000), 
+Bundle 2096: (to: 10, time: 160.000000), 
+Bundle 2133: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 2073: (to: 6, time: 40.000000), 
+Node 15: 
+Bundle 2187: (to: 7, time: 80.000000), 
+Bundle 2190: (to: 11, time: 80.000000), 

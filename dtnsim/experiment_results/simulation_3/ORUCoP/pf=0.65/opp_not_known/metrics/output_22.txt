@@ -1,0 +1,44 @@
+The bundles with the following ids have been sent: 
+1031(7 to 5), 1033(12 to 5), 1050(8 to 4), 1052(8 to 3), 1053(10 to 7), 1089(3 to 7), 1135(11 to 1), 1141(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+
+--------------------
+That means, that overall 0 (0/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1031: 4), (1033: 4), (1050: 1), (1052: 1), (1089: 4), (1135: 4), (1141: 1), 
+--------------------
+Overall, the computation required 50 calls to RUCoP, which took 181 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 1031: (to: 10, time: 40.000000), 
+Bundle 1089: (to: 10, time: 45.000000), 
+Node 4: 
+Bundle 1141: (to: 1, time: 85.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 1031: (to: 15, time: 40.000000), 
+Node 8: 
+Bundle 1050: (to: 2, time: 100.000000), 
+Bundle 1052: (to: 2, time: 100.000000), 
+Node 9: 
+Node 10: 
+Bundle 1089: (to: 13, time: 45.000000), 
+Node 11: 
+Bundle 1031: (to: 3, time: 40.000000), 
+Bundle 1135: (to: 15, time: 80.000000), (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 1033: (to: 13, time: 10.000000), (to: 13, time: 10.000000), 
+Bundle 1089: (to: 15, time: 45.000000), 
+Node 13: 
+Bundle 1033: (to: 10, time: 10.000000), (to: 10, time: 10.000000), 
+Bundle 1089: (to: 12, time: 45.000000), 
+Node 14: 
+Node 15: 
+Bundle 1031: (to: 11, time: 40.000000), 
+Bundle 1135: (to: 7, time: 80.000000), (to: 7, time: 80.000000), 

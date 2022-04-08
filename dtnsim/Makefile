@@ -82,7 +82,6 @@ OBJS = \
     $O/src/node/fault/Fault.o \
     $O/src/node/graphics/Graphics.o \
     $O/src/utils/ContactPlanUtils.o \
-    $O/src/utils/ContactUtils.o \
     $O/src/utils/Lp.o \
     $O/src/utils/LpUtils.o \
     $O/src/utils/MetricCollector.o \

@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+841(2 to 10), 842(8 to 3), 846(3 to 11), 847(12 to 10), 852(10 to 5), 873(11 to 6), 876(1 to 9), 888(7 to 12), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(841: 55.000000), (873: 35.000000), (876: 25.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(841: 4), (842: 2), (846: 6), (847: 3), (852: 2), (873: 5), (876: 5), (888: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 34 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 876: (to: 4, time: 50.000000), 
+Node 2: 
+Bundle 841: (to: 1, time: 30.000000), (to: 13, time: 40.000000), 
+Bundle 846: (to: 13, time: 40.000000), 
+Node 3: 
+Bundle 846: (to: 2, time: 20.000000), 
+Node 4: 
+Bundle 847: (to: 8, time: 50.000000), 
+Bundle 876: (to: 15, time: 40.000000), 
+Node 5: 
+Bundle 873: (to: 6, time: 80.000000), 
+Node 6: 
+Node 7: 
+Bundle 888: (to: 10, time: 70.000000), 
+Node 8: 
+Bundle 841: (to: 10, time: 70.000000), 
+Bundle 842: (to: 9, time: 10.000000), 
+Bundle 846: (to: 11, time: 60.000000), (to: 10, time: 70.000000), 
+Node 9: 
+Bundle 842: (to: 6, time: 20.000000), 
+Bundle 873: (to: 5, time: 80.000000), 
+Node 10: 
+Bundle 846: (to: 11, time: 70.000000), 
+Bundle 852: (to: 7, time: 30.000000), (to: 11, time: 70.000000), 
+Bundle 888: (to: 11, time: 70.000000), 
+Node 11: 
+Bundle 873: (to: 12, time: 40.000000), 
+Node 12: 
+Bundle 847: (to: 15, time: 40.000000), 
+Bundle 873: (to: 9, time: 50.000000), (to: 9, time: 80.000000), 
+Bundle 876: (to: 9, time: 50.000000), (to: 9, time: 80.000000), 
+Node 13: 
+Bundle 841: (to: 8, time: 40.000000), 
+Bundle 846: (to: 8, time: 40.000000), 
+Node 14: 
+Node 15: 
+Bundle 847: (to: 4, time: 40.000000), 
+Bundle 876: (to: 12, time: 40.000000), 

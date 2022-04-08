@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+1156(1 to 12), 1158(6 to 3), 1177(8 to 2), 1184(4 to 5), 1193(2 to 4), 1194(9 to 10), 1195(12 to 11), 1203(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1156: 25.000000), (1184: 5.000000), (1194: 20.000000), (1195: 20.000000), (1203: 10.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1156: 2), (1158: 3), (1177: 3), (1184: 4), (1193: 2), (1194: 4), (1195: 3), (1203: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 26 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1156: (to: 5, time: 40.000000), 
+Bundle 1194: (to: 4, time: 80.000000), 
+Node 2: 
+Bundle 1193: (to: 6, time: 60.000000), 
+Node 3: 
+Node 4: 
+Bundle 1184: (to: 8, time: 40.000000), 
+Bundle 1194: (to: 10, time: 80.000000), 
+Node 5: 
+Bundle 1156: (to: 12, time: 40.000000), 
+Bundle 1194: (to: 1, time: 80.000000), 
+Bundle 1195: (to: 11, time: 80.000000), 
+Bundle 1203: (to: 11, time: 80.000000), 
+Node 6: 
+Bundle 1158: (to: 13, time: 40.000000), 
+Bundle 1193: (to: 10, time: 60.000000), 
+Node 7: 
+Bundle 1158: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 1177: (to: 14, time: 40.000000), 
+Bundle 1184: (to: 12, time: 60.000000), 
+Node 9: 
+Bundle 1184: (to: 5, time: 60.000000), 
+Bundle 1194: (to: 5, time: 60.000000), 
+Bundle 1195: (to: 5, time: 60.000000), 
+Node 10: 
+Bundle 1177: (to: 2, time: 100.000000), 
+Node 11: 
+Bundle 1203: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 1184: (to: 9, time: 60.000000), 
+Bundle 1195: (to: 9, time: 60.000000), 
+Node 13: 
+Bundle 1158: (to: 7, time: 40.000000), 
+Node 14: 
+Bundle 1177: (to: 10, time: 40.000000), 
+Node 15: 

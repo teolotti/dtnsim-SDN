@@ -44,7 +44,6 @@ out/gcc-debug//src/node/dtn/routing/RoutingUniboCgr.o: \
  src/node/dtn/routing/RoutingStochastic.h \
  src/node/dtn/routing/RoutingSprayAndWait.h \
  src/node/dtn/routing/RoutingCgrModel350_Probabilistic.h \
- src/node/dtn/routing/RoutingUniboCgr.h \
  src/node/dtn/routing/RoutingUncertainUniboCgr.h \
  src/node/dtn/routing/RoutingBRUF1T.h \
  src/node/dtn/routing/RoutingORUCOP.h \
@@ -110,7 +109,6 @@ src/node/dtn/routing/RoutingEpidemic.h:
 src/node/dtn/routing/RoutingStochastic.h:
 src/node/dtn/routing/RoutingSprayAndWait.h:
 src/node/dtn/routing/RoutingCgrModel350_Probabilistic.h:
-src/node/dtn/routing/RoutingUniboCgr.h:
 src/node/dtn/routing/RoutingUncertainUniboCgr.h:
 src/node/dtn/routing/RoutingBRUF1T.h:
 src/node/dtn/routing/RoutingORUCOP.h:

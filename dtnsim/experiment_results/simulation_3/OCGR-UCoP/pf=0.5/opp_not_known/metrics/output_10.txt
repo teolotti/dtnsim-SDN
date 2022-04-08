@@ -1,0 +1,54 @@
+The bundles with the following ids have been sent: 
+239(7 to 5), 240(12 to 5), 254(8 to 4), 255(8 to 3), 256(10 to 7), 296(3 to 7), 349(11 to 1), 352(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(240: 50.000000), (256: 10.000000), (296: 0.000000), (349: 20.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(239: 4), (240: 4), (254: 3), (255: 2), (256: 6), (296: 6), (349: 3), (352: 1), 
+--------------------
+Overall, the computation required 16 calls to RUCoP, which took 94 seconds and 24 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Bundle 254: (to: 12, time: 60.000000), (to: 3, time: 120.000000), 
+Bundle 255: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 296: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 352: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 239: (to: 1, time: 0.000000), (to: 15, time: 40.000000), 
+Bundle 349: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 254: (to: 2, time: 40.000000), 
+Bundle 255: (to: 2, time: 40.000000), 
+Node 9: 
+Node 10: 
+Bundle 240: (to: 5, time: 20.000000), (to: 5, time: 60.000000), 
+Bundle 256: (to: 5, time: 20.000000), (to: 13, time: 40.000000), 
+Bundle 296: (to: 13, time: 45.000000), 
+Node 11: 
+Bundle 239: (to: 3, time: 40.000000), 
+Bundle 256: (to: 15, time: 40.000000), 
+Bundle 296: (to: 15, time: 45.000000), 
+Bundle 349: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 240: (to: 13, time: 0.000000), 
+Bundle 256: (to: 11, time: 40.000000), 
+Bundle 296: (to: 11, time: 45.000000), 
+Node 13: 
+Bundle 240: (to: 10, time: 10.000000), 
+Bundle 256: (to: 12, time: 40.000000), 
+Bundle 296: (to: 12, time: 45.000000), 
+Node 14: 
+Node 15: 
+Bundle 239: (to: 11, time: 40.000000), 
+Bundle 256: (to: 7, time: 40.000000), 
+Bundle 296: (to: 7, time: 45.000000), 
+Bundle 349: (to: 7, time: 80.000000), 

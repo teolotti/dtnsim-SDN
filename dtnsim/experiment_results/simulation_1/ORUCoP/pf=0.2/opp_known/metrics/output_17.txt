@@ -1,0 +1,55 @@
+The bundles with the following ids have been sent: 
+877(10 to 6), 881(1 to 11), 889(1 to 6), 890(5 to 10), 910(4 to 1), 914(9 to 12), 934(3 to 9), 963(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(881: 35.000000), (889: 25.000000), (914: 55.000000), (934: 15.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(881: 6), (889: 2), (890: 4), (910: 5), (914: 6), (934: 7), (963: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 881: (to: 3, time: 25.000000), 
+Bundle 889: (to: 2, time: 35.000000), 
+Node 2: 
+Bundle 889: (to: 6, time: 60.000000), 
+Node 3: 
+Bundle 881: (to: 6, time: 30.000000), (to: 4, time: 60.000000), 
+Bundle 934: (to: 4, time: 65.000000), (to: 14, time: 80.000000), 
+Node 4: 
+Bundle 881: (to: 11, time: 60.000000), 
+Bundle 910: (to: 13, time: 50.000000), (to: 5, time: 70.000000), 
+Bundle 934: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 890: (to: 15, time: 40.000000), (to: 15, time: 55.000000), 
+Bundle 910: (to: 12, time: 110.000000), 
+Bundle 914: (to: 6, time: 60.000000), (to: 12, time: 110.000000), 
+Bundle 934: (to: 15, time: 80.000000), 
+Bundle 963: (to: 12, time: 110.000000), 
+Node 6: 
+Bundle 881: (to: 14, time: 40.000000), 
+Bundle 934: (to: 5, time: 80.000000), 
+Node 7: 
+Node 8: 
+Node 9: 
+Bundle 914: (to: 15, time: 55.000000), (to: 15, time: 55.000000), 
+Bundle 963: (to: 15, time: 85.000000), 
+Node 10: 
+Node 11: 
+Bundle 910: (to: 10, time: 70.000000), 
+Node 12: 
+Bundle 963: (to: 9, time: 85.000000), 
+Node 13: 
+Bundle 910: (to: 11, time: 50.000000), 
+Node 14: 
+Bundle 881: (to: 3, time: 40.000000), 
+Bundle 934: (to: 6, time: 80.000000), 
+Node 15: 
+Bundle 890: (to: 9, time: 55.000000), (to: 9, time: 55.000000), 
+Bundle 914: (to: 5, time: 55.000000), (to: 5, time: 55.000000), 
+Bundle 934: (to: 9, time: 80.000000), 
+Bundle 963: (to: 5, time: 85.000000), 

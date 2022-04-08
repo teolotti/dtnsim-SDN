@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+1173(10 to 6), 1179(1 to 11), 1187(1 to 6), 1188(5 to 10), 1204(4 to 1), 1207(9 to 12), 1221(3 to 9), 1244(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1173: 45.000000), (1179: 35.000000), (1188: 35.000000), (1204: 60.000000), (1207: 0.000000), (1221: 15.000000), (1244: 25.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1173: 4), (1179: 3), (1187: 1), (1188: 3), (1204: 4), (1207: 3), (1221: 4), (1244: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 25 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1179: (to: 3, time: 20.000000), 
+Bundle 1187: (to: 3, time: 50.000000), 
+Node 2: 
+Node 3: 
+Bundle 1179: (to: 4, time: 60.000000), 
+Bundle 1221: (to: 4, time: 60.000000), 
+Node 4: 
+Bundle 1173: (to: 5, time: 30.000000), 
+Bundle 1179: (to: 11, time: 60.000000), 
+Bundle 1188: (to: 11, time: 60.000000), 
+Bundle 1204: (to: 5, time: 70.000000), 
+Bundle 1221: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 1173: (to: 12, time: 50.000000), 
+Bundle 1188: (to: 4, time: 30.000000), 
+Bundle 1204: (to: 12, time: 110.000000), 
+Bundle 1207: (to: 12, time: 50.000000), 
+Bundle 1221: (to: 15, time: 80.000000), 
+Node 6: 
+Bundle 1204: (to: 1, time: 110.000000), 
+Bundle 1244: (to: 1, time: 110.000000), 
+Node 7: 
+Node 8: 
+Node 9: 
+Bundle 1207: (to: 15, time: 40.000000), 
+Node 10: 
+Bundle 1173: (to: 4, time: 0.000000), 
+Node 11: 
+Bundle 1188: (to: 10, time: 70.000000), 
+Node 12: 
+Bundle 1173: (to: 6, time: 50.000000), 
+Bundle 1204: (to: 6, time: 110.000000), 
+Bundle 1244: (to: 6, time: 110.000000), 
+Node 13: 
+Node 14: 
+Node 15: 
+Bundle 1207: (to: 5, time: 40.000000), 
+Bundle 1221: (to: 9, time: 80.000000), 

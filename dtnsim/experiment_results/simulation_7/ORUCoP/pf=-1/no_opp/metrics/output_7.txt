@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+324(2 to 10), 325(8 to 3), 335(3 to 11), 336(12 to 10), 348(10 to 5), 354(11 to 6), 359(1 to 9), 374(7 to 12), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(325: 25.000000), (335: 75.000000), (348: 35.000000), (354: 35.000000), (359: 35.000000), (374: 5.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(325: 5), (335: 9), (348: 6), (354: 5), (359: 6), (374: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 359: (to: 5, time: 80.000000), (to: 5, time: 80.000000), 
+Node 2: 
+Bundle 325: (to: 3, time: 40.000000), 
+Bundle 335: (to: 6, time: 25.000000), 
+Node 3: 
+Bundle 335: (to: 2, time: 25.000000), (to: 6, time: 80.000000), 
+Node 4: 
+Node 5: 
+Bundle 325: (to: 2, time: 30.000000), 
+Bundle 335: (to: 9, time: 90.000000), 
+Bundle 354: (to: 6, time: 80.000000), 
+Bundle 359: (to: 6, time: 80.000000), (to: 6, time: 80.000000), 
+Node 6: 
+Bundle 335: (to: 8, time: 30.000000), (to: 9, time: 90.000000), 
+Bundle 359: (to: 9, time: 90.000000), (to: 9, time: 90.000000), 
+Node 7: 
+Bundle 348: (to: 8, time: 70.000000), 
+Bundle 374: (to: 8, time: 75.000000), 
+Node 8: 
+Bundle 325: (to: 9, time: 15.000000), (to: 5, time: 20.000000), 
+Bundle 335: (to: 5, time: 70.000000), 
+Bundle 348: (to: 5, time: 70.000000), 
+Bundle 354: (to: 5, time: 70.000000), 
+Bundle 374: (to: 12, time: 80.000000), 
+Node 9: 
+Bundle 325: (to: 6, time: 20.000000), 
+Bundle 335: (to: 11, time: 100.000000), (to: 11, time: 100.000000), 
+Node 10: 
+Bundle 348: (to: 7, time: 35.000000), (to: 11, time: 70.000000), 
+Node 11: 
+Bundle 348: (to: 12, time: 70.000000), 
+Bundle 354: (to: 12, time: 45.000000), (to: 8, time: 60.000000), 
+Node 12: 
+Bundle 348: (to: 9, time: 80.000000), 
+Bundle 354: (to: 9, time: 50.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

@@ -1,0 +1,56 @@
+The bundles with the following ids have been sent: 
+502(1 to 11), 510(3 to 10), 511(4 to 6), 512(7 to 9), 522(12 to 4), 523(12 to 5), 529(8 to 1), 544(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(510: 35.000000), (511: 45.000000), (512: 25.000000), (522: 85.000000), (529: 15.000000), (544: 25.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(502: 4), (510: 4), (511: 6), (512: 3), (522: 2), (523: 4), (529: 4), (544: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 25 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 502: (to: 5, time: 0.000000), 
+Node 2: 
+Bundle 510: (to: 6, time: 50.000000), 
+Bundle 529: (to: 1, time: 60.000000), 
+Node 3: 
+Bundle 510: (to: 2, time: 20.000000), (to: 2, time: 50.000000), 
+Bundle 529: (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 511: (to: 7, time: 20.000000), 
+Bundle 529: (to: 3, time: 50.000000), 
+Node 5: 
+Bundle 502: (to: 6, time: 0.000000), 
+Node 6: 
+Bundle 502: (to: 10, time: 60.000000), 
+Bundle 510: (to: 10, time: 60.000000), 
+Bundle 544: (to: 3, time: 80.000000), 
+Node 7: 
+Bundle 511: (to: 11, time: 25.000000), 
+Bundle 512: (to: 11, time: 20.000000), 
+Node 8: 
+Bundle 522: (to: 4, time: 120.000000), 
+Bundle 529: (to: 4, time: 40.000000), 
+Node 9: 
+Bundle 511: (to: 5, time: 50.000000), (to: 6, time: 70.000000), 
+Bundle 523: (to: 5, time: 50.000000), 
+Bundle 544: (to: 5, time: 50.000000), (to: 6, time: 70.000000), 
+Node 10: 
+Bundle 502: (to: 11, time: 60.000000), 
+Bundle 511: (to: 9, time: 50.000000), 
+Bundle 512: (to: 9, time: 50.000000), 
+Bundle 523: (to: 9, time: 50.000000), 
+Node 11: 
+Bundle 511: (to: 10, time: 30.000000), 
+Bundle 512: (to: 10, time: 30.000000), 
+Bundle 523: (to: 10, time: 35.000000), 
+Node 12: 
+Bundle 522: (to: 8, time: 100.000000), 
+Bundle 523: (to: 11, time: 30.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

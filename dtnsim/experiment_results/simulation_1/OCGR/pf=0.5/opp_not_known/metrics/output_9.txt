@@ -1,0 +1,47 @@
+The bundles with the following ids have been sent: 
+1858(10 to 6), 1873(1 to 11), 1876(1 to 6), 1877(5 to 10), 1906(4 to 1), 1907(9 to 12), 1926(3 to 9), 1955(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1907: 0.000000), 
+--------------------
+That means, that overall 0.125 (1/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1858: 3), (1873: 2), (1876: 1), (1877: 4), (1906: 6), (1907: 3), (1926: 2), (1955: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 38 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1873: (to: 3, time: 20.000000), (to: 3, time: 50.000000), 
+Bundle 1876: (to: 3, time: 50.000000), 
+Node 2: 
+Node 3: 
+Bundle 1926: (to: 4, time: 60.000000), (to: 6, time: 100.000000), 
+Node 4: 
+Bundle 1858: (to: 5, time: 30.000000), (to: 5, time: 70.000000), 
+Bundle 1906: (to: 5, time: 70.000000), (to: 13, time: 80.000000), 
+Node 5: 
+Bundle 1877: (to: 4, time: 30.000000), (to: 15, time: 40.000000), 
+Bundle 1907: (to: 12, time: 50.000000), 
+Node 6: 
+Bundle 1955: (to: 1, time: 110.000000), 
+Node 7: 
+Bundle 1906: (to: 1, time: 190.000000), 
+Node 8: 
+Node 9: 
+Bundle 1877: (to: 8, time: 50.000000), 
+Bundle 1907: (to: 15, time: 40.000000), 
+Node 10: 
+Bundle 1858: (to: 4, time: 0.000000), 
+Bundle 1906: (to: 7, time: 160.000000), 
+Node 11: 
+Bundle 1906: (to: 10, time: 90.000000), 
+Node 12: 
+Bundle 1955: (to: 6, time: 110.000000), 
+Node 13: 
+Bundle 1906: (to: 11, time: 80.000000), 
+Node 14: 
+Node 15: 
+Bundle 1877: (to: 9, time: 40.000000), 
+Bundle 1907: (to: 5, time: 40.000000), 

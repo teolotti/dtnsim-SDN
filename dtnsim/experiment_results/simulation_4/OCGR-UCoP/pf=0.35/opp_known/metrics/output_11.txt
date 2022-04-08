@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+602(1 to 6), 603(6 to 10), 604(9 to 4), 612(2 to 8), 615(5 to 12), 632(7 to 12), 633(10 to 9), 636(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(604: 0.000000), (615: 95.000000), (636: 0.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(602: 3), (603: 7), (604: 3), (612: 2), (615: 4), (632: 4), (633: 3), (636: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 20 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 602: (to: 9, time: 20.000000), (to: 9, time: 80.000000), (to: 9, time: 140.000000), 
+Bundle 603: (to: 2, time: 0.000000), (to: 9, time: 20.000000), (to: 2, time: 100.000000), 
+Bundle 615: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 612: (to: 12, time: 0.000000), (to: 3, time: 20.000000), 
+Bundle 615: (to: 12, time: 120.000000), 
+Node 3: 
+Bundle 636: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 615: (to: 1, time: 80.000000), 
+Node 5: 
+Bundle 615: (to: 4, time: 20.000000), 
+Bundle 633: (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 603: (to: 14, time: 0.000000), 
+Bundle 604: (to: 4, time: 0.000000), 
+Node 7: 
+Bundle 603: (to: 1, time: 0.000000), 
+Bundle 632: (to: 15, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 603: (to: 7, time: 0.000000), 
+Bundle 604: (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 633: (to: 3, time: 40.000000), (to: 5, time: 60.000000), 
+Bundle 636: (to: 13, time: 55.000000), 
+Node 11: 
+Bundle 632: (to: 3, time: 40.000000), (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 636: (to: 8, time: 55.000000), 
+Node 13: 
+Bundle 636: (to: 12, time: 55.000000), 
+Node 14: 
+Bundle 603: (to: 9, time: 0.000000), 
+Bundle 604: (to: 6, time: 0.000000), 
+Node 15: 
+Bundle 632: (to: 11, time: 40.000000), 

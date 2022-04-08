@@ -1,0 +1,62 @@
+The bundles with the following ids have been sent: 
+672(3 to 7), 702(12 to 1), 713(4 to 9), 732(10 to 3), 782(11 to 2), 803(9 to 4), 838(5 to 12), 860(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(672: 25.000000), (702: 35.000000), (713: 95.000000), (732: 0.000000), (782: 35.000000), (803: 5.000000), (860: 40.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(672: 5), (702: 8), (713: 10), (732: 6), (782: 8), (803: 3), (838: 3), (860: 7), 
+--------------------
+Overall, the computation required 30 calls to RUCoP, which took 174 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 672: (to: 5, time: 25.000000), 
+Node 4: 
+Bundle 713: (to: 8, time: 70.000000), (to: 8, time: 70.000000), 
+Bundle 782: (to: 2, time: 130.000000), (to: 2, time: 130.000000), 
+Node 5: 
+Bundle 672: (to: 15, time: 40.000000), 
+Bundle 713: (to: 15, time: 80.000000), (to: 15, time: 80.000000), 
+Bundle 782: (to: 8, time: 120.000000), 
+Bundle 838: (to: 6, time: 125.000000), (to: 15, time: 125.000000), 
+Bundle 860: (to: 6, time: 180.000000), (to: 6, time: 180.000000), 
+Node 6: 
+Bundle 732: (to: 3, time: 65.000000), (to: 3, time: 65.000000), 
+Node 7: 
+Bundle 702: (to: 14, time: 80.000000), 
+Node 8: 
+Bundle 713: (to: 5, time: 70.000000), (to: 5, time: 70.000000), 
+Bundle 732: (to: 6, time: 65.000000), (to: 6, time: 65.000000), 
+Bundle 782: (to: 4, time: 120.000000), (to: 4, time: 120.000000), 
+Bundle 803: (to: 4, time: 120.000000), 
+Bundle 860: (to: 5, time: 170.000000), 
+Node 9: 
+Bundle 803: (to: 6, time: 115.000000), (to: 8, time: 115.000000), 
+Node 10: 
+Bundle 672: (to: 7, time: 50.000000), 
+Bundle 702: (to: 7, time: 50.000000), 
+Bundle 732: (to: 8, time: 65.000000), (to: 8, time: 65.000000), 
+Bundle 860: (to: 11, time: 140.000000), (to: 8, time: 160.000000), 
+Node 11: 
+Bundle 672: (to: 10, time: 50.000000), 
+Bundle 702: (to: 10, time: 50.000000), (to: 15, time: 80.000000), 
+Bundle 713: (to: 9, time: 150.000000), (to: 9, time: 150.000000), 
+Bundle 782: (to: 15, time: 95.000000), (to: 8, time: 100.000000), 
+Bundle 860: (to: 15, time: 160.000000), 
+Node 12: 
+Bundle 702: (to: 11, time: 45.000000), (to: 11, time: 45.000000), 
+Node 13: 
+Node 14: 
+Bundle 702: (to: 1, time: 80.000000), 
+Node 15: 
+Bundle 672: (to: 11, time: 40.000000), 
+Bundle 702: (to: 5, time: 80.000000), 
+Bundle 713: (to: 11, time: 80.000000), (to: 11, time: 80.000000), 
+Bundle 782: (to: 5, time: 95.000000), 
+Bundle 838: (to: 8, time: 160.000000), 
+Bundle 860: (to: 5, time: 160.000000), 

@@ -1,0 +1,59 @@
+The bundles with the following ids have been sent: 
+1414(7 to 5), 1417(12 to 5), 1423(8 to 4), 1426(8 to 3), 1427(10 to 7), 1463(3 to 7), 1495(11 to 1), 1505(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1417: 50.000000), (1423: 120.000000), (1426: 70.000000), (1427: 50.000000), (1463: 55.000000), (1495: 80.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1414: 6), (1417: 6), (1423: 7), (1426: 6), (1427: 5), (1463: 3), (1495: 3), (1505: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1414: (to: 9, time: 20.000000), 
+Node 2: 
+Bundle 1423: (to: 12, time: 60.000000), 
+Bundle 1426: (to: 12, time: 60.000000), 
+Node 3: 
+Bundle 1423: (to: 4, time: 140.000000), 
+Bundle 1463: (to: 4, time: 45.000000), 
+Bundle 1495: (to: 4, time: 140.000000), 
+Node 4: 
+Bundle 1463: (to: 6, time: 80.000000), 
+Bundle 1495: (to: 1, time: 160.000000), 
+Bundle 1505: (to: 1, time: 85.000000), 
+Node 5: 
+Node 6: 
+Bundle 1463: (to: 7, time: 100.000000), 
+Node 7: 
+Bundle 1414: (to: 1, time: 0.000000), (to: 15, time: 40.000000), 
+Node 8: 
+Bundle 1423: (to: 2, time: 40.000000), (to: 2, time: 40.000000), 
+Bundle 1426: (to: 2, time: 40.000000), (to: 2, time: 40.000000), 
+Node 9: 
+Bundle 1414: (to: 14, time: 40.000000), 
+Node 10: 
+Bundle 1417: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Bundle 1423: (to: 3, time: 100.000000), 
+Bundle 1426: (to: 3, time: 100.000000), 
+Bundle 1427: (to: 13, time: 40.000000), (to: 11, time: 60.000000), 
+Node 11: 
+Bundle 1427: (to: 15, time: 80.000000), 
+Bundle 1495: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 1417: (to: 13, time: 40.000000), (to: 13, time: 40.000000), 
+Bundle 1423: (to: 13, time: 80.000000), 
+Bundle 1426: (to: 13, time: 80.000000), 
+Node 13: 
+Bundle 1417: (to: 10, time: 40.000000), (to: 10, time: 40.000000), 
+Bundle 1423: (to: 10, time: 80.000000), 
+Bundle 1426: (to: 10, time: 80.000000), 
+Bundle 1427: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 1414: (to: 6, time: 40.000000), 
+Node 15: 
+Bundle 1414: (to: 11, time: 40.000000), 
+Bundle 1427: (to: 7, time: 80.000000), 

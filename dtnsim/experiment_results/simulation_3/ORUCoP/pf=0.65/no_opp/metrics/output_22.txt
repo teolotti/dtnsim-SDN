@@ -1,0 +1,35 @@
+The bundles with the following ids have been sent: 
+287(7 to 5), 289(12 to 5), 293(8 to 4), 296(8 to 3), 297(10 to 7), 306(3 to 7), 313(11 to 1), 315(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+
+--------------------
+That means, that overall 0 (0/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(289: 3), (293: 1), (296: 1), (315: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Bundle 289: (to: 3, time: 20.000000), 
+Node 3: 
+Bundle 289: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 315: (to: 1, time: 85.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Node 8: 
+Bundle 293: (to: 2, time: 100.000000), 
+Bundle 296: (to: 2, time: 100.000000), 
+Node 9: 
+Node 10: 
+Node 11: 
+Node 12: 
+Bundle 289: (to: 2, time: 10.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

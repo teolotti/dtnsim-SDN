@@ -36,12 +36,6 @@ public:
 	void setRange(double range);
 	bool isDiscovered() const;
 	bool isPredicted() const;
-	vector<int> getForeignSources();
-	bool hasForeignSource(int foreignEid);
-
-	// Control the Foreign Sources
-	void addForeignSource(int foreignEid);
-	void removeForeignSource(int foreignEid);
 
 	// Get and Set residual capacity (Bytes)
 	double getResidualVolume() const;
@@ -66,7 +60,6 @@ private:
 	double failureProbability_;
 	bool discovered_;
 	bool predicted_;
-	vector<int> foreignSources_; //eids of nodes that provide a connection to a discovered contact
 
 };
 

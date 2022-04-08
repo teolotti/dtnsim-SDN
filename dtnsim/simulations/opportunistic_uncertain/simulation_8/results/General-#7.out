@@ -1,8 +1,0 @@
-** Event #0   t=0   Elapsed: 5e-06s (0m 00s)
-     Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
-     Messages:  created: 208   present: 208   in FES: 208
-** Event #457   t=190   Elapsed: 0.014589s (0m 00s)
-     Speed:     ev/sec=31337.9   simsec/sec=12343.1   ev/simsec=2.53889
-     Messages:  created: 332   present: 4   in FES: 0
-
-<!> No more events, simulation completed -- at t=190s, event #457

@@ -34,6 +34,13 @@ int Dtn::numInitStages() const
 	return stages;
 }
 
+/**
+ * Initializes the Dtn object
+ *
+ * @param stage: the stage for the dtn object
+ *
+ * @authors The original implementation was done by the authors of DTNSim and then modified by Simon Rink
+ */
 void Dtn::initialize(int stage)
 {
 	if (stage == 1)
@@ -120,15 +127,14 @@ void Dtn::initialize(int stage)
 
 		string routeString = par("routing");
 
-
-		if (routeString.compare("uncertainUniboCgr") == 0)
+		if (routeString.compare("uncertainUniboCgr") == 0) //only done for (O)CGR-UCoP
 		{
 			vector<Contact> localContacts3 = contactPlan_.getContactsBySrc(this->eid_);
 			for (auto it = localContacts3.begin(); it != localContacts3.end(); it++)
 			{
-				if (this->checkExistenceOfContact(it->getSourceEid(), it->getDestinationEid(), it->getStart()) == 0)
+				if (this->checkExistenceOfContact(it->getSourceEid(), it->getDestinationEid(), it->getStart()) == 0) //identify failed contacts
 				{
-					ContactMsg* failedMsg;
+					ContactMsg *failedMsg;
 					failedMsg = new ContactMsg("contactFailed", CONTACT_FAILED);
 					failedMsg->setSchedulingPriority(CONTACT_FAILED);
 					failedMsg->setName("failedMsg");
@@ -144,8 +150,6 @@ void Dtn::initialize(int stage)
 		this->sdr_.setSize(par("sdrSize"));
 		this->sdr_.setNodesNumber(this->getParentModule()->getParentModule()->par("nodesNumber"));
 		this->sdr_.setContactPlan(&contactTopology_);
-
-
 
 		if (routeString.compare("direct") == 0)
 			routing = new RoutingDirect(eid_, &sdr_, &contactPlan_);
@@ -181,11 +185,6 @@ void Dtn::initialize(int stage)
 			double sContactProb = par("sContactProb");
 			routing = new RoutingCgrModel350_Probabilistic(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"), this, sContactProb);
 		}
-		else if (routeString.compare("uniboCgr") == 0) {
-			int numOfNodes = this->getParentModule()->getParentModule()->par("nodesNumber");
-			int repetition = this->getParentModule()->getParentModule()->getSubmodule("central")->par("repetition");
-			routing = new RoutingUncertainUniboCgr(eid_, &sdr_, &contactPlan_, this, this->metricCollector_, -1, false, repetition, numOfNodes);
-		}
 		else if (routeString.compare("uncertainUniboCgr") == 0)
 		{
 			bool useUncertainty = this->getParentModule()->getParentModule()->getSubmodule("central")->par("useUncertainty");
@@ -198,7 +197,7 @@ void Dtn::initialize(int stage)
 			int numOfNodes = this->getParentModule()->getParentModule()->par("nodesNumber");
 			int repetition = this->getParentModule()->getParentModule()->getSubmodule("central")->par("repetition");
 			routing = new RoutingORUCOP(eid_, &sdr_, &contactPlan_, this, this->metricCollector_, 2, repetition, numOfNodes);
-		}//2 bundles for now.
+		} //2 bundles for now.
 		else if (routeString.compare("BRUF1T") == 0)
 		{
 			string frouting = par("frouting");
@@ -313,6 +312,14 @@ void Dtn::finish()
 	delete routing;
 }
 
+/**
+ * Reacts to a system message.
+ *
+ * @param: msg: A pointer to the received message
+ *
+ * @authors The original implementation was done by the authors of DTNSim and then modified by Simon Rink
+ */
+
 void Dtn::handleMessage(cMessage *msg)
 {
 	///////////////////////////////////////////
@@ -328,12 +335,12 @@ void Dtn::handleMessage(cMessage *msg)
 		BundlePkt *bundle = check_and_cast<BundlePkt*>(msg);
 		dispatchBundle(bundle);
 	}
-	else if (msg->getKind() == CONTACT_FAILED)
+	else if (msg->getKind() == CONTACT_FAILED) //A failed contact was noticed!
 	{
-		ContactMsg* contactMsg = check_and_cast<ContactMsg*>(msg);
+		ContactMsg *contactMsg = check_and_cast<ContactMsg*>(msg);
 
-		RoutingUncertainUniboCgr* uniboRouting = check_and_cast<RoutingUncertainUniboCgr*>(this->routing);
-		uniboRouting->contactFailure(contactMsg->getId());
+		RoutingUncertainUniboCgr *uniboRouting = check_and_cast<RoutingUncertainUniboCgr*>(this->routing);
+		uniboRouting->contactFailure(contactMsg->getId()); //reroute all failed bundles!
 
 		this->refreshForwarding();
 
@@ -343,7 +350,7 @@ void Dtn::handleMessage(cMessage *msg)
 	///////////////////////////////////////////
 	// Contact Start and End
 	///////////////////////////////////////////
-	else if (msg->getKind() == DISC_CONTACT_START_TIMER)
+	else if (msg->getKind() == DISC_CONTACT_START_TIMER) //Discovered contact was found
 	{
 		ContactMsg *contactMsg = check_and_cast<ContactMsg*>(msg);
 
@@ -354,7 +361,7 @@ void Dtn::handleMessage(cMessage *msg)
 		delete contactMsg;
 
 	}
-	else if (msg->getKind() == DISC_CONTACT_END_TIMER)
+	else if (msg->getKind() == DISC_CONTACT_END_TIMER) //Discovered contact ended
 	{
 		ContactMsg *contactMsg = check_and_cast<ContactMsg*>(msg);
 
@@ -375,6 +382,7 @@ void Dtn::handleMessage(cMessage *msg)
 
 		Dtn *controller = check_and_cast<Dtn*>(this->getParentModule()->getParentModule()->getSubmodule("node", 0)->getSubmodule("dtn"));
 
+		//for opportunistic extensions
 		controller->coordinateContactStart(contact);
 
 		// Visualize contact line on
@@ -402,6 +410,7 @@ void Dtn::handleMessage(cMessage *msg)
 
 		Dtn *controller = check_and_cast<Dtn*>(this->getParentModule()->getParentModule()->getSubmodule("node", 0)->getSubmodule("dtn"));
 
+		//for opportunistic extensions
 		controller->coordinateContactEnd(contact);
 
 		for (int i = 0; i < sdr_.getBundlesCountInContact(contactMsg->getId()); i++)
@@ -677,6 +686,14 @@ void Dtn::update(void)
 
 //PROCEDURES FOR OPPORTUNISTIC ROUTING!
 
+/**
+ * Schedules the contact start or end for a discovered contact
+ *
+ * @param c: The started/ended discovered contact
+ * 	      start: Boolean whether the contact started or ended
+ *
+ * @author Simon Rink
+ */
 void Dtn::syncDiscoveredContact(Contact *c, bool start)
 {
 	//only controller node is allowed to decide on final topology
@@ -706,6 +723,14 @@ void Dtn::syncDiscoveredContact(Contact *c, bool start)
 
 }
 
+/**
+ * Adds or removes a discovered contact from a neighbor
+ *
+ * @param c: The contact to be added/removed
+ * 	      start: Boolean whether the contact started or ended
+ *
+ * @author Simon Rink
+ */
 void Dtn::syncDiscoveredContactFromNeighbor(Contact *c, bool start, int ownEid, int neighborEid)
 {
 	if (!this->eid_ == 0)
@@ -720,7 +745,6 @@ void Dtn::syncDiscoveredContactFromNeighbor(Contact *c, bool start, int ownEid, 
 
 		//add discovered contact into the contact plan of the neighbor and inform its neighbors
 		neighbor->addDiscoveredContact(*c);
-		//neighbor->getRouting()->contactStart(c); //TODO:: it is not possible so far to also schedule for transmission (of unsent bundles) here
 
 	}
 	else
@@ -728,11 +752,18 @@ void Dtn::syncDiscoveredContactFromNeighbor(Contact *c, bool start, int ownEid, 
 
 		//remove discovered contact from the contact plan of the neighbor and inform its neighbors
 		neighbor->removeDiscoveredContact(*c);
-		//neighbor->getRouting()->contactEnd(c);
 
 	}
 }
 
+/**
+ * Schedules the start of a discovered contact
+ *
+ * @param c: The contact to be started
+ *
+ *
+ * @author Simon Rink
+ */
 void Dtn::scheduleDiscoveredContactStart(Contact *c)
 {
 	//schedule a new message for the actual contact start
@@ -749,6 +780,14 @@ void Dtn::scheduleDiscoveredContactStart(Contact *c)
 	scheduleAt(simTime(), contactMsgStart);
 }
 
+/**
+ * Schedules the end of a discovered contact
+ *
+ * @param c: The contact to be ended
+ *
+ *
+ * @author Simon Rink
+ */
 void Dtn::scheduleDiscoveredContactEnd(Contact *c)
 {
 	//schedule a new message for the actual contact end
@@ -772,6 +811,13 @@ ContactHistory* Dtn::getContactHistory()
 	return &this->contactHistory_;
 }
 
+/**
+ * Adds the given discovered contact to the contact plan, removes any predicted contact for that pair and notifies the routing about it
+ *
+ * @param c: The contact to be added
+ *
+ * @author Simon Rink
+ */
 void Dtn::addDiscoveredContact(Contact c)
 {
 
@@ -794,6 +840,13 @@ void Dtn::addDiscoveredContact(Contact c)
 	this->routing->updateContactPlan(NULL);
 }
 
+/**
+ * Removes the given discovered contact from the contact plan, and notifies the routing about it
+ *
+ * @param c: The contact to be removed
+ *
+ * @author Simon Rink
+ */
 void Dtn::removeDiscoveredContact(Contact c)
 {
 	Contact contact = this->contactPlan_.removeDiscoveredContact(c.getSourceEid(), c.getDestinationEid());
@@ -804,12 +857,25 @@ void Dtn::removeDiscoveredContact(Contact c)
 	}
 }
 
-
+/*
+ * Predicts all updated contacts
+ *
+ * @param currentTime: The current simulation time
+ *
+ * @author Simon Rink
+ */
 void Dtn::predictAllContacts(double currentTime)
 {
 	this->contactHistory_.predictAndAddAllContacts(currentTime, &this->contactPlan_);
 }
 
+/**
+ * Coordinates the contact start, thus it exchanges all discovered contacts and combines both contact histories
+ *
+ * @param c: The started contact
+ *
+ * @author Simon Rink
+ */
 void Dtn::coordinateContactStart(Contact *c)
 {
 	if (!this->eid_ == 0)
@@ -874,6 +940,13 @@ void Dtn::coordinateContactStart(Contact *c)
 
 }
 
+/**
+ * Coordinates the end of a contact. Thus the discovered contacts are updated (and the neighbors informed), the contact history updated and the contacts predicted
+ *
+ * @param c: The contact that just ended
+ *
+ * @author Simon Rink
+ */
 void Dtn::coordinateContactEnd(Contact *c)
 {
 	if (!this->eid_ == 0)
@@ -935,6 +1008,16 @@ void Dtn::coordinateContactEnd(Contact *c)
 
 }
 
+/**
+ * Notifies all current neighbors about a discovered contact start/end. The function is then recalled by each of them, such that their neighbors are also notified.
+ *
+ * @param c: The contact that just started/ended
+ *        start: A boolean whether the contact started or ended
+ *        alreadyInformed: A pointer to a map that tracks which nodes were already notified
+ *
+ * @author Simon Rink
+ *
+ */
 void Dtn::notifyNeighborsAboutDiscoveredContact(Contact *c, bool start, map<int, int> *alreadyInformed)
 {
 	vector<int> currentNeighbors = this->contactPlan_.getCurrentNeighbors();
@@ -955,18 +1038,25 @@ void Dtn::notifyNeighborsAboutDiscoveredContact(Contact *c, bool start, map<int,
 	}
 }
 
-void Dtn::updateDiscoveredContacts(Contact *c)
+/**
+ * Updates the list of discovered contacts that are still reachable
+ *
+ * @param: The lost contact
+ *
+ * @author Simon Rink
+ */
+void Dtn::updateDiscoveredContacts(Contact* c)
 {
 	vector<Contact> discoveredContacts = this->contactPlan_.getDiscoveredContacts();
 	vector<Contact> lostContacts;
-	map<int, int> reachableNodes = this->getReachableNodes();
+	map<int, int> reachableNodes = this->getReachableNodes(); //obtain the nodes that are still reachable
 	map<int, int> alreadyInformed;
 
 	for (size_t i = 0; i < discoveredContacts.size(); i++)
 	{
 		Contact contact = discoveredContacts.at(i);
 
-		if (reachableNodes.find(contact.getSourceEid()) == reachableNodes.end())
+		if (reachableNodes.find(contact.getSourceEid()) == reachableNodes.end()) //contact is not reachable anymore
 		{
 			lostContacts.push_back(contact);
 		}
@@ -974,36 +1064,43 @@ void Dtn::updateDiscoveredContacts(Contact *c)
 
 	for (size_t i = 0; i < lostContacts.size(); i++)
 	{
-		this->removeDiscoveredContact(lostContacts.at(i));
-		this->notifyNeighborsAboutDiscoveredContact(&lostContacts.at(i), false, &alreadyInformed);
+		this->removeDiscoveredContact(lostContacts.at(i)); //remove the discovered contact
+		this->notifyNeighborsAboutDiscoveredContact(&lostContacts.at(i), false, &alreadyInformed); //inform your neighbors about the loss
 		alreadyInformed.clear();
 	}
 
 }
 
+/**
+ * Identifies the reachable nodes from the current node
+ *
+ * @return A HashMap of reachable nodes
+ *
+ * @author Simon Rink
+ */
 map<int, int> Dtn::getReachableNodes()
 {
 	map<int, int> alreadyFound;
 	map<int, int> stillAvailable;
 	stillAvailable[this->eid_] = 1;
 
-	while (stillAvailable.size() != 0)
+	while (stillAvailable.size() != 0) // as long as there are still new nodes available go into the loop
 	{
 		int newNeighbor = stillAvailable.begin()->first;
-		stillAvailable.erase(stillAvailable.begin());
+		stillAvailable.erase(stillAvailable.begin()); //remove the first element at it is traversed just right now
 		alreadyFound[newNeighbor] = 1;
 
 		Dtn *neighbor = check_and_cast<Dtn*>(this->getParentModule()->getParentModule()->getSubmodule("node", newNeighbor)->getSubmodule("dtn"));
 		ContactPlan *neighborContactPlan = neighbor->getContactPlanPointer();
-		vector<int> newNeighbors = neighborContactPlan->getCurrentNeighbors();
+		vector<int> newNeighbors = neighborContactPlan->getCurrentNeighbors(); //identify current connection for the node
 
 		for (size_t i = 0; i < newNeighbors.size(); i++)
 		{
-			if (alreadyFound.find(newNeighbors[i]) != alreadyFound.end())
+			if (alreadyFound.find(newNeighbors[i]) != alreadyFound.end()) //node is already found
 			{
 				continue;
 			}
-			else if (stillAvailable.find(newNeighbors[i]) == stillAvailable.end())
+			else if (stillAvailable.find(newNeighbors[i]) == stillAvailable.end()) // a new node to be traversed was found
 			{
 				stillAvailable[newNeighbors[i]] = 1;
 			}
@@ -1014,27 +1111,52 @@ map<int, int> Dtn::getReachableNodes()
 
 }
 
+/*
+ * Adds a new neighbor to the contact plan
+ *
+ * @param neighborEid: The EID of the new neighbor
+ *
+ * @author Simon Rink
+ */
 void Dtn::addCurrentNeighbor(int neighborEid)
 {
 	this->contactPlan_.addCurrentNeighbor(neighborEid);
 }
 
+/*
+ * Removes a neighbor from the contact plan
+ *
+ * @param neighbor: The EID of the neighbor to be removed
+ *
+ * @author Simon Rink
+ */
 void Dtn::removeCurrentNeighbor(int neighborEid)
 {
 	this->contactPlan_.removeCurrentNeighbor(neighborEid);
 }
 
+/**
+ * Checks whether a contact exists with the given parameters
+ *
+ * @param  sourceEid: The source of the contact
+ * 		   destinationEid: The destination of the contact
+ * 		   start: The start time of the contact
+ *
+ * @return The ID of the contact if it exists, or 0, if none exists
+ *
+ * @author Simon Rink
+ */
 int Dtn::checkExistenceOfContact(int sourceEid, int destinationEid, int start)
 {
 	Contact *contact = this->contactTopology_.getContactBySrcDstStart(sourceEid, destinationEid, start);
 
 	if (contact == NULL)
 	{
-		return 0;
+		return 0; // no contact found
 	}
 	else if (contact->getEnd() <= simTime().dbl())
 	{
-		return 0;
+		return 0; // contact already over
 	}
 	else
 	{

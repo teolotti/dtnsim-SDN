@@ -1,0 +1,51 @@
+The bundles with the following ids have been sent: 
+2123(7 to 5), 2124(12 to 5), 2143(8 to 4), 2145(8 to 3), 2146(10 to 7), 2184(3 to 7), 2232(11 to 1), 2235(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(2123: 60.000000), (2124: 10.000000), (2143: 120.000000), (2145: 90.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(2123: 6), (2124: 3), (2143: 4), (2145: 3), (2146: 1), (2184: 4), (2232: 3), (2235: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 34 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Bundle 2143: (to: 12, time: 60.000000), (to: 3, time: 120.000000), 
+Bundle 2145: (to: 12, time: 60.000000), (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 2123: (to: 10, time: 40.000000), 
+Bundle 2143: (to: 4, time: 140.000000), 
+Bundle 2184: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 2235: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 2123: (to: 1, time: 0.000000), (to: 15, time: 40.000000), 
+Bundle 2232: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 2143: (to: 2, time: 40.000000), 
+Bundle 2145: (to: 2, time: 40.000000), 
+Node 9: 
+Node 10: 
+Bundle 2123: (to: 5, time: 60.000000), 
+Bundle 2124: (to: 5, time: 20.000000), 
+Bundle 2146: (to: 3, time: 40.000000), 
+Bundle 2184: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 2123: (to: 3, time: 40.000000), 
+Bundle 2232: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 2124: (to: 13, time: 0.000000), 
+Bundle 2184: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 2124: (to: 10, time: 0.000000), 
+Bundle 2184: (to: 12, time: 40.000000), 
+Node 14: 
+Node 15: 
+Bundle 2123: (to: 11, time: 40.000000), 
+Bundle 2232: (to: 7, time: 80.000000), 

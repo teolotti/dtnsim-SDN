@@ -1,0 +1,56 @@
+The bundles with the following ids have been sent: 
+535(10 to 6), 541(1 to 11), 546(1 to 6), 547(5 to 10), 564(4 to 1), 566(9 to 12), 579(3 to 9), 602(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(535: 105.000000), (541: 35.000000), (547: 55.000000), (564: 60.000000), (566: 55.000000), (579: 15.000000), (602: 25.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(535: 5), (541: 3), (546: 1), (547: 8), (564: 4), (566: 4), (579: 4), (602: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 32 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 541: (to: 3, time: 20.000000), 
+Bundle 546: (to: 3, time: 50.000000), 
+Node 2: 
+Node 3: 
+Bundle 541: (to: 4, time: 60.000000), 
+Bundle 579: (to: 4, time: 60.000000), 
+Node 4: 
+Bundle 535: (to: 5, time: 30.000000), (to: 5, time: 70.000000), 
+Bundle 541: (to: 11, time: 60.000000), 
+Bundle 547: (to: 11, time: 60.000000), 
+Bundle 564: (to: 5, time: 70.000000), 
+Bundle 579: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 535: (to: 12, time: 110.000000), 
+Bundle 547: (to: 4, time: 30.000000), (to: 15, time: 40.000000), 
+Bundle 564: (to: 12, time: 110.000000), 
+Bundle 566: (to: 12, time: 50.000000), (to: 12, time: 110.000000), 
+Bundle 579: (to: 15, time: 80.000000), 
+Node 6: 
+Bundle 564: (to: 1, time: 110.000000), 
+Bundle 602: (to: 1, time: 110.000000), 
+Node 7: 
+Node 8: 
+Bundle 547: (to: 4, time: 60.000000), 
+Node 9: 
+Bundle 547: (to: 8, time: 50.000000), 
+Bundle 566: (to: 15, time: 40.000000), 
+Node 10: 
+Bundle 535: (to: 4, time: 0.000000), 
+Node 11: 
+Bundle 547: (to: 10, time: 70.000000), (to: 10, time: 90.000000), 
+Node 12: 
+Bundle 535: (to: 6, time: 110.000000), 
+Bundle 564: (to: 6, time: 110.000000), 
+Bundle 602: (to: 6, time: 110.000000), 
+Node 13: 
+Node 14: 
+Node 15: 
+Bundle 547: (to: 9, time: 40.000000), 
+Bundle 566: (to: 5, time: 40.000000), 
+Bundle 579: (to: 9, time: 80.000000), 

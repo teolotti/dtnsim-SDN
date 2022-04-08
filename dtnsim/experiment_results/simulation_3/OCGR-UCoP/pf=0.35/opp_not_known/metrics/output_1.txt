@@ -1,0 +1,56 @@
+The bundles with the following ids have been sent: 
+744(7 to 5), 747(12 to 5), 764(8 to 4), 766(8 to 3), 767(10 to 7), 804(3 to 7), 851(11 to 1), 854(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(747: 50.000000), (767: 10.000000), (851: 20.000000), (854: 0.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(744: 5), (747: 4), (764: 3), (766: 3), (767: 6), (804: 1), (851: 3), (854: 7), 
+--------------------
+Overall, the computation required 15 calls to RUCoP, which took 91 seconds and 22 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 744: (to: 2, time: 0.000000), 
+Node 2: 
+Bundle 744: (to: 12, time: 0.000000), (to: 3, time: 20.000000), 
+Bundle 764: (to: 3, time: 120.000000), 
+Bundle 766: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 744: (to: 10, time: 40.000000), 
+Bundle 804: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 854: (to: 6, time: 80.000000), 
+Node 5: 
+Node 6: 
+Bundle 854: (to: 14, time: 85.000000), 
+Node 7: 
+Bundle 744: (to: 1, time: 0.000000), 
+Bundle 851: (to: 1, time: 100.000000), 
+Bundle 854: (to: 15, time: 85.000000), 
+Node 8: 
+Bundle 764: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Bundle 766: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Node 9: 
+Bundle 854: (to: 7, time: 85.000000), 
+Node 10: 
+Bundle 747: (to: 5, time: 20.000000), (to: 5, time: 60.000000), 
+Bundle 767: (to: 5, time: 20.000000), (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 767: (to: 15, time: 40.000000), 
+Bundle 851: (to: 15, time: 80.000000), 
+Bundle 854: (to: 3, time: 85.000000), 
+Node 12: 
+Bundle 747: (to: 13, time: 0.000000), 
+Bundle 767: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 747: (to: 10, time: 10.000000), 
+Bundle 767: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 854: (to: 9, time: 85.000000), 
+Node 15: 
+Bundle 767: (to: 7, time: 40.000000), 
+Bundle 851: (to: 7, time: 80.000000), 
+Bundle 854: (to: 11, time: 85.000000), 

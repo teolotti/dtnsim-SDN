@@ -1,0 +1,54 @@
+The bundles with the following ids have been sent: 
+654(2 to 10), 655(8 to 3), 675(3 to 11), 676(12 to 10), 683(10 to 5), 712(11 to 6), 716(1 to 9), 742(7 to 12), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(654: 55.000000), (675: 35.000000), (683: 35.000000), (712: 35.000000), (716: 25.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(654: 3), (655: 3), (675: 4), (676: 4), (683: 2), (712: 3), (716: 5), (742: 3), 
+--------------------
+Overall, the computation required 17 calls to RUCoP, which took 107 seconds and 29 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 716: (to: 4, time: 50.000000), 
+Node 2: 
+Bundle 654: (to: 13, time: 0.000000), 
+Bundle 655: (to: 3, time: 40.000000), 
+Bundle 675: (to: 6, time: 25.000000), 
+Node 3: 
+Bundle 675: (to: 2, time: 20.000000), 
+Node 4: 
+Bundle 676: (to: 5, time: 40.000000), (to: 8, time: 50.000000), 
+Bundle 716: (to: 15, time: 40.000000), 
+Node 5: 
+Bundle 712: (to: 6, time: 80.000000), 
+Node 6: 
+Bundle 675: (to: 8, time: 30.000000), 
+Node 7: 
+Bundle 742: (to: 8, time: 70.000000), 
+Node 8: 
+Bundle 654: (to: 10, time: 70.000000), 
+Bundle 655: (to: 13, time: 0.000000), 
+Bundle 675: (to: 11, time: 60.000000), 
+Bundle 683: (to: 5, time: 70.000000), 
+Bundle 742: (to: 10, time: 75.000000), 
+Node 9: 
+Node 10: 
+Bundle 683: (to: 8, time: 30.000000), 
+Bundle 742: (to: 11, time: 75.000000), 
+Node 11: 
+Bundle 712: (to: 14, time: 40.000000), 
+Node 12: 
+Bundle 676: (to: 15, time: 40.000000), 
+Bundle 716: (to: 9, time: 50.000000), (to: 9, time: 80.000000), 
+Node 13: 
+Bundle 654: (to: 8, time: 15.000000), 
+Bundle 655: (to: 2, time: 15.000000), 
+Node 14: 
+Bundle 712: (to: 5, time: 45.000000), 
+Node 15: 
+Bundle 676: (to: 4, time: 40.000000), 
+Bundle 716: (to: 12, time: 55.000000), 

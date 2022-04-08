@@ -1,0 +1,49 @@
+The bundles with the following ids have been sent: 
+1912(1 to 12), 1928(6 to 3), 1957(8 to 2), 1962(4 to 5), 1983(2 to 4), 1984(9 to 10), 1985(12 to 11), 1991(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1912: 25.000000), (1957: 60.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1912: 2), (1928: 2), (1957: 3), (1962: 2), (1983: 3), (1984: 5), (1985: 3), (1991: 1), 
+--------------------
+Overall, the computation required 25 calls to RUCoP, which took 144 seconds and 30 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1912: (to: 5, time: 40.000000), 
+Bundle 1984: (to: 4, time: 80.000000), 
+Node 2: 
+Bundle 1983: (to: 6, time: 60.000000), 
+Node 3: 
+Node 4: 
+Bundle 1962: (to: 8, time: 40.000000), 
+Bundle 1984: (to: 10, time: 80.000000), (to: 10, time: 120.000000), 
+Node 5: 
+Bundle 1912: (to: 12, time: 40.000000), 
+Bundle 1984: (to: 1, time: 80.000000), 
+Bundle 1985: (to: 11, time: 80.000000), 
+Bundle 1991: (to: 11, time: 80.000000), 
+Node 6: 
+Bundle 1928: (to: 10, time: 20.000000), 
+Bundle 1983: (to: 10, time: 60.000000), 
+Node 7: 
+Node 8: 
+Bundle 1957: (to: 14, time: 40.000000), 
+Bundle 1962: (to: 12, time: 60.000000), 
+Node 9: 
+Bundle 1984: (to: 5, time: 60.000000), 
+Bundle 1985: (to: 5, time: 60.000000), 
+Node 10: 
+Bundle 1928: (to: 8, time: 60.000000), 
+Bundle 1957: (to: 2, time: 100.000000), 
+Bundle 1983: (to: 8, time: 60.000000), 
+Node 11: 
+Node 12: 
+Bundle 1985: (to: 9, time: 60.000000), 
+Node 13: 
+Node 14: 
+Bundle 1957: (to: 10, time: 40.000000), 
+Node 15: 

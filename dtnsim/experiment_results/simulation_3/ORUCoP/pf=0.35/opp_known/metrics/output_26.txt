@@ -1,0 +1,55 @@
+The bundles with the following ids have been sent: 
+591(7 to 5), 594(12 to 5), 601(8 to 4), 604(8 to 3), 605(10 to 7), 647(3 to 7), 676(11 to 1), 682(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(591: 60.000000), (594: 50.000000), (601: 120.000000), (604: 90.000000), (605: 10.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(591: 9), (594: 6), (601: 7), (604: 6), (605: 6), (647: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 591: (to: 9, time: 20.000000), 
+Node 2: 
+Bundle 601: (to: 12, time: 60.000000), (to: 3, time: 120.000000), 
+Bundle 604: (to: 12, time: 60.000000), (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 591: (to: 10, time: 40.000000), 
+Bundle 601: (to: 4, time: 140.000000), 
+Bundle 647: (to: 4, time: 45.000000), 
+Node 4: 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 591: (to: 1, time: 0.000000), (to: 15, time: 40.000000), 
+Node 8: 
+Bundle 601: (to: 2, time: 40.000000), (to: 2, time: 40.000000), 
+Bundle 604: (to: 2, time: 40.000000), (to: 2, time: 40.000000), 
+Node 9: 
+Bundle 591: (to: 14, time: 40.000000), 
+Node 10: 
+Bundle 591: (to: 5, time: 60.000000), 
+Bundle 594: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Bundle 605: (to: 13, time: 40.000000), (to: 11, time: 60.000000), 
+Node 11: 
+Bundle 591: (to: 3, time: 40.000000), 
+Bundle 605: (to: 15, time: 40.000000), 
+Node 12: 
+Bundle 594: (to: 13, time: 40.000000), (to: 13, time: 40.000000), 
+Bundle 601: (to: 13, time: 80.000000), 
+Bundle 604: (to: 13, time: 80.000000), 
+Bundle 605: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 594: (to: 10, time: 40.000000), (to: 10, time: 40.000000), 
+Bundle 601: (to: 10, time: 80.000000), 
+Bundle 604: (to: 10, time: 80.000000), 
+Bundle 605: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 591: (to: 6, time: 40.000000), 
+Node 15: 
+Bundle 591: (to: 11, time: 40.000000), 
+Bundle 605: (to: 7, time: 40.000000), 

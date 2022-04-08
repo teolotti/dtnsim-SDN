@@ -1,0 +1,47 @@
+The bundles with the following ids have been sent: 
+404(1 to 12), 405(12 to 5), 410(7 to 3), 411(10 to 6), 412(11 to 1), 421(6 to 7), 434(3 to 4), 436(8 to 4), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(411: 15.000000), 
+--------------------
+That means, that overall 0.125 (1/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(404: 3), (405: 2), (410: 4), (411: 5), (412: 2), (421: 4), (434: 1), (436: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 23 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 404: (to: 2, time: 0.000000), 
+Node 2: 
+Bundle 404: (to: 5, time: 0.000000), (to: 4, time: 60.000000), 
+Bundle 410: (to: 5, time: 50.000000), (to: 3, time: 70.000000), 
+Node 3: 
+Bundle 434: (to: 2, time: 50.000000), 
+Node 4: 
+Node 5: 
+Bundle 411: (to: 6, time: 40.000000), 
+Node 6: 
+Bundle 421: (to: 9, time: 30.000000), 
+Node 7: 
+Bundle 410: (to: 8, time: 30.000000), (to: 2, time: 50.000000), 
+Node 8: 
+Bundle 411: (to: 5, time: 40.000000), 
+Bundle 436: (to: 7, time: 60.000000), (to: 12, time: 80.000000), 
+Node 9: 
+Bundle 405: (to: 6, time: 20.000000), 
+Bundle 421: (to: 12, time: 35.000000), 
+Node 10: 
+Bundle 411: (to: 7, time: 20.000000), (to: 11, time: 30.000000), 
+Bundle 412: (to: 7, time: 25.000000), 
+Node 11: 
+Bundle 411: (to: 8, time: 40.000000), 
+Bundle 412: (to: 10, time: 20.000000), 
+Bundle 421: (to: 10, time: 40.000000), 
+Node 12: 
+Bundle 405: (to: 9, time: 0.000000), 
+Bundle 421: (to: 11, time: 40.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

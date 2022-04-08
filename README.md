@@ -14,7 +14,7 @@ The simulator is still under development: this is a beta version. Nonetheless, f
 
 ### Opportunistic simulations ###
 
-DTNSIM has been updated in order to support opportunistic simulations with the model of OCGR. They can be scheduled just as regular contacts in the contact plan .txt file using the keyword "ocontact" (and "orange" for the respective ranges). In this context, they are three possible modes available, each associated with an integer:
+DTNSIM has been updated in order to support opportunistic simulations with the model of OCGR. They can be scheduled just as regular contacts in the contact plan .txt file using the keyword "ocontact" (and "orange" for the respective ranges). In this context, there are three possible modes available, each associated with an integer:
 
 * Mode 0: Opportunistic contacts are ignored completely. 
 * Mode 1: Opportunistic contacts are simulated and are discovered dynamically by the nodes. This is the realistic use-case of opportunistic simulations.
@@ -42,8 +42,8 @@ When this step is accomplished, all that is left to do is to install this librar
 * cd ../../../..
 
 The required scripts to execute and parse L-RUCoP are already in this repo, being run_ibruf.py for ORUCoP and run_cgrbruf.py for OCGR-UCoP. Both are shell scripts working with the python3 interpreter from the virtualenv. All that is left to do in order to make them work is to provide the correct path to the python3.6 version at the top of the file. This will be then in the form path/to/virtualenv/bin/python3.6. 
-When this done everything should be working, as the new routing schemes can be executed just as the other schemes. What might be noteworthy is this context is the execution of the simulation script in simulations/opportunistic_uncertain_/simulation_x. As this script are essentially python scripts, one needs to execute them from within the virtual environment.
-Still, it might happen, that one of the libraries of the virtualenv (PySpark) overlaps with an existing python installtion on the machine, leading to an error because of the mismatch. In this case, the following commands will help:
+When this is done, everything should be working, as the new routing schemes can be executed just as the other schemes. What might be noteworthy in this context, is the execution of the simulation scripts in simulations/opportunistic_uncertain_/simulation_x. As these script are essentially python scripts, one needs to execute them from within the virtual environment.
+Still, it might happen, that one of the libraries of the virtualenv (PySpark) overlaps with an existing python installation on the machine, leading to an error because of the mismatch. In this case, the following commands will help:
 
 * export PYSPARK_PYTHON=path/to/virtualenv/bin/python
 * export PYSPARK_DRIVER_PYTHON=path/to/virtualenv/bin/python
@@ -78,4 +78,4 @@ Note: Nodes will remain static in the simulation visualization. Indeed, the dyna
 
 ## Contact Us ##
 
-If you have any comment, suggestion, or contribution you can reach us at madoerypablo@gmail.com and juanfraire@gmail.com.
+If you have any comment, suggestion, or contribution you can reach us at madoerypablo@gmail.com, juanfraire@gmail.com or s8sirink@stud.uni-saarland.de.

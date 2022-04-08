@@ -1,0 +1,57 @@
+The bundles with the following ids have been sent: 
+1987(1 to 11), 2008(3 to 10), 2009(4 to 6), 2010(7 to 9), 2021(12 to 4), 2022(12 to 5), 2052(8 to 1), 2070(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1987: 60.000000), (2008: 25.000000), (2009: 25.000000), (2010: 25.000000), (2022: 15.000000), (2052: 15.000000), (2070: 0.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1987: 3), (2008: 5), (2009: 3), (2010: 3), (2021: 2), (2022: 4), (2052: 4), (2070: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 29 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1987: (to: 13, time: 0.000000), 
+Bundle 2008: (to: 5, time: 30.000000), 
+Node 2: 
+Bundle 2008: (to: 1, time: 20.000000), 
+Bundle 2009: (to: 6, time: 50.000000), 
+Bundle 2052: (to: 1, time: 60.000000), 
+Node 3: 
+Bundle 2008: (to: 2, time: 20.000000), 
+Bundle 2009: (to: 2, time: 50.000000), 
+Bundle 2052: (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 2009: (to: 3, time: 50.000000), 
+Bundle 2052: (to: 3, time: 50.000000), 
+Bundle 2070: (to: 3, time: 50.000000), 
+Node 5: 
+Bundle 2008: (to: 9, time: 30.000000), 
+Bundle 2070: (to: 14, time: 40.000000), 
+Node 6: 
+Node 7: 
+Bundle 2010: (to: 11, time: 20.000000), 
+Node 8: 
+Bundle 2052: (to: 4, time: 40.000000), 
+Node 9: 
+Bundle 2008: (to: 10, time: 50.000000), 
+Bundle 2022: (to: 5, time: 50.000000), 
+Bundle 2070: (to: 5, time: 50.000000), 
+Node 10: 
+Bundle 1987: (to: 11, time: 60.000000), 
+Bundle 2010: (to: 9, time: 50.000000), 
+Bundle 2022: (to: 9, time: 50.000000), 
+Node 11: 
+Bundle 2010: (to: 10, time: 30.000000), 
+Bundle 2021: (to: 7, time: 40.000000), 
+Bundle 2022: (to: 10, time: 30.000000), 
+Node 12: 
+Bundle 2021: (to: 11, time: 30.000000), 
+Bundle 2022: (to: 11, time: 30.000000), 
+Node 13: 
+Bundle 1987: (to: 10, time: 0.000000), 
+Node 14: 
+Bundle 2070: (to: 4, time: 40.000000), 
+Node 15: 

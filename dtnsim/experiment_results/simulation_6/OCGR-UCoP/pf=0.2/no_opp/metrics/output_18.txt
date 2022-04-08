@@ -1,0 +1,54 @@
+The bundles with the following ids have been sent: 
+491(1 to 11), 497(3 to 10), 498(4 to 6), 499(7 to 9), 511(12 to 4), 512(12 to 5), 517(8 to 1), 531(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(491: 60.000000), (498: 35.000000), (499: 25.000000), (511: 85.000000), (517: 15.000000), (531: 25.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(491: 5), (497: 3), (498: 6), (499: 3), (511: 2), (512: 1), (517: 4), (531: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 24 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 491: (to: 5, time: 0.000000), (to: 5, time: 30.000000), 
+Node 2: 
+Bundle 497: (to: 1, time: 25.000000), (to: 6, time: 50.000000), 
+Bundle 517: (to: 1, time: 60.000000), 
+Node 3: 
+Bundle 497: (to: 2, time: 20.000000), 
+Bundle 517: (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 498: (to: 7, time: 20.000000), 
+Bundle 517: (to: 3, time: 50.000000), 
+Node 5: 
+Bundle 491: (to: 9, time: 30.000000), 
+Bundle 498: (to: 6, time: 60.000000), 
+Bundle 531: (to: 6, time: 60.000000), 
+Node 6: 
+Bundle 531: (to: 3, time: 80.000000), 
+Node 7: 
+Bundle 498: (to: 11, time: 25.000000), 
+Bundle 499: (to: 11, time: 20.000000), 
+Node 8: 
+Bundle 511: (to: 4, time: 120.000000), 
+Bundle 517: (to: 4, time: 40.000000), 
+Node 9: 
+Bundle 491: (to: 10, time: 50.000000), 
+Bundle 498: (to: 5, time: 50.000000), 
+Bundle 531: (to: 5, time: 50.000000), 
+Node 10: 
+Bundle 491: (to: 11, time: 60.000000), 
+Bundle 498: (to: 9, time: 50.000000), 
+Bundle 499: (to: 9, time: 50.000000), 
+Node 11: 
+Bundle 498: (to: 10, time: 30.000000), 
+Bundle 499: (to: 10, time: 30.000000), 
+Node 12: 
+Bundle 511: (to: 8, time: 100.000000), 
+Bundle 512: (to: 11, time: 30.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

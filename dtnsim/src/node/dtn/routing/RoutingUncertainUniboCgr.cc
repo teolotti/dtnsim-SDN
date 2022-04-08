@@ -2,7 +2,7 @@
  * RoutingUncertainUniboCgr.cc
  *
  *  Created on: Jan 16, 2022
- *      Author: simon
+ *      Author: Simon Rink
  */
 
 #include "RoutingUncertainUniboCgr.h"
@@ -29,6 +29,20 @@ int findMaxTs();
 void updateStartTimes(vector<Contact> *contacts);
 vector<int> getTsForContact(Contact *contact);
 
+/*
+ * Initiates the routing object
+ *
+ * @param eid: The local EID
+ * 	      sdr: The pointer to the local SDR
+ * 	      contactPlan: The pointer to the local contact plan
+ * 	      metricCollector: The object that collects all necessary metrics in the simulations
+ * 	      tsIntervalDuration: The constant duration of the timestamps, -1 if they differ in length
+ * 	      useUncertainty: Indicator, whether to use OCGR or OCGR-UCoP
+ * 	      repetition: number of run in the simulations
+ * 	      numOfNodes: number of nodes in the network
+ *
+ * @author Simon Rink
+ */
 RoutingUncertainUniboCgr::RoutingUncertainUniboCgr(int eid, SdrModel *sdr, ContactPlan *contactPlan, cModule *dtn, MetricCollector *metricCollector, int tsIntervalDuration, bool useUncertainty, int repetition, int numOfNodes) :
 		RoutingOpportunistic(eid, sdr, contactPlan, dtn, metricCollector)
 {
@@ -88,6 +102,14 @@ RoutingUncertainUniboCgr::~RoutingUncertainUniboCgr()
 	// TODO Auto-generated destructor stub
 }
 
+/*
+ * Takes a bundle and routes it using Unibo. After that it is queued
+ *
+ * @param bundle: The current bundle
+ *        simTime: The current simulation time
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::routeAndQueueBundle(BundlePkt *bundle, double simTime)
 {
 	if (opportunistic)
@@ -102,23 +124,23 @@ void RoutingUncertainUniboCgr::routeAndQueueBundle(BundlePkt *bundle, double sim
 
 	List cgrRoutes = NULL;
 	ListElt *elt;
-	if (bundle->getSenderEid() == 0)
+	if (bundle->getSenderEid() == 0) // new bundle
 	{
 		this->metricCollector_->updateStartedBundles(eid_, bundle->getBundleId(), bundle->getSourceEid(), bundle->getDestinationEid(), simTime);
 	}
 	int numberOfRoutes = 1;
 	currDest = bundle->getDestinationEid();
-	if (this->multiHops.find(bundle->getBundleId()) != this->multiHops.end())
+	if (this->multiHops.find(bundle->getBundleId()) != this->multiHops.end()) //multi hops detected
 	{
 		this->enqueueBundle(bundle, simTime, NULL);
 		return;
 	}
-	if (useUncertainMode && this->nodeBrufFunction_.find(currDest) == this->nodeBrufFunction_.end())
+	if (useUncertainMode && this->nodeBrufFunction_.find(currDest) == this->nodeBrufFunction_.end()) //no routing decisions yet
 	{
 		this->callToPython();
 		brufFunction = this->nodeBrufFunction_[currDest];
 	}
-	else if (useUncertainMode && this->lastTimeUpdated_[bundle->getDestinationEid()] < this->contactPlan_->getLastEditTime().dbl())
+	else if (useUncertainMode && this->lastTimeUpdated_[bundle->getDestinationEid()] < this->contactPlan_->getLastEditTime().dbl()) //routing information outdated
 	{
 		this->callToPython();
 		brufFunction = this->nodeBrufFunction_[currDest];
@@ -150,7 +172,7 @@ void RoutingUncertainUniboCgr::routeAndQueueBundle(BundlePkt *bundle, double sim
 
 				if (numberOfRoutes == 1)
 				{
-
+					//update delivery confidence
 					bundle->setDlvConfidence(bundle->getDlvConfidence() + (1 - (1 - route->arrivalConfidence) * (1 - bundle->getDlvConfidence())));
 
 					if (bundle->getDlvConfidence() >= 1.0)
@@ -198,12 +220,19 @@ void RoutingUncertainUniboCgr::routeAndQueueBundle(BundlePkt *bundle, double sim
 		}
 	}
 	else
-	{
+	{	//queue to limbo
 		bundle->setNextHopEid(0);
 		this->sdr_->enqueueBundleToContact(bundle, 0);
 	}
 }
 
+/*
+ * Reroute bundle that were queued to a failed contact
+ *
+ * @param contactid: The ID of the contact
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::contactFailure(int contactId)
 {
 	while (sdr_->isBundleForContact(contactId))
@@ -215,11 +244,27 @@ void RoutingUncertainUniboCgr::contactFailure(int contactId)
 
 }
 
+/*
+ * Inform the receiver about a multi hop
+ *
+ * @param hops: The list of multi hops
+ * 	      bundleId: The ID of the bundle
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::notifyAboutMultiHop(vector<int>hops, long bundleId)
 {
 	this->multiHops[bundleId] = hops;
 }
 
+/*
+ * Notifies the receiver about the made routing decisions
+ *
+ * @param jsonFunction: The routing function
+ * 	      destination: The destination of the bundle
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::notifyAboutRouting(json jsonFunction, int destination)
 {
 	this->nodeBrufFunction_[destination] = jsonFunction;
@@ -228,6 +273,15 @@ void RoutingUncertainUniboCgr::notifyAboutRouting(json jsonFunction, int destina
 	this->tsStartTimes_[destination] = tsStartTimes[destination];
 }
 
+/*
+ * Checks whether the route has a multi hop
+ *
+ * @param route: The route from Unibo
+ *
+ * @return The list of multi hops
+ *
+ * @author Simon Rink
+ */
 vector<int> RoutingUncertainUniboCgr::hasMultiHop(Route *route)
 {
 	int ts = getTsForStartOrCurrentTime(route->fromTime);
@@ -249,11 +303,20 @@ vector<int> RoutingUncertainUniboCgr::hasMultiHop(Route *route)
 	return hopsWithinTs;
 }
 
+/*
+ * Enqueues a bundle to the contact, if possible
+ *
+ * @param bundle: The current bundle
+ * 	      simTime: The current simulation time
+ * 	      route: The route from Unibo
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::enqueueBundle(BundlePkt *bundle, double simTime, Route *route)
 {
 
 
-	//multi hop!!
+	//multi hop from other source!!
 	if (route == NULL)
 	{
 		int destination = this->multiHops[bundle->getBundleId()].front();
@@ -281,7 +344,7 @@ void RoutingUncertainUniboCgr::enqueueBundle(BundlePkt *bundle, double simTime, 
 		id = contactDtnSim->getId();
 		}
 
-		if (id == 0)
+		if (id == 0) //illegal contact
 		{
 				bundle->setNextHopEid(0);
 				this->sdr_->enqueueBundleToContact(bundle, 0);
@@ -292,7 +355,7 @@ void RoutingUncertainUniboCgr::enqueueBundle(BundlePkt *bundle, double simTime, 
 
 		this->multiHops[bundle->getBundleId()].erase(this->multiHops[bundle->getBundleId()].begin());
 
-		if (this->multiHops[bundle->getBundleId()].size() > 0)
+		if (this->multiHops[bundle->getBundleId()].size() > 0) //still multi hops left
 		{
 			other->notifyAboutMultiHop(this->multiHops[bundle->getBundleId()], bundle->getBundleId());
 		}
@@ -316,7 +379,7 @@ void RoutingUncertainUniboCgr::enqueueBundle(BundlePkt *bundle, double simTime, 
 		hops = this->hasMultiHop(route);
 	}
 
-	if (hops.size() > 1) //multi hop!
+	if (hops.size() > 1) //multi hop from this source!
 	{
 
 		int destination = hops[0];
@@ -344,7 +407,7 @@ void RoutingUncertainUniboCgr::enqueueBundle(BundlePkt *bundle, double simTime, 
 		id = contactDtnSim->getId();
 		}
 
-		if (id == 0)
+		if (id == 0) //illegal contact
 		{
 			bundle->setNextHopEid(0);
 			this->sdr_->enqueueBundleToContact(bundle, 0);
@@ -354,7 +417,7 @@ void RoutingUncertainUniboCgr::enqueueBundle(BundlePkt *bundle, double simTime, 
 
 		hops.erase(hops.begin());
 
-		if (hops.size() > 0)
+		if (hops.size() > 0) //still multi hops available
 		{
 			other->notifyAboutMultiHop(hops, bundle->getBundleId());
 		}
@@ -419,6 +482,17 @@ void RoutingUncertainUniboCgr::enqueueBundle(BundlePkt *bundle, double simTime, 
 	this->sdr_->enqueueBundleToContact(bundle, id);
 }
 
+/*
+ * Transfers the field from a BundlePkt to a cgrBundle
+ *
+ * @param time: The time for Unibo
+ * 	      bundle: The DTNSim bundle
+ * 	      cgrBundle: The bundle for Unibo
+ *
+ * @return -1, in case a bundle was set to NULL, 0 otherwise
+ *
+ * @author Simon Rink
+ */
 int RoutingUncertainUniboCgr::convertBundlePktToCgrBundle(time_t time, BundlePkt *bundle, CgrBundle *cgrBundle)
 {
 	if (bundle == NULL || cgrBundle == NULL)
@@ -451,6 +525,15 @@ int RoutingUncertainUniboCgr::convertBundlePktToCgrBundle(time_t time, BundlePkt
 
 }
 
+/*
+ * Adds a DTNSim contact to the Unibo SAP
+ *
+ * @param contact: The contact from Unibo
+ *
+ * @return <0, if an error happened during the process, 1 otherwise
+ *
+ * @author Simon Rink
+ */
 int RoutingUncertainUniboCgr::addContactToSap(Contact *contact)
 {
 	int result = addContact(this->defaultRegionNbr_, contact->getSourceEid(), contact->getDestinationEid(), contact->getStart(), contact->getEnd(), contact->getDataRate(), contact->getConfidence(), 0, NULL,
@@ -467,7 +550,15 @@ int RoutingUncertainUniboCgr::addContactToSap(Contact *contact)
 }
 
 
-
+/*
+ * Remove a DTNSim contact from the Unibo SAP
+ *
+ * @param contact: The contact from DTNSim
+ *
+ * @return < 0, if an error happened, 1 otherwise
+ *
+ * @author Simon Rink
+ */
 int RoutingUncertainUniboCgr::removeContactFromSap(Contact *contact)
 {
 	int result = 0;
@@ -484,6 +575,13 @@ int RoutingUncertainUniboCgr::removeContactFromSap(Contact *contact)
 	return result;
 }
 
+/*
+ * Adds or removes contacts from the Unibo SAP
+ *
+ * @param contact: NULL, if all recently added contact should be added to the SAP, a pointer to the contact if it needs to be removed
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::updateContactPlan(Contact *c)
 {
 	// this->populateContactPlan(); return; //(much) slower, but working
@@ -514,6 +612,13 @@ void RoutingUncertainUniboCgr::updateContactPlan(Contact *c)
 
 }
 
+/*
+ * Sets up the contact plan during the initialization
+ *
+ * @return < 0, if an error happend, 1 otherwise
+ *
+ * @author Simon Rink
+ */
 int RoutingUncertainUniboCgr::populateContactPlan()
 {
 	this->restoreSAPvalues();
@@ -549,6 +654,15 @@ int RoutingUncertainUniboCgr::populateContactPlan()
 
 }
 
+/*
+ * Initializes the Unibo structures
+ *
+ * @param time_t: The reference time
+ *
+ * @return < 0 , if an error happened during the initialization
+ *
+ * @authors Originally by the authors of Unibo, adapted for this version by Simon Rink
+ */
 int RoutingUncertainUniboCgr::initializeUniboCGR(time_t time)
 {
 	int result = 1;
@@ -591,6 +705,17 @@ int RoutingUncertainUniboCgr::initializeUniboCGR(time_t time)
 	return result;
 }
 
+/*
+ * Searches the best route through the network
+ *
+ * @param time: The current Unibo time
+ * 	      bundle: The current bundle
+ * 	      cgrRoutes: The result route list
+ *
+ * @return < 0, if an error occured, 1 if not
+ *
+ * @author Simon Rink
+ */
 int RoutingUncertainUniboCgr::callUniboCGR(time_t time, BundlePkt *bundle, List *cgrRoutes)
 {
 	int result;
@@ -635,6 +760,11 @@ int RoutingUncertainUniboCgr::callUniboCGR(time_t time, BundlePkt *bundle, List 
 	return result;
 }
 
+/*
+ * All important SAP values are initialized
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::initializeSAPValues()
 {
 	//set important values in certains SAPs to ensure correct initialization
@@ -655,6 +785,11 @@ void RoutingUncertainUniboCgr::initializeSAPValues()
 	this->phaseTwoSAP.suppressedNeighbors = NULL;
 }
 
+/**
+ * Store the current singleton SAP values into the local ones
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::saveSAPs()
 {
 	//update local SAPs
@@ -669,6 +804,11 @@ void RoutingUncertainUniboCgr::saveSAPs()
 	this->phaseTwoSAP = *get_phase_two_sap(NULL);
 }
 
+/*
+ * Transfer the local SAP values into the singleton SAP
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::restoreSAPvalues()
 {
 	//overwrite all SAPs with the addresses of the local SAPs
@@ -683,6 +823,15 @@ void RoutingUncertainUniboCgr::restoreSAPvalues()
 	get_phase_two_sap(&this->phaseTwoSAP);
 }
 
+/*
+ * The node is notified about the fact, that a bundle was successfully delivered
+ *
+ * @param bundleId: The ID of the bundle
+ *        contact: The used contact
+ *        sentToDestination: Identifier whether the delivery was towards to the bundle destination
+ *
+ * @authors The original authors of DTNSim, then ported to this class by Simon Rink
+ */
 void RoutingUncertainUniboCgr::successfulBundleForwarded(long bundleId, Contact *contact, bool sentToDestination)
 {
 	if (sentToDestination)
@@ -691,6 +840,13 @@ void RoutingUncertainUniboCgr::successfulBundleForwarded(long bundleId, Contact 
 	}
 }
 
+/*
+ * Checks whether a bundle was already delivered successfully
+ *
+ * @param bundleId: The ID of the bundle
+ *
+ * @authors The original authors of DTNSim, then ported to this class by Simon Rink
+ */
 bool RoutingUncertainUniboCgr::isDeliveredBundle(long bundleId)
 {
 	for (size_t i = 0; i < this->deliveredBundles_.size(); i++)
@@ -704,6 +860,13 @@ bool RoutingUncertainUniboCgr::isDeliveredBundle(long bundleId)
 	return false;
 }
 
+/*
+ * Accepts or rejects a delivered bundle with this node as destination
+ *
+ * @param bundle: The pointer to the received bundle
+ *
+ * @authors The original authors of DTNSim, then ported to this class by Simon Rink
+ */
 bool RoutingUncertainUniboCgr::msgToMeArrive(BundlePkt *bundle)
 {
 	if (!this->isDeliveredBundle(bundle->getBundleId()))
@@ -717,6 +880,13 @@ bool RoutingUncertainUniboCgr::msgToMeArrive(BundlePkt *bundle)
 	return false;
 }
 
+/*
+ * Bundles queued to this contact are examined and then sent to it. Recompute values if it is a discovered contact.
+ *
+ * @param c: The started contact
+ *
+ * @author Principle based on contactStart() by the authors of DTNSim, then extended by DTNSim
+ */
 void RoutingUncertainUniboCgr::contactStart(Contact *c)
 {
 	vector<BundlePkt*> toBeRerouted;
@@ -728,13 +898,14 @@ void RoutingUncertainUniboCgr::contactStart(Contact *c)
 		this->sdr_->popNextBundleForContact(0);
 	}
 	vector<BundlePkt*> routeLater;
+
 	//try out whether a new route exists for a newly discovered contact
 	for (size_t i = 0; i < toBeRerouted.size(); i++)
 	{
 		BundlePkt *bundle = toBeRerouted.at(i);
 		if (this->bundleReroutable.find(bundle->getBundleId()) == this->bundleReroutable.end())
 		{
-			if (c->isDiscovered())
+			if (c->isDiscovered()) //new contact discovered
 			{
 				this->routeAndQueueBundle(bundle, simTime().dbl());
 			}
@@ -784,6 +955,7 @@ void RoutingUncertainUniboCgr::contactStart(Contact *c)
 		}
 	}
 
+	// send non-received bundles
 	for (list<BundlePkt*>::iterator it = nonReceived.begin(); it != nonReceived.end(); ++it)
 	{
 		sdr_->enqueueBundleToContact(*it, c->getId());
@@ -791,6 +963,13 @@ void RoutingUncertainUniboCgr::contactStart(Contact *c)
 	}
 }
 
+/*
+ * Reroutes all bundles that could not delivered using this contact
+ *
+ * @param c: The ended contact
+ *
+ * @authors The original authors of DTNSim, then ported to this class by Simon Rink
+ */
 void RoutingUncertainUniboCgr::contactEnd(Contact *c)
 {
 	while (sdr_->isBundleForContact(c->getId()))
@@ -801,6 +980,11 @@ void RoutingUncertainUniboCgr::contactEnd(Contact *c)
 	}
 }
 
+/*
+ * The call to L-RUCoP is performed here, thus the initialiation and the contact plan files are created, L-RUCoP called and the results interpreted
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::callToPython()
 {
 	char currDirectory[128];
@@ -838,6 +1022,13 @@ void RoutingUncertainUniboCgr::callToPython()
 
 }
 
+/*
+ * The file for the RUCoP computation is created, thus all contact are splitted in case it is necessary and then added
+ *
+ * @param endDestination: The destination of the bundle
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::convertContactPlanIntoNet()
 {
 	ofstream networkFile("net.py");
@@ -854,7 +1045,7 @@ void RoutingUncertainUniboCgr::convertContactPlanIntoNet()
 		int destination = contacts->at(i).getDestinationEid() - 1;
 		vector<int> tsValues = getTsForContact(&contacts->at(i));
 		double pf = contacts->at(i).getFailureProbability();
-		for (size_t i = 0; i < tsValues.size(); i++)
+		for (size_t i = 0; i < tsValues.size(); i++) //split contact
 		{
 			contactString = contactString + "{'from': " + to_string(source) + ", ";
 			contactString = contactString + "'to': " + to_string(destination) + ", ";
@@ -870,7 +1061,11 @@ void RoutingUncertainUniboCgr::convertContactPlanIntoNet()
 	networkFile.close();
 }
 
-
+/*
+ * Creates the initialization file for L-RUCoP
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::createSourceDestFile()
 {
 	ofstream sourceDestFile("sourcetarget.txt");
@@ -878,6 +1073,15 @@ void RoutingUncertainUniboCgr::createSourceDestFile()
 	sourceDestFile.close();
 }
 
+/*
+ * Returns the timestamp for the given time, interpreted as contact start or current simulation time
+ *
+ * @param startOrCurrent: The given simulation or contact start time
+ *
+ * @return The respective timestamp
+ *
+ * @author Simon Rink
+ */
 int getTsForStartOrCurrentTime(int startOrCurrent)
 {
 
@@ -891,6 +1095,15 @@ int getTsForStartOrCurrentTime(int startOrCurrent)
 
 }
 
+/*
+ * Returns the timestamp for the given time, interpreted as contact end
+ *
+ * @param end: The end time of a contact
+ *
+ * @return The respective time stamp
+ *
+ * @author Simon Rink
+ */
 int getTsForEndTime(int end)
 {
 
@@ -904,6 +1117,13 @@ int getTsForEndTime(int end)
 
 }
 
+/*
+ * Reads the json results from a call to L-RUCoP
+ *
+ * @param destination: The destination of the bundle
+ *
+ * @author Simon Rink
+ */
 void RoutingUncertainUniboCgr::readJsonFromFile()
 {
 	string filename = "working_dir/CGR-UCOP/routing_files/decisions.json";
@@ -924,6 +1144,15 @@ void RoutingUncertainUniboCgr::readJsonFromFile()
 	}
 }
 
+/*
+ * Computes the SDP for the given route
+ *
+ * @param route: The chosen route
+ *
+ * @return The SDP for the route
+ *
+ * @authors Originally implemented by the authors of RUCoP, then ported and modified by Simon Rink
+ */
 double get_probability_if_this_route_is_chosen(Route *route)
 {
 	if (!useUncertainMode)
@@ -938,6 +1167,7 @@ double get_probability_if_this_route_is_chosen(Route *route)
 	int ts = getTsForStartOrCurrentTime(route->fromTime);
 	vector<UniboContact*> hopsWithinTs;
 
+	//get potential multi hops
 	for (ListElt *elt = route->hops->first; elt != NULL; elt = elt->next)
 	{
 		UniboContact *currHop = (UniboContact*) elt->data;
@@ -951,6 +1181,7 @@ double get_probability_if_this_route_is_chosen(Route *route)
 		}
 	}
 
+	//compute the case that everythings works
 	int last_hop_destination = hopsWithinTs.back()->toNode;
 
 	double successProbability = getNodeFutureDeliveryProbability(last_hop_destination, ts + 1);
@@ -960,6 +1191,7 @@ double get_probability_if_this_route_is_chosen(Route *route)
 		successProbability = successProbability * (1 - hopsWithinTs.at(i)->pf);
 	}
 
+	//compute the cases where one hop fails
 	for (size_t i = 0; i < hopsWithinTs.size(); i++)
 	{
 		double currProbability = 1;
@@ -978,6 +1210,9 @@ double get_probability_if_this_route_is_chosen(Route *route)
 	return successProbability;
 }
 
+/*
+ * Can be used in future iteration
+ */
 double get_probability_if_this_contact_is_chosen(UniboContact *contact, time_t earliestTransmissionTime)
 {
 	if (!useUncertainMode)
@@ -995,6 +1230,16 @@ double get_probability_if_this_contact_is_chosen(UniboContact *contact, time_t e
 
 }
 
+/*
+ * Reads up the success probability for a given node at a certain timestamp
+ *
+ * @param carrierEid: The node in question
+ * 	      ts: The timestamp
+ *
+ * @return The SDP for the node at time ts
+ *
+ * @authors Originally implemented by the authors of RUCoP, then ported and modified by Simon Rink
+ */
 double getNodeFutureDeliveryProbability(int carrierEid, int ts) //from CGRBRUFPowered
 {
 	string sTs = to_string(ts);
@@ -1005,12 +1250,12 @@ double getNodeFutureDeliveryProbability(int carrierEid, int ts) //from CGRBRUFPo
 		return 0;
 	}
 
-	if (currDest == carrierEid)
+	if (currDest == carrierEid) //destination found
 	{
 		return 1.0;
 	}
 
-	if (ts == numOfTs)
+	if (ts == numOfTs) //end of possible routing found
 	{
 		if (currDest == carrierEid)
 		{
@@ -1025,13 +1270,26 @@ double getNodeFutureDeliveryProbability(int carrierEid, int ts) //from CGRBRUFPo
 	{
 		double result = brufFunction.at(sTs).at(sCarrier);
 		return result;
-	} catch (...)
+	} catch (...) //no decisions available
 	{
 		return 0;
 	}
 	//return brufFunction.at(sSource).at(sTarget).at(sTs).at(sCarrier);
 }
 
+/*
+ * Computes the available backlog for the given neighbor
+ *
+ * @param neighbor: The number of the neighbor node
+ *        priority: The bundle priority
+ *        ordinal: The ordinal priority
+ *        CgrApplicableBacklog: The return value for the applicable backlog
+ *        CgrTotalBacklog: The return value for the total backlog
+ *
+ * @return - 1, if the bachlog object were uninitialized, 0 otherwise
+ *
+ * @author Simon Rink
+ */
 int computeApplicableBacklog(unsigned long long neighbor, int priority, unsigned int ordinal, CgrScalar *CgrApplicableBacklog, CgrScalar *CgrTotalBacklog)
 {
 	int result = 0;
@@ -1057,6 +1315,15 @@ int computeApplicableBacklog(unsigned long long neighbor, int priority, unsigned
 	return result;
 }
 
+/*
+ * Computes the EVC for all bundles stored to a neighbor
+ *
+ * @param sizes: The bundles sizes
+ *
+ * @return The computed EVC
+ *
+ * @author Simon Rink
+ */
 int getTotalEVC(vector<int> sizes)
 {
 	int result = 0;
@@ -1068,12 +1335,26 @@ int getTotalEVC(vector<int> sizes)
 	return result;
 }
 
+/*
+ * Returns the maximum time stamps
+ *
+ * @return The maximum time stamp
+ *
+ * @author Simon Rink
+ */
 int findMaxTs()
 {
 
 	return tsStartTimes[currDest].size() - 1;
 }
 
+/**
+ * Updates the start times according to the contacts for RUCoP
+ *
+ * @param contacts: The contacts that are considered for the time stamps
+ *
+ * @author Simon Rink
+ */
 void updateStartTimes(vector<Contact> *contacts)
 {
 	map<int, int> alreadySeen;
@@ -1083,7 +1364,7 @@ void updateStartTimes(vector<Contact> *contacts)
 	{
 		int start = contacts->at(i).getStart();
 		int end = contacts->at(i).getEnd();
-		if (alreadySeen.find(start) == alreadySeen.end())
+		if (alreadySeen.find(start) == alreadySeen.end()) //do not insert duplicates
 		{
 			alreadySeen[start] = 1;
 			tsStartTimes[currDest].push_back(start);
@@ -1096,18 +1377,28 @@ void updateStartTimes(vector<Contact> *contacts)
 		}
 	}
 
-	sort(tsStartTimes[currDest].begin(), tsStartTimes[currDest].begin() + tsStartTimes[currDest].size());
+	sort(tsStartTimes[currDest].begin(), tsStartTimes[currDest].begin() + tsStartTimes[currDest].size()); //the list must be sorted
 	numOfTs = findMaxTs();
 
 }
 
+/*
+ * Returns the time intervals for a given contact
+ *
+ * @param contact: The respective contact pointer
+ * 	      destination: The destination of the bundle
+ *
+ * @return A vector of time stamps
+ *
+ * @author Simon Rink
+ */
 vector<int> getTsForContact(Contact *contact)
 {
 	int startTs = getTsForStartOrCurrentTime(contact->getStart());
 	int endTs = getTsForEndTime(contact->getEnd());
 	vector<int> tsValues;
 
-	for (int i = startTs; i <= endTs; i++)
+	for (int i = startTs; i <= endTs; i++) //take all ts between start and end
 	{
 		tsValues.push_back(i);
 	}

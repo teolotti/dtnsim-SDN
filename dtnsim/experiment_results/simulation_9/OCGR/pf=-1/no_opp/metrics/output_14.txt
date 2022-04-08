@@ -1,0 +1,57 @@
+The bundles with the following ids have been sent: 
+834(7 to 5), 837(12 to 5), 845(8 to 4), 848(8 to 3), 849(10 to 7), 861(3 to 7), 876(11 to 1), 882(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(834: 60.000000), (837: 50.000000), (848: 90.000000), (882: 35.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(834: 5), (837: 4), (845: 3), (848: 2), (849: 6), (861: 4), (876: 2), (882: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 33 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 834: (to: 2, time: 0.000000), 
+Bundle 849: (to: 9, time: 80.000000), 
+Bundle 861: (to: 9, time: 80.000000), 
+Bundle 882: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 834: (to: 3, time: 20.000000), 
+Bundle 837: (to: 3, time: 20.000000), 
+Bundle 845: (to: 3, time: 120.000000), 
+Bundle 848: (to: 3, time: 120.000000), 
+Bundle 882: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 834: (to: 10, time: 40.000000), 
+Bundle 837: (to: 10, time: 40.000000), 
+Bundle 845: (to: 4, time: 140.000000), 
+Bundle 861: (to: 4, time: 40.000000), 
+Bundle 876: (to: 4, time: 140.000000), 
+Node 4: 
+Bundle 849: (to: 1, time: 80.000000), 
+Bundle 861: (to: 1, time: 80.000000), 
+Bundle 882: (to: 1, time: 80.000000), 
+Node 5: 
+Bundle 849: (to: 4, time: 60.000000), 
+Node 6: 
+Node 7: 
+Bundle 834: (to: 1, time: 0.000000), 
+Node 8: 
+Bundle 845: (to: 2, time: 40.000000), 
+Bundle 848: (to: 2, time: 40.000000), 
+Node 9: 
+Bundle 849: (to: 7, time: 80.000000), 
+Bundle 861: (to: 7, time: 80.000000), 
+Node 10: 
+Bundle 834: (to: 5, time: 60.000000), 
+Bundle 837: (to: 5, time: 60.000000), 
+Bundle 849: (to: 3, time: 40.000000), (to: 5, time: 60.000000), 
+Node 11: 
+Bundle 876: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 837: (to: 2, time: 0.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

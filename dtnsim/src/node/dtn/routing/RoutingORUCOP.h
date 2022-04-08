@@ -2,7 +2,7 @@
  * RoutingORUCOP.h
  *
  *  Created on: Jan 24, 2022
- *      Author: simon
+ *      Author: Simon Rink
  */
 
 #ifndef SRC_NODE_DTN_ROUTING_ROUTINGORUCOP_H_

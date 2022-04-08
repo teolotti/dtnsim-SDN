@@ -1,0 +1,45 @@
+The bundles with the following ids have been sent: 
+469(7 to 5), 470(12 to 5), 475(8 to 4), 476(8 to 3), 477(10 to 7), 483(3 to 7), 493(11 to 1), 495(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(475: 120.000000), (476: 90.000000), (493: 80.000000), (495: 35.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(469: 1), (470: 2), (475: 4), (476: 3), (477: 3), (483: 1), (493: 3), (495: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 23 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 495: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 475: (to: 3, time: 120.000000), 
+Bundle 476: (to: 3, time: 120.000000), 
+Bundle 495: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 475: (to: 4, time: 140.000000), 
+Bundle 477: (to: 4, time: 40.000000), 
+Bundle 483: (to: 4, time: 40.000000), 
+Bundle 493: (to: 4, time: 140.000000), 
+Node 4: 
+Bundle 493: (to: 1, time: 160.000000), 
+Bundle 495: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 469: (to: 1, time: 0.000000), 
+Node 8: 
+Bundle 475: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Bundle 476: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Node 9: 
+Node 10: 
+Bundle 477: (to: 5, time: 20.000000), (to: 3, time: 40.000000), 
+Node 11: 
+Bundle 493: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 470: (to: 2, time: 0.000000), (to: 11, time: 40.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

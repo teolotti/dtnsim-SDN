@@ -2,7 +2,7 @@
  * MetricCollector.cc
  *
  *  Created on: Feb 1, 2022
- *      Author: simon
+ *      Author: Simon Rink
  */
 
 #include "MetricCollector.h"
@@ -171,6 +171,11 @@ string MetricCollector::getPrefix()
 	return result;
 }
 
+/**
+ * All results from the node metrics are evaluated and printed into the .txt and .json files
+ *
+ * @author Simon Rink
+ */
 void MetricCollector::evaluateAndPrintResults()
 {
 	//Collect necessary data
@@ -284,6 +289,13 @@ void MetricCollector::evaluateAndPrintResults()
 
 }
 
+/*
+ * Determines the bundles that started in the network
+ *
+ * @return A Map that contains for each bundle ID the corresponding start time
+ *
+ * @author Simon Rink
+ */
 map<long, double> MetricCollector::getOverallSentBundles()
 {
 	map<long, double> bundleMap;
@@ -300,6 +312,13 @@ map<long, double> MetricCollector::getOverallSentBundles()
 	return bundleMap;
 }
 
+/*
+ * Determines the bundles that were succesfully received at their destination
+ *
+ * @return A Map contains for each bundle the corresponding when it was received
+ *
+ * @author Simon Rink
+ */
 map<long, double> MetricCollector::getOverallReceivedBundles()
 {
 	map<long, double> bundleMap;
@@ -316,12 +335,32 @@ map<long, double> MetricCollector::getOverallReceivedBundles()
 	return bundleMap;
 }
 
+/**
+ * Returns a unique string for each bundle
+ *
+ * @param bundleid: The ID of the bundle
+ * 	      start: The start time of the bundle
+ *
+ * @return The resulting string
+ *
+ * @author Simon Rink
+ */
 string MetricCollector::getInformationString(long bundleId, double start)
 {
 	tuple<int, int> informations = this->bundleInformation_[bundleId];
 	return to_string(get<0>(informations)) + ":" + to_string(get<1>(informations)) + ":" + to_string(start);
 }
 
+/*
+ * Computes the delivery delay for each bundle
+ *
+ * @param startTimes: The start times for each bundle
+ * 		  receivingTimes: The receiving times for each bundle
+ *
+ * @return The Map that contains for each bundle the corresponding delivery delay
+ *
+ * @author Simon Rink
+ */
 map<long, double> MetricCollector::computeDeliveryTimes(map<long, double> startTimes, map<long, double> receivingTimes)
 {
 	map<long, double> bundleMap;
@@ -334,6 +373,13 @@ map<long, double> MetricCollector::computeDeliveryTimes(map<long, double> startT
 	return bundleMap;
 }
 
+/*
+ * Computes the overall sent copies for each bundle
+ *
+ * @return A Map that contains for each bundle the corresponding amount of sent bundles
+ *
+ * @author Simon Rink
+ */
 map<long, int> MetricCollector::getBundleDeliveryCounts()
 {
 	map<long, int> bundleMap;
@@ -358,6 +404,13 @@ map<long, int> MetricCollector::getBundleDeliveryCounts()
 	return bundleMap;
 }
 
+/**
+ * Returns the calls to the RUCoP algorithm in the whole simulation
+ *
+ * @return The number of RUCoP calls
+ *
+ * @author Simon Rink
+ */
 int MetricCollector::getRUCoPCalls()
 {
 	int RUCoPCalls = 0;
@@ -371,6 +424,13 @@ int MetricCollector::getRUCoPCalls()
 	return RUCoPCalls;
 }
 
+/**
+ * Returns the calls to CGR in the whole simulation
+ *
+ * @return The number of CGR calls
+ *
+ * @author Simon Rink
+ */
 int MetricCollector::getCGRCalls()
 {
 	int djikstraCalls = 0;

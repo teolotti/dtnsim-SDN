@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+261(7 to 5), 267(12 to 5), 286(8 to 4), 289(8 to 3), 290(10 to 7), 324(3 to 7), 379(11 to 1), 382(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(261: 20.000000), (267: 10.000000), (324: 0.000000), (382: 35.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(261: 6), (267: 3), (286: 2), (289: 2), (290: 1), (324: 6), (379: 3), (382: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 31 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 261: (to: 2, time: 0.000000), 
+Bundle 382: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 261: (to: 12, time: 0.000000), 
+Bundle 382: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 324: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 382: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 261: (to: 1, time: 0.000000), 
+Bundle 379: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 286: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Bundle 289: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Node 9: 
+Node 10: 
+Bundle 261: (to: 5, time: 20.000000), 
+Bundle 267: (to: 5, time: 20.000000), 
+Bundle 290: (to: 3, time: 40.000000), 
+Bundle 324: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 324: (to: 15, time: 40.000000), 
+Bundle 379: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 261: (to: 13, time: 0.000000), 
+Bundle 267: (to: 13, time: 0.000000), 
+Bundle 324: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 261: (to: 10, time: 0.000000), 
+Bundle 267: (to: 10, time: 0.000000), 
+Bundle 324: (to: 12, time: 40.000000), 
+Node 14: 
+Node 15: 
+Bundle 324: (to: 7, time: 40.000000), 
+Bundle 379: (to: 7, time: 80.000000), 

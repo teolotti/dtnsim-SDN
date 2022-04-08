@@ -1,0 +1,48 @@
+The bundles with the following ids have been sent: 
+794(1 to 12), 799(6 to 3), 819(8 to 2), 829(4 to 5), 837(2 to 4), 838(9 to 10), 839(12 to 11), 848(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(799: 35.000000), (819: 60.000000), (838: 20.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(794: 3), (799: 6), (819: 6), (829: 1), (838: 8), (839: 2), (848: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 794: (to: 4, time: 15.000000), (to: 5, time: 40.000000), 
+Bundle 838: (to: 4, time: 80.000000), (to: 4, time: 80.000000), 
+Bundle 848: (to: 4, time: 80.000000), 
+Node 2: 
+Node 3: 
+Node 4: 
+Bundle 794: (to: 8, time: 40.000000), 
+Bundle 829: (to: 8, time: 55.000000), 
+Bundle 838: (to: 10, time: 80.000000), (to: 10, time: 80.000000), 
+Node 5: 
+Bundle 838: (to: 1, time: 80.000000), (to: 1, time: 80.000000), 
+Bundle 848: (to: 1, time: 80.000000), 
+Node 6: 
+Bundle 799: (to: 10, time: 25.000000), (to: 13, time: 40.000000), 
+Node 7: 
+Bundle 799: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 819: (to: 14, time: 40.000000), (to: 14, time: 40.000000), 
+Node 9: 
+Bundle 838: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Bundle 839: (to: 5, time: 60.000000), 
+Node 10: 
+Bundle 799: (to: 14, time: 40.000000), 
+Bundle 819: (to: 2, time: 100.000000), (to: 2, time: 100.000000), 
+Node 11: 
+Node 12: 
+Bundle 839: (to: 9, time: 60.000000), 
+Node 13: 
+Bundle 799: (to: 7, time: 40.000000), 
+Node 14: 
+Bundle 799: (to: 8, time: 40.000000), 
+Bundle 819: (to: 10, time: 80.000000), (to: 10, time: 80.000000), 
+Node 15: 

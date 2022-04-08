@@ -1,0 +1,56 @@
+The bundles with the following ids have been sent: 
+1969(10 to 6), 1989(1 to 11), 1997(1 to 6), 1998(5 to 10), 2034(4 to 1), 2038(9 to 12), 2070(3 to 9), 2108(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1969: 105.000000), (1989: 35.000000), (1997: 25.000000), (2038: 55.000000), (2070: 15.000000), (2108: 25.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1969: 5), (1989: 7), (1997: 3), (1998: 8), (2034: 2), (2038: 5), (2070: 7), (2108: 4), 
+--------------------
+Overall, the computation required 60 calls to RUCoP, which took 293 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1989: (to: 3, time: 25.000000), (to: 3, time: 25.000000), 
+Bundle 1997: (to: 2, time: 35.000000), (to: 3, time: 50.000000), 
+Node 2: 
+Node 3: 
+Bundle 1989: (to: 6, time: 30.000000), (to: 4, time: 60.000000), 
+Bundle 1997: (to: 6, time: 60.000000), 
+Bundle 2070: (to: 4, time: 65.000000), (to: 6, time: 65.000000), 
+Node 4: 
+Bundle 1969: (to: 5, time: 70.000000), 
+Bundle 1989: (to: 11, time: 60.000000), 
+Bundle 1998: (to: 11, time: 60.000000), 
+Bundle 2034: (to: 11, time: 60.000000), (to: 11, time: 60.000000), 
+Bundle 2070: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 1969: (to: 12, time: 110.000000), 
+Bundle 1998: (to: 15, time: 40.000000), (to: 15, time: 40.000000), 
+Bundle 2038: (to: 12, time: 110.000000), 
+Bundle 2070: (to: 15, time: 80.000000), (to: 15, time: 80.000000), 
+Node 6: 
+Bundle 1989: (to: 14, time: 40.000000), 
+Bundle 2070: (to: 5, time: 80.000000), 
+Bundle 2108: (to: 1, time: 110.000000), (to: 1, time: 110.000000), 
+Node 7: 
+Node 8: 
+Bundle 1998: (to: 4, time: 60.000000), 
+Node 9: 
+Bundle 1998: (to: 8, time: 50.000000), (to: 8, time: 55.000000), 
+Bundle 2038: (to: 15, time: 55.000000), (to: 15, time: 55.000000), 
+Node 10: 
+Bundle 1969: (to: 4, time: 5.000000), (to: 4, time: 5.000000), 
+Node 11: 
+Node 12: 
+Bundle 1969: (to: 6, time: 110.000000), 
+Bundle 2108: (to: 6, time: 110.000000), (to: 6, time: 110.000000), 
+Node 13: 
+Node 14: 
+Bundle 1989: (to: 3, time: 80.000000), 
+Node 15: 
+Bundle 1998: (to: 9, time: 40.000000), (to: 9, time: 40.000000), 
+Bundle 2038: (to: 5, time: 55.000000), (to: 5, time: 55.000000), 
+Bundle 2070: (to: 9, time: 80.000000), 

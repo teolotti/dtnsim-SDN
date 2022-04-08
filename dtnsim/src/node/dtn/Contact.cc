@@ -159,45 +159,6 @@ double Contact::getRange() const
 	return range_;
 }
 
-vector<int> Contact::getForeignSources()
-{
-	return this->foreignSources_;
-}
 
-void Contact::addForeignSource(int foreignEid)
-{
-	this->foreignSources_.push_back(foreignEid);
-}
-
-void Contact::removeForeignSource(int foreignEid)
-{
-	int position = -1;
-
-	for (size_t i = 0; i < this->foreignSources_.size(); i++) {
-		if (this->foreignSources_[i] == foreignEid) {
-			position = i;
-		}
-	}
-
-	if (position > -1) {
-		this->foreignSources_.erase(this->foreignSources_.begin() + position);
-	}
-}
-
-bool Contact::hasForeignSource(int foreignEid)
-{
-	if (this->foreignSources_.size() == 0) {
-		return false;
-	} else {
-		for (auto it = this->foreignSources_.begin(); it != this->foreignSources_.end(); it++) {
-			if (foreignEid == (*it)) {
-				return true;
-			}
-		}
-	}
-
-	return false;
-
-}
 
 

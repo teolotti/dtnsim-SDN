@@ -13,7 +13,6 @@
 #include <src/node/dtn/routing/RoutingSprayAndWait.h>
 #include <src/node/dtn/routing/RoutingCgrModel350_Probabilistic.h>
 #include <src/node/dtn/routing/RoutingOpportunistic.h>
-#include <src/node/dtn/routing/RoutingUniboCgr.h>
 #include <src/node/dtn/routing/RoutingUncertainUniboCgr.h>
 #include <src/node/dtn/routing/RoutingBRUF1T.h>
 #include <src/node/dtn/routing/RoutingORUCOP.h>

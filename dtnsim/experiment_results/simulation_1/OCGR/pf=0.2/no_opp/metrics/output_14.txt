@@ -1,0 +1,54 @@
+The bundles with the following ids have been sent: 
+626(10 to 6), 633(1 to 11), 641(1 to 6), 642(5 to 10), 647(4 to 1), 650(9 to 12), 663(3 to 9), 674(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(626: 45.000000), (633: 35.000000), (642: 35.000000), (647: 60.000000), (650: 55.000000), (674: 25.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(626: 4), (633: 3), (641: 1), (642: 3), (647: 4), (650: 4), (663: 4), (674: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 27 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 633: (to: 3, time: 20.000000), 
+Bundle 641: (to: 3, time: 50.000000), 
+Node 2: 
+Node 3: 
+Bundle 633: (to: 4, time: 60.000000), 
+Bundle 663: (to: 4, time: 60.000000), 
+Node 4: 
+Bundle 626: (to: 5, time: 30.000000), 
+Bundle 633: (to: 11, time: 60.000000), 
+Bundle 642: (to: 11, time: 60.000000), 
+Bundle 647: (to: 5, time: 70.000000), 
+Bundle 650: (to: 5, time: 70.000000), 
+Bundle 663: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 626: (to: 12, time: 50.000000), 
+Bundle 642: (to: 4, time: 30.000000), 
+Bundle 647: (to: 12, time: 110.000000), 
+Bundle 650: (to: 12, time: 110.000000), 
+Bundle 663: (to: 12, time: 110.000000), 
+Node 6: 
+Bundle 647: (to: 1, time: 110.000000), 
+Bundle 674: (to: 1, time: 110.000000), 
+Node 7: 
+Node 8: 
+Bundle 650: (to: 4, time: 60.000000), 
+Node 9: 
+Bundle 650: (to: 8, time: 50.000000), 
+Node 10: 
+Bundle 626: (to: 4, time: 0.000000), 
+Node 11: 
+Bundle 642: (to: 10, time: 70.000000), 
+Node 12: 
+Bundle 626: (to: 6, time: 50.000000), 
+Bundle 647: (to: 6, time: 110.000000), 
+Bundle 663: (to: 9, time: 130.000000), 
+Bundle 674: (to: 6, time: 110.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

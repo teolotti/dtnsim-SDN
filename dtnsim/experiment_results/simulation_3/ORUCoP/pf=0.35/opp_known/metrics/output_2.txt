@@ -1,0 +1,51 @@
+The bundles with the following ids have been sent: 
+965(7 to 5), 967(12 to 5), 973(8 to 4), 975(8 to 3), 976(10 to 7), 1008(3 to 7), 1035(11 to 1), 1038(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(965: 60.000000), (967: 50.000000), (973: 120.000000), (975: 90.000000), (976: 10.000000), (1035: 80.000000), (1038: 35.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(965: 10), (967: 3), (973: 3), (975: 3), (976: 4), (1035: 3), (1038: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1038: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 973: (to: 3, time: 120.000000), 
+Bundle 975: (to: 3, time: 120.000000), 
+Bundle 1038: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 965: (to: 10, time: 40.000000), (to: 10, time: 40.000000), 
+Bundle 973: (to: 4, time: 140.000000), 
+Bundle 1035: (to: 4, time: 140.000000), 
+Node 4: 
+Bundle 1035: (to: 1, time: 160.000000), 
+Bundle 1038: (to: 1, time: 85.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 965: (to: 15, time: 40.000000), (to: 15, time: 40.000000), 
+Node 8: 
+Bundle 973: (to: 2, time: 100.000000), 
+Bundle 975: (to: 2, time: 100.000000), (to: 2, time: 100.000000), 
+Node 9: 
+Node 10: 
+Bundle 965: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Bundle 967: (to: 5, time: 60.000000), 
+Bundle 976: (to: 11, time: 30.000000), (to: 11, time: 60.000000), 
+Node 11: 
+Bundle 965: (to: 3, time: 40.000000), (to: 3, time: 40.000000), 
+Bundle 976: (to: 15, time: 40.000000), 
+Bundle 1035: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 967: (to: 13, time: 40.000000), 
+Node 13: 
+Bundle 967: (to: 10, time: 40.000000), 
+Node 14: 
+Node 15: 
+Bundle 965: (to: 11, time: 40.000000), (to: 11, time: 40.000000), 
+Bundle 976: (to: 7, time: 40.000000), 

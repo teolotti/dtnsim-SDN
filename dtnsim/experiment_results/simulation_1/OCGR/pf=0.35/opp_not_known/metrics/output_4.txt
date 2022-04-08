@@ -1,0 +1,58 @@
+The bundles with the following ids have been sent: 
+1934(10 to 6), 1952(1 to 11), 1957(1 to 6), 1958(5 to 10), 1988(4 to 1), 1993(9 to 12), 2018(3 to 9), 2050(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1934: 105.000000), (1952: 35.000000), (1957: 15.000000), (1988: 60.000000), (1993: 55.000000), (2018: 65.000000), (2050: 25.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1934: 5), (1952: 3), (1957: 3), (1958: 8), (1988: 4), (1993: 4), (2018: 4), (2050: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 36 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1952: (to: 3, time: 20.000000), 
+Bundle 1957: (to: 3, time: 50.000000), 
+Node 2: 
+Node 3: 
+Bundle 1952: (to: 4, time: 60.000000), 
+Bundle 1957: (to: 14, time: 40.000000), 
+Bundle 2018: (to: 4, time: 60.000000), 
+Node 4: 
+Bundle 1934: (to: 5, time: 30.000000), (to: 5, time: 70.000000), 
+Bundle 1952: (to: 11, time: 60.000000), 
+Bundle 1958: (to: 11, time: 60.000000), 
+Bundle 1988: (to: 5, time: 70.000000), 
+Bundle 2018: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 1934: (to: 12, time: 110.000000), 
+Bundle 1958: (to: 4, time: 30.000000), (to: 15, time: 40.000000), 
+Bundle 1988: (to: 12, time: 110.000000), 
+Bundle 1993: (to: 12, time: 50.000000), (to: 12, time: 110.000000), 
+Bundle 2018: (to: 12, time: 110.000000), 
+Node 6: 
+Bundle 1988: (to: 1, time: 110.000000), 
+Bundle 2050: (to: 1, time: 110.000000), 
+Node 7: 
+Node 8: 
+Bundle 1958: (to: 4, time: 60.000000), 
+Node 9: 
+Bundle 1958: (to: 8, time: 50.000000), 
+Bundle 1993: (to: 15, time: 40.000000), 
+Node 10: 
+Bundle 1934: (to: 4, time: 0.000000), 
+Node 11: 
+Bundle 1958: (to: 10, time: 70.000000), (to: 10, time: 90.000000), 
+Node 12: 
+Bundle 1934: (to: 6, time: 110.000000), 
+Bundle 1988: (to: 6, time: 110.000000), 
+Bundle 2018: (to: 9, time: 130.000000), 
+Bundle 2050: (to: 6, time: 110.000000), 
+Node 13: 
+Node 14: 
+Bundle 1957: (to: 6, time: 40.000000), 
+Node 15: 
+Bundle 1958: (to: 9, time: 40.000000), 
+Bundle 1993: (to: 5, time: 40.000000), 

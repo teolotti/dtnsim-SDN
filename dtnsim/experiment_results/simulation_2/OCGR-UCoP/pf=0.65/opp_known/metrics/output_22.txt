@@ -1,0 +1,47 @@
+The bundles with the following ids have been sent: 
+761(1 to 12), 763(6 to 3), 780(8 to 2), 785(4 to 5), 794(2 to 4), 795(9 to 10), 796(12 to 11), 802(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(763: 35.000000), 
+--------------------
+That means, that overall 0.125 (1/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(761: 2), (763: 3), (780: 3), (785: 2), (794: 2), (795: 3), (796: 3), (802: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 21 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 761: (to: 5, time: 40.000000), (to: 5, time: 80.000000), 
+Bundle 795: (to: 4, time: 80.000000), 
+Node 2: 
+Bundle 794: (to: 6, time: 60.000000), 
+Node 3: 
+Node 4: 
+Bundle 785: (to: 8, time: 40.000000), 
+Node 5: 
+Bundle 795: (to: 1, time: 80.000000), 
+Bundle 796: (to: 11, time: 80.000000), 
+Bundle 802: (to: 11, time: 80.000000), 
+Node 6: 
+Bundle 763: (to: 13, time: 40.000000), 
+Bundle 794: (to: 10, time: 60.000000), 
+Node 7: 
+Bundle 763: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 780: (to: 14, time: 40.000000), 
+Bundle 785: (to: 12, time: 60.000000), 
+Node 9: 
+Bundle 795: (to: 5, time: 60.000000), 
+Bundle 796: (to: 5, time: 60.000000), 
+Node 10: 
+Bundle 780: (to: 2, time: 100.000000), 
+Node 11: 
+Node 12: 
+Bundle 796: (to: 9, time: 60.000000), 
+Node 13: 
+Bundle 763: (to: 7, time: 40.000000), 
+Node 14: 
+Bundle 780: (to: 10, time: 40.000000), 
+Node 15: 

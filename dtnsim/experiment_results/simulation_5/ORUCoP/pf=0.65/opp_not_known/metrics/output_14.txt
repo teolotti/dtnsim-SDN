@@ -1,0 +1,51 @@
+The bundles with the following ids have been sent: 
+1825(1 to 12), 1826(12 to 5), 1846(7 to 3), 1847(10 to 6), 1848(11 to 1), 1858(6 to 7), 1901(3 to 4), 1907(8 to 4), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1847: 65.000000), (1848: 95.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1825: 4), (1826: 8), (1846: 4), (1847: 4), (1848: 6), (1858: 8), (1901: 2), (1907: 2), 
+--------------------
+Overall, the computation required 62 calls to RUCoP, which took 249 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1825: (to: 13, time: 0.000000), (to: 13, time: 0.000000), 
+Node 2: 
+Node 3: 
+Bundle 1858: (to: 2, time: 50.000000), (to: 2, time: 50.000000), 
+Bundle 1901: (to: 2, time: 50.000000), (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 1847: (to: 8, time: 70.000000), 
+Node 5: 
+Node 6: 
+Bundle 1858: (to: 9, time: 35.000000), (to: 9, time: 35.000000), 
+Node 7: 
+Bundle 1826: (to: 7, time: 90.000000), (to: 7, time: 90.000000), 
+Bundle 1846: (to: 8, time: 30.000000), (to: 8, time: 30.000000), 
+Bundle 1847: (to: 4, time: 70.000000), 
+Node 8: 
+Bundle 1826: (to: 7, time: 90.000000), (to: 7, time: 90.000000), 
+Bundle 1846: (to: 13, time: 80.000000), (to: 13, time: 80.000000), 
+Bundle 1847: (to: 6, time: 90.000000), 
+Bundle 1848: (to: 13, time: 80.000000), (to: 13, time: 80.000000), 
+Bundle 1907: (to: 13, time: 55.000000), 
+Node 9: 
+Bundle 1858: (to: 15, time: 40.000000), (to: 15, time: 40.000000), 
+Node 10: 
+Bundle 1847: (to: 7, time: 40.000000), 
+Node 11: 
+Bundle 1826: (to: 8, time: 40.000000), (to: 8, time: 40.000000), 
+Bundle 1848: (to: 8, time: 40.000000), (to: 8, time: 40.000000), 
+Node 12: 
+Bundle 1826: (to: 11, time: 40.000000), (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 1825: (to: 8, time: 0.000000), (to: 8, time: 0.000000), 
+Bundle 1848: (to: 1, time: 120.000000), (to: 1, time: 120.000000), 
+Bundle 1907: (to: 13, time: 120.000000), 
+Node 14: 
+Node 15: 
+Bundle 1858: (to: 3, time: 40.000000), (to: 3, time: 40.000000), 

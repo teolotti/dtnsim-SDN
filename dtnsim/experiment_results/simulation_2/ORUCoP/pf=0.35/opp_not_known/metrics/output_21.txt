@@ -1,0 +1,47 @@
+The bundles with the following ids have been sent: 
+661(1 to 12), 677(6 to 3), 709(8 to 2), 719(4 to 5), 744(2 to 4), 745(9 to 10), 746(12 to 11), 755(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(661: 25.000000), (677: 35.000000), (709: 60.000000), (755: 10.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(661: 4), (677: 4), (709: 6), (719: 4), (744: 6), (745: 4), (755: 3), 
+--------------------
+Overall, the computation required 42 calls to RUCoP, which took 215 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 661: (to: 4, time: 40.000000), (to: 5, time: 40.000000), 
+Node 2: 
+Bundle 744: (to: 6, time: 60.000000), (to: 6, time: 60.000000), 
+Node 3: 
+Node 4: 
+Bundle 661: (to: 8, time: 40.000000), 
+Bundle 719: (to: 8, time: 55.000000), (to: 8, time: 55.000000), 
+Node 5: 
+Bundle 661: (to: 12, time: 40.000000), 
+Bundle 745: (to: 1, time: 80.000000), (to: 12, time: 80.000000), 
+Bundle 755: (to: 11, time: 80.000000), (to: 1, time: 80.000000), 
+Node 6: 
+Bundle 677: (to: 13, time: 40.000000), (to: 13, time: 80.000000), 
+Bundle 744: (to: 13, time: 120.000000), (to: 13, time: 120.000000), 
+Node 7: 
+Bundle 677: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 709: (to: 14, time: 40.000000), (to: 14, time: 40.000000), 
+Bundle 719: (to: 14, time: 55.000000), (to: 14, time: 55.000000), 
+Node 9: 
+Bundle 745: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Node 10: 
+Bundle 709: (to: 2, time: 100.000000), (to: 2, time: 100.000000), 
+Node 11: 
+Bundle 755: (to: 3, time: 80.000000), 
+Node 12: 
+Node 13: 
+Bundle 677: (to: 7, time: 40.000000), 
+Bundle 744: (to: 7, time: 120.000000), (to: 7, time: 120.000000), 
+Node 14: 
+Bundle 709: (to: 10, time: 80.000000), (to: 10, time: 80.000000), 
+Node 15: 

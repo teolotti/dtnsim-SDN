@@ -178,6 +178,15 @@ vector<int> SdrModel::getBundleSizesStoredToNeighbor(int eid)
 	return sizes;
 }
 
+/*
+ * Returns the sizes of all bundles that are currently queued to a neighbor, but only those that have a higher priority
+ *
+ * @param eid: The EID of the neighbor
+ * 		  critical: Whether the bundle to be queued is critical or not
+ *
+ * @authors: Original Implementation in getBundleSizesStoredToNeighbor() by the authors of DTNSim, general procedure then ported to this function and modified by Simon Rink
+ */
+
 vector<int> SdrModel::getBundleSizesStoredToNeighborWithHigherPriority(int eid, bool critical)
 {
 	vector<int> sizes;

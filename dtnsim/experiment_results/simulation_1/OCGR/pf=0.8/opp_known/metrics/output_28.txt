@@ -1,0 +1,50 @@
+The bundles with the following ids have been sent: 
+983(10 to 6), 984(1 to 11), 988(1 to 6), 989(5 to 10), 1004(4 to 1), 1005(9 to 12), 1011(3 to 9), 1034(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1005: 0.000000), (1011: 15.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(983: 1), (984: 2), (988: 1), (989: 5), (1004: 4), (1005: 3), (1011: 6), (1034: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 30 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 984: (to: 3, time: 20.000000), (to: 3, time: 50.000000), 
+Bundle 988: (to: 3, time: 50.000000), 
+Node 2: 
+Node 3: 
+Bundle 1011: (to: 4, time: 60.000000), (to: 14, time: 80.000000), 
+Node 4: 
+Bundle 989: (to: 11, time: 60.000000), (to: 13, time: 80.000000), 
+Bundle 1004: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 989: (to: 4, time: 30.000000), 
+Bundle 1004: (to: 12, time: 110.000000), 
+Bundle 1005: (to: 12, time: 50.000000), 
+Bundle 1011: (to: 15, time: 80.000000), 
+Node 6: 
+Bundle 1004: (to: 1, time: 110.000000), 
+Bundle 1011: (to: 5, time: 80.000000), 
+Bundle 1034: (to: 1, time: 110.000000), 
+Node 7: 
+Node 8: 
+Node 9: 
+Bundle 1005: (to: 15, time: 40.000000), 
+Node 10: 
+Bundle 983: (to: 4, time: 0.000000), 
+Node 11: 
+Bundle 989: (to: 10, time: 90.000000), 
+Node 12: 
+Bundle 1004: (to: 6, time: 110.000000), 
+Bundle 1034: (to: 6, time: 110.000000), 
+Node 13: 
+Bundle 989: (to: 11, time: 80.000000), 
+Node 14: 
+Bundle 1011: (to: 6, time: 80.000000), 
+Node 15: 
+Bundle 1005: (to: 5, time: 40.000000), 
+Bundle 1011: (to: 9, time: 80.000000), 

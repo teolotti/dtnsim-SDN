@@ -1,0 +1,56 @@
+The bundles with the following ids have been sent: 
+1578(7 to 5), 1579(12 to 5), 1585(8 to 4), 1587(8 to 3), 1588(10 to 7), 1619(3 to 7), 1643(11 to 1), 1650(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1579: 10.000000), (1588: 10.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1578: 5), (1579: 3), (1585: 5), (1587: 5), (1588: 6), (1619: 1), (1643: 3), (1650: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 24 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Bundle 1585: (to: 12, time: 60.000000), 
+Bundle 1587: (to: 12, time: 60.000000), 
+Node 3: 
+Bundle 1578: (to: 10, time: 40.000000), 
+Bundle 1619: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 1650: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 1578: (to: 1, time: 0.000000), (to: 15, time: 40.000000), 
+Bundle 1643: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 1585: (to: 2, time: 40.000000), 
+Bundle 1587: (to: 2, time: 40.000000), 
+Node 9: 
+Node 10: 
+Bundle 1579: (to: 5, time: 20.000000), 
+Bundle 1585: (to: 3, time: 100.000000), 
+Bundle 1587: (to: 3, time: 100.000000), 
+Bundle 1588: (to: 11, time: 20.000000), (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 1578: (to: 3, time: 40.000000), 
+Bundle 1588: (to: 15, time: 40.000000), 
+Bundle 1643: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 1579: (to: 13, time: 0.000000), 
+Bundle 1585: (to: 13, time: 80.000000), 
+Bundle 1587: (to: 13, time: 80.000000), 
+Bundle 1588: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 1579: (to: 10, time: 10.000000), 
+Bundle 1585: (to: 10, time: 80.000000), 
+Bundle 1587: (to: 10, time: 80.000000), 
+Bundle 1588: (to: 12, time: 40.000000), 
+Node 14: 
+Node 15: 
+Bundle 1578: (to: 11, time: 40.000000), 
+Bundle 1588: (to: 7, time: 40.000000), 
+Bundle 1643: (to: 7, time: 80.000000), 

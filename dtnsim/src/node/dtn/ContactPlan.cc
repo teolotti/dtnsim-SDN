@@ -31,6 +31,16 @@ ContactPlan::ContactPlan(ContactPlan &contactPlan)
 	}
 }
 
+/**
+ * Sets up the contactPlan for the simulations
+ *
+ * @param fileName: The name of the contact plan .txt file
+ * 		  nodesNumber: The number of nodes
+ * 		  mode: The chosen mode for the simulation (0, 1, 2)
+ * 		  failureProb: The failure probability every contact should have, -1 if the probability from the contact plan file should be taken
+ *
+ * @authors: original implementation from the authors of DTNSim, then modified by Simon Rink
+ */
 void ContactPlan::parseContactPlanFile(string fileName, int nodesNumber, int mode, double failureProb)
 {
 	this->contactIdsBySrc_.resize(nodesNumber + 1);
@@ -130,7 +140,17 @@ void ContactPlan::parseContactPlanFile(string fileName, int nodesNumber, int mod
 	this->updateContactRanges();
 	this->sortContactIdsBySrcByStartTime();
 }
-// does only consider opportunistic contacts, i.e. contacts that are not in the ContactPlan to be used in the Dtn nodes.
+
+/**
+ * Sets up the contactTopology for the simulations
+ *
+ * @param fileName: The name of the contact plan .txt file
+ * 		  nodesNumber: The number of nodes
+ * 		  mode: The chosen mode for the simulation (0, 1, 2)
+ * 		  failureProb: The failure probability every contact should have, -1 if the probability from the contact plan file should be taken
+ *
+ * @authors: adapted from parseContactPlanFile() from the authors of DTNSim, then ported and modified by Simon Rink
+ */
 void ContactPlan::parseOpportunisticContactPlanFile(string fileName, int nodesNumber, int mode, double failureProb)
 {
 	this->contactIdsBySrc_.resize(nodesNumber + 1);
@@ -428,6 +448,13 @@ vector<Contact> ContactPlan::getContactsBySrcDst(int Src, int Dst)
 	return contacts;
 }
 
+/*
+ * Returns all discovered contacts
+ *
+ * @return A vector that contains discovered contacts
+ *
+ * @author Simon Rink
+ */
 vector<Contact> ContactPlan::getDiscoveredContacts()
 {
 	vector<Contact> contacts;
@@ -443,6 +470,17 @@ vector<Contact> ContactPlan::getDiscoveredContacts()
 	return contacts;
 }
 
+/**
+ * Returns a pointer to the contact with the given source/destination pair, that starts after the passed start time
+ *
+ * @param sourceEid: The source EID of the contact
+ * 	      destinationEid: The destination EID of the contact
+ * 	      start: The start time of the contact
+ *
+ * @return A pointer to the contact, if it exists, NULL if not
+ *
+ * @author Simon Rink
+ */
 Contact* ContactPlan::getContactBySrcDstStart(int sourceEid, int destinationEid, double start)
 {
 	for (size_t i = 0; i < this->contacts_.size(); i++)
@@ -456,6 +494,13 @@ Contact* ContactPlan::getContactBySrcDstStart(int sourceEid, int destinationEid,
 	return NULL;
 }
 
+/*
+ * Returns all current neighbors
+ *
+ * @return A vector that contains all current neighbors
+ *
+ * @author Simon Rink
+ */
 vector<int> ContactPlan::getCurrentNeighbors()
 {
 	return this->currentNeighbors_;
@@ -517,6 +562,16 @@ vector<Contact>::iterator ContactPlan::deleteContactById(int contactId)
 	return itReturn;
 }
 
+/**
+ * Removes a predicted contact for the given source/destination pair
+ *
+ * @param sourceEid: The EID of the contact source
+ *        destinationEid: The EID of the contact destination
+ *
+ * @return The deleted contact
+ *
+ * @author Simon Rink
+ */
 Contact ContactPlan::removePredictedContactForSourceDestination(int sourceEid, int destinationEid)
 {
 	vector<Contact> contacts = this->getContactsBySrcDst(sourceEid, destinationEid);
@@ -535,6 +590,16 @@ Contact ContactPlan::removePredictedContactForSourceDestination(int sourceEid, i
 	return Contact(-1, 0, 0, 0, 0, 0, 0, 0);
 }
 
+/**
+ * Removes a discovered contact for the given source/destination pair
+ *
+ * @param sourceEid: The EID of the contact source
+ *        destinationEid: The EID of the contact destination
+ *
+ * @return The deleted contact
+ *
+ * @author Simon Rink
+ */
 Contact ContactPlan::removeDiscoveredContact(int sourceEid, int destinationEid)
 {
 	vector<Contact> contacts = this->getContactsBySrcDst(sourceEid, destinationEid);
@@ -591,6 +656,18 @@ void ContactPlan::sortContactIdsBySrcByStartTime()
 	}
 }
 
+/**
+ * Checks whether there already exists a contacts that overlaps with the given parameters
+ *
+ * @param sourceEid: The source EID of the new contact
+ * 	      destinationEid: The destination EID of the new contact
+ * 	      start: The start time of the contact
+ * 	      end: The end time of the contact
+ *
+ * @return True, if a overlap was found, False if not
+ *
+ * @author Simon Rink
+ */
 bool ContactPlan::overlapsWithContact(int sourceEid, int destinationEid, double start, double end)
 {
 	vector<Contact> contacts = this->getContactsBySrcDst(sourceEid, destinationEid);
@@ -612,6 +689,16 @@ bool ContactPlan::overlapsWithContact(int sourceEid, int destinationEid, double 
 	return false;
 }
 
+/**
+ * Goes through the list of contacts for the given source/destination pair and returns whether there exists a predicted contact for them
+ *
+ * @param sourceEid: The EID of the contact source
+ * 		  destinationEid: The EID of the contact destination
+ *
+ * @return Boolean, whether there exists a predicted contact or not
+ *
+ * @author Simon Rink
+ */
 bool ContactPlan::hasPredictedContact(int sourceEid, int destinationEid)
 {
 	vector<Contact> contacts = this->getContactsBySrcDst(sourceEid, destinationEid);
@@ -627,6 +714,16 @@ bool ContactPlan::hasPredictedContact(int sourceEid, int destinationEid)
 	return false;
 }
 
+/**
+ * Goes through the list of contacts for the given source/destination pair and returns whether there exists a discovered contact for them
+ *
+ * @param sourceEid: The EID of the contact source
+ * 		  destinationEid: The EID of the contact destination
+ *
+ * @return Boolean, whether there exists a discovered contact or not
+ *
+ * @author Simon Rink
+ */
 bool ContactPlan::hasDiscoveredContact(int sourceEid, int destinationEid)
 {
 	vector<Contact> contacts = this->getContactsBySrcDst(sourceEid, destinationEid);
@@ -643,16 +740,38 @@ bool ContactPlan::hasDiscoveredContact(int sourceEid, int destinationEid)
 	return false;
 }
 
+
+/*
+ * Returns the highest ID in the plan
+ *
+ * @return The highest ID in the contact plan
+ *
+ * @author Simon Rink
+ */
 int ContactPlan::getHighestId()
 {
 	return this->nextContactId - 1;
 }
 
+/**
+ * Adds a new neighbor to the list of current neighbors
+ *
+ * @param eid: The EID of the neighbor
+ *
+ * @author Simon Rink
+ */
 void ContactPlan::addCurrentNeighbor(int eid)
 {
 	this->currentNeighbors_.push_back(eid);
 }
 
+/**
+ * Remove a neighbor from the list of current neighbors
+ *
+ * @param eid: The EID of the neighbor
+ *
+ * @author Simon Rink
+ */
 void ContactPlan::removeCurrentNeighbor(int eid)
 {
 	int position = -1;
@@ -672,6 +791,11 @@ void ContactPlan::removeCurrentNeighbor(int eid)
 	}
 }
 
+/**
+ * Traverses the notified end timings of the contacts and deletes them, if the time is <= the current time
+ *
+ * @author Simon Rink
+ */
 void ContactPlan::deleteOldContacts()
 {
 	double currTime = simTime().dbl();

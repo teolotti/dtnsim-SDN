@@ -71,8 +71,8 @@ private:
 
 	static const int DELETED_CONTACT = -1;
 	int nextContactId = 1;
-	vector<int> currentNeighbors_;
-	map<double, vector<int>> contactDeleteTimes_;
+	vector<int> currentNeighbors_; //The current neighbors of a node
+	map<double, vector<int>> contactDeleteTimes_; //The times at which a contact needs to be deleted
 	vector<Contact> contacts_;
 	vector<Contact> ranges_;
 	vector<vector<int>> contactIdsBySrc_;

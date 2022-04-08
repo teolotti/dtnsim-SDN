@@ -2,7 +2,7 @@
  * ContactHistory.h
  *
  *  Created on: Nov 16, 2021
- *      Author: simon
+ *      Author: Simon Rink
  */
 
 #ifndef SRC_NODE_DTN_CONTACTHISTORY_H_
@@ -37,13 +37,12 @@ public:
 	//one from the receiver, as the receiver is likely to produce uncertain results
 	void addContact(Contact* senderContact, Contact* destinationContact);
 
-	//Used when 2 contacts exchange their history information.
+	//Used when 2 nodes exchange their history information.
 	void combineContactHistories(ContactHistory* otherHistory);
 
 	//Called by nodes to predict new contact.
 	Contact predictAndAddContact(double currentTime, int sourceEid, int destinationEid, ContactPlan *contactPlan);
 	vector<Contact> predictAndAddAllContacts(double currentTime, ContactPlan *contactPlan);
-	vector<Contact> predictAndAddAllContactsForSource(int sourceEid, double currentTime, ContactPlan *contactPlan);
 
 	//Helper function for contact prediction.
 	vector<Contact*> getAllContactsForSourceDestination(int sourceEid, int destinationEid);

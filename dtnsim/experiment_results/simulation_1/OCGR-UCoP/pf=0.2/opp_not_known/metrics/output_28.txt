@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+1545(10 to 6), 1560(1 to 11), 1567(1 to 6), 1568(5 to 10), 1597(4 to 1), 1602(9 to 12), 1623(3 to 9), 1660(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1567: 15.000000), (1568: 55.000000), (1602: 0.000000), (1623: 15.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1545: 1), (1560: 4), (1567: 3), (1568: 5), (1597: 4), (1602: 3), (1623: 4), (1660: 2), 
+--------------------
+Overall, the computation required 10 calls to RUCoP, which took 73 seconds and 26 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1560: (to: 3, time: 20.000000), (to: 3, time: 50.000000), 
+Bundle 1567: (to: 3, time: 50.000000), 
+Node 2: 
+Node 3: 
+Bundle 1560: (to: 4, time: 60.000000), (to: 4, time: 90.000000), 
+Bundle 1567: (to: 14, time: 40.000000), 
+Bundle 1623: (to: 6, time: 60.000000), 
+Node 4: 
+Bundle 1568: (to: 11, time: 60.000000), (to: 13, time: 80.000000), 
+Bundle 1597: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 1568: (to: 4, time: 30.000000), 
+Bundle 1597: (to: 12, time: 110.000000), 
+Bundle 1602: (to: 12, time: 50.000000), 
+Bundle 1623: (to: 15, time: 80.000000), 
+Node 6: 
+Bundle 1597: (to: 1, time: 110.000000), 
+Bundle 1623: (to: 5, time: 80.000000), 
+Bundle 1660: (to: 1, time: 110.000000), 
+Node 7: 
+Node 8: 
+Node 9: 
+Bundle 1602: (to: 15, time: 40.000000), 
+Node 10: 
+Bundle 1545: (to: 4, time: 0.000000), 
+Node 11: 
+Bundle 1568: (to: 10, time: 90.000000), 
+Node 12: 
+Bundle 1597: (to: 6, time: 110.000000), 
+Bundle 1660: (to: 6, time: 110.000000), 
+Node 13: 
+Bundle 1568: (to: 11, time: 80.000000), 
+Node 14: 
+Bundle 1567: (to: 6, time: 50.000000), 
+Node 15: 
+Bundle 1602: (to: 5, time: 55.000000), 
+Bundle 1623: (to: 9, time: 80.000000), 

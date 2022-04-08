@@ -1,0 +1,60 @@
+The bundles with the following ids have been sent: 
+614(7 to 5), 616(12 to 5), 624(8 to 4), 626(8 to 3), 627(10 to 7), 657(3 to 7), 686(11 to 1), 691(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(616: 50.000000), (624: 120.000000), (627: 10.000000), (657: 0.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(614: 6), (616: 4), (624: 3), (626: 5), (627: 6), (657: 6), (686: 3), (691: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 38 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 614: (to: 2, time: 0.000000), (to: 9, time: 20.000000), 
+Node 2: 
+Bundle 624: (to: 3, time: 120.000000), 
+Bundle 626: (to: 12, time: 60.000000), 
+Node 3: 
+Bundle 624: (to: 4, time: 140.000000), 
+Bundle 657: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 691: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Bundle 614: (to: 5, time: 40.000000), 
+Node 7: 
+Bundle 614: (to: 1, time: 0.000000), 
+Bundle 686: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 624: (to: 2, time: 40.000000), 
+Bundle 626: (to: 2, time: 40.000000), 
+Node 9: 
+Bundle 614: (to: 14, time: 40.000000), 
+Node 10: 
+Bundle 616: (to: 5, time: 20.000000), (to: 5, time: 60.000000), 
+Bundle 626: (to: 3, time: 100.000000), 
+Bundle 627: (to: 11, time: 20.000000), (to: 13, time: 40.000000), 
+Bundle 657: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 627: (to: 15, time: 40.000000), 
+Bundle 657: (to: 15, time: 40.000000), 
+Bundle 686: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 616: (to: 13, time: 0.000000), 
+Bundle 626: (to: 13, time: 80.000000), 
+Bundle 627: (to: 11, time: 40.000000), 
+Bundle 657: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 616: (to: 10, time: 0.000000), 
+Bundle 626: (to: 10, time: 80.000000), 
+Bundle 627: (to: 12, time: 40.000000), 
+Bundle 657: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 614: (to: 6, time: 40.000000), 
+Node 15: 
+Bundle 627: (to: 7, time: 40.000000), 
+Bundle 657: (to: 7, time: 40.000000), 
+Bundle 686: (to: 7, time: 80.000000), 

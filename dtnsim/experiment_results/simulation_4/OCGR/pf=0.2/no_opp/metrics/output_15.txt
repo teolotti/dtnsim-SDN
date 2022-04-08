@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+122(1 to 6), 123(6 to 10), 124(9 to 4), 129(2 to 8), 140(5 to 12), 147(7 to 12), 148(10 to 9), 150(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(124: 140.000000), (148: 40.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(122: 3), (123: 4), (124: 6), (129: 3), (140: 3), (147: 3), (148: 4), (150: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 33 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 122: (to: 2, time: 0.000000), 
+Bundle 123: (to: 2, time: 100.000000), 
+Bundle 124: (to: 2, time: 0.000000), 
+Bundle 140: (to: 2, time: 100.000000), 
+Bundle 147: (to: 2, time: 100.000000), 
+Bundle 148: (to: 9, time: 80.000000), 
+Node 2: 
+Bundle 122: (to: 3, time: 20.000000), 
+Bundle 124: (to: 3, time: 20.000000), 
+Bundle 129: (to: 12, time: 0.000000), (to: 3, time: 20.000000), 
+Node 3: 
+Bundle 122: (to: 4, time: 40.000000), 
+Bundle 124: (to: 4, time: 40.000000), (to: 4, time: 140.000000), 
+Bundle 129: (to: 4, time: 40.000000), 
+Bundle 150: (to: 4, time: 40.000000), 
+Node 4: 
+Bundle 140: (to: 1, time: 80.000000), 
+Bundle 148: (to: 1, time: 80.000000), 
+Node 5: 
+Bundle 140: (to: 4, time: 20.000000), 
+Bundle 148: (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 123: (to: 7, time: 40.000000), 
+Node 7: 
+Bundle 123: (to: 1, time: 40.000000), (to: 1, time: 100.000000), 
+Bundle 124: (to: 1, time: 0.000000), 
+Bundle 147: (to: 1, time: 40.000000), (to: 1, time: 100.000000), 
+Node 8: 
+Node 9: 
+Bundle 124: (to: 7, time: 0.000000), 
+Node 10: 
+Bundle 148: (to: 5, time: 60.000000), 
+Node 11: 
+Node 12: 
+Node 13: 
+Node 14: 
+Node 15: 

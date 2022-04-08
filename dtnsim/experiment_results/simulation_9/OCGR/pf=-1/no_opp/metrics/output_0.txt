@@ -1,0 +1,56 @@
+The bundles with the following ids have been sent: 
+125(7 to 5), 128(12 to 5), 137(8 to 4), 140(8 to 3), 141(10 to 7), 152(3 to 7), 168(11 to 1), 172(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(125: 60.000000), (128: 50.000000), (137: 120.000000), (140: 90.000000), (168: 80.000000), (172: 35.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(125: 5), (128: 4), (137: 3), (140: 2), (141: 5), (152: 3), (168: 3), (172: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 30 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 125: (to: 2, time: 0.000000), 
+Bundle 141: (to: 9, time: 80.000000), 
+Bundle 152: (to: 9, time: 80.000000), 
+Bundle 172: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 125: (to: 3, time: 20.000000), 
+Bundle 128: (to: 3, time: 20.000000), 
+Bundle 137: (to: 3, time: 120.000000), 
+Bundle 140: (to: 3, time: 120.000000), 
+Bundle 172: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 125: (to: 10, time: 40.000000), 
+Bundle 128: (to: 10, time: 40.000000), 
+Bundle 137: (to: 4, time: 140.000000), 
+Bundle 152: (to: 4, time: 40.000000), 
+Bundle 168: (to: 4, time: 140.000000), 
+Node 4: 
+Bundle 141: (to: 1, time: 80.000000), 
+Bundle 152: (to: 1, time: 80.000000), 
+Bundle 168: (to: 1, time: 160.000000), 
+Bundle 172: (to: 1, time: 80.000000), 
+Node 5: 
+Bundle 141: (to: 4, time: 60.000000), 
+Node 6: 
+Node 7: 
+Bundle 125: (to: 1, time: 0.000000), 
+Node 8: 
+Bundle 137: (to: 2, time: 40.000000), 
+Bundle 140: (to: 2, time: 40.000000), 
+Node 9: 
+Node 10: 
+Bundle 125: (to: 5, time: 60.000000), 
+Bundle 128: (to: 5, time: 60.000000), 
+Bundle 141: (to: 3, time: 40.000000), (to: 5, time: 60.000000), 
+Node 11: 
+Bundle 168: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 128: (to: 2, time: 0.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

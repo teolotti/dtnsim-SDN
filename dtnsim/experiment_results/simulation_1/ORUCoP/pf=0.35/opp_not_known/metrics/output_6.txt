@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+658(10 to 6), 677(1 to 11), 685(1 to 6), 686(5 to 10), 720(4 to 1), 725(9 to 12), 755(3 to 9), 796(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(658: 45.000000), (686: 35.000000), (720: 140.000000), (725: 0.000000), (755: 15.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(658: 6), (686: 9), (720: 6), (725: 6), (755: 7), 
+--------------------
+Overall, the computation required 24 calls to RUCoP, which took 151 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 755: (to: 4, time: 65.000000), (to: 14, time: 80.000000), 
+Node 4: 
+Bundle 658: (to: 5, time: 30.000000), (to: 5, time: 30.000000), 
+Bundle 686: (to: 11, time: 60.000000), 
+Bundle 720: (to: 11, time: 60.000000), (to: 11, time: 60.000000), 
+Bundle 755: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 658: (to: 12, time: 50.000000), 
+Bundle 686: (to: 15, time: 40.000000), (to: 15, time: 40.000000), 
+Bundle 725: (to: 12, time: 55.000000), (to: 12, time: 55.000000), 
+Bundle 755: (to: 15, time: 80.000000), 
+Node 6: 
+Bundle 755: (to: 5, time: 80.000000), 
+Node 7: 
+Bundle 720: (to: 1, time: 190.000000), 
+Node 8: 
+Bundle 686: (to: 4, time: 60.000000), 
+Node 9: 
+Bundle 686: (to: 8, time: 50.000000), (to: 8, time: 55.000000), 
+Bundle 725: (to: 15, time: 55.000000), (to: 15, time: 55.000000), 
+Node 10: 
+Bundle 658: (to: 4, time: 5.000000), (to: 4, time: 5.000000), 
+Bundle 720: (to: 7, time: 160.000000), 
+Node 11: 
+Bundle 686: (to: 10, time: 70.000000), 
+Bundle 720: (to: 5, time: 70.000000), (to: 10, time: 70.000000), 
+Node 12: 
+Bundle 658: (to: 6, time: 50.000000), 
+Node 13: 
+Node 14: 
+Bundle 755: (to: 6, time: 80.000000), 
+Node 15: 
+Bundle 686: (to: 9, time: 40.000000), (to: 9, time: 40.000000), 
+Bundle 725: (to: 5, time: 55.000000), (to: 5, time: 55.000000), 
+Bundle 755: (to: 9, time: 80.000000), 

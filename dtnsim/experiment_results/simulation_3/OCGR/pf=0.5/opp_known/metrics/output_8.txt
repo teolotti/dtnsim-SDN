@@ -1,0 +1,46 @@
+The bundles with the following ids have been sent: 
+1224(7 to 5), 1225(12 to 5), 1229(8 to 4), 1230(8 to 3), 1231(10 to 7), 1256(3 to 7), 1277(11 to 1), 1280(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1225: 50.000000), (1231: 10.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1224: 5), (1225: 4), (1229: 2), (1230: 2), (1231: 3), (1256: 1), (1277: 3), (1280: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 27 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 1224: (to: 10, time: 40.000000), 
+Bundle 1256: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 1280: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 1224: (to: 1, time: 0.000000), (to: 15, time: 40.000000), 
+Bundle 1277: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 1229: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Bundle 1230: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Node 9: 
+Node 10: 
+Bundle 1225: (to: 5, time: 20.000000), (to: 5, time: 60.000000), 
+Bundle 1231: (to: 11, time: 20.000000), 
+Node 11: 
+Bundle 1224: (to: 3, time: 40.000000), 
+Bundle 1231: (to: 15, time: 40.000000), 
+Bundle 1277: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 1225: (to: 13, time: 0.000000), 
+Node 13: 
+Bundle 1225: (to: 10, time: 0.000000), 
+Node 14: 
+Node 15: 
+Bundle 1224: (to: 11, time: 40.000000), 
+Bundle 1231: (to: 7, time: 40.000000), 
+Bundle 1277: (to: 7, time: 80.000000), 

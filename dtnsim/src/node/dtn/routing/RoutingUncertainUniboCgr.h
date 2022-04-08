@@ -2,7 +2,7 @@
  * RoutingUncertainUniboCgr.h
  *
  *  Created on: Jan 16, 2022
- *      Author: simon
+ *      Author: Simon Rink
  */
 
 #ifndef SRC_NODE_DTN_ROUTING_ROUTINGUNCERTAINUNIBOCGR_H_

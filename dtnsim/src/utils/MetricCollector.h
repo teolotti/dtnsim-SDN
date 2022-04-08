@@ -2,7 +2,7 @@
  * MetricCollector.h
  *
  *  Created on: Feb 1, 2022
- *      Author: simon
+ *      Author: Simon Rink
  */
 
 #ifndef SRC_UTILS_METRICCOLLECTOR_H_
@@ -62,6 +62,7 @@ public:
 	void evaluateAndPrintResults();
 	int getFileNumber(string prefix);
 	int getMode();
+
 private:
 	map<long, double> getOverallSentBundles();
 	map<long, double> getOverallReceivedBundles();

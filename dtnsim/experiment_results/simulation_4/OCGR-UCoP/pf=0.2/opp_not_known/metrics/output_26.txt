@@ -1,0 +1,66 @@
+The bundles with the following ids have been sent: 
+780(1 to 6), 781(6 to 10), 782(9 to 4), 793(2 to 8), 815(5 to 12), 851(7 to 12), 852(10 to 9), 867(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(780: 40.000000), (781: 0.000000), (782: 80.000000), (793: 0.000000), (815: 95.000000), (851: 0.000000), (852: 40.000000), (867: 0.000000), 
+--------------------
+That means, that overall 1 (8/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(780: 3), (781: 8), (782: 4), (793: 2), (815: 4), (851: 6), (852: 7), (867: 4), 
+--------------------
+Overall, the computation required 6 calls to RUCoP, which took 38 seconds and 15 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 780: (to: 9, time: 20.000000), 
+Bundle 781: (to: 2, time: 0.000000), 
+Bundle 815: (to: 2, time: 100.000000), 
+Bundle 852: (to: 9, time: 80.000000), 
+Node 2: 
+Bundle 781: (to: 12, time: 0.000000), 
+Bundle 793: (to: 12, time: 0.000000), 
+Bundle 815: (to: 12, time: 120.000000), 
+Node 3: 
+Bundle 851: (to: 10, time: 40.000000), 
+Bundle 867: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 815: (to: 1, time: 80.000000), 
+Node 5: 
+Bundle 815: (to: 4, time: 20.000000), 
+Node 6: 
+Bundle 781: (to: 14, time: 0.000000), 
+Bundle 782: (to: 4, time: 0.000000), (to: 4, time: 80.000000), 
+Node 7: 
+Bundle 781: (to: 1, time: 0.000000), 
+Bundle 851: (to: 15, time: 40.000000), 
+Bundle 852: (to: 1, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 780: (to: 14, time: 40.000000), 
+Bundle 781: (to: 7, time: 0.000000), 
+Bundle 782: (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 851: (to: 13, time: 40.000000), 
+Bundle 852: (to: 13, time: 40.000000), 
+Bundle 867: (to: 13, time: 55.000000), 
+Node 11: 
+Bundle 851: (to: 3, time: 40.000000), 
+Bundle 852: (to: 15, time: 40.000000), 
+Node 12: 
+Bundle 781: (to: 13, time: 0.000000), 
+Bundle 793: (to: 8, time: 15.000000), 
+Bundle 852: (to: 11, time: 40.000000), 
+Bundle 867: (to: 8, time: 55.000000), 
+Node 13: 
+Bundle 781: (to: 10, time: 0.000000), 
+Bundle 851: (to: 12, time: 40.000000), 
+Bundle 852: (to: 12, time: 40.000000), 
+Bundle 867: (to: 12, time: 55.000000), 
+Node 14: 
+Bundle 780: (to: 6, time: 40.000000), 
+Bundle 781: (to: 9, time: 0.000000), 
+Bundle 782: (to: 6, time: 0.000000), 
+Node 15: 
+Bundle 851: (to: 11, time: 40.000000), 
+Bundle 852: (to: 7, time: 40.000000), 

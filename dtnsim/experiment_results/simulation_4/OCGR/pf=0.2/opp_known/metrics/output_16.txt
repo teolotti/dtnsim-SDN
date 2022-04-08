@@ -1,0 +1,54 @@
+The bundles with the following ids have been sent: 
+632(1 to 6), 633(6 to 10), 634(9 to 4), 640(2 to 8), 648(5 to 12), 669(7 to 12), 670(10 to 9), 674(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(632: 80.000000), (634: 0.000000), (640: 0.000000), (669: 80.000000), (670: 80.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(632: 4), (633: 3), (634: 3), (640: 2), (648: 2), (669: 7), (670: 6), (674: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 31 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 632: (to: 9, time: 20.000000), (to: 9, time: 80.000000), 
+Node 2: 
+Bundle 640: (to: 12, time: 0.000000), 
+Node 3: 
+Bundle 669: (to: 10, time: 40.000000), (to: 10, time: 100.000000), 
+Bundle 674: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 648: (to: 1, time: 80.000000), 
+Bundle 670: (to: 1, time: 80.000000), (to: 6, time: 120.000000), 
+Node 5: 
+Bundle 648: (to: 4, time: 20.000000), 
+Bundle 670: (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 633: (to: 14, time: 0.000000), 
+Bundle 634: (to: 4, time: 0.000000), 
+Bundle 670: (to: 14, time: 120.000000), 
+Node 7: 
+Bundle 669: (to: 15, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 632: (to: 14, time: 80.000000), 
+Bundle 633: (to: 7, time: 0.000000), 
+Bundle 634: (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 669: (to: 13, time: 120.000000), 
+Bundle 670: (to: 5, time: 60.000000), 
+Node 11: 
+Bundle 669: (to: 3, time: 40.000000), 
+Node 12: 
+Bundle 640: (to: 8, time: 0.000000), 
+Node 13: 
+Bundle 669: (to: 12, time: 120.000000), 
+Node 14: 
+Bundle 632: (to: 6, time: 80.000000), 
+Bundle 633: (to: 9, time: 0.000000), 
+Bundle 634: (to: 6, time: 0.000000), 
+Bundle 670: (to: 9, time: 120.000000), 
+Node 15: 
+Bundle 669: (to: 11, time: 40.000000), 

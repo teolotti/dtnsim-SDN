@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+1578(3 to 7), 1605(12 to 1), 1611(4 to 9), 1633(10 to 3), 1668(11 to 2), 1686(9 to 4), 1720(5 to 12), 1737(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1605: 35.000000), (1611: 5.000000), (1686: 5.000000), (1737: 40.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1578: 3), (1605: 4), (1611: 3), (1633: 3), (1668: 3), (1686: 5), (1720: 3), (1737: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 35 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Bundle 1578: (to: 1, time: 40.000000), 
+Node 3: 
+Bundle 1578: (to: 5, time: 20.000000), (to: 2, time: 30.000000), 
+Node 4: 
+Bundle 1611: (to: 5, time: 50.000000), 
+Bundle 1668: (to: 2, time: 130.000000), 
+Node 5: 
+Bundle 1605: (to: 1, time: 80.000000), 
+Bundle 1611: (to: 6, time: 50.000000), 
+Bundle 1686: (to: 4, time: 110.000000), (to: 8, time: 120.000000), 
+Bundle 1720: (to: 6, time: 120.000000), 
+Bundle 1737: (to: 6, time: 180.000000), 
+Node 6: 
+Bundle 1611: (to: 9, time: 60.000000), 
+Bundle 1633: (to: 3, time: 60.000000), 
+Bundle 1686: (to: 5, time: 110.000000), 
+Bundle 1720: (to: 9, time: 120.000000), 
+Node 7: 
+Node 8: 
+Bundle 1633: (to: 6, time: 60.000000), 
+Bundle 1668: (to: 4, time: 120.000000), 
+Bundle 1686: (to: 4, time: 120.000000), 
+Bundle 1737: (to: 5, time: 170.000000), 
+Node 9: 
+Bundle 1605: (to: 5, time: 70.000000), 
+Bundle 1686: (to: 6, time: 110.000000), 
+Bundle 1720: (to: 12, time: 120.000000), 
+Node 10: 
+Bundle 1633: (to: 8, time: 60.000000), 
+Bundle 1737: (to: 11, time: 140.000000), (to: 8, time: 160.000000), 
+Node 11: 
+Bundle 1668: (to: 8, time: 100.000000), 
+Node 12: 
+Bundle 1605: (to: 11, time: 40.000000), (to: 9, time: 60.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

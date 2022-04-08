@@ -1,0 +1,56 @@
+The bundles with the following ids have been sent: 
+240(3 to 7), 271(12 to 1), 278(4 to 9), 296(10 to 3), 330(11 to 2), 347(9 to 4), 378(5 to 12), 394(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(394: 40.000000), 
+--------------------
+That means, that overall 0.125 (1/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(240: 6), (271: 6), (278: 4), (296: 3), (330: 3), (347: 2), (378: 2), (394: 5), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 40 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 240: (to: 5, time: 20.000000), 
+Node 4: 
+Bundle 278: (to: 5, time: 50.000000), 
+Bundle 330: (to: 2, time: 130.000000), 
+Node 5: 
+Bundle 240: (to: 7, time: 30.000000), (to: 15, time: 40.000000), 
+Bundle 271: (to: 1, time: 80.000000), 
+Bundle 278: (to: 6, time: 50.000000), (to: 6, time: 120.000000), 
+Bundle 378: (to: 6, time: 120.000000), 
+Bundle 394: (to: 6, time: 180.000000), 
+Node 6: 
+Bundle 278: (to: 9, time: 120.000000), 
+Bundle 296: (to: 3, time: 60.000000), 
+Bundle 347: (to: 5, time: 110.000000), 
+Bundle 378: (to: 9, time: 120.000000), 
+Node 7: 
+Node 8: 
+Bundle 271: (to: 5, time: 70.000000), 
+Bundle 296: (to: 6, time: 60.000000), 
+Bundle 330: (to: 4, time: 120.000000), 
+Node 9: 
+Bundle 347: (to: 6, time: 110.000000), 
+Node 10: 
+Bundle 240: (to: 7, time: 50.000000), 
+Bundle 271: (to: 7, time: 50.000000), (to: 8, time: 60.000000), 
+Bundle 296: (to: 8, time: 60.000000), 
+Bundle 394: (to: 11, time: 140.000000), 
+Node 11: 
+Bundle 240: (to: 10, time: 50.000000), 
+Bundle 271: (to: 10, time: 50.000000), 
+Bundle 330: (to: 8, time: 100.000000), 
+Bundle 394: (to: 9, time: 150.000000), (to: 15, time: 160.000000), 
+Node 12: 
+Bundle 271: (to: 11, time: 40.000000), 
+Node 13: 
+Node 14: 
+Node 15: 
+Bundle 240: (to: 11, time: 40.000000), 
+Bundle 394: (to: 5, time: 160.000000), 

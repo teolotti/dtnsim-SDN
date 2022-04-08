@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+1961(1 to 11), 1982(3 to 10), 1983(4 to 6), 1984(7 to 9), 1999(12 to 4), 2000(12 to 5), 2034(8 to 1), 2043(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1982: 25.000000), (1983: 35.000000), (1984: 45.000000), (2043: 25.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1961: 5), (1982: 8), (1983: 6), (1984: 4), (1999: 2), (2000: 2), (2043: 7), 
+--------------------
+Overall, the computation required 46 calls to RUCoP, which took 215 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1961: (to: 5, time: 0.000000), (to: 13, time: 0.000000), 
+Bundle 1982: (to: 5, time: 30.000000), (to: 13, time: 80.000000), 
+Node 2: 
+Bundle 1982: (to: 1, time: 25.000000), (to: 1, time: 25.000000), 
+Node 3: 
+Bundle 1982: (to: 2, time: 25.000000), (to: 2, time: 25.000000), 
+Node 4: 
+Bundle 1983: (to: 14, time: 40.000000), (to: 14, time: 55.000000), 
+Node 5: 
+Bundle 1961: (to: 9, time: 30.000000), 
+Bundle 1982: (to: 9, time: 30.000000), 
+Bundle 1983: (to: 6, time: 60.000000), (to: 6, time: 60.000000), 
+Bundle 2043: (to: 14, time: 55.000000), 
+Node 6: 
+Bundle 1984: (to: 9, time: 70.000000), 
+Bundle 2043: (to: 3, time: 80.000000), 
+Node 7: 
+Bundle 1984: (to: 8, time: 25.000000), (to: 6, time: 70.000000), 
+Bundle 2043: (to: 6, time: 70.000000), 
+Node 8: 
+Bundle 1984: (to: 11, time: 25.000000), 
+Node 9: 
+Bundle 1961: (to: 10, time: 50.000000), 
+Bundle 1982: (to: 10, time: 50.000000), 
+Bundle 2043: (to: 5, time: 55.000000), (to: 10, time: 55.000000), 
+Node 10: 
+Bundle 2043: (to: 7, time: 55.000000), 
+Node 11: 
+Node 12: 
+Bundle 1999: (to: 11, time: 40.000000), (to: 5, time: 120.000000), 
+Bundle 2000: (to: 11, time: 40.000000), (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 1961: (to: 10, time: 40.000000), 
+Node 14: 
+Bundle 1983: (to: 5, time: 40.000000), (to: 5, time: 55.000000), 
+Bundle 2043: (to: 4, time: 55.000000), 
+Node 15: 

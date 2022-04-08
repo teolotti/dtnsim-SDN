@@ -1,0 +1,49 @@
+The bundles with the following ids have been sent: 
+498(1 to 6), 499(6 to 10), 500(9 to 4), 505(2 to 8), 506(5 to 12), 519(7 to 12), 520(10 to 9), 523(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(498: 160.000000), (500: 80.000000), (519: 80.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(498: 5), (499: 3), (500: 5), (505: 2), (506: 2), (519: 7), (520: 2), (523: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 32 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 498: (to: 9, time: 20.000000), (to: 9, time: 80.000000), (to: 9, time: 140.000000), 
+Node 2: 
+Bundle 505: (to: 12, time: 0.000000), (to: 3, time: 20.000000), 
+Node 3: 
+Bundle 519: (to: 10, time: 100.000000), 
+Bundle 523: (to: 10, time: 40.000000), 
+Node 4: 
+Node 5: 
+Bundle 506: (to: 4, time: 20.000000), (to: 4, time: 60.000000), 
+Bundle 520: (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 499: (to: 14, time: 0.000000), 
+Bundle 500: (to: 4, time: 0.000000), (to: 7, time: 40.000000), (to: 4, time: 80.000000), 
+Node 7: 
+Bundle 519: (to: 15, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 498: (to: 14, time: 160.000000), 
+Bundle 499: (to: 7, time: 0.000000), 
+Bundle 500: (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 519: (to: 13, time: 120.000000), 
+Bundle 520: (to: 5, time: 60.000000), 
+Node 11: 
+Bundle 519: (to: 3, time: 40.000000), (to: 3, time: 80.000000), 
+Node 12: 
+Node 13: 
+Bundle 519: (to: 12, time: 120.000000), 
+Node 14: 
+Bundle 498: (to: 6, time: 160.000000), 
+Bundle 499: (to: 9, time: 0.000000), 
+Bundle 500: (to: 6, time: 0.000000), 
+Node 15: 
+Bundle 519: (to: 11, time: 40.000000), 

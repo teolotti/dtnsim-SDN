@@ -1,0 +1,44 @@
+The bundles with the following ids have been sent: 
+186(10 to 6), 189(1 to 11), 192(1 to 6), 193(5 to 10), 195(4 to 1), 196(9 to 12), 202(3 to 9), 209(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(195: 60.000000), (202: 65.000000), (209: 25.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(186: 1), (189: 2), (192: 1), (193: 1), (195: 4), (196: 1), (202: 4), (209: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 21 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 189: (to: 3, time: 20.000000), (to: 3, time: 50.000000), 
+Bundle 192: (to: 3, time: 50.000000), 
+Node 2: 
+Node 3: 
+Bundle 202: (to: 4, time: 60.000000), 
+Node 4: 
+Bundle 195: (to: 5, time: 70.000000), 
+Bundle 202: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 193: (to: 4, time: 30.000000), 
+Bundle 195: (to: 12, time: 110.000000), 
+Bundle 202: (to: 12, time: 110.000000), 
+Node 6: 
+Bundle 195: (to: 1, time: 110.000000), 
+Bundle 209: (to: 1, time: 110.000000), 
+Node 7: 
+Node 8: 
+Node 9: 
+Bundle 196: (to: 8, time: 50.000000), 
+Node 10: 
+Bundle 186: (to: 4, time: 0.000000), 
+Node 11: 
+Node 12: 
+Bundle 195: (to: 6, time: 110.000000), 
+Bundle 202: (to: 9, time: 130.000000), 
+Bundle 209: (to: 6, time: 110.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

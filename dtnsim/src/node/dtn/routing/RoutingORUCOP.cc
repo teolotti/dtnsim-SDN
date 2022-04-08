@@ -2,7 +2,7 @@
  * RoutingORUCOP.cc
  *
  *  Created on: Jan 24, 2022
- *      Author: simon
+ *      Author: Simon Rink
  */
 
 #include "RoutingORUCOP.h"
@@ -11,6 +11,20 @@ static map<long, long> originalBundleIds;
 
 long getOriginalBundleId(long bundleId);
 
+/*
+ * Initializes the routing object for ORUCoP
+ *
+ * @param eid: The EID of the local node
+ * 	      sdr: The pointer to local SDR model
+ * 	      contactPlan: The pointer to the contact plan of the node
+ * 	      dtn: A pointer to the local dtn module
+ * 	      metricCollector: A pointer to the metricCollector
+ * 	      bundleCopies: The amount of copies to be simulated
+ * 	      repetition: The run number in the simulations
+ * 	      numOfNodes: The amount of nodes in the network
+ *
+ * @author Simon Rink
+ */
 RoutingORUCOP::RoutingORUCOP(int eid, SdrModel *sdr, ContactPlan *contactPlan, cModule *dtn, MetricCollector *metricCollector, int bundleCopies, int repetition, int numOfNodes) :
 		RoutingOpportunistic(eid, sdr, contactPlan, dtn, metricCollector)
 {
@@ -49,6 +63,14 @@ RoutingORUCOP::RoutingORUCOP(int eid, SdrModel *sdr, ContactPlan *contactPlan, c
 		// TODO Auto-generated destructor stub
 	}
 
+/*
+ * Routes a newly received (or created) bundle. In case it is created, it is also copied for the wanted amount.
+ *
+ * @param bundle: A pointer to the bundle
+ *        simTime: The current simulation time
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::routeAndQueueBundle(BundlePkt *bundle, double simTime)
 {
 	if (this->opportunistic)
@@ -93,6 +115,13 @@ void RoutingORUCOP::routeAndQueueBundle(BundlePkt *bundle, double simTime)
 	this->queueBundlesForCurrentContact();
 }
 
+/*
+ * When a contact starts, all bundles are routes and queued, if they are supposed to be
+ *
+ * @param c: The started contact
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::contactStart(Contact *c)
 {
 	if (c->isDiscovered())
@@ -105,6 +134,11 @@ void RoutingORUCOP::contactStart(Contact *c)
 	this->queueBundlesForCurrentContact();
 }
 
+/*
+ * All bundles are queued to the current contact(s) if they're supposed to be, and rerouted if they fail
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::queueBundlesForCurrentContact()
 {
 	for (auto it = this->routingDecisions_.begin(); it != this->routingDecisions_.end(); it++)
@@ -123,6 +157,17 @@ void RoutingORUCOP::queueBundlesForCurrentContact()
 	}
 }
 
+/*
+ * The receiver node is notified about the routing decisions
+ *
+ * @param jsonFunction: The routing table
+ * 	      destination: The destination of the bundle
+ * 	      idMap: The ID map of the sender
+ * 	      tsStartTimes: The start times of the sender
+ * 	      numOfTs: The number of timestamps of the sender
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::notifyAboutRouting(map<int, json> jsonFunction, int destination, map<int, int> idMap, vector<int> tsStartTimes, int numOfTs)
 {
 	this->jsonFunction_[destination] = jsonFunction;
@@ -136,6 +181,13 @@ void RoutingORUCOP::notifyAboutRouting(map<int, json> jsonFunction, int destinat
 	this->lastUpdateTime_[destination] = simTime().dbl();
 }
 
+/*
+ * For each decision it is checked, whether it accounts to a contact currently active and/or whether contact failed
+ *
+ * @param bundleId: The Id of the bundle
+ *
+ * @author Simon Rink
+ */
 int RoutingORUCOP::checkAndQueueBundles(long bundleId)
 {
 	int failedBundles = 0;
@@ -147,7 +199,7 @@ int RoutingORUCOP::checkAndQueueBundles(long bundleId)
 			break;
 		}
 		queue<Contact> decision = routingDecisions.at(i);
-
+		//check decisions
 		if (decision.size() == 0)
 		{
 			continue;
@@ -205,11 +257,20 @@ int RoutingORUCOP::checkAndQueueBundles(long bundleId)
 	return failedBundles;
 }
 
+/*
+ * All bundles with the passed ID are rerouted
+ *
+ * @param bundleId: The ID of the bundle
+ *        destination: The destination of the bundle
+ *        failedBundles: The number of failed bundles
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::reRouteFailedBundles(long bundleId, int destination, int failedBundles)
 {
 	int nextTs = this->getTsForStartOrCurrentTime(simTime().dbl(), destination) + 1;
 
-	while (failedBundles != 0)
+	while (failedBundles != 0) //as long as there are still failed routes continue to search for new opportunities
 	{
 		this->routingDecisions_[bundleId].clear();
 		this->bundleSolvedCopies_[bundleId] = this->storedBundles_[bundleId].size() - failedBundles;
@@ -219,21 +280,38 @@ void RoutingORUCOP::reRouteFailedBundles(long bundleId, int destination, int fai
 			this->routeNextBundle(bundleId, destination, nextTs);
 		}
 
-		failedBundles = this->checkAndQueueBundles(bundleId);
+		failedBundles = this->checkAndQueueBundles(bundleId); //check whether there are still failed ones
 
-		nextTs++;
+		nextTs++; //check next timestamp
 	}
 }
 
+/*
+ * Notifies the receiver about a multi hop
+ *
+ * @param bundleId: The ID of the bundle
+ * 	      hops: The queue of the hops, containing the respective contacts
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::notifyAboutMultiHop(long bundleId, queue<Contact> hops)
 {
 	this->bundleSolvedCopies_[bundleId]++;
 	this->routingDecisions_[bundleId].push_back(hops);
 }
 
+/**
+ * Routes the next bundle from the unsolved ones (if any)
+ *
+ * @param bundleId: The ID of the bundle
+ * 	      destination: The destination of the bundle
+ * 	      ts: The current timestamp
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::routeNextBundle(long bundleId, int destination, int ts)
 {
-	if (this->bundleSolvedCopies_[bundleId] >= this->storedBundles_[bundleId].size())
+	if (this->bundleSolvedCopies_[bundleId] >= this->storedBundles_[bundleId].size()) //do return if all decisions are already made!
 	{
 		return;
 	}
@@ -244,6 +322,13 @@ void RoutingORUCOP::routeNextBundle(long bundleId, int destination, int ts)
 
 }
 
+/*
+ * Reroutes all bundles that could not delivered using this contact
+ *
+ * @param c: The ended contact
+ *
+ * @authors The original authors of DTNSim, then ported to this class by Simon Rink
+ */
 void RoutingORUCOP::contactEnd(Contact *c)
 {
 	while (sdr_->isBundleForContact(c->getId()))
@@ -254,6 +339,13 @@ void RoutingORUCOP::contactEnd(Contact *c)
 	}
 }
 
+/*
+ * Checks whether a bundle was already delivered successfully
+ *
+ * @param bundleId: The ID of the bundle
+ *
+ * @authors The original authors of DTNSim, then ported to this class by Simon Rink
+ */
 bool RoutingORUCOP::isDeliveredBundle(long bundleId)
 {
 	for (size_t i = 0; i < this->deliveredBundles_.size(); i++)
@@ -267,6 +359,13 @@ bool RoutingORUCOP::isDeliveredBundle(long bundleId)
 	return false;
 }
 
+/*
+ * Accepts or rejects a delivered bundle with this node as destination
+ *
+ * @param bundle: The pointer to the received bundle
+ *
+ * @authors The original authors of DTNSim, then ported to this class by Simon Rink
+ */
 bool RoutingORUCOP::msgToMeArrive(BundlePkt *bundle)
 {
 	if (!this->isDeliveredBundle(bundle->getBundleId()))
@@ -280,6 +379,15 @@ bool RoutingORUCOP::msgToMeArrive(BundlePkt *bundle)
 	return false;
 }
 
+/*
+ * The node is notified about the fact, that a bundle was successfully delivered
+ *
+ * @param bundleId: The ID of the bundle
+ *        contact: The used contact
+ *        sentToDestination: Identifier whether the delivery was towards to the bundle destination
+ *
+ * @authors The original authors of DTNSim, then ported to this class by Simon Rink
+ */
 void RoutingORUCOP::successfulBundleForwarded(long bundleId, Contact *contact, bool sentToDestination)
 {
 	if (sentToDestination)
@@ -288,19 +396,29 @@ void RoutingORUCOP::successfulBundleForwarded(long bundleId, Contact *contact, b
 	}
 }
 
+/*
+ * Updates the routing tables for all bundles that currently reside at the node
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::reRouteBundles()
 {
 	this->contactPlan_->deleteOldContacts();
 
 	for (auto it = this->storedBundles_.begin(); it != this->storedBundles_.end(); it++)
 	{
-		if (it->second.size() != 0)
+		if (it->second.size() != 0) //don't enter of no bundles are present!
 		{
 			this->callToPython(it->second.front());
 		}
 	}
 }
 
+/*
+ * For all stored bundles, the respective decisions are obtained
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::updateRoutingDecisions()
 {
 
@@ -312,6 +430,7 @@ void RoutingORUCOP::updateRoutingDecisions()
 			continue;
 		}
 
+		//reset all values
 		this->bundleSolvedCopies_[it->first] = 0;
 
 		this->routingDecisions_[it->first].clear();
@@ -320,11 +439,20 @@ void RoutingORUCOP::updateRoutingDecisions()
 
 		for (size_t i = 0; i < this->storedBundles_[it->first].size(); i++)
 		{
-			this->routeNextBundle(it->first, destination, this->getTsForStartOrCurrentTime(simTime().dbl(), destination));
+			this->routeNextBundle(it->first, destination, this->getTsForStartOrCurrentTime(simTime().dbl(), destination)); //obtain decisions
 		}
 	}
 }
 
+/*
+ * A bundle is queued to the given contact
+ *
+ * @param bundle: The pointer to the bundle
+ * 	      contactId: The ID of the contact
+ * 	      destinationEid: The EID of the next node
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::queueBundle(BundlePkt *bundle, int contactId, int destinationEid)
 {
 	if (contactId != 0)
@@ -332,9 +460,16 @@ void RoutingORUCOP::queueBundle(BundlePkt *bundle, int contactId, int destinatio
 		bundle->setNextHopEid(destinationEid);
 	}
 
-	this->sdr_->enqueueBundleToContact(bundle, contactId);
+	this->sdr_->enqueueBundleToContact(bundle, contactId); //enqueue bundle
 }
 
+/*
+ * The file for the RUCoP computation is created, thus all contact are splitted in case it is necessary and then added
+ *
+ * @param endDestination: The destination of the bundle
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::convertContactPlanIntoNet(int endDestination)
 {
 	ofstream networkFile("net.py");
@@ -354,7 +489,7 @@ void RoutingORUCOP::convertContactPlanIntoNet(int endDestination)
 		int destination = contacts->at(i).getDestinationEid() - 1;
 		vector<int> tsValues = getTsForContact(&contacts->at(i), endDestination);
 		double pf = contacts->at(i).getFailureProbability();
-		for (size_t i = 0; i < tsValues.size(); i++)
+		for (size_t i = 0; i < tsValues.size(); i++) //go through each splitted interval
 		{
 			contactString = contactString + "{'from': " + to_string(source) + ", ";
 			contactString = contactString + "'to': " + to_string(destination) + ", ";
@@ -372,6 +507,14 @@ void RoutingORUCOP::convertContactPlanIntoNet(int endDestination)
 	networkFile.close();
 }
 
+/*
+ * Creates the initialization file for L-RUCoP
+ *
+ * @param source: The source of the bundle
+ * 		  destination: The destination of the bundle
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::createIniFile(int source, int destination)
 {
 	ofstream iniFile("ini.txt");
@@ -379,6 +522,13 @@ void RoutingORUCOP::createIniFile(int source, int destination)
 	iniFile.close();
 }
 
+/*
+ * The call to L-RUCoP is performed here, thus the initialiation and the contact plan files are created, L-RUCoP called and the results interpreted
+ *
+ * @param bundle: A pointer to the bundle in question
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::callToPython(BundlePkt *bundle)
 {
 	char currDirectory[128];
@@ -410,7 +560,7 @@ void RoutingORUCOP::callToPython(BundlePkt *bundle)
 	this->lastUpdateTime_[originalBundleIds[bundle->getId()]] = simTime().dbl();
 	for (size_t i = 0; i < this->bundleCopies_; i++)
 	{
-		this->metricCollector_->updateRUCoPCalls(this->eid_);
+		this->metricCollector_->updateRUCoPCalls(this->eid_); //one RUCoP call for each bundle
 	}
 
 	chdir(currDirectory); //return to current directory
@@ -422,6 +572,14 @@ void RoutingORUCOP::callToPython(BundlePkt *bundle)
 	}
 }
 
+/*
+ * Reads the json results from a call to L-RUCoP
+ *
+ * @param destination: The destination of the bundle
+ * 	      bundleId: The ID of the bundle
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::readJsonFromFile(int destination, long bundleId)
 {
 	string pathToFiles = "working_dir/IRUCoPn-" + to_string(this->bundleCopies_) + "/routing_files/pf=-1/todtnsim-";
@@ -433,7 +591,7 @@ void RoutingORUCOP::readJsonFromFile(int destination, long bundleId)
 
 		if (file.good())
 		{
-			this->jsonFunction_[destination][i] = json::parse(file);
+			this->jsonFunction_[destination][i] = json::parse(file); //save json for corresponding destination
 		}
 		else
 		{
@@ -442,11 +600,22 @@ void RoutingORUCOP::readJsonFromFile(int destination, long bundleId)
 	}
 }
 
+/*
+ * Returns the timestamp for the given time, interpreted as contact start or current simulation time
+ *
+ * @param startOrCurrent: The given simulation or contact start time
+ *        destination: The destination of the bundle
+ *
+ * @return The respective timestamp
+ *
+ * @author Simon Rink
+ */
 int RoutingORUCOP::getTsForStartOrCurrentTime(int startOrCurrent, int destination)
 {
-
+	//go through all time stamps
 	for (size_t i = 0; i < this->tsStartTimes_[destination].size() - 1; i++)
 	{
+		//We win if we either find the correct start time, or the simulation is in between two timestamps, thus the lower one is important
 		if (startOrCurrent == this->tsStartTimes_[destination].at(i) || startOrCurrent < this->tsStartTimes_[destination].at(i + 1))
 		{
 			return i;
@@ -455,11 +624,22 @@ int RoutingORUCOP::getTsForStartOrCurrentTime(int startOrCurrent, int destinatio
 
 }
 
+/*
+ * Returns the timestamp for the given time, interpreted as contact end
+ *
+ * @param end: The end time of a contact
+ *        destination: The destination of the bundle
+ *
+ * @return The respective time stamp
+ *
+ * @author Simon Rink
+ */
 int RoutingORUCOP::getTsForEndTime(int end, int destination)
 {
-
+	//go through each element
 	for (size_t i = 1; i < this->tsStartTimes_[destination].size(); i++)
 	{
+		//if we found a time stamp, it has to be the lower as we want the interval ended by this contact
 		if (end == this->tsStartTimes_[destination].at(i))
 		{
 			return i - 1;
@@ -468,6 +648,14 @@ int RoutingORUCOP::getTsForEndTime(int end, int destination)
 
 }
 
+/**
+ * Updates the start times according to the contacts for RUCoP
+ *
+ * @param contacts: The contacts that are considered for the time stamps
+ * 	      destination: The destination of the bundle
+ *
+ * @author Simon Rink
+ */
 void RoutingORUCOP::updateStartTimes(vector<Contact> *contacts, int destination)
 {
 	map<int, int> alreadySeen;
@@ -477,7 +665,7 @@ void RoutingORUCOP::updateStartTimes(vector<Contact> *contacts, int destination)
 	{
 		int start = contacts->at(i).getStart();
 		int end = contacts->at(i).getEnd();
-		if (alreadySeen.find(start) == alreadySeen.end())
+		if (alreadySeen.find(start) == alreadySeen.end()) //timer must not be included several times
 		{
 			alreadySeen[start] = 1;
 			this->tsStartTimes_[destination].push_back(start);
@@ -490,18 +678,28 @@ void RoutingORUCOP::updateStartTimes(vector<Contact> *contacts, int destination)
 		}
 	}
 
-	sort(this->tsStartTimes_[destination].begin(), this->tsStartTimes_[destination].begin() + this->tsStartTimes_[destination].size());
+	sort(this->tsStartTimes_[destination].begin(), this->tsStartTimes_[destination].begin() + this->tsStartTimes_[destination].size()); //must be sorted!
 	this->numOfTs_[destination] = this->findMaxTs(destination);
 
 }
 
+/*
+ * Returns the time intervals for a given contact
+ *
+ * @param contact: The respective contact pointer
+ * 	      destination: The destination of the bundle
+ *
+ * @return A vector of time stamps
+ *
+ * @author Simon Rink
+ */
 vector<int> RoutingORUCOP::getTsForContact(Contact *contact, int destination)
 {
 	int startTs = this->getTsForStartOrCurrentTime(contact->getStart(), destination);
 	int endTs = this->getTsForEndTime(contact->getEnd(), destination);
 	vector<int> tsValues;
 
-	for (int i = startTs; i <= endTs; i++)
+	for (int i = startTs; i <= endTs; i++) //take each timestamp between start and end
 	{
 		tsValues.push_back(i);
 	}
@@ -510,12 +708,31 @@ vector<int> RoutingORUCOP::getTsForContact(Contact *contact, int destination)
 
 }
 
+/*
+ * Returns the maximum time stamps
+ *
+ * @param destination: The destination of the bundle
+ *
+ * @return The maximum time stamp
+ *
+ * @author Simon Rink
+ */
 int RoutingORUCOP::findMaxTs(int destination)
 {
 
 	return this->tsStartTimes_[destination].size() - 1;
 }
 
+/*
+ * Identifies the correct decisions for a given bundle copy
+ *
+ * @param bundleId: The ID of the bundle
+ * 	      destination: The destination of the bundle
+ *
+ * @return The queue of chosen contacts
+ *
+ * @author Simon Rink
+ */
 queue<Contact> RoutingORUCOP::getNextRoutingDecisionForBundle(long bundleId, int destination, int ts)
 {
 	int solvedCopies = this->bundleSolvedCopies_[bundleId];
@@ -536,7 +753,7 @@ queue<Contact> RoutingORUCOP::getNextRoutingDecisionForBundle(long bundleId, int
 			int copies = curr.at("copies");
 			solvedCopies = solvedCopies - copies;
 
-			if (solvedCopies < 0)
+			if (solvedCopies < 0) //we have found the correct position
 			{
 				vector<int> route = curr.at("route");
 				return this->getDecisionFromRoute(route, destination);
@@ -552,13 +769,23 @@ queue<Contact> RoutingORUCOP::getNextRoutingDecisionForBundle(long bundleId, int
 
 }
 
+/*
+ * Returns for a given route from RUCoP the corresponding queue
+ *
+ * @param route: The route from RUCoP
+ * 	      destination: The destination of the bundle
+ *
+ * @return The resulting decision queue
+ *
+ * @author Simon Rink
+ */
 queue<Contact> RoutingORUCOP::getDecisionFromRoute(vector<int> route, int destination)
 {
 	queue<Contact> decisionQueue;
 	for (size_t i = 0; i < route.size(); i++)
 	{
 		int actualId = this->idMap_[destination][route.at(i)];
-		Contact *contact = this->contactPlan_->getContactById(actualId);
+		Contact *contact = this->contactPlan_->getContactById(actualId); //get corresponding ID from DTNSim
 		if (contact == NULL)
 		{
 			continue;

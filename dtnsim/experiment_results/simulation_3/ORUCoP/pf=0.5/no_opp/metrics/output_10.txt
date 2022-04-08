@@ -1,0 +1,38 @@
+The bundles with the following ids have been sent: 
+74(7 to 5), 76(12 to 5), 79(8 to 4), 81(8 to 3), 82(10 to 7), 97(3 to 7), 112(11 to 1), 116(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(112: 80.000000), 
+--------------------
+That means, that overall 0.125 (1/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(76: 2), (79: 2), (81: 2), (82: 5), (112: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 112: (to: 4, time: 140.000000), 
+Node 4: 
+Bundle 82: (to: 6, time: 80.000000), 
+Bundle 112: (to: 1, time: 160.000000), 
+Node 5: 
+Bundle 82: (to: 4, time: 60.000000), (to: 4, time: 60.000000), 
+Node 6: 
+Node 7: 
+Node 8: 
+Bundle 79: (to: 2, time: 40.000000), (to: 2, time: 40.000000), 
+Bundle 81: (to: 2, time: 40.000000), (to: 2, time: 40.000000), 
+Node 9: 
+Node 10: 
+Bundle 82: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Node 11: 
+Bundle 112: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 76: (to: 11, time: 40.000000), (to: 11, time: 40.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

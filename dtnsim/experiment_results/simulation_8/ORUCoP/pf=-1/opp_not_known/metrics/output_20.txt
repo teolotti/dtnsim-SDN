@@ -1,0 +1,58 @@
+The bundles with the following ids have been sent: 
+236(3 to 7), 268(12 to 1), 276(4 to 9), 296(10 to 3), 346(11 to 2), 366(9 to 4), 404(5 to 12), 425(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(268: 35.000000), (276: 35.000000), (346: 65.000000), (366: 5.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(236: 5), (268: 8), (276: 8), (296: 4), (346: 6), (366: 6), (404: 4), (425: 3), 
+--------------------
+Overall, the computation required 42 calls to RUCoP, which took 212 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 236: (to: 5, time: 25.000000), (to: 2, time: 30.000000), 
+Node 4: 
+Bundle 276: (to: 5, time: 55.000000), (to: 8, time: 70.000000), 
+Node 5: 
+Bundle 236: (to: 15, time: 40.000000), 
+Bundle 268: (to: 1, time: 80.000000), (to: 1, time: 80.000000), 
+Bundle 276: (to: 15, time: 80.000000), (to: 15, time: 80.000000), 
+Bundle 346: (to: 8, time: 120.000000), 
+Bundle 366: (to: 8, time: 120.000000), 
+Bundle 404: (to: 6, time: 125.000000), (to: 15, time: 125.000000), 
+Node 6: 
+Bundle 366: (to: 5, time: 115.000000), 
+Bundle 404: (to: 9, time: 125.000000), 
+Node 7: 
+Node 8: 
+Bundle 276: (to: 5, time: 70.000000), 
+Bundle 296: (to: 6, time: 65.000000), (to: 6, time: 65.000000), 
+Bundle 346: (to: 13, time: 160.000000), 
+Bundle 366: (to: 4, time: 120.000000), (to: 4, time: 120.000000), 
+Node 9: 
+Bundle 366: (to: 6, time: 115.000000), (to: 8, time: 115.000000), 
+Node 10: 
+Bundle 296: (to: 8, time: 65.000000), (to: 8, time: 65.000000), 
+Bundle 425: (to: 11, time: 140.000000), (to: 8, time: 160.000000), 
+Node 11: 
+Bundle 236: (to: 8, time: 160.000000), 
+Bundle 268: (to: 15, time: 80.000000), (to: 15, time: 80.000000), 
+Bundle 276: (to: 9, time: 90.000000), 
+Bundle 346: (to: 15, time: 95.000000), (to: 2, time: 100.000000), 
+Bundle 425: (to: 9, time: 150.000000), 
+Node 12: 
+Bundle 268: (to: 11, time: 45.000000), (to: 11, time: 45.000000), 
+Node 13: 
+Bundle 346: (to: 2, time: 160.000000), 
+Node 14: 
+Node 15: 
+Bundle 236: (to: 11, time: 40.000000), 
+Bundle 268: (to: 5, time: 80.000000), (to: 5, time: 80.000000), 
+Bundle 276: (to: 11, time: 80.000000), (to: 11, time: 80.000000), 
+Bundle 346: (to: 5, time: 120.000000), 
+Bundle 404: (to: 8, time: 160.000000), 

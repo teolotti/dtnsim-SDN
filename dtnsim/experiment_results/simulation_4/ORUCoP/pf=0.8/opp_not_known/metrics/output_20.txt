@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+192(1 to 6), 193(6 to 10), 194(9 to 4), 210(2 to 8), 227(5 to 12), 257(7 to 12), 258(10 to 9), 269(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(194: 80.000000), 
+--------------------
+That means, that overall 0.125 (1/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(193: 12), (194: 6), (210: 4), (257: 4), (258: 7), (269: 2), 
+--------------------
+Overall, the computation required 26 calls to RUCoP, which took 136 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 193: (to: 2, time: 100.000000), (to: 2, time: 100.000000), 
+Bundle 258: (to: 1, time: 80.000000), 
+Node 2: 
+Bundle 193: (to: 3, time: 120.000000), (to: 3, time: 120.000000), 
+Bundle 210: (to: 3, time: 20.000000), (to: 3, time: 20.000000), 
+Node 3: 
+Bundle 210: (to: 4, time: 40.000000), 
+Bundle 258: (to: 4, time: 40.000000), 
+Bundle 269: (to: 4, time: 55.000000), 
+Node 4: 
+Bundle 210: (to: 1, time: 80.000000), 
+Bundle 258: (to: 1, time: 80.000000), 
+Bundle 269: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Bundle 193: (to: 14, time: 0.000000), (to: 14, time: 0.000000), 
+Bundle 194: (to: 5, time: 40.000000), (to: 4, time: 80.000000), 
+Node 7: 
+Bundle 193: (to: 1, time: 0.000000), (to: 1, time: 0.000000), 
+Bundle 257: (to: 15, time: 40.000000), (to: 11, time: 160.000000), 
+Node 8: 
+Node 9: 
+Bundle 193: (to: 7, time: 0.000000), (to: 7, time: 0.000000), 
+Bundle 194: (to: 14, time: 0.000000), (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 258: (to: 3, time: 40.000000), (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 257: (to: 7, time: 40.000000), 
+Node 12: 
+Bundle 258: (to: 1, time: 80.000000), 
+Node 13: 
+Bundle 258: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 193: (to: 9, time: 0.000000), (to: 9, time: 0.000000), 
+Bundle 194: (to: 6, time: 0.000000), (to: 6, time: 0.000000), 
+Node 15: 
+Bundle 257: (to: 11, time: 40.000000), 

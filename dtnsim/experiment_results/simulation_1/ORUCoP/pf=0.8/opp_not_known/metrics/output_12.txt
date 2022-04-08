@@ -1,0 +1,41 @@
+The bundles with the following ids have been sent: 
+917(10 to 6), 934(1 to 11), 937(1 to 6), 938(5 to 10), 968(4 to 1), 972(9 to 12), 992(3 to 9), 1029(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(972: 55.000000), 
+--------------------
+That means, that overall 0.125 (1/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(917: 2), (938: 6), (968: 5), (972: 6), (992: 3), 
+--------------------
+Overall, the computation required 52 calls to RUCoP, which took 246 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 992: (to: 4, time: 65.000000), (to: 14, time: 80.000000), 
+Node 4: 
+Bundle 938: (to: 13, time: 80.000000), (to: 13, time: 80.000000), 
+Bundle 968: (to: 13, time: 50.000000), (to: 13, time: 80.000000), 
+Node 5: 
+Bundle 938: (to: 4, time: 35.000000), (to: 4, time: 35.000000), 
+Bundle 972: (to: 12, time: 110.000000), (to: 12, time: 110.000000), 
+Node 6: 
+Node 7: 
+Node 8: 
+Node 9: 
+Bundle 972: (to: 15, time: 55.000000), (to: 15, time: 55.000000), 
+Node 10: 
+Bundle 917: (to: 4, time: 5.000000), (to: 4, time: 5.000000), 
+Node 11: 
+Bundle 968: (to: 15, time: 50.000000), 
+Node 12: 
+Node 13: 
+Bundle 938: (to: 11, time: 80.000000), (to: 11, time: 80.000000), 
+Bundle 968: (to: 11, time: 50.000000), (to: 11, time: 80.000000), 
+Node 14: 
+Bundle 992: (to: 6, time: 80.000000), 
+Node 15: 
+Bundle 972: (to: 5, time: 55.000000), (to: 5, time: 55.000000), 

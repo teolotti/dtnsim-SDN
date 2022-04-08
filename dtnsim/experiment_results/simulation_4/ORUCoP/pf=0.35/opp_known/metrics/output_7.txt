@@ -1,0 +1,56 @@
+The bundles with the following ids have been sent: 
+977(1 to 6), 978(6 to 10), 979(9 to 4), 993(2 to 8), 1000(5 to 12), 1018(7 to 12), 1019(10 to 9), 1026(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(977: 40.000000), (978: 120.000000), (979: 0.000000), (1018: 80.000000), (1026: 85.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(977: 4), (978: 9), (979: 6), (1000: 1), (1018: 6), (1019: 2), (1026: 5), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 977: (to: 9, time: 20.000000), (to: 9, time: 80.000000), 
+Bundle 978: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 978: (to: 12, time: 120.000000), 
+Node 3: 
+Bundle 1018: (to: 10, time: 100.000000), 
+Bundle 1026: (to: 4, time: 55.000000), 
+Node 4: 
+Bundle 1026: (to: 6, time: 120.000000), 
+Node 5: 
+Bundle 1000: (to: 4, time: 25.000000), 
+Node 6: 
+Bundle 978: (to: 14, time: 0.000000), (to: 14, time: 0.000000), 
+Bundle 979: (to: 4, time: 0.000000), (to: 4, time: 0.000000), 
+Bundle 1026: (to: 14, time: 120.000000), 
+Node 7: 
+Bundle 1018: (to: 15, time: 80.000000), 
+Node 8: 
+Node 9: 
+Bundle 977: (to: 14, time: 40.000000), 
+Bundle 978: (to: 1, time: 80.000000), 
+Bundle 979: (to: 14, time: 0.000000), (to: 14, time: 0.000000), 
+Bundle 1026: (to: 8, time: 140.000000), 
+Node 10: 
+Bundle 1018: (to: 13, time: 120.000000), 
+Bundle 1019: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 1018: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 978: (to: 13, time: 120.000000), 
+Node 13: 
+Bundle 978: (to: 10, time: 120.000000), 
+Bundle 1018: (to: 12, time: 120.000000), 
+Bundle 1019: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 977: (to: 6, time: 40.000000), 
+Bundle 978: (to: 9, time: 0.000000), (to: 9, time: 0.000000), 
+Bundle 979: (to: 6, time: 0.000000), (to: 6, time: 0.000000), 
+Bundle 1026: (to: 9, time: 120.000000), 
+Node 15: 
+Bundle 1018: (to: 11, time: 80.000000), 

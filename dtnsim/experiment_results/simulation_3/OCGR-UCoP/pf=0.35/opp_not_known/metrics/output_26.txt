@@ -1,0 +1,57 @@
+The bundles with the following ids have been sent: 
+722(7 to 5), 724(12 to 5), 742(8 to 4), 744(8 to 3), 745(10 to 7), 787(3 to 7), 839(11 to 1), 842(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(724: 50.000000), (742: 120.000000), (744: 90.000000), (745: 10.000000), (787: 0.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(722: 5), (724: 4), (742: 3), (744: 2), (745: 6), (787: 6), (839: 3), (842: 1), 
+--------------------
+Overall, the computation required 16 calls to RUCoP, which took 94 seconds and 25 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 722: (to: 9, time: 20.000000), 
+Node 2: 
+Bundle 742: (to: 3, time: 120.000000), 
+Bundle 744: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 742: (to: 4, time: 140.000000), 
+Bundle 787: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 842: (to: 6, time: 80.000000), 
+Node 5: 
+Node 6: 
+Bundle 722: (to: 5, time: 40.000000), 
+Node 7: 
+Bundle 722: (to: 1, time: 0.000000), 
+Bundle 839: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 742: (to: 2, time: 40.000000), 
+Bundle 744: (to: 2, time: 40.000000), 
+Node 9: 
+Bundle 722: (to: 14, time: 40.000000), 
+Node 10: 
+Bundle 724: (to: 5, time: 20.000000), (to: 5, time: 60.000000), 
+Bundle 745: (to: 5, time: 20.000000), (to: 13, time: 40.000000), 
+Bundle 787: (to: 13, time: 45.000000), 
+Node 11: 
+Bundle 745: (to: 15, time: 40.000000), 
+Bundle 787: (to: 15, time: 45.000000), 
+Bundle 839: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 724: (to: 13, time: 0.000000), 
+Bundle 745: (to: 11, time: 40.000000), 
+Bundle 787: (to: 11, time: 45.000000), 
+Node 13: 
+Bundle 724: (to: 10, time: 10.000000), 
+Bundle 745: (to: 12, time: 40.000000), 
+Bundle 787: (to: 12, time: 45.000000), 
+Node 14: 
+Bundle 722: (to: 6, time: 40.000000), 
+Node 15: 
+Bundle 745: (to: 7, time: 40.000000), 
+Bundle 787: (to: 7, time: 45.000000), 
+Bundle 839: (to: 7, time: 80.000000), 

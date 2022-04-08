@@ -1,0 +1,59 @@
+The bundles with the following ids have been sent: 
+1483(1 to 12), 1499(6 to 3), 1532(8 to 2), 1537(4 to 5), 1557(2 to 4), 1558(9 to 10), 1559(12 to 11), 1576(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1483: 25.000000), (1499: 55.000000), (1532: 60.000000), (1537: 5.000000), (1559: 20.000000), (1576: 10.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1483: 2), (1499: 7), (1532: 3), (1537: 4), (1557: 7), (1558: 2), (1559: 3), (1576: 2), 
+--------------------
+Overall, the computation required 13 calls to RUCoP, which took 77 seconds and 21 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1483: (to: 5, time: 40.000000), 
+Node 2: 
+Bundle 1557: (to: 6, time: 60.000000), 
+Node 3: 
+Node 4: 
+Bundle 1537: (to: 8, time: 40.000000), 
+Node 5: 
+Bundle 1483: (to: 12, time: 40.000000), 
+Bundle 1499: (to: 11, time: 80.000000), 
+Bundle 1557: (to: 1, time: 80.000000), 
+Bundle 1558: (to: 1, time: 80.000000), 
+Bundle 1559: (to: 11, time: 80.000000), 
+Bundle 1576: (to: 11, time: 80.000000), 
+Node 6: 
+Bundle 1499: (to: 10, time: 20.000000), 
+Bundle 1557: (to: 10, time: 60.000000), 
+Node 7: 
+Node 8: 
+Bundle 1499: (to: 12, time: 60.000000), 
+Bundle 1532: (to: 14, time: 40.000000), 
+Bundle 1537: (to: 12, time: 60.000000), 
+Bundle 1557: (to: 12, time: 60.000000), 
+Node 9: 
+Bundle 1499: (to: 5, time: 60.000000), 
+Bundle 1537: (to: 5, time: 60.000000), 
+Bundle 1557: (to: 5, time: 60.000000), 
+Bundle 1558: (to: 5, time: 60.000000), 
+Bundle 1559: (to: 5, time: 60.000000), 
+Node 10: 
+Bundle 1499: (to: 8, time: 60.000000), 
+Bundle 1532: (to: 2, time: 100.000000), 
+Bundle 1557: (to: 8, time: 60.000000), 
+Node 11: 
+Bundle 1499: (to: 3, time: 80.000000), 
+Bundle 1576: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 1499: (to: 9, time: 60.000000), 
+Bundle 1537: (to: 9, time: 60.000000), 
+Bundle 1557: (to: 9, time: 60.000000), 
+Bundle 1559: (to: 9, time: 60.000000), 
+Node 13: 
+Node 14: 
+Bundle 1532: (to: 10, time: 40.000000), 
+Node 15: 

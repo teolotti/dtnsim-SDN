@@ -15,7 +15,7 @@ out/gcc-debug//src/central/Central.o: src/central/Central.cc \
  src/node/dtn/routing/RoutingSprayAndWait.h \
  src/node/dtn/routing/RoutingCgrModel350_Probabilistic.h \
  src/node/dtn/routing/RoutingOpportunistic.h src/utils/MetricCollector.h \
- src/utils/json.hpp src/node/dtn/routing/RoutingUniboCgr.h \
+ src/utils/json.hpp src/node/dtn/routing/RoutingUncertainUniboCgr.h \
  src/node/dtn/routing/unibocgr/core/contact_plan/ranges/ranges.h \
  src/node/dtn/routing/unibocgr/core/library/commonDefines.h \
  src/node/dtn/routing/unibocgr/core/config.h \
@@ -41,7 +41,6 @@ out/gcc-debug//src/central/Central.o: src/central/Central.cc \
  src/node/dtn/routing/unibocgr/core/cgr/../library_from_ion/scalar/scalar.h \
  src/node/dtn/routing/unibocgr/core/cgr/cgr.h \
  src/node/dtn/routing/unibocgr/core/cgr/../routes/routes.h \
- src/node/dtn/routing/RoutingUncertainUniboCgr.h \
  src/node/dtn/routing/RoutingBRUF1T.h \
  src/node/dtn/routing/RoutingORUCOP.h \
  src/node/dtn/routing/brufncopies/BRUFNCopies1TOracle.h \
@@ -82,7 +81,7 @@ src/node/dtn/routing/RoutingCgrModel350_Probabilistic.h:
 src/node/dtn/routing/RoutingOpportunistic.h:
 src/utils/MetricCollector.h:
 src/utils/json.hpp:
-src/node/dtn/routing/RoutingUniboCgr.h:
+src/node/dtn/routing/RoutingUncertainUniboCgr.h:
 src/node/dtn/routing/unibocgr/core/contact_plan/ranges/ranges.h:
 src/node/dtn/routing/unibocgr/core/library/commonDefines.h:
 src/node/dtn/routing/unibocgr/core/config.h:
@@ -108,7 +107,6 @@ src/node/dtn/routing/unibocgr/core/cgr/../library/list/list_type.h:
 src/node/dtn/routing/unibocgr/core/cgr/../library_from_ion/scalar/scalar.h:
 src/node/dtn/routing/unibocgr/core/cgr/cgr.h:
 src/node/dtn/routing/unibocgr/core/cgr/../routes/routes.h:
-src/node/dtn/routing/RoutingUncertainUniboCgr.h:
 src/node/dtn/routing/RoutingBRUF1T.h:
 src/node/dtn/routing/RoutingORUCOP.h:
 src/node/dtn/routing/brufncopies/BRUFNCopies1TOracle.h:

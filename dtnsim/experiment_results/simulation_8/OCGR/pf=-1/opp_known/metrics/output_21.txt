@@ -1,0 +1,54 @@
+The bundles with the following ids have been sent: 
+553(3 to 7), 571(12 to 1), 575(4 to 9), 579(10 to 3), 606(11 to 2), 613(9 to 4), 631(5 to 12), 637(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(571: 35.000000), (575: 25.000000), (606: 25.000000), (631: 15.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(553: 5), (571: 5), (575: 3), (579: 3), (606: 5), (613: 2), (631: 4), (637: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 34 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 553: (to: 5, time: 20.000000), 
+Node 4: 
+Bundle 575: (to: 5, time: 50.000000), (to: 8, time: 70.000000), 
+Node 5: 
+Bundle 553: (to: 7, time: 30.000000), (to: 15, time: 40.000000), 
+Bundle 571: (to: 1, time: 80.000000), 
+Bundle 631: (to: 6, time: 120.000000), (to: 15, time: 120.000000), 
+Node 6: 
+Bundle 579: (to: 3, time: 60.000000), 
+Bundle 613: (to: 5, time: 110.000000), 
+Node 7: 
+Node 8: 
+Bundle 575: (to: 9, time: 80.000000), 
+Bundle 579: (to: 6, time: 60.000000), 
+Bundle 606: (to: 13, time: 120.000000), 
+Node 9: 
+Bundle 606: (to: 5, time: 100.000000), (to: 8, time: 110.000000), 
+Bundle 613: (to: 6, time: 110.000000), 
+Bundle 637: (to: 6, time: 160.000000), 
+Node 10: 
+Bundle 579: (to: 8, time: 60.000000), 
+Bundle 637: (to: 11, time: 140.000000), 
+Node 11: 
+Bundle 553: (to: 10, time: 50.000000), 
+Bundle 571: (to: 10, time: 50.000000), (to: 15, time: 80.000000), 
+Bundle 606: (to: 9, time: 90.000000), 
+Bundle 631: (to: 12, time: 140.000000), 
+Bundle 637: (to: 9, time: 150.000000), 
+Node 12: 
+Bundle 571: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 606: (to: 2, time: 120.000000), 
+Node 14: 
+Node 15: 
+Bundle 553: (to: 11, time: 40.000000), 
+Bundle 571: (to: 5, time: 80.000000), 
+Bundle 631: (to: 11, time: 120.000000), 

@@ -1,0 +1,57 @@
+The bundles with the following ids have been sent: 
+473(1 to 11), 480(3 to 10), 481(4 to 6), 482(7 to 9), 493(12 to 4), 494(12 to 5), 504(8 to 1), 521(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(481: 25.000000), (482: 25.000000), (493: 25.000000), (494: 15.000000), (504: 15.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(473: 4), (480: 5), (481: 3), (482: 3), (493: 4), (494: 4), (504: 4), (521: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 32 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 473: (to: 2, time: 40.000000), 
+Bundle 480: (to: 5, time: 30.000000), 
+Node 2: 
+Bundle 473: (to: 6, time: 50.000000), 
+Bundle 480: (to: 1, time: 20.000000), 
+Bundle 481: (to: 6, time: 50.000000), 
+Bundle 504: (to: 1, time: 60.000000), 
+Node 3: 
+Bundle 480: (to: 2, time: 20.000000), 
+Bundle 481: (to: 2, time: 50.000000), 
+Bundle 493: (to: 4, time: 60.000000), 
+Bundle 504: (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 481: (to: 3, time: 50.000000), 
+Bundle 504: (to: 3, time: 50.000000), 
+Node 5: 
+Bundle 480: (to: 9, time: 30.000000), 
+Node 6: 
+Bundle 473: (to: 10, time: 60.000000), 
+Node 7: 
+Bundle 482: (to: 11, time: 20.000000), 
+Bundle 493: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 504: (to: 4, time: 40.000000), 
+Node 9: 
+Bundle 480: (to: 10, time: 50.000000), 
+Bundle 494: (to: 5, time: 50.000000), 
+Bundle 521: (to: 10, time: 50.000000), (to: 6, time: 70.000000), 
+Node 10: 
+Bundle 473: (to: 11, time: 60.000000), 
+Bundle 482: (to: 9, time: 50.000000), 
+Bundle 494: (to: 9, time: 50.000000), 
+Node 11: 
+Bundle 482: (to: 10, time: 30.000000), 
+Bundle 493: (to: 7, time: 40.000000), 
+Bundle 494: (to: 10, time: 30.000000), 
+Node 12: 
+Bundle 493: (to: 11, time: 30.000000), 
+Bundle 494: (to: 11, time: 30.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+330(7 to 5), 332(12 to 5), 340(8 to 4), 342(8 to 3), 343(10 to 7), 358(3 to 7), 372(11 to 1), 380(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(332: 50.000000), (343: 50.000000), (358: 35.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(330: 2), (332: 4), (340: 2), (342: 2), (343: 5), (358: 4), (372: 2), (380: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 29 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 330: (to: 2, time: 0.000000), 
+Bundle 343: (to: 9, time: 80.000000), 
+Bundle 358: (to: 9, time: 80.000000), 
+Bundle 380: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 332: (to: 3, time: 20.000000), 
+Bundle 340: (to: 3, time: 120.000000), 
+Bundle 342: (to: 3, time: 120.000000), 
+Bundle 380: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 332: (to: 10, time: 40.000000), 
+Bundle 343: (to: 4, time: 40.000000), 
+Bundle 358: (to: 4, time: 40.000000), 
+Bundle 372: (to: 4, time: 140.000000), 
+Node 4: 
+Bundle 343: (to: 1, time: 80.000000), 
+Bundle 358: (to: 1, time: 80.000000), 
+Bundle 380: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 330: (to: 1, time: 0.000000), 
+Node 8: 
+Bundle 340: (to: 2, time: 40.000000), 
+Bundle 342: (to: 2, time: 40.000000), 
+Node 9: 
+Bundle 343: (to: 7, time: 80.000000), 
+Bundle 358: (to: 7, time: 80.000000), 
+Node 10: 
+Bundle 332: (to: 5, time: 60.000000), 
+Bundle 343: (to: 3, time: 40.000000), 
+Node 11: 
+Bundle 372: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 332: (to: 2, time: 0.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

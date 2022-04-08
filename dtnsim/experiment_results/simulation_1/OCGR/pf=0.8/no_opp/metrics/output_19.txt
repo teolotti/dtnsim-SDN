@@ -1,0 +1,38 @@
+The bundles with the following ids have been sent: 
+345(10 to 6), 347(1 to 11), 350(1 to 6), 351(5 to 10), 353(4 to 1), 354(9 to 12), 356(3 to 9), 357(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+
+--------------------
+That means, that overall 0 (0/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(345: 1), (347: 2), (350: 1), (351: 2), (353: 1), (354: 1), (356: 2), (357: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 19 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 347: (to: 3, time: 20.000000), (to: 3, time: 50.000000), 
+Bundle 350: (to: 3, time: 50.000000), 
+Node 2: 
+Node 3: 
+Bundle 356: (to: 4, time: 60.000000), (to: 6, time: 100.000000), 
+Node 4: 
+Bundle 351: (to: 11, time: 60.000000), 
+Bundle 353: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 351: (to: 4, time: 30.000000), 
+Node 6: 
+Node 7: 
+Node 8: 
+Node 9: 
+Bundle 354: (to: 8, time: 50.000000), 
+Node 10: 
+Bundle 345: (to: 4, time: 0.000000), 
+Node 11: 
+Node 12: 
+Bundle 357: (to: 6, time: 110.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

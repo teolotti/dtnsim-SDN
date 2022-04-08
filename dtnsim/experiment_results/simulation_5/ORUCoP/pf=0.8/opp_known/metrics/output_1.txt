@@ -1,0 +1,45 @@
+The bundles with the following ids have been sent: 
+421(1 to 12), 422(12 to 5), 427(7 to 3), 428(10 to 6), 429(11 to 1), 434(6 to 7), 460(3 to 4), 465(8 to 4), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(460: 10.000000), (465: 5.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(421: 6), (429: 3), (434: 6), (460: 2), (465: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 421: (to: 13, time: 0.000000), (to: 13, time: 40.000000), 
+Bundle 465: (to: 4, time: 60.000000), 
+Node 2: 
+Bundle 434: (to: 4, time: 60.000000), 
+Bundle 460: (to: 4, time: 60.000000), 
+Node 3: 
+Bundle 434: (to: 2, time: 50.000000), 
+Bundle 460: (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 434: (to: 8, time: 70.000000), 
+Node 5: 
+Node 6: 
+Bundle 434: (to: 9, time: 35.000000), 
+Node 7: 
+Node 8: 
+Bundle 421: (to: 5, time: 50.000000), (to: 5, time: 55.000000), 
+Bundle 465: (to: 13, time: 55.000000), (to: 7, time: 60.000000), 
+Node 9: 
+Bundle 434: (to: 15, time: 40.000000), 
+Node 10: 
+Node 11: 
+Bundle 429: (to: 10, time: 40.000000), (to: 14, time: 40.000000), 
+Node 12: 
+Node 13: 
+Bundle 421: (to: 8, time: 0.000000), (to: 8, time: 40.000000), 
+Bundle 465: (to: 1, time: 55.000000), 
+Node 14: 
+Bundle 429: (to: 5, time: 40.000000), 
+Node 15: 
+Bundle 434: (to: 3, time: 40.000000), 
