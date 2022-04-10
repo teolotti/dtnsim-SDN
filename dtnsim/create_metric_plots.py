@@ -3,21 +3,32 @@ import sys
 import json2latex
 import math
 
-def compute_avg_seeds(path, num_of_seeds):
+
+"""
+In this function all seeds of a run from an algorithm in a simulation are collected and put into a map to have access to them later
+
+@param path: The path to the collected metrics
+       num_of_seeds: The number of seeds tested
+       
+@return The dictionary with the collected seed metrics
+
+@author Simon Rink
+"""
+def collect_seed_metrics(path, num_of_seeds):
 	seeds_dict = dict()
 	
-	for num in range(0, num_of_seeds):
+	for num in range(0, num_of_seeds): #read all seed files
 		with open(path + '/metrics/jsonResults_' + str(num) + '.txt') as file1:
 			seeds_dict[num] = json.load(file1)
 	
-	result = dict()
-	bundleIds = seeds_dict[0]['bundleIds']
+	result = dict() #initiate result dictionary
+	bundleIds = seeds_dict[0]['bundleIds'] #collect the bundles from the simulation
 	result["receivedIds"] = dict()
 	bundles_received_count = dict()
 	rucop_calls = 0 
 	computation_time = 0
-	delivery_times = dict()
-	delivery_counts = dict()
+	
+	#set up required seed values
 	seed_values = dict()
 	seed_values["ratio"] = dict()
 	seed_values["times"] = dict()
@@ -28,28 +39,22 @@ def compute_avg_seeds(path, num_of_seeds):
 	
 	for id_ in bundleIds:
 		bundles_received_count[id_] = 0
-		delivery_times[id_] = 0
-		delivery_counts[id_] = 0
 	
 	for num in range(0, num_of_seeds):
 		seed_values["times"][num] = dict()
 		seed_values["counts"][num] = dict()
-		delivery_ratio += len(seeds_dict[num]["receivedIds"]) / len(bundleIds)
 		seed_values["ratio"][num] = len(seeds_dict[num]["receivedIds"]) / len(bundleIds)
 		for id_ in bundleIds:
-			seed_values["times"][num][id_] = -1
+			seed_values["times"][num][id_] = -1 #if no bundle was received in that seed, set it to -1
 			seed_values["counts"][num][id_] = -1
 			if id_ in seeds_dict[num]["receivedIds"]:
 				if (seeds_dict[num]["bundleDeliveryTimes"][id_] == 0):
-					delivery_times[id_] += 1
-					seed_values["times"][num][id_] = 1
+					seed_values["times"][num][id_] = 1 #set the delivery time to 1, if it was actually 0 to compete for the 0-ranges
 				else:
-					delivery_times[id_] += seeds_dict[num]["bundleDeliveryTimes"][id_]
 					seed_values["times"][num][id_] = seeds_dict[num]["bundleDeliveryTimes"][id_]
-				delivery_counts[id_] += seeds_dict[num]["bundleDeliveryCounts"][id_]
 				seed_values["counts"][num][id_] = seeds_dict[num]["bundleDeliveryCounts"][id_]
 				bundles_received_count[id_] = bundles_received_count[id_] + 1
-				result["receivedIds"][id_] = 1
+				result["receivedIds"][id_] = 1 #Bundle was received at least once in the run
 		rucop_calls += seeds_dict[num]["RUCoPCalls"]
 		computation_time += seeds_dict[num]["RUCoPComputationTime"]
 	
@@ -57,24 +62,29 @@ def compute_avg_seeds(path, num_of_seeds):
 	computation_time = computation_time / num_of_seeds
 							
 	delivery_ratio = delivery_ratio / num_of_seeds
-	if delivery_ratio == 0:
-		delivery_ratio = ((1 / len(bundleIds)) / num_of_seeds)
-		seed_values["ratio"][0] = 1 / len(bundleIds)
 	
-	for id_ in bundleIds:
-		if bundles_received_count[id_] > 0:
-			delivery_times[id_] = delivery_times[id_] / bundles_received_count[id_]
-			delivery_counts[id_] = delivery_counts[id_] / bundles_received_count[id_]
+	
+	if delivery_ratio == 0:
+		seed_values["ratio"][0] = 1 / len(bundleIds) #if the bundle has not been delivered at any time, give it one bundle for comparison reason
+	
 	result["bundleIds"] = bundleIds
-	result["delivery_ratio"] = delivery_ratio
-	result["delivery_times"] = delivery_times
-	result["delivery_counts"] = delivery_counts
 	result["seed_values"] = seed_values
 	result["calls"] = rucop_calls
 	result["computation"] = computation_time
 	
 	return result
 	
+"""
+This function computes the covariance for two sets with the same length
+@param set_one: The values from the first set
+	   mean_one: The mean of the first set
+	   set_two: The values from the second set
+	   mean_two: The mean of the second set
+
+@return The computed covariance
+
+@author Simon Rink
+"""
 def calculate_covariance(set_one, mean_one, set_two, mean_two):
 	
 	if len(set_one) == 0 or len(set_one) == 1:
@@ -85,6 +95,16 @@ def calculate_covariance(set_one, mean_one, set_two, mean_two):
 	
 	return covariance / (len(set_one) - 1)
 	
+"""
+This function computes the standard deviation of a data set
+
+@param data_set: The given data set
+	   mean: The mean of the data set
+	   
+@return The computed standard deviation
+
+@author Simon Rink
+"""
 def calculate_standard_deviation(data_set, mean):
 
 	if len(data_set) == 0 or len(data_set) == 1:
@@ -95,6 +115,15 @@ def calculate_standard_deviation(data_set, mean):
 	
 	return math.sqrt(sd / (len(data_set) - 1))
 	
+"""
+This function computes the mean for a given data set
+
+@param data_set: The given data set
+
+@return The computed mean
+
+@author Simon Rink
+"""
 def calculate_mean(data_set):
 	
 	if len(data_set) == 0:
@@ -105,7 +134,16 @@ def calculate_mean(data_set):
 		
 	return mean / len(data_set)
 		
+"""
+This function computes the 95 % CI and the mean for the comparison of two sets, thus including the error propagation"
 
+@param set_other: The values from the algorithm to be compared with CGR
+	   set_cgr: The values from the CGR run
+	   
+@return The computed CI
+
+@author Simon Rink
+"""
 def compute_confidence_interval(set_other, set_cgr):
 
 	result = dict()
@@ -120,6 +158,7 @@ def compute_confidence_interval(set_other, set_cgr):
 	
 	cv = calculate_covariance(set_other, other_mean, set_cgr, cgr_mean)
 
+	#use formula for error propagation, if both means and sds are equal, the resulting confidence is also
 	if (other_mean == cgr_mean and other_sd == cgr_sd):
 		confidence = other_sd
 	else:
@@ -131,16 +170,27 @@ def compute_confidence_interval(set_other, set_cgr):
 	
 	return result
 	
-				
+"""
+This function compares the results of CGR run with that of another algorithm
+
+@param cgr_result: The results from CGR
+	   other_result: The results from the other algorithm
+	   
+@return A dictionary with the computed results
+
+@author Simon Rink
+""" 			
 def compare_with_cgr(cgr_result, other_result, num_of_seeds):
 	
 	bundleIds = cgr_result['bundleIds']
 	receivedIds = cgr_result["receivedIds"]
 
 	
-	delivery_ratio_result = compute_confidence_interval(other_result["seed_values"]["ratio"], cgr_result["seed_values"]["ratio"])
+	delivery_ratio_result = compute_confidence_interval(other_result["seed_values"]["ratio"], cgr_result["seed_values"]["ratio"]) #compute result for delivery ratio
 	delivery_ratio = delivery_ratio_result["mean"]
 	delivery_ratio_ci = delivery_ratio_result["confidence"]
+	
+	#set up dictionaries for delivery delay and energy efficiency
 	other_delivery = dict()
 	cgr_delivery = dict()
 	other_count = dict()
@@ -158,14 +208,14 @@ def compare_with_cgr(cgr_result, other_result, num_of_seeds):
 		other_count[id_] = dict()
 		cgr_count[id_] = dict()
 		for num in range(0, num_of_seeds):
-			if (cgr_result["seed_values"]["times"][num][id_] != -1 and other_result["seed_values"]["times"][num][id_] != -1):
+			if (cgr_result["seed_values"]["times"][num][id_] != -1 and other_result["seed_values"]["times"][num][id_] != -1): #only compare two seeds if the bundles arrived in both
 				other_delivery[id_][bundles_arrived[id_]] = other_result["seed_values"]["times"][num][id_]
 				cgr_delivery[id_][bundles_arrived[id_]] = cgr_result["seed_values"]["times"][num][id_]
 				other_count[id_][bundles_arrived[id_]] = other_result["seed_values"]["counts"][num][id_]
 				cgr_count[id_][bundles_arrived[id_]] = cgr_result["seed_values"]["counts"][num][id_]
 				bundles_arrived[id_] = bundles_arrived[id_] + 1
 		
-		if (bundles_arrived[id_] > 0):		
+		if (bundles_arrived[id_] > 0):	#compute delivery delay and energy efficiency results	
 			bundles_results["times"][id_] = compute_confidence_interval(other_delivery[id_], cgr_delivery[id_])
 			bundles_results["counts"][id_] = compute_confidence_interval(other_count[id_], cgr_count[id_])
 		
@@ -174,6 +224,7 @@ def compare_with_cgr(cgr_result, other_result, num_of_seeds):
 	delivery_counts = 0
 	delivery_counts_ci = 0
 	
+	#computes means for delay, efficiency and their respective CIs over all bundles
 	for id_ in receivedIds:
 		if (bundles_arrived[id_] > 0):
 			delivery_times += bundles_results["times"][id_]["mean"]
@@ -187,27 +238,7 @@ def compare_with_cgr(cgr_result, other_result, num_of_seeds):
 	delivery_counts = delivery_counts / overall_received
 	delivery_counts_ci = delivery_counts_ci / overall_received
 		
-				
-				
-	
-	#delivery_ratio = other_result["delivery_ratio"] / cgr_result["delivery_ratio"]
-	#compared_bundles = 0
-	#delivery_times = 0
-	#delivery_counts = 0
-	
-	#for id_ in receivedIds:
-	#	if id_ in other_result["delivery_times"]:
-	#		delivery_times += other_result["delivery_times"][id_] / cgr_result["delivery_times"][id_]
-	#		delivery_counts += other_result["delivery_counts"][id_] / cgr_result["delivery_counts"][id_]
-	#		compared_bundles += 1
-		
-	#if compared_bundles > 0:
-	#	delivery_times = delivery_times / compared_bundles
-	#	delivery_counts = delivery_counts / compared_bundles
-	#else:
-	#	delivery_times = 1
-	#	delivery_counts = 1
-		
+	#store results
 	result = dict()
 	
 	result["delivery_ratio"] = delivery_ratio - 1
@@ -222,19 +253,41 @@ def compare_with_cgr(cgr_result, other_result, num_of_seeds):
 	return result
 	
 		
-	
+"""
+This function analyzes one run of an algorithm with CGR
+@param path: The path to the results from the other algorithm
+	   num_of_seeds: The number of tested seeds
+	   cgr_result: The results from CGR
+
+@return The analyzed results
+
+@author Simon Rink
+"""
 def analyze_run(path, num_of_seeds, cgr_result):
-	other_result = compute_avg_seeds(path, num_of_seeds)
+	other_result = collect_seed_metrics(path, num_of_seeds)
 	
 	cgr_comparison = compare_with_cgr(cgr_result, other_result, num_of_seeds)
 	
 	return cgr_comparison
 	
+"""
+This function analyzes one whole simulation
+
+@param path: The path to the simulation
+       pfs: The used failure probabilities
+       num_of_seeds: The number of tested seeds
+       num: The simulation number
+       
+@return A dictionary containing all results
+
+@author Simon Rink
+""" 
 def analyze_simulation(path, pfs, num_of_seeds, num):
 	cgr_results = dict()
 	
-	for pf in pfs:
-		cgr_results[pf] = compute_avg_seeds(path + '/OCGR/pf=' + str(pf) + '/no_opp', num_of_seeds)
+	for pf in pfs: #compute cgr results for each pf
+		cgr_results[pf] = collect_seed_metrics(path + '/OCGR/pf=' + str(pf) + '/no_opp', num_of_seeds)
+		
 	algorithm_results = dict()
 	algorithm_results["OCGR"] = dict()
 	algorithm_results["RUCoP"] = dict()
@@ -244,7 +297,8 @@ def analyze_simulation(path, pfs, num_of_seeds, num):
 	algorithm_results["ORUCoP"] = dict()
 	algorithm_results["CGR-UCoP"] = dict()
 	algorithm_results["CGR-UCoP-AK"] = dict()
-	for pf in pfs:
+	
+	for pf in pfs: #compare all algorithms with CGR for each pf
 		algorithm_results["OCGR"][pf] = analyze_run(path + '/OCGR/pf=' + str(pf) + '/opp_not_known', num_of_seeds, cgr_results[pf])
 		algorithm_results["RUCoP"][pf] = analyze_run(path + '/ORUCoP/pf=' + str(pf) + '/no_opp', num_of_seeds, cgr_results[pf])
 		algorithm_results["CGR-AK"][pf] = analyze_run(path + '/OCGR/pf=' + str(pf) + '/opp_known', num_of_seeds, cgr_results[pf])
@@ -254,15 +308,23 @@ def analyze_simulation(path, pfs, num_of_seeds, num):
 		algorithm_results["CGR-UCoP"][pf] = analyze_run(path + '/OCGR-UCoP/pf=' + str(pf) + '/no_opp', num_of_seeds, cgr_results[pf])
 		algorithm_results["CGR-UCoP-AK"][pf] = analyze_run(path + '/OCGR-UCoP/pf=' + str(pf) + '/opp_known', num_of_seeds, cgr_results[pf])
 		
-		
-	#print_results(algorithm_results, pfs, num)
 	
 	return algorithm_results
 	
+"""
+This function prints one metric for simulations with multiple failure probabilites
+
+@param results: The computed results
+	   metric: The metric (e.g. delivery ratio) to be printed
+	   pfs: The used failure probabilities
+	   num: The number of the simulation
+	   
+@author Simon Rink
+"""
 def print_metric_graph_non_specific(results, metric, pfs, num):
 	final_string = "x "
 	
-	for i in range(1, 17):
+	for i in range(1, 17): #set up y values for each algorithm. These are the mean and their corresponding CI
 		final_string += "y" + str(i) + " "
 		
 	final_string += "\n"
@@ -300,11 +362,20 @@ def print_metric_graph_non_specific(results, metric, pfs, num):
 		
 	with open("plots/sim_" + str(num) + "_" + metric, "w") as output:
 		output.write(final_string)
-		
+
+"""
+This funtion prints one metric for a simulation with only one failure probability
+
+@param results: The aquired results
+	   metric: The metric (e.g. delivery ratio) to be printed
+	   num: The number of the simulation
+	   
+@author Simon Rink
+"""		
 def print_metric_graph_specific(results, metric, num):
 	final_string = "x "
 	
-	for i in range(1, 17):
+	for i in range(1, 17):  #set up y values for each algorithm. These are the mean and their corresponding CI
 		final_string += "y" + str(i) + " "
 		
 	final_string += "\n"
@@ -337,9 +408,18 @@ def print_metric_graph_specific(results, metric, num):
 	with open("plots/sim_" + str(num) + "_" + metric, "w") as output:
 		output.write(final_string)
 	
+"""
+This function prints results for one simulation
+
+@param result: The collected results from the simulation
+	   pfs: The used failure probabilities
+	   num: The number of the current simulation
+	   
+@author Simon Rink
+"""
 def print_results(results, pfs, num):
 	
-	if (num < 7):
+	if (num < 7): #All simulations below 7 use multiple failure probabilites
 		print_metric_graph_non_specific(results, "delivery_ratio", pfs, num)
 		print_metric_graph_non_specific(results, "delivery_times", pfs, num)
 		print_metric_graph_non_specific(results, "delivery_counts", pfs, num)
@@ -348,7 +428,16 @@ def print_results(results, pfs, num):
 		print_metric_graph_specific(results, "delivery_times", num)
 		print_metric_graph_specific(results, "delivery_counts", num)
 	
-	
+"""
+This function calculates the mean for each metric for each pf for two simulations from one category
+
+@param result_1: The results from the first simulation
+	   result_2: The results from the second simulation
+	   
+@return The combined simulation results
+
+@author Simon Rink
+"""
 def combine_result(result_1, result_2):
 	final_result = dict()
 	
@@ -361,6 +450,13 @@ def combine_result(result_1, result_2):
 	
 	return final_result
 	
+"""
+This function computes the means for each metric for each algorithm and prints them
+
+@param final_result: All combined results from each categories
+
+@author Simon Rink
+""" 
 def generate_overall_means(final_results):
 	
 	overall_means = dict()
@@ -384,7 +480,7 @@ def generate_overall_means(final_results):
 					
 					
 	for algorithm in overall_means:
-		overall_means[algorithm]["delivery_ratio"] = overall_means[algorithm]["delivery_ratio"] / 17
+		overall_means[algorithm]["delivery_ratio"] = overall_means[algorithm]["delivery_ratio"] / 17 #there are 17 different simulation results available for each metric
 		overall_means[algorithm]["delivery_times"] = overall_means[algorithm]["delivery_times"] / 17
 		overall_means[algorithm]["delivery_counts"] = overall_means[algorithm]["delivery_counts"] / 17
 		overall_means[algorithm]["calls"] = overall_means[algorithm]["calls"] / 17
@@ -392,6 +488,13 @@ def generate_overall_means(final_results):
 				
 	print_overall_means(overall_means)
 	
+"""
+This function prints the overall means from above
+
+@param overall_means: The calculated overall means
+
+@author Simon Rink
+"""
 def print_overall_means(overall_means):
 	
 	with open("plots/means", "w") as output:
@@ -405,13 +508,13 @@ def main():
 	result = dict()
 	final_results = dict()
 	
-	for sim in range(1, num_of_sims + 1):
+	for sim in range(1, num_of_sims + 1): #calculate results for each simulations
 		if sim < 7:
 			result[sim] = analyze_simulation(path + "/simulation_" + str(sim), [0.2, 0.35, 0.5, 0.65, 0.8], 30, sim)
 		else:
 			result[sim] = analyze_simulation(path + "/simulation_" + str(sim), [-1], 30, sim)
 			
-	for i in range(0, 5):
+	for i in range(0, 5): #combine all results
 		final_results[i] = combine_result(result[2*i+1], result[2*i+2])
 		print_results(final_results[i], [0.2, 0.35, 0.5, 0.65, 0.8], 2*i+1)
 	

@@ -1,6 +1,6 @@
 import os
 
-SIMULATION_PATH = "/home/simon/Schreibtisch/experiment_results"
+SIMULATION_PATH = "../../../experiment_results"
 SIM_NUMBER = 8
 pfs = [-1]
 
@@ -29,7 +29,7 @@ def generate_omnet_ini_file(bundle_infos, algorithm, mode, fp, sim):
 	else:
 		final_string += 'dtnsim.central.useUncertainty = true\n'
 		final_string += 'dtnsim.node[*].dtn.routing = "ORUCOP"\n'
-	final_string += 'dtnsim.central.collectorPath = "/home/simon/Schreibtisch/experiment_results/simulation_' + str(sim) + '"\n'
+	final_string += 'dtnsim.central.collectorPath = "../../../experiment_results/simulation_' + str(sim) + '"\n'
 	final_string += generate_omnet_traffic(bundle_infos)
 
 
