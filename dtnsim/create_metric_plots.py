@@ -43,6 +43,7 @@ def collect_seed_metrics(path, num_of_seeds):
 	for num in range(0, num_of_seeds):
 		seed_values["times"][num] = dict()
 		seed_values["counts"][num] = dict()
+		delivery_ratio += len(seeds_dict[num]["receivedIds"]) / len(bundleIds)
 		seed_values["ratio"][num] = len(seeds_dict[num]["receivedIds"]) / len(bundleIds)
 		for id_ in bundleIds:
 			seed_values["times"][num][id_] = -1 #if no bundle was received in that seed, set it to -1
