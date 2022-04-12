@@ -49,7 +49,7 @@ Still, it might happen, that one of the libraries of the virtualenv (PySpark) ov
 * export PYSPARK_DRIVER_PYTHON=path/to/virtualenv/bin/python
 
 ### Opportunistic & uncertain simulation result analysis ###
-What might be noteworthy in this context, is the execution of the simulation scripts in simulations/opportunistic_uncertain_/simulation_x. As these script are essentially python scripts, one needs to execute them from within the virtual environment. They will automatically execute one simulation with all algorithms that were tested in this thesis with 30 different seeds and store them in the folder experiment_result. However, these parameters can be adjustments to the users' wishes. To analyze the results in terms of delivery ratio, delay and energy efficiency, the file create_metric_plots.py is provided, that will print the results in the folder metrics.
+What might be noteworthy in this context, is the execution of the simulation scripts in simulations/opportunistic_uncertain_/simulation_x. As these script are essentially python scripts, one needs to execute them from within the virtual environment. They will automatically execute one simulation with all algorithms that were tested in this thesis with 30 different seeds and store them in the folder experiment_result. However, these parameters can be adjusted to the users' wishes. Keep in mind, that when executing the script all previous values are deleted and overwritten, thus if one wants to keep them, they have to be stored in a backup folder. To analyze the results in terms of delivery ratio, delay and energy efficiency, the file create_metric_plots.py is provided, that will print the results in the folder metrics.
 
 ### Topology Outputs (optional) ###
 
