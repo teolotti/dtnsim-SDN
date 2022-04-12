@@ -313,15 +313,15 @@ def main():
 	sim_infos = dict()
 	sim_infos[SIM_NUMBER] = get_bundle_infos(SIM_NUMBER)
 	for pf in pfs:
-		#run_simulations(sim_infos[SIM_NUMBER], "ORUCOP", 0, pf, SIM_NUMBER)
+		run_simulations(sim_infos[SIM_NUMBER], "ORUCOP", 0, pf, SIM_NUMBER)
 		run_simulations(sim_infos[SIM_NUMBER], "OCGR-UCoP", 0, pf, SIM_NUMBER)
-		#run_simulations(sim_infos[SIM_NUMBER], "OCGR", 0, pf, SIM_NUMBER)
-		#run_simulations(sim_infos[SIM_NUMBER], "ORUCOP", 1, pf, SIM_NUMBER)
+		run_simulations(sim_infos[SIM_NUMBER], "OCGR", 0, pf, SIM_NUMBER)
+		run_simulations(sim_infos[SIM_NUMBER], "ORUCOP", 1, pf, SIM_NUMBER)
 		run_simulations(sim_infos[SIM_NUMBER], "OCGR-UCoP", 1, pf, SIM_NUMBER)
-		#run_simulations(sim_infos[SIM_NUMBER], "OCGR", 1, pf, SIM_NUMBER)
-		#run_simulations(sim_infos[SIM_NUMBER], "ORUCOP", 2, pf, SIM_NUMBER)
+		run_simulations(sim_infos[SIM_NUMBER], "OCGR", 1, pf, SIM_NUMBER)
+		run_simulations(sim_infos[SIM_NUMBER], "ORUCOP", 2, pf, SIM_NUMBER)
 		run_simulations(sim_infos[SIM_NUMBER], "OCGR-UCoP", 2, pf, SIM_NUMBER)
-		#run_simulations(sim_infos[SIM_NUMBER], "OCGR", 2, pf, SIM_NUMBER)
+		run_simulations(sim_infos[SIM_NUMBER], "OCGR", 2, pf, SIM_NUMBER)
 		
 
 

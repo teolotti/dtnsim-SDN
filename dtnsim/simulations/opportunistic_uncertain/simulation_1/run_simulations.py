@@ -91,8 +91,8 @@ def setup_pfs(path):
 	
 def setup_algorithms(path):
 	setup_pfs(path + "/OCGR")
-	setup_pfs(path + "/ORUCoP")
-	setup_pfs(path + "/OCGR-UCoP")
+	#setup_pfs(path + "/ORUCoP")
+	#setup_pfs(path + "/OCGR-UCoP")
 	
 def setup_simulation():
 	setup_algorithms(SIMULATION_PATH + "/simulation_" +  str(SIM_NUMBER))
