@@ -22,7 +22,7 @@ DTNSIM has been updated in order to support opportunistic simulations with the m
 
 ### Combining opportunistic and uncertain routing ###
 
-DTNSIM features two new routing additions, ORUCoP and OCGR-UCoP, that combine opportunistic and uncertain routing approaches. As of now, the current approach includes regular calls to the Python3 implementation of L-RUCoP. This requires some setup in order to enable this call. The most convenient way is to use a virtual environment provided by the authors of RUCoP (https://www.notion.so/fraverta/Routing-Under-Uncertain-Contact-Plans-070f323ee0c745f5b283fa0af198e81b). 
+DTNSIM features two new routing additions, OL-RUCoP and OCGR-UCoP, that combine opportunistic and uncertain routing approaches. As of now, the current approach includes regular calls to the Python3 implementation of L-RUCoP. This requires some setup in order to enable this call. The most convenient way is to use a virtual environment provided by the authors of RUCoP (https://www.notion.so/fraverta/Routing-Under-Uncertain-Contact-Plans-070f323ee0c745f5b283fa0af198e81b). 
 Here a brief overview of the most important steps:
 First you need the current implementation of RUCoP:
 
@@ -41,13 +41,15 @@ When this step is accomplished, all that is left to do is to install this librar
 * python setup.py install &&
 * cd ../../../..
 
-The required scripts to execute and parse L-RUCoP are already in this repo, being run_ibruf.py for ORUCoP and run_cgrbruf.py for OCGR-UCoP. Both are shell scripts working with the python3 interpreter from the virtualenv. All that is left to do in order to make them work is to provide the correct path to the python3.6 version at the top of the file. This will be then in the form path/to/virtualenv/bin/python3.6. 
-When this is done, everything should be working, as the new routing schemes can be executed just as the other schemes. What might be noteworthy in this context, is the execution of the simulation scripts in simulations/opportunistic_uncertain_/simulation_x. As these script are essentially python scripts, one needs to execute them from within the virtual environment.
+The required scripts to execute and parse L-RUCoP are already in this repo, being run_ibruf.py for OL-RUCoP and run_cgrbruf.py for OCGR-UCoP. Both are shell scripts working with the python3 interpreter from the virtualenv. All that is left to do in order to make them work is to provide the correct path to the python3.6 version at the top of the file. This will be then in the form path/to/virtualenv/bin/python3.6. 
+When this is done, everything should be working, as the new routing schemes can be executed just as the other schemes. If you want to simulate OCGR-UCoP, you have to insert "uncertainUniboCgr" as routingType in the .ini file, while for OL-RUCoP, "ORUCoP" is needed. If you want to simulate OCGR alone, insert "uncertainUniboCgr", but additionally set the parameter "userUncertainMode" to false.
 Still, it might happen, that one of the libraries of the virtualenv (PySpark) overlaps with an existing python installation on the machine, leading to an error because of the mismatch. In this case, the following commands will help:
 
 * export PYSPARK_PYTHON=path/to/virtualenv/bin/python
 * export PYSPARK_DRIVER_PYTHON=path/to/virtualenv/bin/python
 
+### Opportunistic & uncertain simulation result analysis ###
+What might be noteworthy in this context, is the execution of the simulation scripts in simulations/opportunistic_uncertain_/simulation_x. As these script are essentially python scripts, one needs to execute them from within the virtual environment. They will automatically execute one simulation with all algorithms that were tested in this thesis with 30 different seeds and store them in the folder experiment_result. However, these parameters can be adjustments to the users' wishes. To analyze the results in terms of delivery ratio, delay and energy efficiency, the file create_metric_plots.py is provided, that will print the results in the folder metrics.
 
 ### Topology Outputs (optional) ###
 
