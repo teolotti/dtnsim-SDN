@@ -1,4 +1,0 @@
-id,best_t_cost=-1,best_t_pf=-1,sdp_pf=-1,states,t_changes_pf=-1,t_changes_proba_pf=-1,t_cost_pf=-1,ts
-229408,1.65,"[OrderedDict([('copies', 1), ('name', 'next'), ('contact_ids', []), ('source_node', 10)])]",0.42250000000000004,"(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0)",[262176],[1.0],1.65,7
-229632,1.0,"[OrderedDict([('copies', 1), ('name', 'next'), ('contact_ids', []), ('source_node', 7)])]",0.65,"(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0)",[262400],[1.0],1.0,7
-245760,0.0,"[OrderedDict([('copies', 1), ('name', 'next'), ('contact_ids', []), ('source_node', 1)])]",1.0,"(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)",[278528],[1.0],0.0,7

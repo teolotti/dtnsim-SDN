@@ -1,3 +1,0 @@
-id,best_t_cost=-1,best_t_pf=-1,sdp_pf=-1,states,t_changes_pf=-1,t_changes_proba_pf=-1,t_cost_pf=-1,ts
-622848,1.0,"[OrderedDict([('copies', 1), ('name', 'send6_0-toward:(23,)'), ('contact_ids', [24]), ('source_node', 7)])]",0.19999999999999996,"(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0)",[671744],[0.19999999999999996],1.0,19
-638976,0.0,"[OrderedDict([('copies', 1), ('name', 'next'), ('contact_ids', []), ('source_node', 1)])]",1.0,"(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)",[671744],[1.0],0.0,19

@@ -1,6 +1,0 @@
-Compute BRUF time: 5.9279704093933105 seconds
-Total States number: 78
-Total Transitions number: 210
-Average Memory Consumption: 96371003.07692307
-Max Memory Consumption: 96481280 bytes
-Min Memory Consumption: 96043008 bytes
