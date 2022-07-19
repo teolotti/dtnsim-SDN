@@ -1,5 +1,6 @@
 #include <src/central/Central.h>
 
+
 Define_Module (dtnsim::Central);
 
 namespace dtnsim
@@ -50,10 +51,17 @@ void Central::initialize()
 //	}
 
 	// Initialize contact plan
-	contactPlan_.parseContactPlanFile(par("contactsFile"), nodesNumber_);
+	contactPlan_.parseContactPlanFile(par("contactsFile"), nodesNumber_, this->par("mode"), this->par("failureProbability"));
 
 	// Initialize topology
-	contactTopology_.parseContactPlanFile(par("contactsFile"), nodesNumber_);
+	int mode = this->par("mode");
+	if (mode < 2) {
+	contactTopology_.parseOpportunisticContactPlanFile(par("contactsFile"), nodesNumber_, mode, this->par("failureProbability"));
+	}
+	else
+	{
+		contactTopology_.parseContactPlanFile(par("contactsFile"), nodesNumber_, 2, this->par("failureProbability"));
+	}
 
 	// schedule dummy event to make time pass until
 	// last potential contact. This is mandatory in order for nodes
@@ -84,6 +92,7 @@ void Central::initialize()
 		emit(totalRoutes, totalRoutesVar);
 	}
 
+
 	int deleteNContacts = this->par("deleteNContacts");
 
 	if (deleteNContacts > 0)
@@ -100,7 +109,43 @@ void Central::initialize()
 		}
 
 		deleteContacts(contactIdsToDelete, faultsAware);
+	} else if (this->par("useSpecificFailureProbabilities")) {
+		vector<int> contactIdsToDelete;
+
+		contactIdsToDelete = this->getContactIdsWithSpecificFProb();
+		deleteContacts(contactIdsToDelete, false);
 	}
+	else{
+        double failureProbability = this->par("failureProbability");
+        vector<int> contactIdsToDelete;
+        if (failureProbability > 0)
+        {
+	        contactIdsToDelete = getRandomContactIdsWithFProb(failureProbability);
+	        deleteContacts(contactIdsToDelete, faultsAware);
+	    } else{
+	    	 string toDeleteContactsIds = this->par("contactIdsToDelete");
+	    	 stringstream stream(toDeleteContactsIds);
+	    	 vector<int> contactIdsToDelete;
+	    	 if (toDeleteContactsIds != "") {
+	    		 while(1) {
+	    			 int n; stream >> n;
+	    			 contactIdsToDelete.push_back(n);
+	    			 if(!stream)
+	    				 break;
+	             }
+	    	 }
+	         if (contactIdsToDelete.size() > 0 ){
+	             deleteContacts(contactIdsToDelete, faultsAware);
+	         }
+
+	    }
+	}
+
+
+	this->metricCollector_.initialize(nodesNumber_);
+	this->metricCollector_.setMode(mode);
+	this->metricCollector_.setFailureProb(this->par("failureProbability"));
+	this->metricCollector_.setPath(this->par("collectorPath"));
 
 	// setting modified contact plan and contact topology
 	// to each node
@@ -109,6 +154,8 @@ void Central::initialize()
 		Dtn *dtn = check_and_cast<Dtn *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("dtn"));
 		dtn->setContactPlan(contactPlan_);
 		dtn->setContactTopology(contactTopology_);
+		dtn->setMetricCollector(&metricCollector_);
+
 
 		Com *com = check_and_cast<Com *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("com"));
 		com->setContactTopology(contactTopology_);
@@ -140,6 +187,8 @@ void Central::finish()
 //			bubble("Killing ION processes ...");
 //			system("../../src/ion/killm");
 //		}
+
+		this->metricCollector_.evaluateAndPrintResults();
 
 		if (this->par("saveTopology"))
 		{
@@ -384,6 +433,41 @@ vector<int> Central::getRandomContactIds(int nContacts)
 		contacts->erase(contacts->begin() + randomPosition);
 
 		contactsDeleted++;
+	}
+
+	return contactIds;
+}
+
+vector<int> Central::getRandomContactIdsWithFProb(double failureProbability)
+{
+       vector<int> contactIds;
+
+       // get working copy of contactPlan_
+       ContactPlan workCP(contactPlan_);
+       vector<Contact> *contacts = workCP.getContacts();
+
+       for(unsigned int i=0; i < contacts->size(); i++){
+               double randomNumber =  uniform(0, 1);
+               if (randomNumber < failureProbability)
+                       contactIds.push_back(contacts->at(i).getId());
+       }
+
+       return contactIds;
+}
+
+vector<int> Central::getContactIdsWithSpecificFProb()
+{
+	vector<int> contactIds;
+
+	ContactPlan workCP(contactPlan_);
+	ContactPlan workCT(contactTopology_);
+	vector<Contact>* contacts = workCT.getContacts();
+
+	for(size_t i = 0; i < contacts->size(); i++) {
+		double randomNumber = uniform(0,1, 0.5);
+		if (randomNumber < contacts->at(i).getFailureProbability()) {
+			contactIds.push_back(contacts->at(i).getId());
+		}
 	}
 
 	return contactIds;

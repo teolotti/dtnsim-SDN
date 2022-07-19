@@ -1,0 +1,41 @@
+The bundles with the following ids have been sent: 
+1773(1 to 12), 1789(6 to 3), 1816(8 to 2), 1819(4 to 5), 1835(2 to 4), 1836(9 to 10), 1837(12 to 11), 1839(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+
+--------------------
+That means, that overall 0 (0/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1773: 2), (1789: 2), (1816: 3), (1819: 1), (1835: 1), (1836: 2), (1837: 1), (1839: 1), 
+--------------------
+Overall, the computation required 18 calls to RUCoP, which took 101 seconds and 27 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1773: (to: 5, time: 40.000000), (to: 5, time: 80.000000), 
+Node 2: 
+Bundle 1835: (to: 6, time: 60.000000), 
+Node 3: 
+Node 4: 
+Bundle 1819: (to: 8, time: 40.000000), 
+Node 5: 
+Bundle 1836: (to: 1, time: 80.000000), 
+Bundle 1839: (to: 11, time: 80.000000), 
+Node 6: 
+Bundle 1789: (to: 10, time: 20.000000), 
+Node 7: 
+Node 8: 
+Bundle 1816: (to: 14, time: 40.000000), 
+Node 9: 
+Bundle 1836: (to: 5, time: 60.000000), 
+Node 10: 
+Bundle 1789: (to: 8, time: 60.000000), 
+Bundle 1816: (to: 2, time: 100.000000), 
+Node 11: 
+Node 12: 
+Bundle 1837: (to: 9, time: 60.000000), 
+Node 13: 
+Node 14: 
+Bundle 1816: (to: 10, time: 40.000000), 
+Node 15: 

@@ -1,0 +1,54 @@
+The bundles with the following ids have been sent: 
+483(1 to 12), 485(6 to 3), 503(8 to 2), 510(4 to 5), 518(2 to 4), 519(9 to 10), 520(12 to 11), 526(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(483: 25.000000), (503: 60.000000), (510: 25.000000), (520: 20.000000), (526: 10.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(483: 2), (485: 3), (503: 3), (510: 6), (518: 3), (519: 4), (520: 5), (526: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 17 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 483: (to: 5, time: 40.000000), 
+Node 2: 
+Bundle 518: (to: 6, time: 60.000000), 
+Node 3: 
+Node 4: 
+Bundle 510: (to: 8, time: 40.000000), 
+Node 5: 
+Bundle 483: (to: 12, time: 40.000000), 
+Bundle 519: (to: 1, time: 80.000000), 
+Bundle 520: (to: 11, time: 80.000000), 
+Bundle 526: (to: 11, time: 80.000000), 
+Node 6: 
+Bundle 485: (to: 13, time: 40.000000), 
+Bundle 518: (to: 10, time: 60.000000), 
+Node 7: 
+Bundle 485: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 503: (to: 14, time: 40.000000), 
+Bundle 510: (to: 12, time: 60.000000), 
+Node 9: 
+Bundle 510: (to: 5, time: 60.000000), (to: 15, time: 80.000000), 
+Bundle 519: (to: 5, time: 60.000000), (to: 15, time: 80.000000), 
+Bundle 520: (to: 5, time: 60.000000), (to: 15, time: 80.000000), 
+Node 10: 
+Bundle 503: (to: 2, time: 100.000000), 
+Bundle 518: (to: 8, time: 60.000000), 
+Node 11: 
+Bundle 526: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 510: (to: 9, time: 60.000000), 
+Bundle 520: (to: 9, time: 60.000000), 
+Node 13: 
+Bundle 485: (to: 7, time: 40.000000), 
+Node 14: 
+Bundle 503: (to: 10, time: 40.000000), 
+Node 15: 
+Bundle 510: (to: 5, time: 80.000000), 
+Bundle 519: (to: 5, time: 80.000000), 
+Bundle 520: (to: 5, time: 80.000000), 

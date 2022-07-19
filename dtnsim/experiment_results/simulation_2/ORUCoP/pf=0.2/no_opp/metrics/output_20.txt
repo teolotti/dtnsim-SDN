@@ -1,0 +1,63 @@
+The bundles with the following ids have been sent: 
+75(1 to 12), 81(6 to 3), 90(8 to 2), 94(4 to 5), 104(2 to 4), 105(9 to 10), 106(12 to 11), 137(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(75: 25.000000), (90: 60.000000), (104: 60.000000), (105: 20.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(75: 3), (81: 13), (90: 13), (104: 8), (105: 6), (106: 5), (137: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 75: (to: 4, time: 15.000000), (to: 5, time: 40.000000), 
+Bundle 81: (to: 4, time: 80.000000), 
+Bundle 90: (to: 4, time: 80.000000), (to: 4, time: 80.000000), 
+Bundle 105: (to: 4, time: 80.000000), 
+Bundle 137: (to: 4, time: 80.000000), 
+Node 2: 
+Bundle 104: (to: 6, time: 60.000000), 
+Node 3: 
+Node 4: 
+Bundle 81: (to: 10, time: 80.000000), 
+Bundle 90: (to: 10, time: 80.000000), (to: 10, time: 80.000000), 
+Bundle 105: (to: 10, time: 80.000000), 
+Bundle 137: (to: 10, time: 80.000000), 
+Node 5: 
+Bundle 75: (to: 12, time: 40.000000), 
+Bundle 81: (to: 1, time: 80.000000), 
+Bundle 90: (to: 1, time: 80.000000), (to: 1, time: 80.000000), 
+Bundle 104: (to: 12, time: 80.000000), 
+Bundle 105: (to: 1, time: 80.000000), (to: 12, time: 80.000000), 
+Bundle 106: (to: 1, time: 80.000000), 
+Bundle 137: (to: 1, time: 80.000000), 
+Node 6: 
+Bundle 81: (to: 10, time: 25.000000), (to: 10, time: 60.000000), 
+Bundle 104: (to: 10, time: 60.000000), 
+Node 7: 
+Node 8: 
+Bundle 81: (to: 12, time: 60.000000), (to: 12, time: 60.000000), 
+Bundle 90: (to: 12, time: 60.000000), (to: 12, time: 60.000000), 
+Bundle 104: (to: 12, time: 60.000000), 
+Node 9: 
+Bundle 81: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Bundle 90: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Bundle 104: (to: 5, time: 60.000000), 
+Bundle 105: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Bundle 106: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Node 10: 
+Bundle 81: (to: 8, time: 60.000000), (to: 8, time: 60.000000), 
+Bundle 90: (to: 2, time: 100.000000), 
+Bundle 104: (to: 8, time: 60.000000), 
+Node 11: 
+Node 12: 
+Bundle 81: (to: 9, time: 60.000000), (to: 9, time: 60.000000), 
+Bundle 90: (to: 9, time: 60.000000), (to: 9, time: 60.000000), 
+Bundle 104: (to: 9, time: 60.000000), (to: 4, time: 120.000000), 
+Bundle 106: (to: 9, time: 60.000000), (to: 9, time: 60.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

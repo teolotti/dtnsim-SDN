@@ -1,0 +1,48 @@
+The bundles with the following ids have been sent: 
+1925(7 to 5), 1926(12 to 5), 1942(8 to 4), 1943(8 to 3), 1944(10 to 7), 1977(3 to 7), 2021(11 to 1), 2024(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+
+--------------------
+That means, that overall 0 (0/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1925: 4), (1926: 4), (1942: 2), (1943: 2), (1944: 3), (1977: 2), (2021: 3), (2024: 3), 
+--------------------
+Overall, the computation required 22 calls to RUCoP, which took 124 seconds and 36 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 2024: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 1942: (to: 3, time: 120.000000), 
+Bundle 1943: (to: 3, time: 120.000000), 
+Bundle 2024: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 1977: (to: 4, time: 40.000000), 
+Node 4: 
+Bundle 1977: (to: 6, time: 80.000000), 
+Bundle 2024: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 1925: (to: 1, time: 0.000000), (to: 15, time: 40.000000), 
+Bundle 2021: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 1942: (to: 2, time: 40.000000), 
+Bundle 1943: (to: 2, time: 40.000000), 
+Node 9: 
+Node 10: 
+Bundle 1926: (to: 5, time: 20.000000), (to: 5, time: 60.000000), 
+Bundle 1944: (to: 5, time: 20.000000), (to: 3, time: 40.000000), (to: 5, time: 60.000000), 
+Node 11: 
+Bundle 1925: (to: 3, time: 40.000000), 
+Bundle 2021: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 1926: (to: 13, time: 0.000000), 
+Node 13: 
+Bundle 1926: (to: 10, time: 10.000000), 
+Node 14: 
+Node 15: 
+Bundle 1925: (to: 11, time: 40.000000), 
+Bundle 2021: (to: 7, time: 80.000000), 

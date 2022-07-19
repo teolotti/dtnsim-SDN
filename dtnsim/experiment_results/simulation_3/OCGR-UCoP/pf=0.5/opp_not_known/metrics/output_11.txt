@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+685(7 to 5), 687(12 to 5), 701(8 to 4), 702(8 to 3), 703(10 to 7), 734(3 to 7), 782(11 to 1), 785(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(687: 50.000000), (703: 10.000000), (782: 20.000000), (785: 0.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(685: 2), (687: 4), (701: 2), (702: 2), (703: 6), (734: 1), (782: 3), (785: 7), 
+--------------------
+Overall, the computation required 8 calls to RUCoP, which took 52 seconds and 19 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 685: (to: 9, time: 20.000000), 
+Node 2: 
+Node 3: 
+Bundle 734: (to: 4, time: 40.000000), 
+Node 4: 
+Bundle 785: (to: 6, time: 80.000000), 
+Node 5: 
+Node 6: 
+Bundle 785: (to: 14, time: 85.000000), 
+Node 7: 
+Bundle 685: (to: 1, time: 0.000000), 
+Bundle 782: (to: 1, time: 100.000000), 
+Bundle 785: (to: 15, time: 85.000000), 
+Node 8: 
+Bundle 701: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Bundle 702: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Node 9: 
+Bundle 785: (to: 7, time: 85.000000), 
+Node 10: 
+Bundle 687: (to: 5, time: 20.000000), (to: 5, time: 60.000000), 
+Bundle 703: (to: 5, time: 20.000000), (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 703: (to: 15, time: 40.000000), 
+Bundle 782: (to: 15, time: 80.000000), 
+Bundle 785: (to: 3, time: 85.000000), 
+Node 12: 
+Bundle 687: (to: 13, time: 0.000000), 
+Bundle 703: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 687: (to: 10, time: 10.000000), 
+Bundle 703: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 785: (to: 9, time: 85.000000), 
+Node 15: 
+Bundle 703: (to: 7, time: 40.000000), 
+Bundle 782: (to: 7, time: 80.000000), 
+Bundle 785: (to: 11, time: 85.000000), 

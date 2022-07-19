@@ -1,0 +1,41 @@
+The bundles with the following ids have been sent: 
+592(7 to 5), 594(12 to 5), 600(8 to 4), 602(8 to 3), 603(10 to 7), 621(3 to 7), 634(11 to 1), 639(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(603: 70.000000), (621: 55.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(594: 3), (600: 2), (602: 2), (603: 4), (621: 3), (634: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 621: (to: 4, time: 45.000000), 
+Node 4: 
+Bundle 603: (to: 6, time: 80.000000), 
+Bundle 621: (to: 6, time: 80.000000), 
+Node 5: 
+Bundle 603: (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 603: (to: 7, time: 100.000000), 
+Bundle 621: (to: 7, time: 100.000000), 
+Node 7: 
+Node 8: 
+Bundle 600: (to: 2, time: 40.000000), (to: 2, time: 40.000000), 
+Bundle 602: (to: 2, time: 40.000000), (to: 2, time: 40.000000), 
+Node 9: 
+Node 10: 
+Bundle 603: (to: 5, time: 30.000000), 
+Node 11: 
+Bundle 594: (to: 3, time: 40.000000), 
+Bundle 634: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 594: (to: 2, time: 10.000000), (to: 11, time: 40.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

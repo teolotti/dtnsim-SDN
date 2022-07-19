@@ -1,0 +1,48 @@
+The bundles with the following ids have been sent: 
+553(10 to 6), 560(1 to 11), 569(1 to 6), 570(5 to 10), 578(4 to 1), 582(9 to 12), 600(3 to 9), 612(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(560: 35.000000), (569: 25.000000), (570: 35.000000), (612: 25.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(560: 6), (569: 4), (570: 3), (578: 6), (600: 8), (612: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 560: (to: 3, time: 25.000000), (to: 3, time: 50.000000), 
+Bundle 569: (to: 2, time: 35.000000), (to: 3, time: 50.000000), 
+Node 2: 
+Bundle 569: (to: 6, time: 60.000000), 
+Node 3: 
+Bundle 560: (to: 4, time: 60.000000), (to: 4, time: 60.000000), 
+Bundle 569: (to: 6, time: 60.000000), 
+Bundle 600: (to: 4, time: 65.000000), (to: 6, time: 100.000000), 
+Node 4: 
+Bundle 560: (to: 11, time: 60.000000), (to: 11, time: 60.000000), 
+Bundle 570: (to: 11, time: 60.000000), 
+Bundle 578: (to: 11, time: 60.000000), (to: 11, time: 60.000000), 
+Bundle 600: (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 570: (to: 4, time: 35.000000), 
+Bundle 600: (to: 12, time: 110.000000), (to: 12, time: 110.000000), 
+Node 6: 
+Bundle 600: (to: 5, time: 100.000000), 
+Bundle 612: (to: 1, time: 110.000000), (to: 1, time: 110.000000), 
+Node 7: 
+Node 8: 
+Node 9: 
+Node 10: 
+Bundle 578: (to: 7, time: 160.000000), (to: 7, time: 160.000000), 
+Node 11: 
+Bundle 570: (to: 10, time: 70.000000), 
+Bundle 578: (to: 10, time: 70.000000), (to: 10, time: 70.000000), 
+Node 12: 
+Bundle 600: (to: 6, time: 110.000000), (to: 6, time: 110.000000), 
+Bundle 612: (to: 6, time: 110.000000), (to: 6, time: 110.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

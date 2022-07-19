@@ -1,0 +1,49 @@
+The bundles with the following ids have been sent: 
+1303(1 to 6), 1304(6 to 10), 1305(9 to 4), 1317(2 to 8), 1334(5 to 12), 1365(7 to 12), 1366(10 to 9), 1380(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1365: 40.000000), 
+--------------------
+That means, that overall 0.125 (1/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1304: 7), (1305: 4), (1334: 2), (1365: 11), (1366: 4), (1380: 4), 
+--------------------
+Overall, the computation required 28 calls to RUCoP, which took 142 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1304: (to: 2, time: 100.000000), 
+Node 2: 
+Node 3: 
+Bundle 1365: (to: 10, time: 40.000000), (to: 10, time: 40.000000), 
+Bundle 1380: (to: 10, time: 55.000000), 
+Node 4: 
+Node 5: 
+Bundle 1334: (to: 4, time: 25.000000), (to: 4, time: 25.000000), 
+Node 6: 
+Bundle 1304: (to: 14, time: 0.000000), (to: 14, time: 0.000000), 
+Node 7: 
+Bundle 1365: (to: 15, time: 40.000000), (to: 15, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 1304: (to: 1, time: 20.000000), (to: 8, time: 60.000000), 
+Bundle 1305: (to: 14, time: 0.000000), (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 1365: (to: 13, time: 80.000000), (to: 13, time: 80.000000), 
+Bundle 1366: (to: 13, time: 40.000000), (to: 3, time: 40.000000), 
+Bundle 1380: (to: 13, time: 55.000000), 
+Node 11: 
+Bundle 1365: (to: 3, time: 40.000000), (to: 3, time: 40.000000), 
+Node 12: 
+Bundle 1366: (to: 12, time: 40.000000), 
+Bundle 1380: (to: 15, time: 55.000000), 
+Node 13: 
+Bundle 1365: (to: 12, time: 80.000000), 
+Bundle 1366: (to: 12, time: 40.000000), 
+Bundle 1380: (to: 12, time: 55.000000), 
+Node 14: 
+Bundle 1304: (to: 9, time: 0.000000), (to: 9, time: 0.000000), 
+Bundle 1305: (to: 6, time: 0.000000), (to: 6, time: 0.000000), 
+Node 15: 
+Bundle 1365: (to: 11, time: 40.000000), (to: 11, time: 40.000000), 

@@ -1,0 +1,58 @@
+The bundles with the following ids have been sent: 
+2001(3 to 7), 2035(12 to 1), 2041(4 to 9), 2059(10 to 3), 2110(11 to 2), 2129(9 to 4), 2165(5 to 12), 2184(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(2035: 35.000000), (2041: 35.000000), (2110: 65.000000), (2129: 5.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(2001: 7), (2035: 8), (2041: 9), (2059: 4), (2110: 7), (2129: 3), (2165: 3), (2184: 4), 
+--------------------
+Overall, the computation required 36 calls to RUCoP, which took 191 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 2001: (to: 4, time: 50.000000), 
+Node 2: 
+Bundle 2001: (to: 1, time: 40.000000), 
+Node 3: 
+Bundle 2001: (to: 5, time: 25.000000), (to: 2, time: 30.000000), 
+Node 4: 
+Bundle 2041: (to: 8, time: 70.000000), (to: 8, time: 70.000000), 
+Node 5: 
+Bundle 2001: (to: 15, time: 40.000000), 
+Bundle 2035: (to: 1, time: 80.000000), (to: 1, time: 80.000000), 
+Bundle 2041: (to: 15, time: 80.000000), (to: 15, time: 80.000000), 
+Bundle 2110: (to: 8, time: 120.000000), 
+Bundle 2165: (to: 6, time: 125.000000), (to: 15, time: 125.000000), 
+Node 6: 
+Node 7: 
+Node 8: 
+Bundle 2041: (to: 5, time: 70.000000), (to: 5, time: 70.000000), 
+Bundle 2059: (to: 6, time: 65.000000), (to: 6, time: 65.000000), 
+Bundle 2110: (to: 13, time: 120.000000), 
+Bundle 2129: (to: 4, time: 120.000000), 
+Bundle 2184: (to: 5, time: 170.000000), 
+Node 9: 
+Bundle 2129: (to: 6, time: 115.000000), (to: 8, time: 115.000000), 
+Node 10: 
+Bundle 2059: (to: 8, time: 65.000000), (to: 8, time: 65.000000), 
+Bundle 2184: (to: 11, time: 140.000000), (to: 8, time: 160.000000), 
+Node 11: 
+Bundle 2001: (to: 8, time: 160.000000), 
+Bundle 2035: (to: 15, time: 80.000000), (to: 15, time: 80.000000), 
+Bundle 2041: (to: 9, time: 90.000000), 
+Bundle 2110: (to: 15, time: 95.000000), (to: 15, time: 120.000000), 
+Bundle 2184: (to: 9, time: 150.000000), 
+Node 12: 
+Bundle 2035: (to: 11, time: 45.000000), (to: 11, time: 45.000000), 
+Node 13: 
+Bundle 2110: (to: 2, time: 160.000000), 
+Node 14: 
+Node 15: 
+Bundle 2001: (to: 11, time: 40.000000), 
+Bundle 2035: (to: 5, time: 80.000000), (to: 5, time: 80.000000), 
+Bundle 2041: (to: 11, time: 80.000000), (to: 11, time: 80.000000), 
+Bundle 2110: (to: 15, time: 95.000000), (to: 5, time: 120.000000), 
+Bundle 2165: (to: 8, time: 160.000000), 

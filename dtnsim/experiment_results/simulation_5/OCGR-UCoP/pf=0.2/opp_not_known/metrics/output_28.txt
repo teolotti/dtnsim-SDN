@@ -1,0 +1,54 @@
+The bundles with the following ids have been sent: 
+1600(1 to 12), 1601(12 to 5), 1621(7 to 3), 1622(10 to 6), 1623(11 to 1), 1634(6 to 7), 1678(3 to 4), 1681(8 to 4), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1600: 80.000000), (1601: 30.000000), (1622: 15.000000), (1634: 5.000000), (1678: 10.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1600: 3), (1601: 4), (1621: 3), (1622: 5), (1623: 2), (1634: 5), (1678: 2), (1681: 3), 
+--------------------
+Overall, the computation required 12 calls to RUCoP, which took 75 seconds and 22 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1600: (to: 13, time: 0.000000), 
+Bundle 1681: (to: 4, time: 60.000000), 
+Node 2: 
+Bundle 1621: (to: 5, time: 50.000000), (to: 3, time: 70.000000), 
+Bundle 1678: (to: 4, time: 60.000000), 
+Node 3: 
+Bundle 1601: (to: 5, time: 30.000000), 
+Bundle 1678: (to: 2, time: 50.000000), 
+Node 4: 
+Node 5: 
+Bundle 1622: (to: 6, time: 40.000000), 
+Node 6: 
+Bundle 1634: (to: 9, time: 30.000000), 
+Node 7: 
+Bundle 1621: (to: 2, time: 50.000000), 
+Node 8: 
+Bundle 1600: (to: 12, time: 80.000000), 
+Bundle 1622: (to: 5, time: 40.000000), 
+Bundle 1681: (to: 13, time: 40.000000), 
+Node 9: 
+Bundle 1601: (to: 15, time: 0.000000), 
+Bundle 1634: (to: 12, time: 35.000000), 
+Node 10: 
+Bundle 1622: (to: 7, time: 20.000000), (to: 11, time: 30.000000), 
+Bundle 1623: (to: 7, time: 25.000000), 
+Bundle 1634: (to: 7, time: 40.000000), 
+Node 11: 
+Bundle 1622: (to: 8, time: 40.000000), 
+Bundle 1623: (to: 10, time: 20.000000), 
+Bundle 1634: (to: 10, time: 40.000000), 
+Node 12: 
+Bundle 1601: (to: 9, time: 0.000000), 
+Bundle 1634: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 1600: (to: 8, time: 0.000000), 
+Bundle 1681: (to: 1, time: 55.000000), 
+Node 14: 
+Node 15: 
+Bundle 1601: (to: 3, time: 0.000000), 

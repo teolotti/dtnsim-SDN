@@ -1,0 +1,48 @@
+The bundles with the following ids have been sent: 
+201(1 to 12), 202(12 to 5), 225(7 to 3), 226(10 to 6), 227(11 to 1), 235(6 to 7), 278(3 to 4), 289(8 to 4), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(201: 80.000000), (202: 50.000000), (289: 5.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(201: 6), (202: 10), (226: 1), (227: 4), (235: 4), (278: 4), (289: 4), 
+--------------------
+Overall, the computation required 32 calls to RUCoP, which took 153 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 201: (to: 13, time: 0.000000), (to: 13, time: 0.000000), 
+Bundle 289: (to: 4, time: 60.000000), 
+Node 2: 
+Bundle 202: (to: 5, time: 50.000000), (to: 5, time: 50.000000), 
+Bundle 278: (to: 5, time: 50.000000), (to: 5, time: 50.000000), 
+Node 3: 
+Bundle 202: (to: 2, time: 50.000000), (to: 2, time: 50.000000), 
+Bundle 278: (to: 2, time: 50.000000), (to: 2, time: 50.000000), 
+Node 4: 
+Node 5: 
+Bundle 227: (to: 14, time: 160.000000), 
+Node 6: 
+Bundle 235: (to: 9, time: 35.000000), (to: 9, time: 35.000000), 
+Node 7: 
+Node 8: 
+Bundle 201: (to: 12, time: 80.000000), (to: 12, time: 80.000000), 
+Bundle 227: (to: 5, time: 50.000000), 
+Bundle 289: (to: 13, time: 55.000000), (to: 12, time: 80.000000), 
+Node 9: 
+Bundle 202: (to: 15, time: 40.000000), (to: 15, time: 40.000000), 
+Bundle 235: (to: 12, time: 35.000000), (to: 12, time: 35.000000), 
+Node 10: 
+Bundle 226: (to: 7, time: 25.000000), 
+Node 11: 
+Bundle 227: (to: 8, time: 40.000000), (to: 10, time: 40.000000), 
+Node 12: 
+Bundle 202: (to: 9, time: 0.000000), (to: 9, time: 0.000000), 
+Node 13: 
+Bundle 201: (to: 8, time: 0.000000), (to: 8, time: 0.000000), 
+Bundle 289: (to: 1, time: 55.000000), 
+Node 14: 
+Node 15: 
+Bundle 202: (to: 3, time: 40.000000), (to: 3, time: 40.000000), 

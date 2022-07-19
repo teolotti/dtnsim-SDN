@@ -1,0 +1,43 @@
+The bundles with the following ids have been sent: 
+1735(1 to 11), 1752(3 to 10), 1753(4 to 6), 1754(7 to 9), 1756(12 to 4), 1757(12 to 5), 1782(8 to 1), 1785(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+
+--------------------
+That means, that overall 0 (0/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1735: 3), (1752: 2), (1753: 4), (1754: 2), (1756: 3), (1757: 2), (1782: 1), (1785: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 40 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1735: (to: 13, time: 0.000000), 
+Node 2: 
+Node 3: 
+Bundle 1752: (to: 2, time: 20.000000), (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 1753: (to: 3, time: 50.000000), (to: 14, time: 80.000000), 
+Node 5: 
+Bundle 1753: (to: 6, time: 80.000000), 
+Node 6: 
+Node 7: 
+Bundle 1754: (to: 11, time: 20.000000), (to: 6, time: 70.000000), 
+Bundle 1785: (to: 3, time: 60.000000), (to: 6, time: 70.000000), 
+Node 8: 
+Bundle 1782: (to: 4, time: 40.000000), 
+Node 9: 
+Bundle 1785: (to: 10, time: 50.000000), 
+Node 10: 
+Bundle 1735: (to: 11, time: 60.000000), 
+Bundle 1785: (to: 7, time: 50.000000), 
+Node 11: 
+Node 12: 
+Bundle 1756: (to: 11, time: 30.000000), (to: 11, time: 40.000000), (to: 8, time: 100.000000), 
+Bundle 1757: (to: 11, time: 30.000000), (to: 8, time: 100.000000), 
+Node 13: 
+Bundle 1735: (to: 10, time: 0.000000), 
+Node 14: 
+Bundle 1753: (to: 5, time: 80.000000), 
+Node 15: 

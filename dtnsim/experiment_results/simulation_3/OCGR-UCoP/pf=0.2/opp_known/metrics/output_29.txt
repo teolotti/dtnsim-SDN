@@ -1,0 +1,66 @@
+The bundles with the following ids have been sent: 
+1798(7 to 5), 1799(12 to 5), 1809(8 to 4), 1811(8 to 3), 1812(10 to 7), 1844(3 to 7), 1878(11 to 1), 1885(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1798: 60.000000), (1799: 10.000000), (1809: 120.000000), (1811: 70.000000), (1812: 10.000000), (1844: 0.000000), (1885: 0.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1798: 6), (1799: 3), (1809: 6), (1811: 5), (1812: 3), (1844: 6), (1878: 3), (1885: 6), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 21 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1885: (to: 9, time: 85.000000), 
+Node 2: 
+Bundle 1809: (to: 12, time: 60.000000), 
+Bundle 1811: (to: 12, time: 60.000000), 
+Node 3: 
+Bundle 1798: (to: 10, time: 40.000000), 
+Bundle 1809: (to: 4, time: 140.000000), 
+Bundle 1844: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 1885: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 1798: (to: 1, time: 0.000000), (to: 15, time: 40.000000), 
+Bundle 1878: (to: 1, time: 100.000000), 
+Bundle 1885: (to: 15, time: 85.000000), 
+Node 8: 
+Bundle 1809: (to: 2, time: 40.000000), 
+Bundle 1811: (to: 2, time: 40.000000), 
+Node 9: 
+Bundle 1885: (to: 7, time: 85.000000), 
+Node 10: 
+Bundle 1798: (to: 5, time: 60.000000), 
+Bundle 1799: (to: 5, time: 20.000000), 
+Bundle 1809: (to: 3, time: 100.000000), 
+Bundle 1811: (to: 3, time: 100.000000), 
+Bundle 1812: (to: 11, time: 20.000000), 
+Bundle 1844: (to: 13, time: 45.000000), 
+Node 11: 
+Bundle 1798: (to: 3, time: 40.000000), 
+Bundle 1812: (to: 15, time: 40.000000), 
+Bundle 1844: (to: 15, time: 45.000000), 
+Bundle 1878: (to: 15, time: 80.000000), 
+Bundle 1885: (to: 3, time: 85.000000), 
+Node 12: 
+Bundle 1799: (to: 13, time: 0.000000), 
+Bundle 1809: (to: 13, time: 80.000000), 
+Bundle 1811: (to: 13, time: 80.000000), 
+Bundle 1844: (to: 11, time: 45.000000), 
+Node 13: 
+Bundle 1799: (to: 10, time: 10.000000), 
+Bundle 1809: (to: 10, time: 80.000000), 
+Bundle 1811: (to: 10, time: 80.000000), 
+Bundle 1844: (to: 12, time: 45.000000), 
+Node 14: 
+Node 15: 
+Bundle 1798: (to: 11, time: 40.000000), 
+Bundle 1812: (to: 7, time: 40.000000), 
+Bundle 1844: (to: 7, time: 45.000000), 
+Bundle 1878: (to: 7, time: 80.000000), 
+Bundle 1885: (to: 11, time: 85.000000), 

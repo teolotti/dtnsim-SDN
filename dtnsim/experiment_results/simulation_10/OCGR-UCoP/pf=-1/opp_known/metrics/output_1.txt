@@ -1,0 +1,65 @@
+The bundles with the following ids have been sent: 
+646(1 to 6), 647(6 to 10), 648(9 to 4), 657(2 to 8), 666(5 to 12), 687(7 to 12), 688(10 to 9), 704(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(646: 40.000000), (647: 40.000000), (648: 0.000000), (657: 25.000000), (687: 0.000000), (688: 40.000000), (704: 0.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(646: 3), (647: 8), (648: 3), (657: 6), (666: 4), (687: 6), (688: 5), (704: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 18 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 646: (to: 9, time: 20.000000), 
+Bundle 647: (to: 2, time: 0.000000), 
+Bundle 666: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 647: (to: 12, time: 0.000000), (to: 3, time: 20.000000), 
+Bundle 657: (to: 12, time: 0.000000), (to: 3, time: 20.000000), 
+Node 3: 
+Bundle 647: (to: 10, time: 40.000000), 
+Bundle 657: (to: 10, time: 40.000000), 
+Bundle 687: (to: 10, time: 40.000000), 
+Bundle 688: (to: 4, time: 40.000000), 
+Bundle 704: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 666: (to: 1, time: 80.000000), 
+Bundle 688: (to: 6, time: 80.000000), 
+Node 5: 
+Bundle 666: (to: 4, time: 20.000000), (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 647: (to: 14, time: 0.000000), 
+Bundle 648: (to: 4, time: 0.000000), 
+Bundle 688: (to: 14, time: 80.000000), 
+Node 7: 
+Bundle 647: (to: 1, time: 0.000000), 
+Bundle 687: (to: 15, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 646: (to: 14, time: 40.000000), 
+Bundle 647: (to: 7, time: 0.000000), 
+Bundle 648: (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 657: (to: 13, time: 40.000000), 
+Bundle 687: (to: 13, time: 40.000000), 
+Bundle 688: (to: 3, time: 40.000000), 
+Bundle 704: (to: 13, time: 55.000000), 
+Node 11: 
+Bundle 687: (to: 3, time: 40.000000), 
+Node 12: 
+Bundle 657: (to: 8, time: 40.000000), 
+Bundle 704: (to: 8, time: 55.000000), 
+Node 13: 
+Bundle 657: (to: 12, time: 40.000000), 
+Bundle 687: (to: 12, time: 40.000000), 
+Bundle 704: (to: 12, time: 55.000000), 
+Node 14: 
+Bundle 646: (to: 6, time: 40.000000), 
+Bundle 647: (to: 9, time: 0.000000), 
+Bundle 648: (to: 6, time: 0.000000), 
+Bundle 688: (to: 9, time: 80.000000), 
+Node 15: 
+Bundle 687: (to: 11, time: 40.000000), 

@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+566(7 to 5), 568(12 to 5), 576(8 to 4), 578(8 to 3), 579(10 to 7), 605(3 to 7), 625(11 to 1), 628(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(568: 50.000000), (576: 120.000000), (578: 90.000000), (579: 10.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(566: 6), (568: 4), (576: 4), (578: 3), (579: 6), (605: 1), (625: 3), (628: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 32 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 566: (to: 2, time: 0.000000), (to: 9, time: 20.000000), 
+Node 2: 
+Bundle 576: (to: 3, time: 120.000000), 
+Bundle 578: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 576: (to: 4, time: 140.000000), 
+Bundle 605: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 628: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Bundle 566: (to: 5, time: 40.000000), 
+Node 7: 
+Bundle 566: (to: 1, time: 0.000000), 
+Bundle 625: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 576: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Bundle 578: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Node 9: 
+Bundle 566: (to: 14, time: 40.000000), 
+Node 10: 
+Bundle 568: (to: 5, time: 20.000000), (to: 5, time: 60.000000), 
+Bundle 579: (to: 11, time: 20.000000), (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 579: (to: 15, time: 40.000000), 
+Bundle 625: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 568: (to: 13, time: 0.000000), 
+Bundle 579: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 568: (to: 10, time: 0.000000), 
+Bundle 579: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 566: (to: 6, time: 40.000000), 
+Node 15: 
+Bundle 579: (to: 7, time: 40.000000), 
+Bundle 625: (to: 7, time: 80.000000), 

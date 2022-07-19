@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+991(7 to 5), 993(12 to 5), 1001(8 to 4), 1004(8 to 3), 1005(10 to 7), 1030(3 to 7), 1052(11 to 1), 1055(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(991: 40.000000), (993: 10.000000), (1001: 120.000000), (1004: 90.000000), (1005: 10.000000), (1052: 20.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(991: 6), (993: 3), (1001: 4), (1004: 3), (1005: 3), (1030: 1), (1052: 3), (1055: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 20 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 991: (to: 2, time: 0.000000), (to: 9, time: 20.000000), 
+Bundle 1055: (to: 9, time: 85.000000), 
+Node 2: 
+Bundle 1001: (to: 3, time: 120.000000), 
+Bundle 1004: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 1001: (to: 4, time: 140.000000), 
+Bundle 1030: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 1055: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Bundle 991: (to: 5, time: 40.000000), 
+Node 7: 
+Bundle 991: (to: 1, time: 0.000000), 
+Bundle 1052: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 1001: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Bundle 1004: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Node 9: 
+Bundle 991: (to: 14, time: 40.000000), 
+Bundle 1055: (to: 7, time: 85.000000), 
+Node 10: 
+Bundle 993: (to: 5, time: 20.000000), 
+Bundle 1005: (to: 11, time: 20.000000), 
+Node 11: 
+Bundle 1005: (to: 15, time: 40.000000), 
+Bundle 1052: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 993: (to: 13, time: 0.000000), 
+Node 13: 
+Bundle 993: (to: 10, time: 10.000000), 
+Node 14: 
+Bundle 991: (to: 6, time: 40.000000), 
+Node 15: 
+Bundle 1005: (to: 7, time: 40.000000), 
+Bundle 1052: (to: 7, time: 80.000000), 

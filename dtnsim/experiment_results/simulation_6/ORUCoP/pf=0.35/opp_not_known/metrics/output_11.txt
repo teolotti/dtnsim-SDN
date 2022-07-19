@@ -1,0 +1,48 @@
+The bundles with the following ids have been sent: 
+632(1 to 11), 650(3 to 10), 651(4 to 6), 652(7 to 9), 664(12 to 4), 665(12 to 5), 704(8 to 1), 713(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(632: 60.000000), (650: 35.000000), (651: 55.000000), (652: 45.000000), (664: 25.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(632: 6), (650: 4), (651: 6), (652: 4), (664: 5), (665: 3), (704: 2), 
+--------------------
+Overall, the computation required 54 calls to RUCoP, which took 226 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 632: (to: 13, time: 0.000000), (to: 13, time: 40.000000), 
+Node 2: 
+Bundle 650: (to: 6, time: 50.000000), 
+Node 3: 
+Bundle 650: (to: 2, time: 25.000000), (to: 2, time: 25.000000), 
+Bundle 664: (to: 4, time: 60.000000), 
+Node 4: 
+Bundle 651: (to: 14, time: 40.000000), (to: 14, time: 45.000000), 
+Node 5: 
+Bundle 651: (to: 6, time: 80.000000), (to: 6, time: 80.000000), 
+Node 6: 
+Bundle 650: (to: 10, time: 60.000000), 
+Bundle 652: (to: 9, time: 70.000000), 
+Node 7: 
+Bundle 652: (to: 11, time: 25.000000), (to: 6, time: 70.000000), 
+Bundle 664: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 704: (to: 4, time: 45.000000), (to: 4, time: 45.000000), 
+Node 9: 
+Node 10: 
+Bundle 632: (to: 11, time: 60.000000), (to: 11, time: 60.000000), 
+Node 11: 
+Bundle 652: (to: 10, time: 30.000000), 
+Bundle 664: (to: 7, time: 40.000000), 
+Bundle 665: (to: 10, time: 35.000000), 
+Node 12: 
+Bundle 664: (to: 11, time: 35.000000), (to: 8, time: 100.000000), 
+Bundle 665: (to: 11, time: 35.000000), (to: 8, time: 100.000000), 
+Node 13: 
+Bundle 632: (to: 10, time: 40.000000), (to: 10, time: 40.000000), 
+Node 14: 
+Bundle 651: (to: 5, time: 40.000000), (to: 5, time: 45.000000), 
+Node 15: 

@@ -1,0 +1,2 @@
+id,best_t_cost=-1,best_t_pf=-1,sdp_pf=-1,states,t_changes_pf=-1,t_changes_proba_pf=-1,t_cost_pf=-1,ts
+354294,8.029319495680001,"[OrderedDict([('copies', 2), ('name', 'next'), ('contact_ids', []), ('source_node', 4)])]",0.05100568985599997,"(0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)",[14703201],[1.0],8.029319495680001,0

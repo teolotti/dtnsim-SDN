@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+213(2 to 10), 214(8 to 3), 221(3 to 11), 222(12 to 10), 230(10 to 5), 248(11 to 6), 253(1 to 9), 265(7 to 12), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(221: 55.000000), (248: 35.000000), (253: 0.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(213: 2), (214: 2), (221: 8), (222: 4), (230: 2), (248: 3), (253: 4), (265: 3), 
+--------------------
+Overall, the computation required 10 calls to RUCoP, which took 81 seconds and 24 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 253: (to: 4, time: 50.000000), 
+Node 2: 
+Bundle 213: (to: 13, time: 0.000000), 
+Bundle 221: (to: 6, time: 25.000000), 
+Node 3: 
+Bundle 221: (to: 2, time: 20.000000), 
+Node 4: 
+Bundle 222: (to: 5, time: 40.000000), (to: 8, time: 50.000000), 
+Bundle 253: (to: 15, time: 40.000000), 
+Node 5: 
+Bundle 221: (to: 14, time: 80.000000), 
+Bundle 248: (to: 6, time: 80.000000), 
+Node 6: 
+Bundle 221: (to: 3, time: 20.000000), (to: 8, time: 30.000000), 
+Node 7: 
+Bundle 265: (to: 8, time: 70.000000), 
+Node 8: 
+Bundle 214: (to: 13, time: 0.000000), 
+Bundle 221: (to: 11, time: 60.000000), (to: 5, time: 70.000000), 
+Bundle 265: (to: 10, time: 75.000000), 
+Node 9: 
+Node 10: 
+Bundle 230: (to: 8, time: 30.000000), (to: 11, time: 70.000000), 
+Bundle 265: (to: 11, time: 75.000000), 
+Node 11: 
+Bundle 248: (to: 14, time: 40.000000), 
+Node 12: 
+Bundle 222: (to: 15, time: 40.000000), 
+Bundle 253: (to: 9, time: 50.000000), 
+Node 13: 
+Bundle 213: (to: 8, time: 15.000000), 
+Bundle 214: (to: 2, time: 15.000000), 
+Node 14: 
+Bundle 221: (to: 11, time: 80.000000), 
+Bundle 248: (to: 5, time: 45.000000), 
+Node 15: 
+Bundle 222: (to: 4, time: 40.000000), 
+Bundle 253: (to: 12, time: 55.000000), 

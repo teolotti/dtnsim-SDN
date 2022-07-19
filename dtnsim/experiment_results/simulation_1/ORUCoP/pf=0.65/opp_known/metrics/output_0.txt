@@ -1,0 +1,45 @@
+The bundles with the following ids have been sent: 
+171(10 to 6), 174(1 to 11), 182(1 to 6), 183(5 to 10), 203(4 to 1), 209(9 to 12), 219(3 to 9), 243(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(182: 25.000000), (183: 35.000000), (203: 140.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(174: 2), (182: 2), (183: 8), (203: 6), (209: 4), (219: 4), 
+--------------------
+Overall, the computation required 16 calls to RUCoP, which took 117 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 174: (to: 3, time: 25.000000), (to: 3, time: 25.000000), 
+Bundle 182: (to: 2, time: 35.000000), 
+Node 2: 
+Bundle 182: (to: 6, time: 60.000000), 
+Node 3: 
+Bundle 219: (to: 14, time: 80.000000), (to: 14, time: 80.000000), 
+Node 4: 
+Bundle 183: (to: 13, time: 40.000000), (to: 13, time: 50.000000), 
+Bundle 203: (to: 13, time: 50.000000), (to: 13, time: 80.000000), 
+Node 5: 
+Bundle 183: (to: 4, time: 35.000000), (to: 4, time: 35.000000), 
+Node 6: 
+Node 7: 
+Bundle 203: (to: 1, time: 190.000000), 
+Node 8: 
+Node 9: 
+Bundle 209: (to: 15, time: 55.000000), (to: 15, time: 55.000000), 
+Node 10: 
+Bundle 203: (to: 7, time: 160.000000), 
+Node 11: 
+Bundle 183: (to: 10, time: 70.000000), (to: 10, time: 70.000000), 
+Bundle 203: (to: 10, time: 70.000000), 
+Node 12: 
+Node 13: 
+Bundle 183: (to: 11, time: 40.000000), (to: 11, time: 50.000000), 
+Bundle 203: (to: 11, time: 50.000000), 
+Node 14: 
+Bundle 219: (to: 6, time: 80.000000), (to: 6, time: 80.000000), 
+Node 15: 
+Bundle 209: (to: 5, time: 55.000000), (to: 5, time: 55.000000), 

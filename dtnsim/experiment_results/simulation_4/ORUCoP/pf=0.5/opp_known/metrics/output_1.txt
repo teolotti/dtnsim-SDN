@@ -1,0 +1,60 @@
+The bundles with the following ids have been sent: 
+586(1 to 6), 587(6 to 10), 588(9 to 4), 600(2 to 8), 608(5 to 12), 627(7 to 12), 628(10 to 9), 639(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(586: 40.000000), (588: 80.000000), (600: 125.000000), (639: 85.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(586: 4), (587: 8), (588: 8), (600: 7), (627: 4), (628: 5), (639: 5), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 586: (to: 9, time: 20.000000), (to: 9, time: 80.000000), 
+Node 2: 
+Bundle 600: (to: 3, time: 20.000000), (to: 3, time: 20.000000), 
+Node 3: 
+Bundle 600: (to: 4, time: 40.000000), 
+Bundle 639: (to: 4, time: 55.000000), 
+Node 4: 
+Bundle 600: (to: 6, time: 80.000000), 
+Bundle 639: (to: 6, time: 80.000000), 
+Node 5: 
+Node 6: 
+Bundle 587: (to: 14, time: 0.000000), (to: 14, time: 0.000000), 
+Bundle 588: (to: 7, time: 60.000000), (to: 4, time: 80.000000), 
+Bundle 600: (to: 14, time: 80.000000), 
+Bundle 639: (to: 14, time: 80.000000), 
+Node 7: 
+Bundle 587: (to: 15, time: 80.000000), 
+Bundle 588: (to: 15, time: 80.000000), 
+Bundle 627: (to: 15, time: 80.000000), (to: 15, time: 80.000000), 
+Node 8: 
+Node 9: 
+Bundle 586: (to: 14, time: 40.000000), 
+Bundle 587: (to: 1, time: 80.000000), (to: 7, time: 80.000000), 
+Bundle 588: (to: 14, time: 0.000000), (to: 14, time: 0.000000), 
+Bundle 600: (to: 8, time: 140.000000), 
+Bundle 639: (to: 8, time: 140.000000), 
+Node 10: 
+Bundle 628: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 628: (to: 15, time: 40.000000), 
+Node 12: 
+Bundle 628: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 628: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 586: (to: 6, time: 40.000000), 
+Bundle 587: (to: 9, time: 0.000000), (to: 9, time: 0.000000), 
+Bundle 588: (to: 6, time: 0.000000), (to: 6, time: 0.000000), 
+Bundle 600: (to: 9, time: 80.000000), 
+Bundle 639: (to: 9, time: 80.000000), 
+Node 15: 
+Bundle 587: (to: 11, time: 80.000000), 
+Bundle 588: (to: 11, time: 80.000000), 
+Bundle 627: (to: 11, time: 80.000000), (to: 11, time: 80.000000), 
+Bundle 628: (to: 7, time: 40.000000), 

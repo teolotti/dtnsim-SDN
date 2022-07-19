@@ -1,0 +1,46 @@
+The bundles with the following ids have been sent: 
+501(1 to 12), 502(12 to 5), 507(7 to 3), 508(10 to 6), 509(11 to 1), 515(6 to 7), 536(3 to 4), 538(8 to 4), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(502: 40.000000), (536: 10.000000), (538: 5.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(501: 5), (502: 4), (507: 1), (508: 3), (509: 5), (515: 1), (536: 2), (538: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 29 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 501: (to: 2, time: 0.000000), (to: 13, time: 0.000000), 
+Bundle 538: (to: 4, time: 60.000000), 
+Node 2: 
+Bundle 536: (to: 4, time: 60.000000), 
+Node 3: 
+Bundle 536: (to: 2, time: 50.000000), 
+Node 4: 
+Node 5: 
+Bundle 538: (to: 1, time: 50.000000), 
+Node 6: 
+Bundle 515: (to: 9, time: 30.000000), 
+Node 7: 
+Bundle 507: (to: 2, time: 50.000000), 
+Bundle 509: (to: 4, time: 30.000000), (to: 2, time: 50.000000), (to: 4, time: 70.000000), 
+Node 8: 
+Bundle 501: (to: 5, time: 40.000000), (to: 12, time: 80.000000), 
+Bundle 538: (to: 5, time: 50.000000), 
+Node 9: 
+Node 10: 
+Bundle 508: (to: 11, time: 30.000000), (to: 7, time: 40.000000), (to: 8, time: 80.000000), 
+Bundle 509: (to: 7, time: 20.000000), 
+Node 11: 
+Bundle 502: (to: 14, time: 40.000000), 
+Bundle 509: (to: 10, time: 20.000000), 
+Node 12: 
+Bundle 502: (to: 9, time: 0.000000), (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 501: (to: 8, time: 0.000000), 
+Node 14: 
+Bundle 502: (to: 5, time: 40.000000), 
+Node 15: 

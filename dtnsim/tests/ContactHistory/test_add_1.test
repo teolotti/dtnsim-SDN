@@ -1,0 +1,73 @@
+%description:
+Tests basic adding operations for Contact histories.
+
+%includes:
+
+#include <src/node/dtn/ContactPlan.h>
+#include <src/node/dtn/Contact.h>
+#include <src/node/dtn/ContactHistory.h>
+
+%activity:
+
+#define CHECK(cond)  if (!(cond)) {throw cRuntimeError("BUG at line %d, failed condition %s", __LINE__, #cond);}
+
+Contact testC = Contact(0, 50, 100, 1, 3, 100, 1.0, 10);
+Contact testC2 = Contact(1, 100, 150, 1, 3, 100, 1.0, 10);
+Contact testC3 = Contact(2, 50, 100, 2, 3, 100, 1.0, 100);
+Contact testC4 = Contact(3, 50, 100, 5, 3, 100, 1.0, 100);
+Contact testC5 = Contact(4, 50, 100, 4, 3, 100, 1.0, 100);
+Contact testC6 = Contact(5, 20, 30, 1, 3, 100, 1.0, 10);
+Contact testC7 = Contact(6, 50, 100, 1, 5, 100, 1.0, 10);
+Contact testC8 = Contact(7, 50, 100, 1, 4, 100, 1.0, 10);
+Contact testC9 = Contact(8, 160, 180, 1, 3, 100, 1.0, 10);
+Contact testC10 = Contact(9, 155, 160, 1, 3, 100, 1.0, 10);
+Contact testC11 = Contact(10, 50, 100, 1, 2, 100, 1.0, 10);
+Contact testC12 = Contact(11, 50, 100, 0, 2, 100, 1.0, 10);
+Contact testC13 = Contact(12, 50, 100, 6, 2, 100, 1.0, 10);
+Contact testC14 = Contact(13, 50, 100, 7, 2, 100, 1.0, 10);
+ContactHistory testHistory = ContactHistory();
+
+testHistory.addContact(&testC, &testC);
+testHistory.addContact(&testC, &testC);
+testHistory.addContact(&testC2, &testC2);
+testHistory.addContact(&testC3, &testC3);
+testHistory.addContact(&testC4, &testC4);
+testHistory.addContact(&testC5, &testC5);
+testHistory.addContact(&testC6, &testC6);
+testHistory.addContact(&testC7, &testC7);
+testHistory.addContact(&testC8, &testC8);
+testHistory.addContact(&testC9, &testC9);
+testHistory.addContact(&testC10, &testC10);
+testHistory.addContact(&testC11, &testC11);
+testHistory.addContact(&testC12, &testC12);
+testHistory.addContact(NULL, &testC13);
+testHistory.addContact(&testC14, NULL);
+
+
+CHECK(testHistory.getContactList().size() == 14);
+CHECK((*testHistory.getReliableContact(0)).getId() == 11);
+CHECK((*testHistory.getReliableContact(1)).getId() == 10);
+CHECK((*testHistory.getReliableContact(2)).getId() == 5);
+CHECK((*testHistory.getReliableContact(3)).getId() == 0);
+CHECK((*testHistory.getReliableContact(4)).getId() == 1);
+CHECK((*testHistory.getReliableContact(5)).getId() == 9);
+CHECK((*testHistory.getReliableContact(6)).getId() == 8);
+CHECK((*testHistory.getReliableContact(7)).getId() == 7);
+CHECK((*testHistory.getReliableContact(8)).getId() == 6);
+CHECK((*testHistory.getReliableContact(9)).getId() == 2);
+CHECK((*testHistory.getReliableContact(10)).getId() == 4);
+CHECK((*testHistory.getReliableContact(11)).getId() == 3);
+CHECK((*testHistory.getReliableContact(12)).getId() == 12);
+CHECK((*testHistory.getReliableContact(13)).getId() == 13);
+
+
+CHECK(testHistory.getSenderStartPositions().size() == 7);
+CHECK(testHistory.getSenderStartPositions().at(0) == 0);
+CHECK(testHistory.getSenderStartPositions().at(1) == 1);
+CHECK(testHistory.getSenderStartPositions().at(2) == 9);
+CHECK(testHistory.getSenderStartPositions().at(5) == 11);
+CHECK(testHistory.getSenderStartPositions().at(4) == 10);
+CHECK(testHistory.getSenderStartPositions().at(6) == 12);
+CHECK(testHistory.getSenderStartPositions().at(7) == 13);
+
+

@@ -1,0 +1,46 @@
+The bundles with the following ids have been sent: 
+802(7 to 5), 803(12 to 5), 809(8 to 4), 810(8 to 3), 811(10 to 7), 824(3 to 7), 836(11 to 1), 840(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(811: 70.000000), (824: 55.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(802: 1), (803: 2), (809: 2), (810: 2), (811: 4), (824: 3), (836: 2), (840: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 22 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Bundle 803: (to: 3, time: 20.000000), 
+Bundle 809: (to: 3, time: 120.000000), 
+Bundle 810: (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 824: (to: 4, time: 40.000000), 
+Bundle 836: (to: 4, time: 140.000000), 
+Node 4: 
+Bundle 811: (to: 6, time: 80.000000), 
+Bundle 824: (to: 6, time: 80.000000), 
+Bundle 840: (to: 1, time: 80.000000), 
+Node 5: 
+Bundle 811: (to: 4, time: 30.000000), 
+Node 6: 
+Bundle 811: (to: 7, time: 100.000000), 
+Bundle 824: (to: 7, time: 100.000000), 
+Node 7: 
+Bundle 802: (to: 1, time: 0.000000), 
+Node 8: 
+Bundle 809: (to: 2, time: 40.000000), 
+Bundle 810: (to: 2, time: 40.000000), 
+Node 9: 
+Node 10: 
+Bundle 811: (to: 5, time: 20.000000), 
+Node 11: 
+Bundle 836: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 803: (to: 2, time: 0.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

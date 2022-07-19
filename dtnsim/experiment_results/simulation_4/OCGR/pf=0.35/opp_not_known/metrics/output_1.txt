@@ -1,0 +1,55 @@
+The bundles with the following ids have been sent: 
+759(1 to 6), 760(6 to 10), 761(9 to 4), 770(2 to 8), 790(5 to 12), 822(7 to 12), 823(10 to 9), 830(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(759: 40.000000), (760: 100.000000), (761: 0.000000), (770: 125.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(759: 3), (760: 9), (761: 3), (770: 6), (790: 2), (822: 4), (823: 2), (830: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 35 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 759: (to: 9, time: 20.000000), 
+Bundle 760: (to: 2, time: 0.000000), 
+Bundle 770: (to: 9, time: 80.000000), 
+Node 2: 
+Bundle 760: (to: 12, time: 0.000000), (to: 3, time: 20.000000), 
+Bundle 770: (to: 12, time: 0.000000), (to: 3, time: 20.000000), 
+Node 3: 
+Bundle 760: (to: 10, time: 40.000000), (to: 10, time: 100.000000), 
+Bundle 770: (to: 4, time: 40.000000), 
+Bundle 822: (to: 10, time: 40.000000), 
+Bundle 830: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 770: (to: 1, time: 80.000000), 
+Node 5: 
+Bundle 790: (to: 4, time: 20.000000), (to: 4, time: 60.000000), 
+Bundle 823: (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 760: (to: 14, time: 0.000000), 
+Bundle 761: (to: 4, time: 0.000000), 
+Node 7: 
+Bundle 760: (to: 1, time: 0.000000), 
+Bundle 822: (to: 15, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 759: (to: 14, time: 40.000000), 
+Bundle 760: (to: 7, time: 0.000000), 
+Bundle 761: (to: 14, time: 0.000000), 
+Bundle 770: (to: 8, time: 140.000000), 
+Node 10: 
+Bundle 823: (to: 5, time: 60.000000), 
+Node 11: 
+Bundle 822: (to: 3, time: 40.000000), 
+Node 12: 
+Node 13: 
+Node 14: 
+Bundle 759: (to: 6, time: 40.000000), 
+Bundle 760: (to: 9, time: 0.000000), 
+Bundle 761: (to: 6, time: 0.000000), 
+Node 15: 
+Bundle 822: (to: 11, time: 40.000000), 

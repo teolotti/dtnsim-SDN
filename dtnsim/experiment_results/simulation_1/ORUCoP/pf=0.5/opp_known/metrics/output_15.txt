@@ -1,0 +1,48 @@
+The bundles with the following ids have been sent: 
+179(10 to 6), 183(1 to 11), 188(1 to 6), 189(5 to 10), 207(4 to 1), 211(9 to 12), 223(3 to 9), 247(12 to 1), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(207: 60.000000), (211: 55.000000), (223: 55.000000), (247: 25.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(189: 6), (207: 7), (211: 6), (223: 7), (247: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 223: (to: 14, time: 80.000000), (to: 14, time: 80.000000), 
+Node 4: 
+Bundle 207: (to: 13, time: 50.000000), (to: 5, time: 70.000000), 
+Node 5: 
+Bundle 189: (to: 15, time: 40.000000), (to: 15, time: 55.000000), 
+Bundle 207: (to: 12, time: 110.000000), 
+Bundle 211: (to: 12, time: 110.000000), (to: 12, time: 110.000000), 
+Bundle 223: (to: 15, time: 120.000000), 
+Node 6: 
+Bundle 207: (to: 1, time: 110.000000), 
+Bundle 223: (to: 5, time: 100.000000), 
+Bundle 247: (to: 1, time: 110.000000), (to: 1, time: 110.000000), 
+Node 7: 
+Node 8: 
+Node 9: 
+Bundle 189: (to: 8, time: 55.000000), (to: 8, time: 55.000000), 
+Bundle 211: (to: 15, time: 55.000000), (to: 15, time: 55.000000), 
+Node 10: 
+Node 11: 
+Bundle 207: (to: 10, time: 70.000000), 
+Node 12: 
+Bundle 207: (to: 6, time: 110.000000), 
+Bundle 247: (to: 6, time: 110.000000), (to: 6, time: 110.000000), 
+Node 13: 
+Bundle 207: (to: 11, time: 50.000000), 
+Node 14: 
+Bundle 223: (to: 6, time: 80.000000), (to: 6, time: 80.000000), 
+Node 15: 
+Bundle 189: (to: 9, time: 55.000000), (to: 9, time: 55.000000), 
+Bundle 211: (to: 5, time: 55.000000), (to: 5, time: 55.000000), 
+Bundle 223: (to: 9, time: 120.000000), 

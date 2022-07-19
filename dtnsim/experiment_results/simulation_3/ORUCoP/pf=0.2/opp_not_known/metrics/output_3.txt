@@ -1,0 +1,69 @@
+The bundles with the following ids have been sent: 
+1769(7 to 5), 1777(12 to 5), 1793(8 to 4), 1795(8 to 3), 1796(10 to 7), 1845(3 to 7), 1900(11 to 1), 1907(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1795: 130.000000), (1845: 35.000000), (1900: 80.000000), (1907: 0.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1769: 12), (1777: 6), (1793: 4), (1795: 10), (1796: 1), (1845: 9), (1900: 4), (1907: 12), 
+--------------------
+Overall, the computation required 54 calls to RUCoP, which took 221 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1769: (to: 2, time: 0.000000), (to: 2, time: 0.000000), 
+Bundle 1907: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 1769: (to: 12, time: 0.000000), (to: 12, time: 0.000000), 
+Bundle 1793: (to: 12, time: 120.000000), 
+Bundle 1795: (to: 12, time: 120.000000), (to: 12, time: 120.000000), 
+Bundle 1907: (to: 12, time: 120.000000), 
+Node 3: 
+Bundle 1769: (to: 10, time: 40.000000), (to: 10, time: 40.000000), 
+Bundle 1777: (to: 10, time: 40.000000), (to: 10, time: 40.000000), 
+Bundle 1845: (to: 4, time: 45.000000), (to: 10, time: 45.000000), 
+Bundle 1900: (to: 4, time: 140.000000), 
+Node 4: 
+Bundle 1845: (to: 6, time: 80.000000), 
+Bundle 1900: (to: 1, time: 160.000000), 
+Bundle 1907: (to: 1, time: 85.000000), (to: 6, time: 85.000000), 
+Node 5: 
+Node 6: 
+Bundle 1845: (to: 7, time: 80.000000), 
+Bundle 1907: (to: 14, time: 85.000000), 
+Node 7: 
+Bundle 1769: (to: 1, time: 0.000000), (to: 1, time: 0.000000), 
+Bundle 1907: (to: 15, time: 85.000000), 
+Node 8: 
+Bundle 1793: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Bundle 1795: (to: 2, time: 40.000000), (to: 2, time: 40.000000), 
+Node 9: 
+Bundle 1907: (to: 7, time: 85.000000), 
+Node 10: 
+Bundle 1795: (to: 3, time: 160.000000), (to: 3, time: 160.000000), 
+Bundle 1796: (to: 3, time: 80.000000), 
+Bundle 1845: (to: 13, time: 45.000000), 
+Node 11: 
+Bundle 1769: (to: 3, time: 40.000000), (to: 3, time: 40.000000), 
+Bundle 1777: (to: 3, time: 40.000000), (to: 3, time: 40.000000), 
+Bundle 1845: (to: 15, time: 80.000000), 
+Bundle 1900: (to: 3, time: 80.000000), (to: 15, time: 80.000000), 
+Bundle 1907: (to: 3, time: 85.000000), 
+Node 12: 
+Bundle 1769: (to: 11, time: 40.000000), (to: 11, time: 40.000000), 
+Bundle 1777: (to: 11, time: 40.000000), (to: 11, time: 40.000000), 
+Bundle 1793: (to: 13, time: 160.000000), 
+Bundle 1795: (to: 13, time: 160.000000), (to: 13, time: 160.000000), 
+Bundle 1845: (to: 11, time: 45.000000), 
+Bundle 1907: (to: 13, time: 160.000000), 
+Node 13: 
+Bundle 1795: (to: 10, time: 160.000000), (to: 10, time: 160.000000), 
+Bundle 1845: (to: 12, time: 45.000000), 
+Bundle 1907: (to: 10, time: 160.000000), 
+Node 14: 
+Bundle 1907: (to: 9, time: 85.000000), 
+Node 15: 
+Bundle 1845: (to: 7, time: 80.000000), 
+Bundle 1907: (to: 11, time: 85.000000), 

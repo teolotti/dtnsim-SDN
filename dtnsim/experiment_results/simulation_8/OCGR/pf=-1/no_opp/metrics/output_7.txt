@@ -1,0 +1,49 @@
+The bundles with the following ids have been sent: 
+369(3 to 7), 374(12 to 1), 378(4 to 9), 386(10 to 3), 397(11 to 2), 404(9 to 4), 410(5 to 12), 415(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(386: 0.000000), 
+--------------------
+That means, that overall 0.125 (1/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(369: 2), (374: 2), (378: 4), (386: 3), (397: 4), (404: 2), (410: 2), (415: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 29 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Node 3: 
+Bundle 369: (to: 5, time: 20.000000), 
+Node 4: 
+Bundle 378: (to: 5, time: 50.000000), 
+Node 5: 
+Bundle 369: (to: 7, time: 30.000000), 
+Bundle 378: (to: 6, time: 50.000000), (to: 6, time: 120.000000), 
+Bundle 410: (to: 6, time: 120.000000), 
+Node 6: 
+Bundle 378: (to: 9, time: 120.000000), 
+Bundle 386: (to: 3, time: 60.000000), 
+Bundle 404: (to: 5, time: 110.000000), 
+Bundle 410: (to: 9, time: 120.000000), 
+Node 7: 
+Node 8: 
+Bundle 386: (to: 6, time: 60.000000), 
+Bundle 397: (to: 4, time: 120.000000), 
+Node 9: 
+Bundle 397: (to: 5, time: 100.000000), (to: 8, time: 110.000000), 
+Bundle 404: (to: 6, time: 110.000000), 
+Bundle 415: (to: 6, time: 160.000000), 
+Node 10: 
+Bundle 386: (to: 8, time: 60.000000), 
+Bundle 415: (to: 11, time: 140.000000), 
+Node 11: 
+Bundle 374: (to: 10, time: 50.000000), 
+Bundle 397: (to: 9, time: 90.000000), 
+Bundle 415: (to: 9, time: 150.000000), 
+Node 12: 
+Bundle 374: (to: 11, time: 40.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

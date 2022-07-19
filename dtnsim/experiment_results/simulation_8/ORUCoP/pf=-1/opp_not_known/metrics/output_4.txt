@@ -1,0 +1,58 @@
+The bundles with the following ids have been sent: 
+2022(3 to 7), 2056(12 to 1), 2068(4 to 9), 2088(10 to 3), 2132(11 to 2), 2152(9 to 4), 2184(5 to 12), 2205(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(2022: 25.000000), (2056: 15.000000), (2068: 95.000000), (2132: 35.000000), (2205: 40.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(2022: 8), (2056: 7), (2068: 10), (2088: 4), (2132: 8), (2184: 2), (2205: 4), 
+--------------------
+Overall, the computation required 34 calls to RUCoP, which took 184 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 2022: (to: 4, time: 50.000000), 
+Node 2: 
+Bundle 2022: (to: 1, time: 40.000000), 
+Node 3: 
+Bundle 2022: (to: 5, time: 25.000000), (to: 2, time: 30.000000), 
+Node 4: 
+Bundle 2068: (to: 8, time: 70.000000), (to: 8, time: 70.000000), 
+Bundle 2132: (to: 2, time: 130.000000), 
+Node 5: 
+Bundle 2022: (to: 15, time: 40.000000), 
+Bundle 2068: (to: 15, time: 80.000000), (to: 15, time: 80.000000), 
+Bundle 2132: (to: 4, time: 110.000000), (to: 8, time: 120.000000), 
+Bundle 2184: (to: 6, time: 125.000000), (to: 15, time: 125.000000), 
+Bundle 2205: (to: 6, time: 180.000000), 
+Node 6: 
+Node 7: 
+Bundle 2056: (to: 1, time: 60.000000), 
+Node 8: 
+Bundle 2068: (to: 5, time: 70.000000), (to: 5, time: 70.000000), 
+Bundle 2088: (to: 6, time: 65.000000), (to: 6, time: 65.000000), 
+Bundle 2132: (to: 13, time: 160.000000), 
+Node 9: 
+Node 10: 
+Bundle 2022: (to: 7, time: 50.000000), 
+Bundle 2056: (to: 7, time: 50.000000), 
+Bundle 2088: (to: 8, time: 65.000000), (to: 8, time: 65.000000), 
+Bundle 2205: (to: 11, time: 140.000000), 
+Node 11: 
+Bundle 2022: (to: 10, time: 50.000000), 
+Bundle 2056: (to: 10, time: 50.000000), (to: 15, time: 80.000000), 
+Bundle 2068: (to: 13, time: 95.000000), (to: 9, time: 150.000000), 
+Bundle 2132: (to: 15, time: 95.000000), (to: 15, time: 120.000000), 
+Bundle 2205: (to: 15, time: 160.000000), 
+Node 12: 
+Bundle 2056: (to: 11, time: 45.000000), (to: 11, time: 45.000000), 
+Node 13: 
+Node 14: 
+Node 15: 
+Bundle 2022: (to: 11, time: 40.000000), 
+Bundle 2056: (to: 5, time: 80.000000), 
+Bundle 2068: (to: 11, time: 80.000000), (to: 11, time: 80.000000), 
+Bundle 2132: (to: 5, time: 95.000000), (to: 5, time: 120.000000), 
+Bundle 2205: (to: 5, time: 160.000000), 

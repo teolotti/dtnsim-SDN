@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+1967(1 to 12), 1968(12 to 5), 1989(7 to 3), 1990(10 to 6), 1991(11 to 1), 2003(6 to 7), 2039(3 to 4), 2041(8 to 4), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1967: 80.000000), (1968: 30.000000), (1991: 5.000000), (2041: 5.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1967: 4), (1968: 4), (1989: 1), (1990: 6), (1991: 4), (2003: 3), (2039: 2), (2041: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 33 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1967: (to: 2, time: 0.000000), (to: 13, time: 0.000000), 
+Bundle 2041: (to: 4, time: 60.000000), 
+Node 2: 
+Bundle 2039: (to: 4, time: 60.000000), 
+Node 3: 
+Bundle 1968: (to: 5, time: 30.000000), 
+Bundle 2039: (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 1990: (to: 8, time: 70.000000), 
+Bundle 1991: (to: 1, time: 30.000000), 
+Node 5: 
+Node 6: 
+Bundle 2003: (to: 9, time: 30.000000), 
+Node 7: 
+Bundle 1989: (to: 2, time: 50.000000), 
+Bundle 1990: (to: 2, time: 50.000000), (to: 4, time: 70.000000), 
+Bundle 1991: (to: 4, time: 30.000000), 
+Node 8: 
+Bundle 1967: (to: 12, time: 80.000000), 
+Bundle 1990: (to: 6, time: 90.000000), 
+Bundle 2041: (to: 13, time: 40.000000), 
+Node 9: 
+Bundle 1968: (to: 15, time: 0.000000), 
+Bundle 2003: (to: 12, time: 30.000000), 
+Node 10: 
+Bundle 1990: (to: 11, time: 30.000000), (to: 7, time: 40.000000), 
+Bundle 1991: (to: 7, time: 20.000000), 
+Node 11: 
+Bundle 1991: (to: 10, time: 20.000000), 
+Node 12: 
+Bundle 1968: (to: 9, time: 0.000000), 
+Bundle 2003: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 1967: (to: 8, time: 0.000000), 
+Bundle 2041: (to: 1, time: 40.000000), 
+Node 14: 
+Node 15: 
+Bundle 1968: (to: 3, time: 0.000000), 

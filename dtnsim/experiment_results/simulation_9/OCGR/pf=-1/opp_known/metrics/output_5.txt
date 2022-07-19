@@ -1,0 +1,60 @@
+The bundles with the following ids have been sent: 
+248(7 to 5), 249(12 to 5), 257(8 to 4), 259(8 to 3), 260(10 to 7), 291(3 to 7), 322(11 to 1), 325(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(248: 60.000000), (249: 10.000000), (257: 120.000000), (259: 90.000000), (260: 10.000000), (291: 0.000000), (325: 0.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(248: 6), (249: 3), (257: 3), (259: 3), (260: 3), (291: 6), (322: 3), (325: 6), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 34 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 325: (to: 9, time: 80.000000), 
+Node 2: 
+Bundle 257: (to: 3, time: 120.000000), 
+Bundle 259: (to: 12, time: 60.000000), (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 248: (to: 10, time: 40.000000), 
+Bundle 257: (to: 4, time: 140.000000), 
+Bundle 291: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 325: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 248: (to: 1, time: 0.000000), (to: 15, time: 40.000000), 
+Bundle 322: (to: 1, time: 100.000000), 
+Bundle 325: (to: 15, time: 80.000000), 
+Node 8: 
+Bundle 257: (to: 2, time: 40.000000), 
+Bundle 259: (to: 2, time: 40.000000), 
+Node 9: 
+Bundle 325: (to: 7, time: 80.000000), 
+Node 10: 
+Bundle 248: (to: 5, time: 60.000000), 
+Bundle 249: (to: 5, time: 20.000000), 
+Bundle 260: (to: 11, time: 20.000000), 
+Bundle 291: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 248: (to: 3, time: 40.000000), 
+Bundle 260: (to: 15, time: 40.000000), 
+Bundle 291: (to: 15, time: 40.000000), 
+Bundle 322: (to: 15, time: 80.000000), 
+Bundle 325: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 249: (to: 13, time: 0.000000), 
+Bundle 291: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 249: (to: 10, time: 0.000000), 
+Bundle 291: (to: 12, time: 40.000000), 
+Node 14: 
+Node 15: 
+Bundle 248: (to: 11, time: 40.000000), 
+Bundle 260: (to: 7, time: 40.000000), 
+Bundle 291: (to: 7, time: 40.000000), 
+Bundle 322: (to: 7, time: 80.000000), 
+Bundle 325: (to: 11, time: 80.000000), 

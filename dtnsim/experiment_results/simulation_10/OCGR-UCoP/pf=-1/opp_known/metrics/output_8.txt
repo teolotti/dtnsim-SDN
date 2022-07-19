@@ -1,0 +1,57 @@
+The bundles with the following ids have been sent: 
+1407(1 to 6), 1408(6 to 10), 1409(9 to 4), 1415(2 to 8), 1422(5 to 12), 1445(7 to 12), 1446(10 to 9), 1455(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1409: 0.000000), (1415: 0.000000), (1422: 95.000000), (1445: 0.000000), (1446: 40.000000), (1455: 0.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1407: 3), (1408: 4), (1409: 3), (1415: 2), (1422: 4), (1445: 6), (1446: 5), (1455: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 16 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1407: (to: 9, time: 20.000000), (to: 9, time: 80.000000), (to: 9, time: 140.000000), 
+Bundle 1422: (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 1415: (to: 12, time: 0.000000), 
+Bundle 1422: (to: 12, time: 120.000000), 
+Node 3: 
+Bundle 1445: (to: 10, time: 40.000000), 
+Bundle 1446: (to: 4, time: 40.000000), 
+Bundle 1455: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 1422: (to: 1, time: 80.000000), 
+Bundle 1446: (to: 6, time: 80.000000), 
+Node 5: 
+Bundle 1422: (to: 4, time: 20.000000), 
+Node 6: 
+Bundle 1408: (to: 14, time: 0.000000), 
+Bundle 1409: (to: 4, time: 0.000000), 
+Bundle 1446: (to: 14, time: 80.000000), 
+Node 7: 
+Bundle 1445: (to: 15, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 1408: (to: 7, time: 0.000000), (to: 8, time: 20.000000), 
+Bundle 1409: (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 1445: (to: 13, time: 40.000000), 
+Bundle 1446: (to: 3, time: 40.000000), 
+Bundle 1455: (to: 13, time: 55.000000), 
+Node 11: 
+Bundle 1445: (to: 3, time: 40.000000), 
+Node 12: 
+Bundle 1415: (to: 8, time: 15.000000), 
+Bundle 1455: (to: 8, time: 55.000000), 
+Node 13: 
+Bundle 1445: (to: 12, time: 40.000000), 
+Bundle 1455: (to: 12, time: 55.000000), 
+Node 14: 
+Bundle 1408: (to: 9, time: 0.000000), 
+Bundle 1409: (to: 6, time: 0.000000), 
+Bundle 1446: (to: 9, time: 80.000000), 
+Node 15: 
+Bundle 1445: (to: 11, time: 40.000000), 

@@ -1,0 +1,54 @@
+The bundles with the following ids have been sent: 
+648(3 to 7), 654(12 to 1), 659(4 to 9), 667(10 to 3), 679(11 to 2), 687(9 to 4), 693(5 to 12), 702(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(648: 35.000000), (654: 35.000000), (659: 95.000000), (679: 35.000000), (687: 5.000000), (693: 15.000000), (702: 40.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(648: 4), (654: 3), (659: 4), (667: 4), (679: 5), (687: 2), (693: 3), (702: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 27 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 648: (to: 4, time: 50.000000), 
+Node 2: 
+Bundle 648: (to: 1, time: 40.000000), 
+Node 3: 
+Bundle 648: (to: 2, time: 30.000000), 
+Node 4: 
+Bundle 648: (to: 7, time: 60.000000), 
+Bundle 659: (to: 8, time: 70.000000), 
+Bundle 679: (to: 2, time: 130.000000), 
+Node 5: 
+Bundle 654: (to: 1, time: 80.000000), 
+Bundle 667: (to: 2, time: 70.000000), 
+Bundle 693: (to: 8, time: 120.000000), 
+Bundle 702: (to: 6, time: 180.000000), 
+Node 6: 
+Node 7: 
+Node 8: 
+Bundle 659: (to: 9, time: 80.000000), (to: 11, time: 130.000000), 
+Bundle 667: (to: 6, time: 65.000000), (to: 5, time: 70.000000), 
+Bundle 679: (to: 4, time: 120.000000), 
+Bundle 687: (to: 4, time: 120.000000), 
+Bundle 693: (to: 11, time: 130.000000), 
+Bundle 702: (to: 5, time: 170.000000), 
+Node 9: 
+Bundle 654: (to: 5, time: 70.000000), 
+Bundle 679: (to: 5, time: 100.000000), (to: 8, time: 110.000000), 
+Bundle 687: (to: 8, time: 110.000000), 
+Node 10: 
+Bundle 667: (to: 8, time: 60.000000), 
+Bundle 702: (to: 8, time: 160.000000), 
+Node 11: 
+Bundle 659: (to: 9, time: 150.000000), 
+Bundle 679: (to: 9, time: 90.000000), 
+Bundle 693: (to: 12, time: 140.000000), 
+Node 12: 
+Bundle 654: (to: 9, time: 60.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

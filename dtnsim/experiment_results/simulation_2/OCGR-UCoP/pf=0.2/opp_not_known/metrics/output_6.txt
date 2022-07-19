@@ -1,0 +1,62 @@
+The bundles with the following ids have been sent: 
+659(1 to 12), 674(6 to 3), 705(8 to 2), 712(4 to 5), 734(2 to 4), 735(9 to 10), 736(12 to 11), 746(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(659: 25.000000), (674: 35.000000), (705: 60.000000), (712: 25.000000), (734: 20.000000), (735: 20.000000), (736: 20.000000), (746: 10.000000), 
+--------------------
+That means, that overall 1 (8/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(659: 2), (674: 4), (705: 3), (712: 6), (734: 10), (735: 6), (736: 5), (746: 2), 
+--------------------
+Overall, the computation required 12 calls to RUCoP, which took 78 seconds and 16 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 659: (to: 5, time: 40.000000), 
+Bundle 734: (to: 4, time: 80.000000), 
+Bundle 735: (to: 4, time: 80.000000), 
+Node 2: 
+Bundle 734: (to: 6, time: 60.000000), 
+Node 3: 
+Node 4: 
+Bundle 712: (to: 8, time: 40.000000), 
+Bundle 735: (to: 10, time: 80.000000), 
+Node 5: 
+Bundle 659: (to: 12, time: 40.000000), 
+Bundle 734: (to: 1, time: 80.000000), 
+Bundle 735: (to: 1, time: 80.000000), 
+Bundle 736: (to: 11, time: 80.000000), 
+Bundle 746: (to: 11, time: 80.000000), 
+Node 6: 
+Bundle 674: (to: 10, time: 20.000000), (to: 13, time: 40.000000), 
+Bundle 734: (to: 10, time: 60.000000), 
+Node 7: 
+Bundle 674: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 705: (to: 14, time: 40.000000), 
+Bundle 712: (to: 12, time: 60.000000), 
+Bundle 734: (to: 12, time: 60.000000), 
+Node 9: 
+Bundle 712: (to: 5, time: 60.000000), (to: 15, time: 80.000000), 
+Bundle 734: (to: 5, time: 60.000000), (to: 15, time: 80.000000), 
+Bundle 735: (to: 5, time: 60.000000), (to: 15, time: 80.000000), 
+Bundle 736: (to: 5, time: 60.000000), (to: 15, time: 80.000000), 
+Node 10: 
+Bundle 705: (to: 2, time: 100.000000), 
+Bundle 734: (to: 8, time: 60.000000), 
+Node 11: 
+Bundle 746: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 712: (to: 9, time: 60.000000), 
+Bundle 734: (to: 9, time: 60.000000), 
+Bundle 736: (to: 9, time: 60.000000), 
+Node 13: 
+Bundle 674: (to: 7, time: 40.000000), 
+Node 14: 
+Bundle 705: (to: 10, time: 40.000000), 
+Node 15: 
+Bundle 712: (to: 5, time: 80.000000), 
+Bundle 734: (to: 5, time: 80.000000), 
+Bundle 735: (to: 5, time: 80.000000), 
+Bundle 736: (to: 5, time: 80.000000), 

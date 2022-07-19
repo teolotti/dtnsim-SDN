@@ -1,0 +1,60 @@
+The bundles with the following ids have been sent: 
+246(7 to 5), 247(12 to 5), 264(8 to 4), 265(8 to 3), 266(10 to 7), 301(3 to 7), 359(11 to 1), 365(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(247: 50.000000), (264: 120.000000), (265: 90.000000), (266: 50.000000), (301: 0.000000), (359: 20.000000), (365: 0.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(246: 4), (247: 4), (264: 4), (265: 3), (266: 6), (301: 6), (359: 3), (365: 6), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 41 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 266: (to: 9, time: 80.000000), 
+Bundle 365: (to: 9, time: 80.000000), 
+Node 2: 
+Bundle 264: (to: 12, time: 60.000000), (to: 3, time: 120.000000), 
+Bundle 265: (to: 12, time: 60.000000), (to: 3, time: 120.000000), 
+Node 3: 
+Bundle 264: (to: 4, time: 140.000000), 
+Bundle 301: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 266: (to: 1, time: 80.000000), 
+Bundle 365: (to: 1, time: 80.000000), 
+Node 5: 
+Bundle 266: (to: 4, time: 60.000000), 
+Node 6: 
+Node 7: 
+Bundle 246: (to: 1, time: 0.000000), (to: 15, time: 40.000000), 
+Bundle 359: (to: 1, time: 100.000000), 
+Bundle 365: (to: 15, time: 80.000000), 
+Node 8: 
+Bundle 264: (to: 2, time: 40.000000), 
+Bundle 265: (to: 2, time: 40.000000), 
+Node 9: 
+Bundle 266: (to: 7, time: 80.000000), 
+Bundle 365: (to: 7, time: 80.000000), 
+Node 10: 
+Bundle 247: (to: 5, time: 20.000000), (to: 5, time: 60.000000), 
+Bundle 266: (to: 3, time: 40.000000), (to: 5, time: 60.000000), 
+Bundle 301: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 246: (to: 3, time: 40.000000), 
+Bundle 301: (to: 15, time: 40.000000), 
+Bundle 359: (to: 15, time: 80.000000), 
+Bundle 365: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 247: (to: 13, time: 0.000000), 
+Bundle 301: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 247: (to: 10, time: 0.000000), 
+Bundle 301: (to: 12, time: 40.000000), 
+Node 14: 
+Node 15: 
+Bundle 246: (to: 11, time: 40.000000), 
+Bundle 301: (to: 7, time: 40.000000), 
+Bundle 359: (to: 7, time: 80.000000), 
+Bundle 365: (to: 11, time: 80.000000), 

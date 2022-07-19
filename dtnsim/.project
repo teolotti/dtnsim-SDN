@@ -35,4 +35,14 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 		<nature>org.omnetpp.main.omnetppnature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>PYSPARK_DRIVER_PYTHON</name>
+			<value>file:/home/simon/git/bachelorthesis/dtnsim/venv/bin/python</value>
+		</variable>
+		<variable>
+			<name>PYSPARK_PYTHON</name>
+			<value>file:/home/simon/git/bachelorthesis/dtnsim/venv/bin/python</value>
+		</variable>
+	</variableList>
 </projectDescription>

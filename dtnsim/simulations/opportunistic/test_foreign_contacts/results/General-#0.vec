@@ -1,0 +1,99 @@
+version 2
+run General-0-20220112-21:18:12-13999
+attr configname General
+attr datetime 20220112-21:18:12
+attr experiment General
+attr inifile example1.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network src.dtnsim
+attr processid 13999
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param dtnsim.nodesNumber 4
+param dtnsim.node[1..3].icon "\"satellite\""
+param dtnsim.node[*].fault.enable false
+param dtnsim.node[*].fault.faultSeed 0*10
+param dtnsim.node[*].fault.meanTTF 20s
+param dtnsim.node[*].fault.meanTTR 5s
+param dtnsim.node[*].dtn.routing "\"uniboCgr\""
+param dtnsim.node[*].dtn.routingType "\"routeListType:allPaths-initial+anchor,volumeAware:allContacts,extensionBlock:on,contactPlan:local\""
+param dtnsim.node[*].dtn.printRoutingDebug true
+param dtnsim.central.contactsFile "\"contactPlan/contactPlan.txt\""
+param dtnsim.node[*].dtn.saveBundleMap true
+param dtnsim.central.saveTopology true
+param dtnsim.central.saveFlows true
+param dtnsim.node[1].app.enable true
+param dtnsim.node[1].app.returnToSender false
+param dtnsim.node[1].app.bundlesNumber "\"1,1,1\""
+param dtnsim.node[1].app.start "\"35,45,105\""
+param dtnsim.node[1].app.destinationEid "\"4,4,4\""
+param dtnsim.node[1].app.size "\"1000,1000,1000\""
+
+vector 0 dtnsim.node[1].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 1 dtnsim.node[1].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 2 dtnsim.node[2].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 3 dtnsim.node[2].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 4 dtnsim.node[3].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 5 dtnsim.node[3].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+vector 6 dtnsim.node[4].dtn sdrBundleStored:vector ETV
+attr interpolationmode none
+attr source sdrBundleStored
+attr title "sdrBundleStored, vector"
+vector 7 dtnsim.node[4].dtn sdrBytesStored:vector ETV
+attr interpolationmode none
+attr source sdrBytesStored
+attr title "sdrBytesStored, vector"
+0	0	0	0
+0	12	35	1
+0	13	35	0
+0	23	45	1
+0	24	45	0
+0	38	105	1
+0	39	120	1
+1	0	0	0
+1	12	35	1000
+1	13	35	0
+1	23	45	1000
+1	24	45	0
+1	38	105	1000
+1	39	120	1000
+2	0	0	0
+2	16	35	1
+2	39	120	1
+3	0	0	0
+3	16	35	1000
+3	39	120	1000
+4	0	0	0
+4	27	45	1
+4	39	120	1
+5	0	0	0
+5	27	45	1000
+5	39	120	1000
+6	0	0	0
+6	39	120	0
+7	0	0	0
+7	39	120	0
+

@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+2029(3 to 7), 2057(12 to 1), 2063(4 to 9), 2080(10 to 3), 2116(11 to 2), 2135(9 to 4), 2164(5 to 12), 2183(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(2080: 15.000000), (2116: 5.000000), (2164: 15.000000), (2183: 40.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(2029: 2), (2057: 4), (2063: 4), (2080: 5), (2116: 3), (2135: 2), (2164: 3), (2183: 3), 
+--------------------
+Overall, the computation required 20 calls to RUCoP, which took 134 seconds and 30 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Node 2: 
+Bundle 2029: (to: 1, time: 40.000000), 
+Bundle 2080: (to: 3, time: 80.000000), 
+Node 3: 
+Bundle 2029: (to: 2, time: 30.000000), 
+Node 4: 
+Bundle 2063: (to: 5, time: 50.000000), 
+Node 5: 
+Bundle 2057: (to: 1, time: 80.000000), 
+Bundle 2063: (to: 6, time: 55.000000), (to: 6, time: 120.000000), 
+Bundle 2080: (to: 2, time: 70.000000), 
+Bundle 2116: (to: 2, time: 100.000000), 
+Bundle 2164: (to: 15, time: 120.000000), 
+Bundle 2183: (to: 6, time: 180.000000), 
+Node 6: 
+Bundle 2063: (to: 9, time: 120.000000), 
+Node 7: 
+Node 8: 
+Bundle 2080: (to: 6, time: 65.000000), (to: 5, time: 70.000000), 
+Bundle 2135: (to: 4, time: 120.000000), 
+Bundle 2183: (to: 5, time: 170.000000), 
+Node 9: 
+Bundle 2135: (to: 8, time: 110.000000), 
+Node 10: 
+Bundle 2080: (to: 8, time: 60.000000), 
+Bundle 2183: (to: 8, time: 160.000000), 
+Node 11: 
+Bundle 2057: (to: 15, time: 40.000000), 
+Bundle 2116: (to: 15, time: 80.000000), 
+Bundle 2164: (to: 12, time: 140.000000), 
+Node 12: 
+Bundle 2057: (to: 11, time: 40.000000), 
+Node 13: 
+Node 14: 
+Node 15: 
+Bundle 2057: (to: 5, time: 45.000000), 
+Bundle 2116: (to: 5, time: 95.000000), 
+Bundle 2164: (to: 11, time: 125.000000), 

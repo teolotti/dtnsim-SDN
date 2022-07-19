@@ -1,0 +1,55 @@
+The bundles with the following ids have been sent: 
+492(1 to 11), 498(3 to 10), 499(4 to 6), 500(7 to 9), 505(12 to 4), 506(12 to 5), 534(8 to 1), 541(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(505: 85.000000), (506: 85.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(492: 3), (498: 4), (499: 2), (500: 2), (505: 8), (506: 6), (534: 1), (541: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 24 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 492: (to: 13, time: 0.000000), 
+Bundle 505: (to: 2, time: 40.000000), 
+Bundle 506: (to: 2, time: 40.000000), 
+Node 2: 
+Bundle 498: (to: 6, time: 50.000000), 
+Bundle 505: (to: 5, time: 120.000000), 
+Bundle 506: (to: 5, time: 120.000000), 
+Node 3: 
+Bundle 498: (to: 2, time: 20.000000), (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 499: (to: 14, time: 40.000000), 
+Node 5: 
+Bundle 505: (to: 14, time: 120.000000), 
+Node 6: 
+Bundle 498: (to: 10, time: 60.000000), 
+Bundle 541: (to: 3, time: 80.000000), 
+Node 7: 
+Bundle 500: (to: 11, time: 20.000000), (to: 6, time: 70.000000), 
+Node 8: 
+Bundle 534: (to: 4, time: 40.000000), 
+Node 9: 
+Bundle 541: (to: 5, time: 50.000000), (to: 6, time: 70.000000), 
+Node 10: 
+Bundle 492: (to: 11, time: 60.000000), 
+Bundle 505: (to: 13, time: 40.000000), 
+Bundle 506: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 505: (to: 10, time: 35.000000), 
+Bundle 506: (to: 10, time: 35.000000), 
+Node 12: 
+Bundle 505: (to: 11, time: 30.000000), 
+Bundle 506: (to: 11, time: 30.000000), 
+Node 13: 
+Bundle 492: (to: 10, time: 0.000000), 
+Bundle 505: (to: 1, time: 40.000000), 
+Bundle 506: (to: 1, time: 40.000000), 
+Node 14: 
+Bundle 499: (to: 5, time: 40.000000), 
+Bundle 505: (to: 4, time: 120.000000), 
+Node 15: 

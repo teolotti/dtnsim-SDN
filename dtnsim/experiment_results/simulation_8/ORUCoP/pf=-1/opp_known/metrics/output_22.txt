@@ -1,0 +1,62 @@
+The bundles with the following ids have been sent: 
+879(3 to 7), 899(12 to 1), 905(4 to 9), 915(10 to 3), 955(11 to 2), 964(9 to 4), 987(5 to 12), 995(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(879: 55.000000), (899: 35.000000), (905: 35.000000), (955: 25.000000), (987: 0.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(879: 11), (899: 7), (905: 9), (915: 3), (955: 6), (964: 2), (987: 3), (995: 5), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 879: (to: 14, time: 80.000000), (to: 14, time: 80.000000), 
+Node 2: 
+Bundle 879: (to: 13, time: 40.000000), 
+Node 3: 
+Bundle 879: (to: 5, time: 25.000000), (to: 2, time: 30.000000), 
+Node 4: 
+Bundle 905: (to: 5, time: 55.000000), (to: 8, time: 70.000000), 
+Node 5: 
+Bundle 879: (to: 1, time: 80.000000), (to: 1, time: 80.000000), 
+Bundle 899: (to: 1, time: 80.000000), (to: 1, time: 80.000000), 
+Bundle 905: (to: 15, time: 55.000000), (to: 15, time: 80.000000), 
+Bundle 987: (to: 6, time: 125.000000), 
+Node 6: 
+Bundle 964: (to: 5, time: 115.000000), 
+Bundle 987: (to: 9, time: 125.000000), 
+Node 7: 
+Node 8: 
+Bundle 879: (to: 5, time: 70.000000), 
+Bundle 905: (to: 5, time: 70.000000), 
+Bundle 915: (to: 13, time: 80.000000), 
+Bundle 955: (to: 13, time: 120.000000), (to: 13, time: 120.000000), 
+Bundle 995: (to: 5, time: 170.000000), 
+Node 9: 
+Bundle 899: (to: 5, time: 70.000000), 
+Bundle 955: (to: 8, time: 110.000000), 
+Bundle 964: (to: 6, time: 115.000000), 
+Bundle 987: (to: 12, time: 125.000000), 
+Node 10: 
+Bundle 915: (to: 8, time: 65.000000), 
+Bundle 995: (to: 11, time: 140.000000), (to: 8, time: 160.000000), 
+Node 11: 
+Bundle 899: (to: 15, time: 45.000000), 
+Bundle 905: (to: 9, time: 90.000000), (to: 9, time: 90.000000), 
+Bundle 955: (to: 9, time: 95.000000), (to: 8, time: 100.000000), 
+Bundle 995: (to: 15, time: 160.000000), 
+Node 12: 
+Bundle 899: (to: 11, time: 45.000000), (to: 9, time: 60.000000), 
+Node 13: 
+Bundle 879: (to: 8, time: 40.000000), 
+Bundle 915: (to: 2, time: 80.000000), 
+Bundle 955: (to: 2, time: 120.000000), 
+Node 14: 
+Bundle 879: (to: 7, time: 80.000000), (to: 7, time: 80.000000), 
+Node 15: 
+Bundle 899: (to: 5, time: 80.000000), 
+Bundle 905: (to: 11, time: 55.000000), (to: 11, time: 80.000000), 
+Bundle 995: (to: 5, time: 160.000000), 

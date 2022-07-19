@@ -1,0 +1,51 @@
+The bundles with the following ids have been sent: 
+346(1 to 12), 350(6 to 3), 356(8 to 2), 360(4 to 5), 370(2 to 4), 371(9 to 10), 372(12 to 11), 392(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(356: 60.000000), (371: 20.000000), (372: 20.000000), (392: 10.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(346: 2), (350: 2), (356: 13), (370: 2), (371: 8), (372: 6), (392: 5), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 346: (to: 4, time: 40.000000), (to: 5, time: 40.000000), 
+Bundle 356: (to: 4, time: 80.000000), (to: 4, time: 80.000000), 
+Bundle 371: (to: 4, time: 80.000000), (to: 4, time: 80.000000), 
+Bundle 392: (to: 4, time: 80.000000), 
+Node 2: 
+Bundle 370: (to: 6, time: 60.000000), 
+Node 3: 
+Node 4: 
+Bundle 356: (to: 10, time: 80.000000), (to: 10, time: 80.000000), 
+Bundle 371: (to: 10, time: 80.000000), (to: 10, time: 80.000000), 
+Bundle 392: (to: 10, time: 80.000000), 
+Node 5: 
+Bundle 356: (to: 1, time: 80.000000), (to: 1, time: 80.000000), 
+Bundle 371: (to: 1, time: 80.000000), (to: 1, time: 80.000000), 
+Bundle 372: (to: 1, time: 80.000000), (to: 11, time: 80.000000), 
+Bundle 392: (to: 11, time: 80.000000), (to: 1, time: 80.000000), 
+Node 6: 
+Bundle 350: (to: 10, time: 60.000000), (to: 10, time: 60.000000), 
+Bundle 370: (to: 10, time: 60.000000), 
+Node 7: 
+Node 8: 
+Bundle 356: (to: 12, time: 60.000000), (to: 12, time: 60.000000), 
+Node 9: 
+Bundle 356: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Bundle 371: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Bundle 372: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Node 10: 
+Bundle 356: (to: 2, time: 100.000000), 
+Node 11: 
+Bundle 392: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 356: (to: 9, time: 60.000000), (to: 9, time: 60.000000), 
+Bundle 372: (to: 9, time: 60.000000), (to: 9, time: 60.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

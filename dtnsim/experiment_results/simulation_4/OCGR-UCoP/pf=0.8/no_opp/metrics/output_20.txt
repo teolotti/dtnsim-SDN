@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+89(1 to 6), 90(6 to 10), 91(9 to 4), 94(2 to 8), 97(5 to 12), 102(7 to 12), 103(10 to 9), 107(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(91: 140.000000), 
+--------------------
+That means, that overall 0.125 (1/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(89: 1), (90: 8), (91: 6), (94: 6), (97: 2), (102: 2), (103: 5), (107: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 34 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 89: (to: 2, time: 0.000000), 
+Bundle 90: (to: 2, time: 100.000000), 
+Bundle 91: (to: 2, time: 0.000000), (to: 2, time: 100.000000), 
+Bundle 94: (to: 9, time: 80.000000), (to: 9, time: 140.000000), 
+Bundle 103: (to: 9, time: 80.000000), (to: 9, time: 140.000000), 
+Bundle 107: (to: 9, time: 80.000000), (to: 9, time: 140.000000), 
+Node 2: 
+Bundle 90: (to: 3, time: 120.000000), 
+Bundle 91: (to: 3, time: 120.000000), 
+Bundle 94: (to: 12, time: 0.000000), (to: 3, time: 20.000000), 
+Node 3: 
+Bundle 90: (to: 10, time: 160.000000), 
+Bundle 91: (to: 4, time: 140.000000), 
+Bundle 94: (to: 4, time: 40.000000), 
+Bundle 103: (to: 4, time: 40.000000), 
+Bundle 107: (to: 4, time: 40.000000), 
+Node 4: 
+Bundle 90: (to: 1, time: 80.000000), 
+Bundle 94: (to: 1, time: 80.000000), 
+Bundle 103: (to: 1, time: 80.000000), 
+Bundle 107: (to: 1, time: 80.000000), 
+Node 5: 
+Bundle 97: (to: 4, time: 20.000000), (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 90: (to: 4, time: 0.000000), (to: 7, time: 40.000000), (to: 7, time: 60.000000), (to: 4, time: 80.000000), 
+Node 7: 
+Bundle 91: (to: 1, time: 0.000000), 
+Bundle 102: (to: 1, time: 40.000000), (to: 1, time: 100.000000), 
+Node 8: 
+Node 9: 
+Bundle 91: (to: 7, time: 0.000000), 
+Node 10: 
+Bundle 103: (to: 3, time: 40.000000), 
+Node 11: 
+Node 12: 
+Node 13: 
+Node 14: 
+Node 15: 

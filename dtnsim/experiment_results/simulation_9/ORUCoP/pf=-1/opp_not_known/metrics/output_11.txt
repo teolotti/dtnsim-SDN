@@ -1,0 +1,58 @@
+The bundles with the following ids have been sent: 
+722(7 to 5), 726(12 to 5), 746(8 to 4), 752(8 to 3), 753(10 to 7), 785(3 to 7), 844(11 to 1), 853(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(726: 50.000000), (753: 50.000000), (785: 35.000000), (844: 20.000000), (853: 0.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(722: 6), (726: 6), (753: 7), (785: 6), (844: 5), (853: 8), 
+--------------------
+Overall, the computation required 24 calls to RUCoP, which took 147 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 722: (to: 9, time: 20.000000), (to: 9, time: 20.000000), 
+Node 2: 
+Node 3: 
+Bundle 785: (to: 10, time: 45.000000), 
+Bundle 844: (to: 4, time: 140.000000), 
+Node 4: 
+Bundle 753: (to: 6, time: 85.000000), 
+Bundle 853: (to: 1, time: 85.000000), (to: 6, time: 85.000000), 
+Node 5: 
+Bundle 753: (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 753: (to: 10, time: 85.000000), 
+Bundle 853: (to: 14, time: 85.000000), 
+Node 7: 
+Bundle 722: (to: 1, time: 0.000000), (to: 1, time: 0.000000), 
+Bundle 844: (to: 1, time: 100.000000), 
+Bundle 853: (to: 15, time: 85.000000), 
+Node 8: 
+Node 9: 
+Bundle 722: (to: 8, time: 20.000000), (to: 8, time: 20.000000), 
+Bundle 853: (to: 7, time: 85.000000), 
+Node 10: 
+Bundle 726: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Bundle 753: (to: 5, time: 60.000000), (to: 11, time: 60.000000), 
+Bundle 785: (to: 13, time: 45.000000), 
+Node 11: 
+Bundle 753: (to: 15, time: 80.000000), 
+Bundle 785: (to: 15, time: 80.000000), 
+Bundle 844: (to: 3, time: 80.000000), (to: 15, time: 80.000000), 
+Bundle 853: (to: 3, time: 85.000000), 
+Node 12: 
+Bundle 726: (to: 13, time: 10.000000), (to: 13, time: 10.000000), 
+Bundle 785: (to: 11, time: 45.000000), 
+Node 13: 
+Bundle 726: (to: 10, time: 10.000000), (to: 10, time: 10.000000), 
+Bundle 785: (to: 12, time: 45.000000), 
+Node 14: 
+Bundle 853: (to: 9, time: 85.000000), 
+Node 15: 
+Bundle 753: (to: 7, time: 80.000000), 
+Bundle 785: (to: 7, time: 80.000000), 
+Bundle 844: (to: 7, time: 80.000000), 
+Bundle 853: (to: 11, time: 85.000000), 

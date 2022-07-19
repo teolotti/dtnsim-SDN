@@ -1,0 +1,50 @@
+The bundles with the following ids have been sent: 
+2144(1 to 6), 2145(6 to 10), 2146(9 to 4), 2153(2 to 8), 2173(5 to 12), 2207(7 to 12), 2208(10 to 9), 2213(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(2146: 0.000000), (2153: 0.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(2144: 1), (2145: 12), (2146: 3), (2153: 2), (2173: 2), (2207: 4), (2208: 1), (2213: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 34 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 2144: (to: 2, time: 0.000000), 
+Bundle 2145: (to: 9, time: 80.000000), 
+Node 2: 
+Bundle 2153: (to: 12, time: 0.000000), 
+Node 3: 
+Bundle 2145: (to: 10, time: 100.000000), (to: 10, time: 160.000000), 
+Bundle 2207: (to: 10, time: 40.000000), 
+Bundle 2213: (to: 10, time: 40.000000), 
+Node 4: 
+Node 5: 
+Bundle 2173: (to: 4, time: 20.000000), (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 2145: (to: 14, time: 0.000000), 
+Bundle 2146: (to: 4, time: 0.000000), 
+Node 7: 
+Bundle 2145: (to: 1, time: 0.000000), (to: 1, time: 40.000000), (to: 15, time: 80.000000), 
+Bundle 2207: (to: 15, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 2145: (to: 7, time: 0.000000), (to: 7, time: 80.000000), 
+Bundle 2146: (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 2208: (to: 5, time: 60.000000), 
+Node 11: 
+Bundle 2145: (to: 3, time: 80.000000), 
+Bundle 2207: (to: 3, time: 40.000000), 
+Node 12: 
+Bundle 2153: (to: 8, time: 0.000000), 
+Node 13: 
+Node 14: 
+Bundle 2145: (to: 9, time: 0.000000), 
+Bundle 2146: (to: 6, time: 0.000000), 
+Node 15: 
+Bundle 2145: (to: 11, time: 80.000000), 
+Bundle 2207: (to: 11, time: 40.000000), 

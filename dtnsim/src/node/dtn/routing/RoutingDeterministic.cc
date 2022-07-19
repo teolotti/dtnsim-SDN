@@ -31,6 +31,11 @@ void RoutingDeterministic::successfulBundleForwarded(long bundleId, Contact * c,
 
 }
 
+void RoutingDeterministic::updateContactPlan(Contact* c)
+{
+
+}
+
 void  RoutingDeterministic::refreshForwarding(Contact * c)
 {
 

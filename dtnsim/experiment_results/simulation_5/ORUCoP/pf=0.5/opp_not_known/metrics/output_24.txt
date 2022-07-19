@@ -1,0 +1,50 @@
+The bundles with the following ids have been sent: 
+1883(1 to 12), 1884(12 to 5), 1904(7 to 3), 1905(10 to 6), 1906(11 to 1), 1920(6 to 7), 1966(3 to 4), 1970(8 to 4), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1883: 80.000000), (1905: 65.000000), (1906: 95.000000), (1970: 45.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1883: 7), (1884: 6), (1904: 2), (1905: 6), (1906: 6), (1920: 6), (1970: 3), 
+--------------------
+Overall, the computation required 72 calls to RUCoP, which took 305 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1883: (to: 2, time: 0.000000), (to: 13, time: 0.000000), (to: 13, time: 80.000000), 
+Node 2: 
+Bundle 1883: (to: 5, time: 50.000000), 
+Node 3: 
+Node 4: 
+Node 5: 
+Bundle 1883: (to: 1, time: 50.000000), 
+Node 6: 
+Bundle 1920: (to: 9, time: 35.000000), (to: 9, time: 35.000000), 
+Node 7: 
+Bundle 1904: (to: 8, time: 30.000000), (to: 8, time: 30.000000), 
+Bundle 1905: (to: 8, time: 30.000000), 
+Node 8: 
+Bundle 1883: (to: 12, time: 80.000000), 
+Bundle 1905: (to: 6, time: 90.000000), (to: 6, time: 90.000000), 
+Bundle 1906: (to: 13, time: 80.000000), (to: 13, time: 80.000000), 
+Bundle 1970: (to: 13, time: 55.000000), (to: 12, time: 80.000000), 
+Node 9: 
+Bundle 1884: (to: 15, time: 40.000000), (to: 15, time: 40.000000), 
+Bundle 1920: (to: 15, time: 40.000000), (to: 15, time: 40.000000), 
+Node 10: 
+Bundle 1905: (to: 7, time: 25.000000), (to: 11, time: 30.000000), 
+Node 11: 
+Bundle 1905: (to: 8, time: 40.000000), 
+Bundle 1906: (to: 8, time: 40.000000), (to: 8, time: 40.000000), 
+Node 12: 
+Bundle 1884: (to: 9, time: 0.000000), (to: 9, time: 0.000000), 
+Bundle 1970: (to: 4, time: 100.000000), 
+Node 13: 
+Bundle 1883: (to: 8, time: 40.000000), 
+Bundle 1906: (to: 1, time: 120.000000), (to: 1, time: 120.000000), 
+Node 14: 
+Node 15: 
+Bundle 1884: (to: 3, time: 40.000000), (to: 3, time: 40.000000), 
+Bundle 1920: (to: 3, time: 40.000000), (to: 3, time: 40.000000), 

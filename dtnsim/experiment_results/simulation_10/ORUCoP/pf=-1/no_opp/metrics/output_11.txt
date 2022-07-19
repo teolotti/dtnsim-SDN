@@ -1,0 +1,45 @@
+The bundles with the following ids have been sent: 
+299(1 to 6), 300(6 to 10), 301(9 to 4), 308(2 to 8), 317(5 to 12), 324(7 to 12), 325(10 to 9), 328(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(317: 95.000000), (324: 80.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(300: 7), (301: 5), (317: 4), (324: 6), (325: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 300: (to: 2, time: 100.000000), (to: 2, time: 100.000000), 
+Bundle 301: (to: 9, time: 20.000000), 
+Bundle 317: (to: 2, time: 100.000000), 
+Bundle 324: (to: 2, time: 100.000000), (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 300: (to: 12, time: 120.000000), 
+Bundle 317: (to: 12, time: 120.000000), 
+Bundle 324: (to: 12, time: 120.000000), (to: 12, time: 120.000000), 
+Node 3: 
+Node 4: 
+Bundle 300: (to: 1, time: 80.000000), 
+Bundle 317: (to: 1, time: 80.000000), 
+Node 5: 
+Bundle 317: (to: 4, time: 25.000000), 
+Node 6: 
+Bundle 300: (to: 4, time: 0.000000), (to: 7, time: 60.000000), 
+Node 7: 
+Bundle 300: (to: 1, time: 100.000000), 
+Bundle 301: (to: 1, time: 0.000000), 
+Bundle 324: (to: 1, time: 100.000000), (to: 1, time: 100.000000), 
+Node 8: 
+Node 9: 
+Bundle 301: (to: 7, time: 0.000000), (to: 8, time: 20.000000), (to: 8, time: 20.000000), 
+Node 10: 
+Bundle 325: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Node 11: 
+Node 12: 
+Node 13: 
+Node 14: 
+Node 15: 

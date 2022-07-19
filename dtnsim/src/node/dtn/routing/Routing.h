@@ -60,6 +60,11 @@ public:
 	virtual void  refreshForwarding(Contact * c) = 0;
 
 	/**
+	 * Method to be called in case a contact plan was updated for opp. routing.
+	 */
+	virtual void updateContactPlan(Contact* c) = 0;
+
+	/**
 	 * Method that will be called by Dtn module when some bundle is forwarded successfully
 	 */
 	virtual void successfulBundleForwarded(long bundleId, Contact * contact, bool sentToDestination)=0;

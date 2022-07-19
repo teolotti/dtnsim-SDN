@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+181(1 to 11), 189(3 to 10), 190(4 to 6), 191(7 to 9), 199(12 to 4), 200(12 to 5), 231(8 to 1), 234(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(181: 40.000000), (189: 15.000000), (190: 45.000000), (199: 85.000000), (200: 85.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(181: 7), (189: 4), (190: 4), (191: 2), (199: 5), (200: 7), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 181: (to: 5, time: 0.000000), (to: 13, time: 40.000000), 
+Bundle 189: (to: 13, time: 40.000000), 
+Node 2: 
+Bundle 189: (to: 1, time: 25.000000), 
+Node 3: 
+Bundle 189: (to: 2, time: 25.000000), 
+Node 4: 
+Bundle 190: (to: 7, time: 25.000000), (to: 14, time: 40.000000), 
+Bundle 200: (to: 14, time: 120.000000), 
+Node 5: 
+Bundle 181: (to: 6, time: 0.000000), 
+Node 6: 
+Bundle 181: (to: 15, time: 40.000000), 
+Node 7: 
+Bundle 190: (to: 6, time: 70.000000), 
+Bundle 191: (to: 6, time: 70.000000), (to: 6, time: 70.000000), 
+Bundle 199: (to: 3, time: 60.000000), 
+Bundle 200: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 199: (to: 4, time: 120.000000), 
+Bundle 200: (to: 4, time: 120.000000), 
+Node 9: 
+Node 10: 
+Node 11: 
+Bundle 199: (to: 7, time: 40.000000), 
+Bundle 200: (to: 7, time: 40.000000), 
+Node 12: 
+Bundle 181: (to: 11, time: 40.000000), 
+Bundle 199: (to: 11, time: 40.000000), (to: 8, time: 100.000000), 
+Bundle 200: (to: 11, time: 40.000000), (to: 8, time: 100.000000), 
+Node 13: 
+Bundle 181: (to: 10, time: 40.000000), 
+Bundle 189: (to: 10, time: 40.000000), 
+Node 14: 
+Bundle 190: (to: 5, time: 40.000000), 
+Bundle 200: (to: 5, time: 120.000000), 
+Node 15: 
+Bundle 181: (to: 12, time: 40.000000), 

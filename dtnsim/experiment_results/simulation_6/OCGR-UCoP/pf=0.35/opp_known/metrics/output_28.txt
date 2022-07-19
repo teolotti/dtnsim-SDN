@@ -1,0 +1,58 @@
+The bundles with the following ids have been sent: 
+1156(1 to 11), 1161(3 to 10), 1162(4 to 6), 1163(7 to 9), 1170(12 to 4), 1171(12 to 5), 1200(8 to 1), 1208(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1163: 25.000000), (1170: 85.000000), (1171: 85.000000), (1208: 25.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1156: 3), (1161: 2), (1162: 2), (1163: 3), (1170: 8), (1171: 6), (1200: 4), (1208: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 24 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1156: (to: 13, time: 0.000000), 
+Bundle 1170: (to: 2, time: 40.000000), 
+Bundle 1171: (to: 2, time: 40.000000), 
+Node 2: 
+Bundle 1170: (to: 5, time: 120.000000), 
+Bundle 1171: (to: 5, time: 120.000000), 
+Node 3: 
+Bundle 1161: (to: 2, time: 20.000000), (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 1162: (to: 14, time: 40.000000), 
+Bundle 1200: (to: 14, time: 40.000000), 
+Node 5: 
+Bundle 1170: (to: 14, time: 120.000000), 
+Bundle 1200: (to: 6, time: 60.000000), 
+Node 6: 
+Bundle 1208: (to: 3, time: 80.000000), 
+Node 7: 
+Bundle 1163: (to: 11, time: 20.000000), 
+Node 8: 
+Bundle 1200: (to: 4, time: 40.000000), 
+Node 9: 
+Bundle 1208: (to: 5, time: 50.000000), (to: 6, time: 70.000000), 
+Node 10: 
+Bundle 1156: (to: 11, time: 60.000000), 
+Bundle 1163: (to: 9, time: 50.000000), 
+Bundle 1170: (to: 13, time: 40.000000), 
+Bundle 1171: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 1163: (to: 10, time: 30.000000), 
+Bundle 1170: (to: 10, time: 35.000000), 
+Bundle 1171: (to: 10, time: 35.000000), 
+Node 12: 
+Bundle 1170: (to: 11, time: 30.000000), 
+Bundle 1171: (to: 11, time: 30.000000), 
+Node 13: 
+Bundle 1156: (to: 10, time: 0.000000), 
+Bundle 1170: (to: 1, time: 40.000000), 
+Bundle 1171: (to: 1, time: 40.000000), 
+Node 14: 
+Bundle 1162: (to: 5, time: 40.000000), 
+Bundle 1170: (to: 4, time: 120.000000), 
+Bundle 1200: (to: 5, time: 45.000000), 
+Node 15: 

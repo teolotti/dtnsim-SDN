@@ -1,0 +1,55 @@
+The bundles with the following ids have been sent: 
+2270(1 to 6), 2271(6 to 10), 2272(9 to 4), 2279(2 to 8), 2299(5 to 12), 2334(7 to 12), 2335(10 to 9), 2343(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(2272: 0.000000), (2279: 0.000000), (2334: 0.000000), (2343: 0.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(2270: 1), (2271: 12), (2272: 3), (2279: 2), (2299: 2), (2334: 6), (2335: 1), (2343: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 37 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 2270: (to: 2, time: 0.000000), 
+Bundle 2271: (to: 9, time: 80.000000), 
+Node 2: 
+Bundle 2279: (to: 12, time: 0.000000), 
+Node 3: 
+Bundle 2271: (to: 10, time: 100.000000), (to: 10, time: 160.000000), 
+Bundle 2334: (to: 10, time: 40.000000), 
+Bundle 2343: (to: 10, time: 40.000000), 
+Node 4: 
+Node 5: 
+Bundle 2299: (to: 4, time: 20.000000), (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 2271: (to: 14, time: 0.000000), 
+Bundle 2272: (to: 4, time: 0.000000), 
+Node 7: 
+Bundle 2271: (to: 1, time: 0.000000), (to: 1, time: 40.000000), (to: 15, time: 80.000000), 
+Bundle 2334: (to: 15, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 2271: (to: 7, time: 0.000000), (to: 7, time: 80.000000), 
+Bundle 2272: (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 2334: (to: 13, time: 40.000000), 
+Bundle 2335: (to: 5, time: 60.000000), 
+Bundle 2343: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 2271: (to: 3, time: 80.000000), 
+Bundle 2334: (to: 3, time: 40.000000), 
+Node 12: 
+Bundle 2279: (to: 8, time: 0.000000), 
+Bundle 2343: (to: 8, time: 40.000000), 
+Node 13: 
+Bundle 2334: (to: 12, time: 40.000000), 
+Bundle 2343: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 2271: (to: 9, time: 0.000000), 
+Bundle 2272: (to: 6, time: 0.000000), 
+Node 15: 
+Bundle 2271: (to: 11, time: 80.000000), 
+Bundle 2334: (to: 11, time: 40.000000), 

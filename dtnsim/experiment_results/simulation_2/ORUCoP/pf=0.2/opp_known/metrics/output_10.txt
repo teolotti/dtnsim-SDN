@@ -1,0 +1,45 @@
+The bundles with the following ids have been sent: 
+201(1 to 12), 206(6 to 3), 225(8 to 2), 233(4 to 5), 243(2 to 4), 244(9 to 10), 245(12 to 11), 256(5 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(201: 25.000000), (206: 35.000000), (225: 60.000000), (245: 20.000000), (256: 10.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(201: 3), (206: 4), (225: 9), (243: 1), (244: 4), (245: 3), (256: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 201: (to: 4, time: 15.000000), (to: 5, time: 40.000000), 
+Node 2: 
+Bundle 243: (to: 6, time: 60.000000), 
+Node 3: 
+Node 4: 
+Node 5: 
+Bundle 201: (to: 12, time: 40.000000), 
+Bundle 244: (to: 1, time: 80.000000), (to: 1, time: 80.000000), 
+Bundle 245: (to: 11, time: 80.000000), 
+Bundle 256: (to: 11, time: 80.000000), (to: 1, time: 80.000000), 
+Node 6: 
+Bundle 206: (to: 13, time: 40.000000), (to: 13, time: 80.000000), 
+Node 7: 
+Bundle 206: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 225: (to: 14, time: 40.000000), (to: 14, time: 80.000000), (to: 14, time: 80.000000), 
+Node 9: 
+Bundle 244: (to: 5, time: 60.000000), (to: 5, time: 60.000000), 
+Bundle 245: (to: 5, time: 60.000000), 
+Node 10: 
+Bundle 225: (to: 8, time: 60.000000), (to: 2, time: 100.000000), (to: 8, time: 100.000000), 
+Node 11: 
+Bundle 256: (to: 3, time: 80.000000), 
+Node 12: 
+Bundle 245: (to: 9, time: 60.000000), 
+Node 13: 
+Bundle 206: (to: 7, time: 40.000000), 
+Node 14: 
+Bundle 225: (to: 10, time: 40.000000), (to: 10, time: 80.000000), (to: 10, time: 80.000000), 
+Node 15: 

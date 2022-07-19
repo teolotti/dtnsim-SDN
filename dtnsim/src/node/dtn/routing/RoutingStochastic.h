@@ -42,6 +42,8 @@ public:
 
 	virtual void successfulBundleForwarded(long bundleId, Contact * contact,  bool sentToDestination);
 
+	virtual void updateContactPlan(Contact* c);
+
 	virtual void  refreshForwarding(Contact * c);
 
 	// This is a pure virtual method (all stochastic routing must at least

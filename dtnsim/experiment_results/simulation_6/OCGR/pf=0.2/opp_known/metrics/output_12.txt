@@ -1,0 +1,56 @@
+The bundles with the following ids have been sent: 
+844(1 to 11), 852(3 to 10), 853(4 to 6), 854(7 to 9), 859(12 to 4), 860(12 to 5), 881(8 to 1), 887(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(844: 60.000000), (852: 15.000000), (853: 55.000000), (854: 45.000000), (859: 25.000000), (860: 45.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(844: 4), (852: 4), (853: 4), (854: 3), (859: 5), (860: 7), (881: 1), (887: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 34 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 844: (to: 5, time: 0.000000), (to: 13, time: 0.000000), 
+Bundle 852: (to: 13, time: 40.000000), 
+Node 2: 
+Bundle 852: (to: 1, time: 20.000000), 
+Node 3: 
+Bundle 852: (to: 2, time: 20.000000), 
+Bundle 859: (to: 4, time: 60.000000), 
+Bundle 860: (to: 4, time: 60.000000), 
+Node 4: 
+Bundle 853: (to: 3, time: 50.000000), (to: 14, time: 80.000000), 
+Bundle 860: (to: 14, time: 80.000000), 
+Bundle 887: (to: 3, time: 50.000000), 
+Node 5: 
+Bundle 853: (to: 6, time: 80.000000), 
+Bundle 887: (to: 14, time: 40.000000), 
+Node 6: 
+Bundle 854: (to: 9, time: 70.000000), 
+Node 7: 
+Bundle 854: (to: 11, time: 20.000000), (to: 6, time: 70.000000), 
+Bundle 859: (to: 3, time: 60.000000), 
+Bundle 860: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 881: (to: 4, time: 40.000000), 
+Node 9: 
+Bundle 887: (to: 5, time: 50.000000), 
+Node 10: 
+Bundle 844: (to: 11, time: 60.000000), 
+Node 11: 
+Bundle 859: (to: 7, time: 40.000000), 
+Bundle 860: (to: 7, time: 40.000000), 
+Node 12: 
+Bundle 859: (to: 11, time: 30.000000), (to: 11, time: 40.000000), 
+Bundle 860: (to: 11, time: 30.000000), (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 844: (to: 10, time: 0.000000), 
+Bundle 852: (to: 10, time: 40.000000), 
+Node 14: 
+Bundle 853: (to: 5, time: 80.000000), 
+Bundle 860: (to: 5, time: 80.000000), 
+Bundle 887: (to: 4, time: 40.000000), 
+Node 15: 

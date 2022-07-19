@@ -1,0 +1,58 @@
+The bundles with the following ids have been sent: 
+518(2 to 10), 519(8 to 3), 527(3 to 11), 528(12 to 10), 536(10 to 5), 557(11 to 6), 562(1 to 9), 577(7 to 12), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(527: 55.000000), (528: 45.000000), (536: 35.000000), (562: 0.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(518: 2), (519: 2), (527: 8), (528: 7), (536: 3), (557: 3), (562: 4), (577: 3), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 25 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 562: (to: 4, time: 50.000000), 
+Node 2: 
+Bundle 518: (to: 13, time: 0.000000), 
+Bundle 527: (to: 6, time: 25.000000), 
+Node 3: 
+Bundle 527: (to: 2, time: 20.000000), 
+Node 4: 
+Bundle 528: (to: 5, time: 40.000000), 
+Bundle 562: (to: 15, time: 40.000000), 
+Node 5: 
+Bundle 527: (to: 14, time: 80.000000), 
+Bundle 528: (to: 14, time: 40.000000), 
+Bundle 557: (to: 6, time: 80.000000), 
+Node 6: 
+Bundle 527: (to: 3, time: 20.000000), (to: 8, time: 30.000000), 
+Node 7: 
+Bundle 577: (to: 8, time: 70.000000), 
+Node 8: 
+Bundle 519: (to: 13, time: 0.000000), 
+Bundle 527: (to: 11, time: 60.000000), (to: 5, time: 70.000000), 
+Bundle 528: (to: 10, time: 70.000000), 
+Bundle 536: (to: 11, time: 60.000000), (to: 5, time: 70.000000), 
+Bundle 577: (to: 10, time: 75.000000), 
+Node 9: 
+Node 10: 
+Bundle 536: (to: 8, time: 30.000000), 
+Bundle 577: (to: 11, time: 75.000000), 
+Node 11: 
+Bundle 528: (to: 8, time: 60.000000), 
+Bundle 557: (to: 14, time: 40.000000), 
+Node 12: 
+Bundle 528: (to: 15, time: 40.000000), 
+Bundle 562: (to: 9, time: 50.000000), 
+Node 13: 
+Bundle 518: (to: 8, time: 15.000000), 
+Bundle 519: (to: 2, time: 15.000000), 
+Node 14: 
+Bundle 527: (to: 11, time: 80.000000), 
+Bundle 528: (to: 11, time: 40.000000), 
+Bundle 557: (to: 5, time: 45.000000), 
+Node 15: 
+Bundle 528: (to: 4, time: 40.000000), 
+Bundle 562: (to: 12, time: 55.000000), 

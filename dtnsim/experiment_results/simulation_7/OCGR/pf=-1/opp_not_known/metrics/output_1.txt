@@ -1,0 +1,53 @@
+The bundles with the following ids have been sent: 
+664(2 to 10), 665(8 to 3), 682(3 to 11), 683(12 to 10), 692(10 to 5), 722(11 to 6), 729(1 to 9), 755(7 to 12), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(664: 35.000000), (683: 45.000000), (692: 35.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(664: 2), (665: 2), (682: 6), (683: 4), (692: 4), (722: 3), (729: 5), (755: 2), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 38 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 664: (to: 10, time: 50.000000), 
+Bundle 729: (to: 4, time: 50.000000), 
+Node 2: 
+Bundle 664: (to: 1, time: 30.000000), 
+Bundle 682: (to: 6, time: 20.000000), 
+Node 3: 
+Bundle 682: (to: 2, time: 20.000000), 
+Node 4: 
+Bundle 683: (to: 8, time: 50.000000), 
+Bundle 729: (to: 15, time: 40.000000), 
+Node 5: 
+Node 6: 
+Bundle 682: (to: 8, time: 30.000000), 
+Node 7: 
+Bundle 692: (to: 4, time: 40.000000), (to: 8, time: 70.000000), 
+Bundle 755: (to: 10, time: 70.000000), 
+Node 8: 
+Bundle 665: (to: 9, time: 10.000000), 
+Bundle 682: (to: 11, time: 60.000000), (to: 10, time: 70.000000), 
+Bundle 683: (to: 10, time: 70.000000), 
+Bundle 692: (to: 5, time: 70.000000), 
+Node 9: 
+Bundle 665: (to: 6, time: 20.000000), 
+Node 10: 
+Bundle 682: (to: 11, time: 70.000000), 
+Bundle 692: (to: 7, time: 30.000000), 
+Bundle 755: (to: 11, time: 70.000000), 
+Node 11: 
+Bundle 722: (to: 12, time: 40.000000), 
+Node 12: 
+Bundle 683: (to: 15, time: 40.000000), 
+Bundle 722: (to: 9, time: 50.000000), (to: 9, time: 80.000000), 
+Bundle 729: (to: 9, time: 50.000000), (to: 9, time: 80.000000), 
+Node 13: 
+Node 14: 
+Node 15: 
+Bundle 683: (to: 4, time: 40.000000), 
+Bundle 729: (to: 12, time: 40.000000), 

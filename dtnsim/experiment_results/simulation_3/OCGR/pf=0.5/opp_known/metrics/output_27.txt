@@ -1,0 +1,56 @@
+The bundles with the following ids have been sent: 
+898(7 to 5), 899(12 to 5), 907(8 to 4), 909(8 to 3), 910(10 to 7), 932(3 to 7), 954(11 to 1), 957(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(899: 10.000000), (909: 130.000000), (910: 10.000000), (957: 75.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(898: 5), (899: 3), (907: 3), (909: 7), (910: 3), (932: 1), (954: 3), (957: 8), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 37 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 957: (to: 9, time: 80.000000), (to: 2, time: 100.000000), 
+Node 2: 
+Bundle 907: (to: 3, time: 120.000000), 
+Bundle 909: (to: 3, time: 120.000000), (to: 12, time: 120.000000), 
+Bundle 957: (to: 3, time: 120.000000), (to: 12, time: 120.000000), 
+Node 3: 
+Bundle 898: (to: 10, time: 40.000000), 
+Bundle 932: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 957: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 898: (to: 1, time: 0.000000), (to: 15, time: 40.000000), 
+Bundle 954: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 907: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Bundle 909: (to: 2, time: 40.000000), (to: 2, time: 100.000000), 
+Node 9: 
+Node 10: 
+Bundle 899: (to: 5, time: 20.000000), 
+Bundle 909: (to: 3, time: 160.000000), 
+Bundle 910: (to: 11, time: 20.000000), 
+Bundle 957: (to: 3, time: 160.000000), 
+Node 11: 
+Bundle 898: (to: 3, time: 40.000000), 
+Bundle 910: (to: 15, time: 40.000000), 
+Bundle 954: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 899: (to: 13, time: 0.000000), 
+Bundle 909: (to: 13, time: 160.000000), 
+Bundle 957: (to: 13, time: 160.000000), 
+Node 13: 
+Bundle 899: (to: 10, time: 0.000000), 
+Bundle 909: (to: 10, time: 160.000000), 
+Bundle 957: (to: 10, time: 160.000000), 
+Node 14: 
+Node 15: 
+Bundle 898: (to: 11, time: 40.000000), 
+Bundle 910: (to: 7, time: 40.000000), 
+Bundle 954: (to: 7, time: 80.000000), 

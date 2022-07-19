@@ -1,0 +1,4 @@
+id,best_t_cost=-1,best_t_pf=-1,sdp_pf=-1,states,t_changes_pf=-1,t_changes_proba_pf=-1,t_cost_pf=-1,ts
+294944,1.65,"[OrderedDict([('copies', 1), ('name', 'send9_6-toward:(18,)'), ('contact_ids', [19]), ('source_node', 10)])]",0.42250000000000004,"(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0)",[327936],[0.65],1.65,9
+295168,1.0,"[OrderedDict([('copies', 1), ('name', 'next'), ('contact_ids', []), ('source_node', 7)])]",0.65,"(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0)",[327936],[1.0],1.0,9
+311296,0.0,"[OrderedDict([('copies', 1), ('name', 'next'), ('contact_ids', []), ('source_node', 1)])]",1.0,"(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)",[344064],[1.0],0.0,9

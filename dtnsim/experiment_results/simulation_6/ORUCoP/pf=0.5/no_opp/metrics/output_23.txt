@@ -1,0 +1,34 @@
+The bundles with the following ids have been sent: 
+363(1 to 11), 369(3 to 10), 370(4 to 6), 371(7 to 9), 378(12 to 4), 379(12 to 5), 384(8 to 1), 395(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+
+--------------------
+That means, that overall 0 (0/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(363: 3), (369: 2), (370: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 363: (to: 5, time: 0.000000), (to: 2, time: 40.000000), 
+Node 2: 
+Node 3: 
+Bundle 369: (to: 2, time: 50.000000), (to: 2, time: 50.000000), 
+Bundle 370: (to: 2, time: 50.000000), (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 370: (to: 3, time: 50.000000), (to: 3, time: 50.000000), 
+Node 5: 
+Bundle 363: (to: 9, time: 30.000000), 
+Node 6: 
+Node 7: 
+Node 8: 
+Node 9: 
+Node 10: 
+Node 11: 
+Node 12: 
+Node 13: 
+Node 14: 
+Node 15: 

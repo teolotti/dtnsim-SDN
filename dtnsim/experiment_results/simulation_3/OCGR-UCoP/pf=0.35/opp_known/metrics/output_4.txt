@@ -1,0 +1,57 @@
+The bundles with the following ids have been sent: 
+1683(7 to 5), 1689(12 to 5), 1698(8 to 4), 1701(8 to 3), 1702(10 to 7), 1725(3 to 7), 1746(11 to 1), 1753(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1683: 20.000000), (1689: 10.000000), (1698: 120.000000), (1701: 70.000000), (1702: 10.000000), (1746: 20.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1683: 6), (1689: 3), (1698: 6), (1701: 5), (1702: 3), (1725: 1), (1746: 3), (1753: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 21 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1683: (to: 2, time: 0.000000), 
+Node 2: 
+Bundle 1683: (to: 12, time: 0.000000), 
+Bundle 1698: (to: 12, time: 60.000000), 
+Bundle 1701: (to: 12, time: 60.000000), 
+Node 3: 
+Bundle 1698: (to: 4, time: 140.000000), 
+Bundle 1725: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 1753: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 1683: (to: 1, time: 0.000000), 
+Bundle 1746: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 1698: (to: 2, time: 40.000000), 
+Bundle 1701: (to: 2, time: 40.000000), 
+Node 9: 
+Node 10: 
+Bundle 1683: (to: 5, time: 20.000000), 
+Bundle 1689: (to: 5, time: 20.000000), 
+Bundle 1698: (to: 3, time: 100.000000), 
+Bundle 1701: (to: 3, time: 100.000000), 
+Bundle 1702: (to: 11, time: 20.000000), 
+Node 11: 
+Bundle 1702: (to: 15, time: 40.000000), 
+Bundle 1746: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 1683: (to: 13, time: 0.000000), 
+Bundle 1689: (to: 13, time: 0.000000), 
+Bundle 1698: (to: 13, time: 80.000000), 
+Bundle 1701: (to: 13, time: 80.000000), 
+Node 13: 
+Bundle 1683: (to: 10, time: 0.000000), 
+Bundle 1689: (to: 10, time: 10.000000), 
+Bundle 1698: (to: 10, time: 80.000000), 
+Bundle 1701: (to: 10, time: 80.000000), 
+Node 14: 
+Node 15: 
+Bundle 1702: (to: 7, time: 40.000000), 
+Bundle 1746: (to: 7, time: 80.000000), 

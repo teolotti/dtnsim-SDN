@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+1927(1 to 11), 1946(3 to 10), 1947(4 to 6), 1948(7 to 9), 1958(12 to 4), 1959(12 to 5), 1995(8 to 1), 2008(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1946: 35.000000), (1947: 45.000000), (1948: 45.000000), (1958: 85.000000), (2008: 5.000000), 
+--------------------
+That means, that overall 0.625 (5/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1927: 5), (1946: 3), (1947: 4), (1948: 3), (1958: 5), (1959: 2), (1995: 2), (2008: 6), 
+--------------------
+Overall, the computation required 46 calls to RUCoP, which took 207 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1927: (to: 5, time: 0.000000), (to: 13, time: 0.000000), 
+Node 2: 
+Bundle 1946: (to: 6, time: 50.000000), 
+Node 3: 
+Bundle 1946: (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 1947: (to: 7, time: 25.000000), (to: 14, time: 55.000000), 
+Node 5: 
+Bundle 1927: (to: 9, time: 30.000000), 
+Bundle 2008: (to: 14, time: 55.000000), 
+Node 6: 
+Bundle 1946: (to: 10, time: 60.000000), 
+Bundle 1948: (to: 9, time: 70.000000), 
+Node 7: 
+Bundle 1947: (to: 6, time: 70.000000), 
+Bundle 1948: (to: 8, time: 25.000000), (to: 6, time: 70.000000), 
+Bundle 1958: (to: 3, time: 60.000000), 
+Bundle 2008: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 1958: (to: 4, time: 120.000000), 
+Bundle 1995: (to: 4, time: 45.000000), (to: 4, time: 45.000000), 
+Node 9: 
+Bundle 1927: (to: 10, time: 50.000000), 
+Bundle 2008: (to: 5, time: 55.000000), (to: 10, time: 55.000000), 
+Node 10: 
+Bundle 2008: (to: 7, time: 55.000000), 
+Node 11: 
+Bundle 1958: (to: 7, time: 40.000000), 
+Node 12: 
+Bundle 1958: (to: 11, time: 35.000000), (to: 8, time: 100.000000), 
+Bundle 1959: (to: 11, time: 35.000000), (to: 11, time: 35.000000), 
+Node 13: 
+Bundle 1927: (to: 10, time: 40.000000), 
+Node 14: 
+Bundle 1947: (to: 5, time: 80.000000), 
+Bundle 2008: (to: 4, time: 55.000000), 
+Node 15: 

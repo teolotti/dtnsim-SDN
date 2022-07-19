@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+353(1 to 11), 360(3 to 10), 361(4 to 6), 362(7 to 9), 374(12 to 4), 375(12 to 5), 388(8 to 1), 403(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(353: 60.000000), (360: 35.000000), (375: 15.000000), (403: 25.000000), 
+--------------------
+That means, that overall 0.5 (4/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(353: 6), (360: 3), (361: 2), (362: 1), (374: 6), (375: 4), (388: 2), (403: 5), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 353: (to: 5, time: 30.000000), (to: 2, time: 40.000000), 
+Node 2: 
+Bundle 353: (to: 6, time: 50.000000), 
+Bundle 360: (to: 6, time: 50.000000), 
+Node 3: 
+Bundle 360: (to: 2, time: 25.000000), 
+Node 4: 
+Bundle 361: (to: 7, time: 25.000000), (to: 3, time: 50.000000), 
+Bundle 388: (to: 3, time: 50.000000), 
+Node 5: 
+Bundle 353: (to: 9, time: 30.000000), 
+Bundle 403: (to: 6, time: 60.000000), 
+Node 6: 
+Bundle 353: (to: 10, time: 60.000000), 
+Bundle 360: (to: 10, time: 60.000000), 
+Bundle 403: (to: 3, time: 80.000000), (to: 3, time: 80.000000), 
+Node 7: 
+Bundle 362: (to: 3, time: 60.000000), 
+Node 8: 
+Bundle 388: (to: 4, time: 45.000000), 
+Node 9: 
+Bundle 374: (to: 5, time: 50.000000), 
+Bundle 375: (to: 5, time: 50.000000), 
+Bundle 403: (to: 5, time: 55.000000), (to: 6, time: 70.000000), 
+Node 10: 
+Bundle 353: (to: 11, time: 60.000000), 
+Bundle 374: (to: 9, time: 50.000000), 
+Bundle 375: (to: 9, time: 50.000000), 
+Node 11: 
+Bundle 374: (to: 10, time: 35.000000), (to: 10, time: 35.000000), 
+Bundle 375: (to: 10, time: 35.000000), 
+Node 12: 
+Bundle 374: (to: 11, time: 35.000000), (to: 11, time: 35.000000), 
+Bundle 375: (to: 11, time: 35.000000), 
+Node 13: 
+Node 14: 
+Node 15: 

@@ -1,0 +1,61 @@
+The bundles with the following ids have been sent: 
+1256(1 to 6), 1257(6 to 10), 1258(9 to 4), 1270(2 to 8), 1287(5 to 12), 1318(7 to 12), 1319(10 to 9), 1327(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1257: 0.000000), (1258: 0.000000), (1270: 25.000000), (1287: 95.000000), (1318: 0.000000), (1319: 100.000000), (1327: 0.000000), 
+--------------------
+That means, that overall 0.875 (7/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1256: 1), (1257: 8), (1258: 3), (1270: 3), (1287: 4), (1318: 6), (1319: 5), (1327: 4), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 35 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1256: (to: 9, time: 20.000000), 
+Bundle 1257: (to: 2, time: 0.000000), 
+Bundle 1287: (to: 2, time: 100.000000), 
+Bundle 1319: (to: 9, time: 80.000000), (to: 9, time: 140.000000), 
+Node 2: 
+Bundle 1257: (to: 12, time: 0.000000), 
+Bundle 1270: (to: 12, time: 0.000000), 
+Bundle 1287: (to: 12, time: 120.000000), 
+Node 3: 
+Bundle 1318: (to: 10, time: 40.000000), 
+Bundle 1327: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 1287: (to: 1, time: 80.000000), 
+Bundle 1319: (to: 1, time: 80.000000), 
+Node 5: 
+Bundle 1287: (to: 4, time: 20.000000), 
+Bundle 1319: (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 1257: (to: 14, time: 0.000000), 
+Bundle 1258: (to: 4, time: 0.000000), 
+Node 7: 
+Bundle 1257: (to: 1, time: 0.000000), 
+Bundle 1318: (to: 15, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 1257: (to: 7, time: 0.000000), 
+Bundle 1258: (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 1318: (to: 13, time: 40.000000), 
+Bundle 1319: (to: 5, time: 60.000000), 
+Bundle 1327: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 1318: (to: 3, time: 40.000000), 
+Node 12: 
+Bundle 1257: (to: 13, time: 0.000000), 
+Bundle 1270: (to: 8, time: 0.000000), (to: 8, time: 40.000000), 
+Bundle 1327: (to: 8, time: 40.000000), 
+Node 13: 
+Bundle 1257: (to: 10, time: 0.000000), 
+Bundle 1318: (to: 12, time: 40.000000), 
+Bundle 1327: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 1257: (to: 9, time: 0.000000), 
+Bundle 1258: (to: 6, time: 0.000000), 
+Node 15: 
+Bundle 1318: (to: 11, time: 40.000000), 

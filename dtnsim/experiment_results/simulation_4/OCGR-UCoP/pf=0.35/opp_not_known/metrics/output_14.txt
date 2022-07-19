@@ -1,0 +1,52 @@
+The bundles with the following ids have been sent: 
+2165(1 to 6), 2166(6 to 10), 2167(9 to 4), 2175(2 to 8), 2194(5 to 12), 2225(7 to 12), 2226(10 to 9), 2235(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(2165: 120.000000), (2167: 0.000000), 
+--------------------
+That means, that overall 0.25 (2/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(2165: 6), (2166: 5), (2167: 3), (2175: 4), (2194: 2), (2225: 4), (2226: 3), (2235: 1), 
+--------------------
+Overall, the computation required 13 calls to RUCoP, which took 80 seconds and 26 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 2165: (to: 2, time: 0.000000), 
+Node 2: 
+Bundle 2165: (to: 12, time: 0.000000), (to: 3, time: 20.000000), 
+Bundle 2175: (to: 12, time: 0.000000), (to: 3, time: 20.000000), 
+Node 3: 
+Bundle 2165: (to: 4, time: 40.000000), 
+Bundle 2175: (to: 4, time: 40.000000), 
+Bundle 2225: (to: 10, time: 40.000000), 
+Bundle 2235: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 2165: (to: 6, time: 80.000000), (to: 6, time: 120.000000), 
+Bundle 2175: (to: 6, time: 80.000000), 
+Node 5: 
+Bundle 2194: (to: 4, time: 20.000000), (to: 4, time: 60.000000), 
+Node 6: 
+Bundle 2166: (to: 14, time: 0.000000), 
+Bundle 2167: (to: 4, time: 0.000000), 
+Node 7: 
+Bundle 2166: (to: 1, time: 0.000000), (to: 1, time: 40.000000), 
+Bundle 2225: (to: 15, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 2166: (to: 7, time: 0.000000), 
+Bundle 2167: (to: 14, time: 0.000000), 
+Node 10: 
+Bundle 2226: (to: 13, time: 40.000000), 
+Node 11: 
+Bundle 2225: (to: 3, time: 40.000000), 
+Node 12: 
+Bundle 2226: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 2226: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 2166: (to: 9, time: 0.000000), 
+Bundle 2167: (to: 6, time: 0.000000), 
+Node 15: 
+Bundle 2225: (to: 11, time: 40.000000), 

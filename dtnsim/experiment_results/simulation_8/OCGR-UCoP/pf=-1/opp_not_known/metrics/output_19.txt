@@ -1,0 +1,55 @@
+The bundles with the following ids have been sent: 
+1993(3 to 7), 2025(12 to 1), 2030(4 to 9), 2047(10 to 3), 2083(11 to 2), 2102(9 to 4), 2135(5 to 12), 2153(10 to 6), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1993: 15.000000), (2025: 35.000000), (2030: 25.000000), (2083: 25.000000), (2102: 5.000000), (2135: 15.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1993: 4), (2025: 4), (2030: 2), (2047: 3), (2083: 7), (2102: 2), (2135: 3), (2153: 3), 
+--------------------
+Overall, the computation required 12 calls to RUCoP, which took 84 seconds and 23 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1993: (to: 14, time: 40.000000), 
+Node 2: 
+Bundle 1993: (to: 1, time: 40.000000), 
+Node 3: 
+Bundle 1993: (to: 2, time: 30.000000), 
+Node 4: 
+Bundle 2030: (to: 8, time: 70.000000), 
+Node 5: 
+Bundle 2025: (to: 1, time: 80.000000), 
+Bundle 2083: (to: 2, time: 100.000000), (to: 4, time: 110.000000), (to: 8, time: 120.000000), 
+Bundle 2135: (to: 15, time: 120.000000), 
+Bundle 2153: (to: 6, time: 180.000000), 
+Node 6: 
+Bundle 2047: (to: 3, time: 65.000000), 
+Node 7: 
+Node 8: 
+Bundle 2030: (to: 9, time: 80.000000), 
+Bundle 2047: (to: 6, time: 65.000000), 
+Bundle 2083: (to: 13, time: 120.000000), 
+Bundle 2102: (to: 4, time: 120.000000), 
+Bundle 2153: (to: 5, time: 170.000000), 
+Node 9: 
+Bundle 2102: (to: 8, time: 110.000000), 
+Node 10: 
+Bundle 2047: (to: 8, time: 60.000000), 
+Bundle 2153: (to: 8, time: 160.000000), 
+Node 11: 
+Bundle 2025: (to: 15, time: 40.000000), 
+Bundle 2083: (to: 15, time: 80.000000), 
+Bundle 2135: (to: 12, time: 140.000000), 
+Node 12: 
+Bundle 2025: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 2083: (to: 2, time: 120.000000), 
+Node 14: 
+Bundle 1993: (to: 7, time: 40.000000), 
+Node 15: 
+Bundle 2025: (to: 5, time: 45.000000), 
+Bundle 2083: (to: 5, time: 95.000000), 
+Bundle 2135: (to: 11, time: 125.000000), 

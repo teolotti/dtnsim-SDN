@@ -1,0 +1,54 @@
+The bundles with the following ids have been sent: 
+1678(7 to 5), 1684(12 to 5), 1693(8 to 4), 1696(8 to 3), 1697(10 to 7), 1720(3 to 7), 1740(11 to 1), 1745(4 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1678: 20.000000), (1684: 10.000000), (1693: 120.000000), (1696: 70.000000), (1697: 10.000000), (1740: 20.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1678: 6), (1684: 3), (1693: 3), (1696: 5), (1697: 3), (1720: 1), (1740: 3), (1745: 1), 
+--------------------
+Overall, the computation required 0 calls to RUCoP, which took 0 seconds and 27 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1678: (to: 2, time: 0.000000), 
+Node 2: 
+Bundle 1678: (to: 12, time: 0.000000), 
+Bundle 1693: (to: 3, time: 120.000000), 
+Bundle 1696: (to: 12, time: 60.000000), 
+Node 3: 
+Bundle 1693: (to: 4, time: 140.000000), 
+Bundle 1720: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 1745: (to: 1, time: 80.000000), 
+Node 5: 
+Node 6: 
+Node 7: 
+Bundle 1678: (to: 1, time: 0.000000), 
+Bundle 1740: (to: 1, time: 100.000000), 
+Node 8: 
+Bundle 1693: (to: 2, time: 40.000000), 
+Bundle 1696: (to: 2, time: 40.000000), 
+Node 9: 
+Node 10: 
+Bundle 1678: (to: 5, time: 20.000000), 
+Bundle 1684: (to: 5, time: 20.000000), 
+Bundle 1696: (to: 3, time: 100.000000), 
+Bundle 1697: (to: 11, time: 20.000000), 
+Node 11: 
+Bundle 1697: (to: 15, time: 40.000000), 
+Bundle 1740: (to: 15, time: 80.000000), 
+Node 12: 
+Bundle 1678: (to: 13, time: 0.000000), 
+Bundle 1684: (to: 13, time: 0.000000), 
+Bundle 1696: (to: 13, time: 80.000000), 
+Node 13: 
+Bundle 1678: (to: 10, time: 0.000000), 
+Bundle 1684: (to: 10, time: 0.000000), 
+Bundle 1696: (to: 10, time: 80.000000), 
+Node 14: 
+Node 15: 
+Bundle 1697: (to: 7, time: 40.000000), 
+Bundle 1740: (to: 7, time: 80.000000), 

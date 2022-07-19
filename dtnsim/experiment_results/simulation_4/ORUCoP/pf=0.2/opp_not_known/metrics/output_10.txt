@@ -1,0 +1,70 @@
+The bundles with the following ids have been sent: 
+249(1 to 6), 250(6 to 10), 251(9 to 4), 269(2 to 8), 296(5 to 12), 332(7 to 12), 333(10 to 9), 351(3 to 8), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(249: 120.000000), (251: 0.000000), (269: 125.000000), (296: 95.000000), (332: 40.000000), (333: 40.000000), 
+--------------------
+That means, that overall 0.75 (6/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(249: 7), (250: 11), (251: 6), (269: 12), (296: 7), (332: 10), (333: 8), 
+--------------------
+Overall, the computation required 24 calls to RUCoP, which took 472 seconds and 0 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 249: (to: 2, time: 0.000000), (to: 9, time: 80.000000), 
+Bundle 250: (to: 9, time: 80.000000), 
+Bundle 269: (to: 9, time: 80.000000), 
+Bundle 296: (to: 2, time: 100.000000), 
+Bundle 332: (to: 9, time: 80.000000), 
+Bundle 333: (to: 9, time: 80.000000), 
+Node 2: 
+Bundle 249: (to: 12, time: 0.000000), 
+Bundle 269: (to: 12, time: 15.000000), (to: 12, time: 15.000000), 
+Bundle 296: (to: 12, time: 120.000000), 
+Node 3: 
+Bundle 332: (to: 10, time: 40.000000), 
+Node 4: 
+Bundle 296: (to: 1, time: 80.000000), (to: 6, time: 80.000000), 
+Node 5: 
+Bundle 296: (to: 4, time: 25.000000), (to: 4, time: 25.000000), 
+Node 6: 
+Bundle 250: (to: 14, time: 0.000000), (to: 14, time: 0.000000), 
+Bundle 251: (to: 4, time: 0.000000), (to: 4, time: 0.000000), 
+Bundle 296: (to: 9, time: 160.000000), 
+Node 7: 
+Bundle 250: (to: 1, time: 40.000000), (to: 3, time: 40.000000), (to: 3, time: 80.000000), 
+Bundle 269: (to: 1, time: 40.000000), (to: 3, time: 40.000000), 
+Bundle 332: (to: 1, time: 40.000000), (to: 15, time: 40.000000), (to: 14, time: 80.000000), 
+Bundle 333: (to: 1, time: 40.000000), 
+Node 8: 
+Node 9: 
+Bundle 249: (to: 14, time: 120.000000), 
+Bundle 250: (to: 7, time: 0.000000), (to: 7, time: 0.000000), (to: 7, time: 80.000000), 
+Bundle 251: (to: 14, time: 0.000000), (to: 14, time: 0.000000), 
+Bundle 269: (to: 8, time: 140.000000), 
+Bundle 332: (to: 7, time: 80.000000), 
+Node 10: 
+Bundle 332: (to: 13, time: 80.000000), 
+Bundle 333: (to: 13, time: 40.000000), (to: 3, time: 40.000000), 
+Node 11: 
+Bundle 249: (to: 1, time: 40.000000), 
+Bundle 269: (to: 15, time: 15.000000), (to: 15, time: 15.000000), 
+Bundle 332: (to: 3, time: 40.000000), 
+Bundle 333: (to: 15, time: 40.000000), 
+Node 12: 
+Bundle 249: (to: 11, time: 40.000000), 
+Bundle 269: (to: 11, time: 15.000000), (to: 11, time: 15.000000), 
+Bundle 333: (to: 11, time: 40.000000), 
+Node 13: 
+Bundle 332: (to: 12, time: 80.000000), 
+Bundle 333: (to: 12, time: 40.000000), 
+Node 14: 
+Bundle 249: (to: 6, time: 120.000000), 
+Bundle 250: (to: 9, time: 0.000000), (to: 9, time: 0.000000), 
+Bundle 251: (to: 6, time: 0.000000), (to: 6, time: 0.000000), 
+Node 15: 
+Bundle 269: (to: 7, time: 15.000000), (to: 7, time: 15.000000), 
+Bundle 332: (to: 11, time: 40.000000), 
+Bundle 333: (to: 7, time: 40.000000), 

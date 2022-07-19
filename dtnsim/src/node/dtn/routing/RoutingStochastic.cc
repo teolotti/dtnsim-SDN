@@ -72,6 +72,11 @@ void RoutingStochastic::successfulBundleForwarded(long bundleId, Contact * conta
 	}
 }
 
+void RoutingStochastic::updateContactPlan(Contact* c)
+{
+
+}
+
 void  RoutingStochastic::refreshForwarding(Contact * c)
 {
 	routeAndQueueBundle(c);

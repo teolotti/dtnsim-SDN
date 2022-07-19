@@ -1,0 +1,54 @@
+The bundles with the following ids have been sent: 
+1123(1 to 11), 1142(3 to 10), 1143(4 to 6), 1144(7 to 9), 1155(12 to 4), 1156(12 to 5), 1187(8 to 1), 1198(9 to 3), 
+--------------------
+The following bundles were received by the destination node with the following delivery time: 
+(1123: 60.000000), (1142: 35.000000), (1198: 0.000000), 
+--------------------
+That means, that overall 0.375 (3/8) were delivered successfully
+--------------------
+Further, every bundle was sent the following amount of times: 
+(1123: 3), (1142: 4), (1143: 4), (1144: 3), (1155: 1), (1156: 3), (1187: 4), (1198: 4), 
+--------------------
+Overall, the computation required 22 calls to RUCoP, which took 136 seconds and 36 calls to CGR, which took 0 seconds
+--------------------
+To achieve this results, the following routing decisions have been taken: 
+Node 1: 
+Bundle 1123: (to: 13, time: 0.000000), 
+Node 2: 
+Bundle 1142: (to: 1, time: 25.000000), (to: 6, time: 50.000000), 
+Bundle 1187: (to: 1, time: 60.000000), 
+Node 3: 
+Bundle 1142: (to: 2, time: 20.000000), 
+Bundle 1187: (to: 2, time: 50.000000), 
+Node 4: 
+Bundle 1143: (to: 7, time: 20.000000), 
+Bundle 1187: (to: 3, time: 50.000000), 
+Bundle 1198: (to: 3, time: 50.000000), 
+Node 5: 
+Bundle 1198: (to: 14, time: 40.000000), 
+Node 6: 
+Bundle 1142: (to: 10, time: 60.000000), 
+Node 7: 
+Bundle 1143: (to: 11, time: 25.000000), 
+Bundle 1144: (to: 11, time: 20.000000), 
+Node 8: 
+Bundle 1187: (to: 4, time: 40.000000), 
+Node 9: 
+Bundle 1198: (to: 5, time: 50.000000), 
+Node 10: 
+Bundle 1123: (to: 11, time: 60.000000), 
+Bundle 1143: (to: 9, time: 50.000000), 
+Bundle 1144: (to: 9, time: 50.000000), 
+Bundle 1156: (to: 9, time: 50.000000), 
+Node 11: 
+Bundle 1143: (to: 10, time: 30.000000), 
+Bundle 1144: (to: 10, time: 30.000000), 
+Bundle 1156: (to: 10, time: 35.000000), 
+Node 12: 
+Bundle 1155: (to: 8, time: 100.000000), 
+Bundle 1156: (to: 11, time: 30.000000), 
+Node 13: 
+Bundle 1123: (to: 10, time: 0.000000), 
+Node 14: 
+Bundle 1198: (to: 4, time: 55.000000), 
+Node 15: 
