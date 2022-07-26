@@ -306,7 +306,7 @@ bool SdrModel::transferToContact(Contact * c)
 	{
 		// found bundles to transfer
 		// check if a queue already exists for this contact
-		map<int, list<BundlePkt *> >::iterator cbq = perContactBundleQueue_.find();
+		map<int, list<BundlePkt *> >::iterator cbq = perContactBundleQueue_.find(cid);
 		if (cbq != perContactBundleQueue_.end())
 		{
 			// a bundle queue already exists, so transfer the bundles to the queue
@@ -315,7 +315,7 @@ bool SdrModel::transferToContact(Contact * c)
 			// no queue exists, so create one, put all the bundles in it, and empty
 			// the node bundle queue
 			perContactBundleQueue_[cid] = nbq->second;
-			nbq.erase(nextHop);
+			perNodeBundleQueue_.erase(nextHop);
 		}
 
 		return true; // transferred some bundles
