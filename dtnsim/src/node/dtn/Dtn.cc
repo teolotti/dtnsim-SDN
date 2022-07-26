@@ -132,7 +132,7 @@ void Dtn::initialize(int stage)
 		}
 		else if (routeString.compare("hdtn") == 0)
 		{
-			routing = new HdtnRouting(eid_, &sdr_, &contactPlan_);
+			routing = new RoutingHdtn(eid_, &sdr_, &contactPlan_);
 		}
 		else
 		{

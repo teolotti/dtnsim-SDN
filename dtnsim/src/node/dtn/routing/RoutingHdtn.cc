@@ -1,4 +1,4 @@
-#include <zmq.h>
+#include <zmq.hpp>
 #include "RoutingHdtn.h"
 
 RoutingHdtn::RoutingHdtn(int eid, SdrModel * sdr, ContactPlan * contactPlan)
@@ -16,12 +16,12 @@ void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	RouterListener r = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH);
 
 	std::string execString(
-			"hdtn-router --contact-plan-file=" + this->cpFile +
-			" --dest-uri-eid=ipn:" + bundle->destinationEid + ".1" +
-			" --hdtn-config-file=" + this->configFile +
-			" & router_PID=$!");
+			std::string("hdtn-router --contact-plan-file=") + this->cpFile +
+			std::string(" --dest-uri-eid=ipn:") + std::to_string(bundle->getDestinationEid()) + std::string(".1") +
+			std::string(" --hdtn-config-file=") + this->configFile +
+			std::string(" & router_PID=$!"));
 
-	system(execString);
+	system(execString.c_str());
 	while (!r.check()); // wait to receive message from router
 	system("kill -2 $router_PID");
 	enqueue(bundle, r.getNextHop());
@@ -29,7 +29,7 @@ void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 
 void RoutingHdtn::contactStart(Contact * c)
 {
-	sdr_->transferFromNode(Contact * c);
+	sdr_->transferToContact(c);
 }
 
 void RoutingHdtn::enqueue(BundlePkt * bundle, int neighborNodeNbr)
@@ -52,7 +52,6 @@ RouterListener::RouterListener(int port)
 }
 
 RouterListener::~RouterListener()
-: port(HDTN_BOUND_ROUTER_PUBSUB_PATH)
 {
 }
 
@@ -60,9 +59,9 @@ bool RouterListener::check()
 {
 	zmq::context_t ctx;
 	zmq::socket_t sock(ctx, zmq::socket_type::sub);
-	std::string path(std::string(
-			"tcp://localhost") +
-			std::lexical_cast<std::string>(this->port));
+	std::string path(
+			std::string("tcp://localhost:") +
+			std::to_string(this->port));
 	sock.connect(path);
 	zmq::pollitem_t items[] = {{sock.handle(), 0, ZMQ_POLLIN, 0}};
 
@@ -71,7 +70,7 @@ bool RouterListener::check()
 	if (rc > 0) {
 		if (items[0].revents & ZMQ_POLLIN) {
 			zmq::message_t message;
-			if (!sock->recv(message, zmq::recv_flags::none)) {
+			if (!sock.recv(message, zmq::recv_flags::none)) {
 				return false;
 			}
 			if (message.size() < sizeof(CommonHdr)) {
@@ -81,7 +80,7 @@ bool RouterListener::check()
 			CommonHdr *common = (CommonHdr *)message.data();
 			switch (common->type) {
 				case HDTN_MSGTYPE_ROUTEUPDATE:
-				hdtn::RouteUpdateHdr * routeUpdateHdr = (hdtn::RouteUpdateHdr *)message.data();
+				RouteUpdateHdr * routeUpdateHdr = (RouteUpdateHdr *)message.data();
 				cbhe_eid_t nextHopEid = routeUpdateHdr->nextHopEid;
 				cbhe_eid_t finalDestEid = routeUpdateHdr->finalDestEid;
 				nextHop = nextHopEid.nodeId;
