@@ -256,6 +256,73 @@ void SdrModel::popNextBundleForContact(int contactId)
 	notify();
 }
 
+/////////////////////////////////////
+// Enqueue and dequeue from perNodeBundleQueue_
+//////////////////////////////////////
+
+bool SdrModel::enqueueBundleToNode(BundlePkt * bundle, int nodeId)
+{
+	// if there is not enough space in sdr, the bundle is deleted
+	// if another behavior is required, the simpleCustodyModel should be used
+	// to avoid bundle deletions
+	if (!(this->isSdrFreeSpace(bundle->getByteLength())))
+	{
+		delete bundle;
+		return false;
+	}
+
+	// Check is queue exits, if not, create it. Add bundle to queue.
+	map<int, list<BundlePkt *> >::iterator it = perNodeBundleQueue_.find(nodeId);
+	if (it != perNodeBundleQueue_.end())
+	{
+		// if custody report, enqueue it at the front so it is prioritized
+		// over data bundles already in the queue
+		if(bundle->getBundleIsCustodyReport())
+			it->second.push_front(bundle);
+		else
+			it->second.push_back(bundle);
+	}
+	else
+	{
+		list<BundlePkt *> q;
+		q.push_back(bundle);
+		perNodeBundleQueue_[nodeId] = q;
+	}
+
+	bundlesNumber_++;
+	bytesStored_ += bundle->getByteLength();
+	notify();
+	return true;
+}
+
+bool SdrModel::transferToContact(Contact * c)
+{
+	int nextHop = c->getDestinationEid();
+	int cid = c->getId();
+
+	// check if there are bundles queued for this contact's destination node
+	map<int, list<BundlePkt *> >::iterator nbq = perNodeBundleQueue_.find(nextHop);
+	if (nbq != perNodeBundleQueue_.end())
+	{
+		// found bundles to transfer
+		// check if a queue already exists for this contact
+		map<int, list<BundlePkt *> >::iterator cbq = perContactBundleQueue_.find();
+		if (cbq != perContactBundleQueue_.end())
+		{
+			// a bundle queue already exists, so transfer the bundles to the queue
+			cbq->second.splice(cbq->second.end(), nbq->second);
+		} else {
+			// no queue exists, so create one, put all the bundles in it, and empty
+			// the node bundle queue
+			perContactBundleQueue_[cid] = nbq->second;
+			nbq.erase(nextHop);
+		}
+
+		return true; // transferred some bundles
+	}
+
+	return false; // nothing to transfer
+}
 
 /////////////////////////////////////
 // Enqueue and dequeue from genericBundleQueue_

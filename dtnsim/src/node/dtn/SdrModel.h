@@ -50,6 +50,10 @@ public:
 	virtual BundlePkt * getNextBundleForContact(int contactId);
 	virtual void popNextBundleForContact(int contactId);
 
+	// Enqueue and dequeue from perNodeBundleQueue_
+	virtual bool enqueueBundleToNode(BundlePkt * bundle, int nodeId);
+	virtual bool transferToContact(Contact * c);
+
 	// Enqueue and dequeue from genericBundleQueue_
 	virtual bool enqueueBundle(BundlePkt * bundle);
 	virtual void removeBundle(long bundleId);
