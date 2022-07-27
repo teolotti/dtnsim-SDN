@@ -132,7 +132,8 @@ void Dtn::initialize(int stage)
 		}
 		else if (routeString.compare("hdtn") == 0)
 		{
-			routing = new RoutingHdtn(eid_, &sdr_, &contactPlan_);
+			string path = this->getParentModule()->getParentModule()->getSubmodule("central")->par("hdtnPath");
+			routing = new RoutingHdtn(eid_, &sdr_, &contactPlan_, &path);
 		}
 		else
 		{

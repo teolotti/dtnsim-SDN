@@ -6,6 +6,8 @@ simple Central
         
         @class(dtnsim::Central);
         
+        string hdtnPath;
+        
         bool saveTopology = default(false);
         bool saveFlows = default(false);
         bool saveLpFlows = default(false);

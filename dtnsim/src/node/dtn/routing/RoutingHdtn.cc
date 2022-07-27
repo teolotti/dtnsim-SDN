@@ -1,9 +1,10 @@
 #include "RoutingHdtn.h"
 #include <sys/wait.h>
 
-RoutingHdtn::RoutingHdtn(int eid, SdrModel * sdr, ContactPlan * contactPlan)
+RoutingHdtn::RoutingHdtn(int eid, SdrModel * sdr, ContactPlan * contactPlan, std::string * path)
 : RoutingDeterministic(eid, sdr, contactPlan)
 {
+	this->hdtnPath = std::string(*path);
 	createRouterConfigFile();
 }
 
@@ -20,7 +21,7 @@ void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	// run HDTN router
 	char cwd[1024];
 	getcwd(cwd, sizeof(cwd));
-	chdir("/home/tim/hdtn");
+	chdir(this->hdtnPath.c_str());
 	std::string execString(
 		std::string("hdtn-router --contact-plan-file=") + this->cpFile +
 		std::string(" --dest-uri-eid=ipn:") + std::to_string(bundle->getDestinationEid()) + std::string(".1") +
@@ -58,13 +59,19 @@ void RoutingHdtn::createRouterConfigFile()
 	std::cout << "[RoutingHdtn] creating configs for node " << this->eid_ << std::endl;
 	if (this->eid_ == 1) {
 		this->cpFile = std::string("contactPlan_RoutingTest.json");
-		this->configFile = std::string("/home/tim/hdtn/test_scripts_linux/Routing_Test/node1/hdtn_node1_cfg.json");
+		this->configFile = std::string(
+				this->hdtnPath +
+				std::string("test_scripts_linux/Routing_Test/node1/hdtn_node1_cfg.json"));
 	} else if (this->eid_ == 2) {
 		this->cpFile = std::string("contactPlan_RoutingTest.json");
-		this->configFile = std::string("/home/tim/hdtn/test_scripts_linux/Routing_Test/node2/hdtn_node2_cfg.json");
+		this->configFile = std::string(
+				this->hdtnPath +
+				std::string("test_scripts_linux/Routing_Test/node2/hdtn_node2_cfg.json"));
 	} else if (this->eid_ == 10) {
 		this->cpFile = std::string("contactPlan.json");
-		this->configFile = std::string("/home/tim/hdtn/tests/config_files/hdtn/hdtn_ingress1tcpcl_port4556_egress2tcpcl_port4557flowid1_port4558flowid2.json");
+		this->configFile = std::string(
+				this->hdtnPath +
+				std::string("tests/config_files/hdtn/hdtn_ingress1tcpcl_port4556_egress2tcpcl_port4557flowid1_port4558flowid2.json"));
 	}
 }
 
