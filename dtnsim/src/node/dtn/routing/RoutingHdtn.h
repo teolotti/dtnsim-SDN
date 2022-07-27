@@ -1,6 +1,7 @@
 #ifndef SRC_NODE_DTN_ROUTINGHDTN_H_
 #define SRC_NODE_DTN_ROUTINGHDTN_H_
 
+#include <zmq.hpp>
 #include <src/node/dtn/routing/RoutingDeterministic.h>
 #include <src/node/dtn/SdrModel.h>
 
@@ -49,11 +50,17 @@ class RouterListener
 public:
   RouterListener(int port);
   ~RouterListener();
+  void connect();
+  void disconnect();
   bool check();
   int getNextHop();
   int getFinalDest();
 private:
   int port;
+  std::string path;
+  zmq::socket_t *sock;
+  zmq::context_t *ctx;
+  bool connected;
   int nextHop;
   int finalDest;
 };

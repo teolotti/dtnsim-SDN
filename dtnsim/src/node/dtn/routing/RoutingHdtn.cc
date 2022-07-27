@@ -1,5 +1,5 @@
-#include <zmq.hpp>
 #include "RoutingHdtn.h"
+#include <sys/wait.h>
 
 RoutingHdtn::RoutingHdtn(int eid, SdrModel * sdr, ContactPlan * contactPlan)
 : RoutingDeterministic(eid, sdr, contactPlan)
@@ -13,18 +13,50 @@ RoutingHdtn::~RoutingHdtn()
 
 void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
-	RouterListener r = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH);
+	// connect a listener
+	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH);
+	listener.connect();
 
-	std::string execString(
+	pid_t pid = fork();
+	switch (pid)
+	{
+	case -1:
+	{
+		perror("fork");
+		exit(1);
+	}
+	case 0:
+	{
+	// run HDTN router
+		char cwd[1024];
+		getcwd(cwd, sizeof(cwd));
+		chdir("/home/tim/hdtn");
+		std::string execString(
 			std::string("hdtn-router --contact-plan-file=") + this->cpFile +
 			std::string(" --dest-uri-eid=ipn:") + std::to_string(bundle->getDestinationEid()) + std::string(".1") +
 			std::string(" --hdtn-config-file=") + this->configFile +
+//			std::string(""));
 			std::string(" & router_PID=$!"));
+		std::cout << "Running command: " << std::endl << execString << std::endl;
+		system(execString.c_str());
+		chdir(cwd);
+		std::cout << "[RoutingHdtn] exiting child process" << std::endl;
+		exit(0);
+	}
+	default:
+	{
+		// wait to receive message from router
+		while (!listener.check());
 
-	system(execString.c_str());
-	while (!r.check()); // wait to receive message from router
-	system("kill -2 $router_PID");
-	enqueue(bundle, r.getNextHop());
+		// disconnect, kill, and enqueue the bundle
+		listener.disconnect();
+		enqueue(bundle, listener.getNextHop());
+		std::cout << "[RoutingHdtn] enqueued bundle" << std::endl;
+
+		int returnStatus;
+		waitpid(pid, &returnStatus, 0);
+	}
+	}
 }
 
 void RoutingHdtn::contactStart(Contact * c)
@@ -42,50 +74,85 @@ void RoutingHdtn::createRouterConfigFile()
 {
 	// for now makes these constant
 	// later they will be parameterized or generated
-	this->cpFile = std::string("~/hdtn/module/scheduler/src/contactPlan.json");
-	this->configFile = std::string("~/hdtn/tests/config_files/hdtn/hdtn_ingress1tcpcl_port4556_egress2tcpcl_port4557flowid1_port4558flowid2.json");
+	this->cpFile = std::string("contactPlan.json");
+	this->configFile = std::string("/home/tim/hdtn/tests/config_files/hdtn/hdtn_ingress1tcpcl_port4556_egress2tcpcl_port4557flowid1_port4558flowid2.json");
 }
 
 RouterListener::RouterListener(int port)
 : port(port)
 {
+	this->path = std::string(
+			std::string("tcp://localhost:") +
+			std::to_string(port));
 }
 
 RouterListener::~RouterListener()
 {
+	if (this->connected) {
+		disconnect();
+	}
+}
+
+void RouterListener::connect()
+{
+	try {
+		this->ctx = new zmq::context_t();
+		this->sock = new zmq::socket_t(*ctx, zmq::socket_type::sub);
+		this->sock->connect(this->path);
+		this->sock->setsockopt(ZMQ_SUBSCRIBE, "", strlen(""));
+		std::cout << "[listener] connected" << std::endl;
+	} catch (const zmq::error_t &ex) {
+		std::cerr << ex.what() << std::endl;
+	}
+
+	this->connected = true;
+	std::cout << "[listener] connected" << std::endl;
+}
+
+void RouterListener::disconnect()
+{
+	this->sock->disconnect(this->path);
+	delete this->sock;
+	delete this->ctx;
+	this->connected = false;
+	std::cout << "[listener] disconnected" << std::endl;
 }
 
 bool RouterListener::check()
 {
-	zmq::context_t ctx;
-	zmq::socket_t sock(ctx, zmq::socket_type::sub);
-	std::string path(
-			std::string("tcp://localhost:") +
-			std::to_string(this->port));
-	sock.connect(path);
-	zmq::pollitem_t items[] = {{sock.handle(), 0, ZMQ_POLLIN, 0}};
+	zmq::pollitem_t items[] = {{this->sock->handle(), 0, ZMQ_POLLIN, 0}};
+	std::cout << "[listener] polling at " << this->path << std::endl;
 
 	int rc = zmq::poll(&items[0], 1, ZMQ_POLL_TIMEOUT);
+	assert(rc >= 0);
 
 	if (rc > 0) {
+		std::cout << "[listener] received message from HDTN!" << std::endl;
 		if (items[0].revents & ZMQ_POLLIN) {
+			std::cout << "[listener] event from router" << std::endl;
 			zmq::message_t message;
-			if (!sock.recv(message, zmq::recv_flags::none)) {
+			if (!sock->recv(message, zmq::recv_flags::none)) {
+				std::cout << "[listener] ?????" << std::endl;
 				return false;
 			}
+
 			if (message.size() < sizeof(CommonHdr)) {
+				std::cout << "[listener] unknown message type" << std::endl;
 				return false;
 			}
 
 			CommonHdr *common = (CommonHdr *)message.data();
 			switch (common->type) {
 				case HDTN_MSGTYPE_ROUTEUPDATE:
-				RouteUpdateHdr * routeUpdateHdr = (RouteUpdateHdr *)message.data();
-				cbhe_eid_t nextHopEid = routeUpdateHdr->nextHopEid;
-				cbhe_eid_t finalDestEid = routeUpdateHdr->finalDestEid;
-				nextHop = nextHopEid.nodeId;
-				finalDest = finalDestEid.nodeId;
-				return true;
+				{
+					std::cout << "[listener] received route update" << std::endl;
+					RouteUpdateHdr * routeUpdateHdr = (RouteUpdateHdr *)message.data();
+					cbhe_eid_t nextHopEid = routeUpdateHdr->nextHopEid;
+					cbhe_eid_t finalDestEid = routeUpdateHdr->finalDestEid;
+					nextHop = nextHopEid.nodeId;
+					finalDest = finalDestEid.nodeId;
+					return true;
+				}
 			}
 		}
 	}
