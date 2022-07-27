@@ -55,8 +55,17 @@ void RoutingHdtn::createRouterConfigFile()
 {
 	// for now makes these constant
 	// later they will be parameterized or generated
-	this->cpFile = std::string("contactPlan.json");
-	this->configFile = std::string("/home/tim/hdtn/tests/config_files/hdtn/hdtn_ingress1tcpcl_port4556_egress2tcpcl_port4557flowid1_port4558flowid2.json");
+	std::cout << "[RoutingHdtn] creating configs for node " << this->eid_ << std::endl;
+	if (this->eid_ == 1) {
+		this->cpFile = std::string("contactPlan_RoutingTest.json");
+		this->configFile = std::string("/home/tim/hdtn/test_scripts_linux/Routing_Test/node1/hdtn_node1_cfg.json");
+	} else if (this->eid_ == 2) {
+		this->cpFile = std::string("contactPlan_RoutingTest.json");
+		this->configFile = std::string("/home/tim/hdtn/test_scripts_linux/Routing_Test/node2/hdtn_node2_cfg.json");
+	} else if (this->eid_ == 10) {
+		this->cpFile = std::string("contactPlan.json");
+		this->configFile = std::string("/home/tim/hdtn/tests/config_files/hdtn/hdtn_ingress1tcpcl_port4556_egress2tcpcl_port4557flowid1_port4558flowid2.json");
+	}
 }
 
 RouterListener::RouterListener(int port)
