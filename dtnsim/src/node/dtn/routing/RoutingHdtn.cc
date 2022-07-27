@@ -26,7 +26,7 @@ void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 		std::string(" --dest-uri-eid=ipn:") + std::to_string(bundle->getDestinationEid()) + std::string(".1") +
 		std::string(" --hdtn-config-file=") + this->configFile +
 //			std::string(""));
-		std::string(" & router_PID=$!"));
+		std::string(" & router_PID=$! && sleep 1 && kill -2 $router_PID"));
 	std::cout << "[RoutingHdtn] Running command: " << std::endl << execString << std::endl;
 	system(execString.c_str());
 	chdir(cwd);
@@ -35,7 +35,7 @@ void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 
 	// disconnect, kill, and enqueue the bundle
 	listener.disconnect();
-	system("kill $router_PID");
+//	system("kill $router_PID");
 	enqueue(bundle, listener.getNextHop());
 	std::cout << "[RoutingHdtn] enqueued bundle" << std::endl;
 }
