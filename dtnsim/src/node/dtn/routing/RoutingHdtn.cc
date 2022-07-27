@@ -17,46 +17,27 @@ void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH);
 	listener.connect();
 
-	pid_t pid = fork();
-	switch (pid)
-	{
-	case -1:
-	{
-		perror("fork");
-		exit(1);
-	}
-	case 0:
-	{
 	// run HDTN router
-		char cwd[1024];
-		getcwd(cwd, sizeof(cwd));
-		chdir("/home/tim/hdtn");
-		std::string execString(
-			std::string("hdtn-router --contact-plan-file=") + this->cpFile +
-			std::string(" --dest-uri-eid=ipn:") + std::to_string(bundle->getDestinationEid()) + std::string(".1") +
-			std::string(" --hdtn-config-file=") + this->configFile +
+	char cwd[1024];
+	getcwd(cwd, sizeof(cwd));
+	chdir("/home/tim/hdtn");
+	std::string execString(
+		std::string("hdtn-router --contact-plan-file=") + this->cpFile +
+		std::string(" --dest-uri-eid=ipn:") + std::to_string(bundle->getDestinationEid()) + std::string(".1") +
+		std::string(" --hdtn-config-file=") + this->configFile +
 //			std::string(""));
-			std::string(" & router_PID=$!"));
-		std::cout << "Running command: " << std::endl << execString << std::endl;
-		system(execString.c_str());
-		chdir(cwd);
-		std::cout << "[RoutingHdtn] exiting child process" << std::endl;
-		exit(0);
-	}
-	default:
-	{
-		// wait to receive message from router
-		while (!listener.check());
+		std::string(" & router_PID=$!"));
+	std::cout << "[RoutingHdtn] Running command: " << std::endl << execString << std::endl;
+	system(execString.c_str());
+	chdir(cwd);
+	// wait to receive message from router
+	while (!listener.check());
 
-		// disconnect, kill, and enqueue the bundle
-		listener.disconnect();
-		enqueue(bundle, listener.getNextHop());
-		std::cout << "[RoutingHdtn] enqueued bundle" << std::endl;
-
-		int returnStatus;
-		waitpid(pid, &returnStatus, 0);
-	}
-	}
+	// disconnect, kill, and enqueue the bundle
+	listener.disconnect();
+	system("kill $router_PID");
+	enqueue(bundle, listener.getNextHop());
+	std::cout << "[RoutingHdtn] enqueued bundle" << std::endl;
 }
 
 void RoutingHdtn::contactStart(Contact * c)
