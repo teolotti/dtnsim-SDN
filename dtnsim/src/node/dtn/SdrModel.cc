@@ -316,7 +316,6 @@ bool SdrModel::transferToContact(Contact * c)
 			// the node bundle queue
 			perContactBundleQueue_[cid] = nbq->second;
 			perNodeBundleQueue_.erase(nextHop);
-			//nbq->second.erase();
 		}
 
 		return true; // transferred some bundles
