@@ -37,13 +37,11 @@ public:
   virtual void routeAndQueueBundle(BundlePkt* bundle, double simTime);
   virtual void contactStart(Contact *c);
 private:
-  //time_t startUtcTime_;
   std::string hdtnPath;
   std::string cpFile;
   std::string configFile;
   virtual void enqueue(BundlePkt *bundle, int neighborNodeNbr);
   virtual void createRouterConfigFile();
-  //virtual time_t getUtcSimulationTime(double simTime);
 };
 
 class RouterListener

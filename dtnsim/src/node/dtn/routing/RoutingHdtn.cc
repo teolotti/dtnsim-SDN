@@ -1,5 +1,4 @@
 #include "RoutingHdtn.h"
-#include <sys/wait.h>
 
 RoutingHdtn::RoutingHdtn(int eid, SdrModel * sdr, ContactPlan * contactPlan, std::string * path)
 : RoutingDeterministic(eid, sdr, contactPlan)
