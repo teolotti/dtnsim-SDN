@@ -70,7 +70,7 @@ void RoutingHdtn::createRouterConfigFile()
 	setenv("HDTN_NODE_LIST_DIR", cwd, 1);
 
 	path = "node" + to_string(this->eid_);
-	mkdir(path.c_str());
+	mkdir(path.c_str(), 0700);
 	chdir(path.c_str());
 
 	ofstream file("cfg.json");
