@@ -21,10 +21,10 @@ Note: Nodes will remain static in the simulation visualization. Indeed, the dyna
 ## HDTN Support ##
 
 HDTN (High-rate Delay Tolerant Network) flight code is supported in the master branch. To run DtnSim using HDTN routing you must 
-1. Install OMNeT++. While DtnSim is tested only for OMNeT++ 5.5.1, the HDTN support was developed and used on OMNeT++ 5.7 because the 5.5.1 version contains a bug making it incompatible with the version of Qt packaged on the Debian 11 (bullseye) system on which this code was developed. OMNeT++ 5.7 is suggest for simulating HDTN on DtnSim but YMMV.
+1. Install OMNeT++. While DtnSim is tested only for OMNeT++ 5.5.1, the HDTN support was developed and used on OMNeT++ 5.7 because the 5.5.1 version [contains a bug](https://github.com/omnetpp/omnetpp/issues/874) making it incompatible with the version of Qt packaged on the Debian 11 (bullseye) system on which this code was developed. OMNeT++ 5.7 is suggested for simulating HDTN on DtnSim but YMMV.
 2. Install DtnSim as described above. 
 3. Download the HDTN source code.
-3. Build HDTN from the source. This requires, among other dependencies, an installation of libzmq3.
+4. Build HDTN from the source. This requires, among other dependencies, an installation of libzmq3.
 
 Follow the [instructions from the HDTN project](https://github.com/nasa/HDTN) for build and installation. Only the hdtn-router executable is actually needed from HDTN. If you wish to compile only this part you may replace the "make" step of HDTN build with "make hdtn-router" and skip the "make install" step.
 
