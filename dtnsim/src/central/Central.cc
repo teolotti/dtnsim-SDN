@@ -69,6 +69,8 @@ void Central::initialize()
 
 		system("rm -rf hdtnFiles/hdtn_nodes");
 		system("rm -rf hdtnFiles/node*");
+		string source = par("hdtnSourceRoot");
+		setenv("HDTN_SOURCE_ROOT", source.c_str(), 1);
 	}
 
 	// Initialize contact plan
