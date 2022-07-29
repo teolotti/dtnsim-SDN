@@ -6,12 +6,13 @@ simple Central
         
         @class(dtnsim::Central);
         
-        string hdtnPath;
+        string hdtnSourceRoot;
         
         bool saveTopology = default(false);
         bool saveFlows = default(false);
         bool saveLpFlows = default(false);
         string contactsFile = default("contacts.txt");
+        string contactsFileJson;
         
         bool enableAvailableRoutesCalculation = default(false);
         int deleteNContacts = default(0);

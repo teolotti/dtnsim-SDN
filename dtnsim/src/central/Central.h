@@ -89,8 +89,9 @@ private:
 	// and get transmission rates
 	ContactPlan contactTopology_;
 
-	// specify if there are ion nodes in the simulation
+	// specify if there are ion  or hdtn nodes in the simulation
 	bool ionNodes_;
+	bool hdtnNodes_;
 
 	// flowIds map: (src,dst) -> flowId
 	// save flow ids corresponding to traffic data

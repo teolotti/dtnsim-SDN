@@ -49,6 +49,28 @@ void Central::initialize()
 //		system("../../src/ion/killm");
 //	}
 
+	hdtnNodes_ = false;
+	for (int i = 0; i < nodesNumber_; i++)
+	{
+		string routing = this->getParentModule()->getSubmodule("node", i)->getSubmodule("dtn")->par("routing");
+		if (routing == "hdtn")
+		{
+			hdtnNodes_ = true;
+			break;
+		}
+	}
+	if (hdtnNodes_)
+	{
+		struct stat st = {0};
+		if (stat("hdtnFiles", &st) == -1)
+		{
+			mkdir("hdtnFiles", 0700);
+		}
+
+		system("rm -rf hdtnFiles/hdtn_nodes");
+		system("rm -rf hdtnFiles/node*");
+	}
+
 	// Initialize contact plan
 	contactPlan_.parseContactPlanFile(par("contactsFile"), nodesNumber_);
 
