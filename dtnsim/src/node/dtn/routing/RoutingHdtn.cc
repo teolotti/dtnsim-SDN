@@ -19,11 +19,8 @@ void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH);
 	listener.connect();
 
-	string hdtnExec = this->hdtnSourceRoot + "/build/module/router/hdtn-router";
 	// run HDTN router
-//	char cwd[1024];
-//	getcwd(cwd, sizeof(cwd));
-//	chdir(this->hdtnSourceRoot.c_str());
+	string hdtnExec = this->hdtnSourceRoot + "/build/module/router/hdtn-router";
 	string execString(
 //		this->hdtnSourceRoot + string("/build/module/router/hdtn-router") +
 		hdtnExec +
@@ -34,7 +31,6 @@ void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 		string(" & router_PID=$! && sleep 1 && kill -2 $router_PID"));
 	cout << "[RoutingHdtn] Running command: " << endl << execString << endl;
 	system(execString.c_str());
-//	chdir(cwd);
 	// wait to receive message from router
 	while (!listener.check());
 
@@ -74,8 +70,6 @@ void RoutingHdtn::createRouterConfigFile()
 	setenv("HDTN_NODE_LIST_DIR", cwd, 1);
 
 	path = "node" + to_string(this->eid_);
-//	string command = "mkdir " + path;
-//	system(command.c_str());
 	mkdir(path.c_str());
 	chdir(path.c_str());
 
@@ -100,9 +94,7 @@ void RoutingHdtn::createRouterConfigFile()
 RouterListener::RouterListener(int port)
 : port(port)
 {
-	this->path = string(
-			string("tcp://localhost:") +
-			to_string(port));
+	this->path = string("tcp://localhost:") + to_string(port);
 }
 
 RouterListener::~RouterListener()
