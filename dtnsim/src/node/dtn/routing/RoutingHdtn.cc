@@ -74,8 +74,9 @@ void RoutingHdtn::createRouterConfigFile()
 	setenv("HDTN_NODE_LIST_DIR", cwd, 1);
 
 	path = "node" + to_string(this->eid_);
-	string command = "mkdir " + path;
-	system(command.c_str());
+//	string command = "mkdir " + path;
+//	system(command.c_str());
+	mkdir(path.c_str());
 	chdir(path.c_str());
 
 	ofstream file("cfg.json");
