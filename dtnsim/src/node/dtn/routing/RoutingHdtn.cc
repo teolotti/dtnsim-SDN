@@ -15,13 +15,14 @@ RoutingHdtn::~RoutingHdtn()
 void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
 	// connect a listener
-	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH + (this->eid_ - 1));
+//	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH + (this->eid_ - 1));
+	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH);
 	listener.connect();
 
 	// run HDTN router
 	char cwd[1024];
 	getcwd(cwd, sizeof(cwd));
-	chdir(this->hdtnPath.c_str());
+	chdir(this->hdtnSourceRoot.c_str());
 	std::string execString(
 		std::string("hdtn-router --contact-plan-file=") + this->cpFile +
 		std::string(" --dest-uri-eid=ipn:") + std::to_string(bundle->getDestinationEid()) + std::string(".1") +
@@ -52,31 +53,44 @@ void RoutingHdtn::enqueue(BundlePkt * bundle, int neighborNodeNbr)
 	sdr_->enqueueBundleToNode(bundle, neighborNodeNbr);
 }
 
-void RoutingHdtn::createRouterConfigFile(int port)
+void RoutingHdtn::createRouterConfigFile()
 {
 	std::cout << "[RoutingHdtn] creating configs for node " << this->eid_ << std::endl;
-	chdir("hdtnFiles");
 	char cwd[1024];
+	string path;
+
+	getcwd(cwd, sizeof(cwd));
+	path = string(cwd) + "/" + "template.json";
+	ifstream temp(path);
+	if (!temp) {
+		cerr << "can't open template" << endl;
+	}
+
+	chdir("hdtnFiles");
 	getcwd(cwd, sizeof(cwd));
 	setenv("HDTN_NODE_LIST_DIR", cwd, 1);
 
-	string path = "node" + to_string(this->eid_);
+	path = "node" + to_string(this->eid_);
 	string command = "mkdir " + path;
 	system(command.c_str());
 	chdir(path.c_str());
 
-	ofstream file;
-	file.open("cfg.json");
-	file << "{" << endl;
-	file << "\t\"myNodeId\": " << this->eid_ << "," << endl;
-	file << "\t\"zmqRouterAddress\": \"localhost\"," << endl;
-	file << "\t\"zmqBoundRouterPubSubPortPath\": " << HDTN_BOUND_ROUTER_PUBSUB_PATH + (this->eid - 1) << endl;
+	ofstream file("cfg.json");
+	if (!file) {
+		cerr << "can't open cfg" << endl;
+	}
+
+	file << temp.rdbuf();
+	file << "    \"myNodeId\": " << this->eid_ << "," << endl;
+	file << "    \"zmqRouterAddress\": \"localhost\"," << endl;
+	file << "    \"zmqBoundRouterPubSubPortPath\": " << HDTN_BOUND_ROUTER_PUBSUB_PATH << endl;
 	file << "}" << endl;
+	temp.close();
 	file.close();
 
-	chdir("../");
+	chdir("../../");
 
-	this->configFile = "hdtnFiles/" + path + "/cfg.json";
+	this->configFile = string(cwd) + "/" + path + "/cfg.json";
 
 //	if (this->eid_ == 1) {
 //		this->cpFile = std::string("contactPlan_RoutingTest.json");

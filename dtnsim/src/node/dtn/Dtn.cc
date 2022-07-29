@@ -132,8 +132,9 @@ void Dtn::initialize(int stage)
 		}
 		else if (routeString.compare("hdtn") == 0)
 		{
-			string path = this->getParentModule()->getParentModule()->getSubmodule("central")->par("hdtnPath");
-			routing = new RoutingHdtn(eid_, &sdr_, &contactPlan_, &path);
+			string hdtnsource = this->getParentModule()->getParentModule()->getSubmodule("central")->par("hdtnSourceRoot");
+			string cpfile = this->getParentModule()->getParentModule()->getSubmodule("central")->par("contactsFileJson");
+			routing = new RoutingHdtn(eid_, &sdr_, &contactPlan_, &hdtnsource, &cpfile);
 		}
 		else
 		{
