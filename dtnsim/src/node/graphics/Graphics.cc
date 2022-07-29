@@ -115,7 +115,7 @@ void Graphics::setBundlesInSdr(int bundNum)
 		return;
 
 	stringstream str;
-	str << "storage:" << bundNum;
+	str << "store:" << bundNum;
 	nodeModule->getDisplayString().setTagArg("t", 0, str.str().c_str());
 }
 
