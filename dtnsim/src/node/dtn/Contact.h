@@ -26,6 +26,7 @@ public:
 	float getConfidence() const;
 	double getRange() const;
 	void setRange(double range);
+	bool isActive();
 
 	// Get and Set residual capacity (Bytes)
 	double getResidualVolume() const;

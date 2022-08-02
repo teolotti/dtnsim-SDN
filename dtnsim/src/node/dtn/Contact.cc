@@ -86,3 +86,9 @@ double Contact::getRange() const
 	}
 	return range_;
 }
+
+bool Contact::isActive() const
+{
+	simtime_t time = simTime();
+	return (time >= start_) && (time < end_);
+}

@@ -295,6 +295,29 @@ bool SdrModel::enqueueBundleToNode(BundlePkt * bundle, int nodeId)
 	return true;
 }
 
+// put b in the queue for c
+bool SdrModel::transferToContact(Contact * c, BundlePkt * b)
+{
+	int cid = c->getId();
+
+	// check if a queue already exists for this contact
+	map<int, list<BundlePkt *> >::iterator cbq = perContactBundleQueue_.find(cid);
+	if (cbq != perContactBundleQueue_.end())
+	{
+		// a bundle queue already exists, so transfer the bundle to the queue
+		cbq->second.push_back(b);
+	} else {
+		// no queue exists, so create one, put the bundle in it
+		vector<BundlePkt*> q;
+		q.push_back(b);
+		perContactBundleQueue_[cid] = q;
+	}
+
+	return true; // transferred some bundles
+}
+
+// if there are any bundles stored in the nodeBundleQueue that could use c
+// then put them in the queue for c
 bool SdrModel::transferToContact(Contact * c)
 {
 	int nextHop = c->getDestinationEid();

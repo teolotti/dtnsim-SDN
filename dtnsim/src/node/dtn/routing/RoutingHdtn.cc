@@ -42,9 +42,16 @@ void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 	// kill any HDTN process spawned
 	// TODO
 
-	// enqueue
-	enqueue(bundle, listener.getNextHop());
-	cout << "[RoutingHdtn] enqueued bundle" << endl;
+	// transmit or enqueue
+	bool success = attemptTransmission(bundle, listener.getNextHop());
+	if (success) {
+		// an active contact was found so try to transmit on it
+		cout << "[RoutingHdtn] placed bundle on outduct to active contact" << endl;
+	} else {
+		// no active contact found. store and enqueue the bundle
+		enqueue(bundle, listener.getNextHop());
+		cout << "[RoutingHdtn] enqueued bundle to storage" << endl;
+	}
 }
 
 void RoutingHdtn::contactStart(Contact * c)
@@ -52,10 +59,24 @@ void RoutingHdtn::contactStart(Contact * c)
 	sdr_->transferToContact(c);
 }
 
+bool RoutingHdtn::attemptTransmission(BundlePkt * bundle, int neighborNodeNbr)
+{
+	bundle->setNextHopEid(neighborNodeNbr);
+	for (Contact &c : contactPlan_.getContactsBySrcDst(eid_, neighborNodeNbr)) {
+		if (c.isActive()) {
+			// put bundle directly on active contact
+			sdr->transferToContact(&c, bundle);
+			return true;
+		}
+	}
+	return false;
+}
+
 void RoutingHdtn::enqueue(BundlePkt * bundle, int neighborNodeNbr)
 {
 	bundle->setNextHopEid(neighborNodeNbr);
 	sdr_->enqueueBundleToNode(bundle, neighborNodeNbr);
+
 }
 
 void RoutingHdtn::createRouterConfigFile()

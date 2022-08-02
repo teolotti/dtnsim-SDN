@@ -53,6 +53,7 @@ public:
 	// Enqueue and dequeue from perNodeBundleQueue_
 	virtual bool enqueueBundleToNode(BundlePkt * bundle, int nodeId);
 	virtual bool transferToContact(Contact * c);
+	virtual bool transferToContact(Contact * c, BundlePkt * b);
 
 	// Enqueue and dequeue from genericBundleQueue_
 	virtual bool enqueueBundle(BundlePkt * bundle);

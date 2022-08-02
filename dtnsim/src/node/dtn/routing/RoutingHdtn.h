@@ -40,6 +40,7 @@ private:
   std::string hdtnSourceRoot;
   std::string cpFile;
   std::string configFile;
+  virtual bool attemptTransmission(BundlePkt *bundle, int neighborNodeNbr);
   virtual void enqueue(BundlePkt *bundle, int neighborNodeNbr);
   virtual void createRouterConfigFile();
 };
