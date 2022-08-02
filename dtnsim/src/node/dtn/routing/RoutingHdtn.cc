@@ -61,11 +61,12 @@ void RoutingHdtn::contactStart(Contact * c)
 
 bool RoutingHdtn::attemptTransmission(BundlePkt * bundle, int neighborNodeNbr)
 {
+	omnetpp::simtime_t time = simTime();
 	bundle->setNextHopEid(neighborNodeNbr);
-	for (Contact &c : contactPlan_.getContactsBySrcDst(eid_, neighborNodeNbr)) {
-		if (c.isActive()) {
+	for (Contact &c : contactPlan_->getContactsBySrcDst(eid_, neighborNodeNbr)) {
+		if (c.isActive(time.dbl())) {
 			// put bundle directly on active contact
-			sdr->transferToContact(&c, bundle);
+			sdr_->transferToContact(&c, bundle);
 			return true;
 		}
 	}

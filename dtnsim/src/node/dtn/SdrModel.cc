@@ -191,6 +191,7 @@ bool SdrModel::enqueueBundleToContact(BundlePkt * bundle, int contactId)
 		perContactBundleQueue_[contactId] = q;
 	}
 
+	bundle->setStored(true);
 	bundlesNumber_++;
 	bytesStored_ += bundle->getByteLength();
 	notify();
@@ -242,7 +243,8 @@ void SdrModel::popNextBundleForContact(int contactId)
 	map<int, list<BundlePkt *> >::iterator it = perContactBundleQueue_.find(contactId);
 	list<BundlePkt *> bundlesToTx = it->second;
 
-	int size = bundlesToTx.front()->getByteLength();
+	BundlePkt *bundle = bundlesToTx.front();
+	int size = bundle->getByteLength();
 	bundlesToTx.pop_front();
 
 	// Update queue after popping the bundle
@@ -251,8 +253,11 @@ void SdrModel::popNextBundleForContact(int contactId)
 	else
 		perContactBundleQueue_.erase(contactId);
 
-	bundlesNumber_--;
-	bytesStored_ -= size;
+	if (bundle->getStored()) {
+		bundle->setStored(false);
+		bundlesNumber_--;
+		bytesStored_ -= size;
+	}
 	notify();
 }
 
@@ -289,8 +294,11 @@ bool SdrModel::enqueueBundleToNode(BundlePkt * bundle, int nodeId)
 		perNodeBundleQueue_[nodeId] = q;
 	}
 
-	bundlesNumber_++;
-	bytesStored_ += bundle->getByteLength();
+	if (!bundle->getStored()) {
+		bundle->setStored(true);
+		bundlesNumber_++;
+		bytesStored_ += bundle->getByteLength();
+	}
 	notify();
 	return true;
 }
@@ -308,12 +316,13 @@ bool SdrModel::transferToContact(Contact * c, BundlePkt * b)
 		cbq->second.push_back(b);
 	} else {
 		// no queue exists, so create one, put the bundle in it
-		vector<BundlePkt*> q;
+		list<BundlePkt*> q;
 		q.push_back(b);
 		perContactBundleQueue_[cid] = q;
 	}
 
-	return true; // transferred some bundles
+	notify();
+	return true; // transferred a bundle
 }
 
 // if there are any bundles stored in the nodeBundleQueue that could use c
@@ -341,6 +350,7 @@ bool SdrModel::transferToContact(Contact * c)
 			perNodeBundleQueue_.erase(nextHop);
 		}
 
+		notify();
 		return true; // transferred some bundles
 	}
 

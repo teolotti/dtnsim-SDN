@@ -55,6 +55,15 @@ packet BundlePkt{
         // 2 to route by hops and delivery time (making a copy)
         int qos;
         
+        // Indicates whether a bundle is stored (true) or
+        // in transit (false). Standard DtnSim treats a bundle
+        // as stored anytime we put it in a bundle queue in the
+        // SDR, but in HDTN we would like to treat it as stored
+        // only when we enqueue it to the perNodeBundleQueue; we use
+        // the perContactBundleQueue not for storage but only as
+        // infrastructure to transmit along.
+        bool stored = false;
+        
 };
 
 message TrafficGeneratorMsg{
