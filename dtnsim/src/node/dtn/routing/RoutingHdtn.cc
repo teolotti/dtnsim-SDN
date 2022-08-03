@@ -1,5 +1,5 @@
 #include "RoutingHdtn.h"
-#include "hdtn/libcgr.h"
+#include "src/hdtn/libcgr.h"
 
 #define ROUTING_FUNCTION routeHdtn
 
@@ -48,7 +48,7 @@ int RoutingHdtn::routeHdtn(BundlePkt * bundle) {
 }
 
 int RoutingHdtn::routeLibcgr(BundlePkt * bundle) {
-	string jsonEventFileName = this->hdtnSourceRoot + "/module/router/" + this->cpFile;
+	string jsonEventFileName = this->hdtnSourceRoot + "/module/router/src/" + this->cpFile;
     vector<cgr::Contact> contactPlan = cgr::cp_load(jsonEventFileName);
     cgr::Contact rootContact = cgr::Contact(this->eid_, this->eid_, 0, cgr::MAX_SIZE, 100, 1.0, 0);
 	rootContact.arrival_time = 0;
