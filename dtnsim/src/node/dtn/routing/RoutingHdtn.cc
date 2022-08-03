@@ -1,5 +1,7 @@
 #include "RoutingHdtn.h"
 
+#define ROUTING_FUNCTION routeHdtn
+
 RoutingHdtn::RoutingHdtn(int eid, SdrModel * sdr, ContactPlan * contactPlan, string * path, string * cpJson)
 : RoutingDeterministic(eid, sdr, contactPlan)
 {
@@ -12,8 +14,7 @@ RoutingHdtn::~RoutingHdtn()
 {
 }
 
-void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
-{
+int routeHdtn(BundlePkt * bundle) {
 	// connect a listener
 //	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH + (this->eid_ - 1));
 	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH);
@@ -41,6 +42,17 @@ void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 
 	// kill any HDTN process spawned
 	// TODO
+
+	return listener.getNextHop();
+}
+
+int routeLibcgr(BundlePkt * bundle) {
+	return 0;
+}
+
+void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
+{
+	int nextHop = ROUTING_FUNCTION(BundlePkt);
 
 	// transmit or enqueue
 	bool success = attemptTransmission(bundle, listener.getNextHop());
