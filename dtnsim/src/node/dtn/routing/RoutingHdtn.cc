@@ -1,4 +1,5 @@
 #include "RoutingHdtn.h"
+#include "hdtn/libcgr.h"
 
 #define ROUTING_FUNCTION routeHdtn
 
@@ -47,7 +48,12 @@ int RoutingHdtn::routeHdtn(BundlePkt * bundle) {
 }
 
 int RoutingHdtn::routeLibcgr(BundlePkt * bundle) {
-	return 0;
+	string jsonEventFileName = this->hdtnSourceRoot + "/module/router/" + this->cpFile;
+    vector<cgr::Contact> contactPlan = cgr::cp_load(jsonEventFileName);
+    cgr::Contact rootContact = cgr::Contact(this->eid_, this->eid_, 0, cgr::MAX_SIZE, 100, 1.0, 0);
+	rootContact.arrival_time = 0;
+	cgr::Route bestRoute = cgr::dijkstra(&rootContact, bundle->getDestinationEid(), contactPlan);
+	return bestRoute.next_node;
 }
 
 void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
