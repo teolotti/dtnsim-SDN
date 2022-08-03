@@ -14,7 +14,7 @@ RoutingHdtn::~RoutingHdtn()
 {
 }
 
-int routeHdtn(BundlePkt * bundle) {
+int RoutingHdtn::routeHdtn(BundlePkt * bundle) {
 	// connect a listener
 //	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH + (this->eid_ - 1));
 	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH);
@@ -46,22 +46,22 @@ int routeHdtn(BundlePkt * bundle) {
 	return listener.getNextHop();
 }
 
-int routeLibcgr(BundlePkt * bundle) {
+int RoutingHdtn::routeLibcgr(BundlePkt * bundle) {
 	return 0;
 }
 
 void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
-	int nextHop = ROUTING_FUNCTION(BundlePkt);
+	int nextHop = ROUTING_FUNCTION(bundle);
 
 	// transmit or enqueue
-	bool success = attemptTransmission(bundle, listener.getNextHop());
+	bool success = attemptTransmission(bundle, nextHop);
 	if (success) {
 		// an active contact was found so try to transmit on it
 		cout << "[RoutingHdtn] placed bundle on outduct to active contact" << endl;
 	} else {
 		// no active contact found. store and enqueue the bundle
-		enqueue(bundle, listener.getNextHop());
+		enqueue(bundle, nextHop);
 		cout << "[RoutingHdtn] enqueued bundle to storage" << endl;
 	}
 }
