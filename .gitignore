@@ -11,3 +11,4 @@ dtnsim/.metadata/
 *.anf
 *.qtenvrc
 **/results/*
+dtnsim/simulations/hdtn_demo/hdtnFiles/
