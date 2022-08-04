@@ -12,3 +12,5 @@ dtnsim/.metadata/
 *.qtenvrc
 **/results/*
 dtnsim/simulations/hdtn_demo/hdtnFiles/
+*.cmdenv-log
+dtnsim/dtnsim_*
