@@ -8,3 +8,6 @@ dtnsim/dtnsim
 dtnsim/.settings/language.settings.xml
 dtnsim/Makefile
 dtnsim/.metadata/
+*.anf
+*.qtenvrc
+**/results/*

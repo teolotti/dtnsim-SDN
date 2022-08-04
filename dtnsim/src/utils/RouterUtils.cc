@@ -1,3 +1,4 @@
+#define USE_BOOST_LIBRARIES 1
 #include "RouterUtils.h"
 
 #ifdef USE_BOOST_LIBRARIES

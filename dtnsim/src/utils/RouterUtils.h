@@ -6,7 +6,7 @@
 #define ROUTERUTILS_H_
 
 #include "TopologyUtils.h"
-#include "ContactPlan.h"
+#include "src/node/dtn/ContactPlan.h"
 #include <boost/graph/adjacency_list.hpp>
 #include "RouterGraphInfo.h"
 #include <string>

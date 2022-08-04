@@ -1,3 +1,4 @@
+#define USE_BOOST_LIBRARIES 1
 #include <src/central/Central.h>
 
 Define_Module (dtnsim::Central);

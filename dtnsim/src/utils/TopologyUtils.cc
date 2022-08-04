@@ -1,3 +1,4 @@
+#define USE_BOOST_LIBRARIES
 #include "../utils/TopologyUtils.h"
 
 #ifdef USE_BOOST_LIBRARIES
