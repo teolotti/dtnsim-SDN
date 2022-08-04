@@ -28,5 +28,5 @@ simple Central
         @statistic[availableRoutes](title="availableRoutes"; source="availableRoutes"; record=sum; interpolationmode=none);
         @statistic[pairsOfNodesWithAtLeastOneRoute](title="pairsOfNodesWithAtLeastOneRoute"; source="pairsOfNodesWithAtLeastOneRoute"; record=sum; interpolationmode=none);
         
-        @display("i=device/terminal");
+        @display("i=device/terminal;is=vs");
 }
