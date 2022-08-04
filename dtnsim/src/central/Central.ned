@@ -7,12 +7,14 @@ simple Central
         @class(dtnsim::Central);
         
         string hdtnSourceRoot;
+        string contactsFileJson;
+//	    string routingMode = default("hdtn-router");
+		string routingMode;
         
         bool saveTopology = default(false);
         bool saveFlows = default(false);
         bool saveLpFlows = default(false);
         string contactsFile = default("contacts.txt");
-        string contactsFileJson;
         
         bool enableAvailableRoutesCalculation = default(false);
         int deleteNContacts = default(0);

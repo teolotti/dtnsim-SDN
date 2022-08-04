@@ -32,7 +32,7 @@ struct RouteUpdateHdr {
 class RoutingHdtn : public RoutingDeterministic
 {
 public:
-  RoutingHdtn(int eid, SdrModel *sdr, ContactPlan *contactPlan, string *path, string *cpJson);
+  RoutingHdtn(int eid, SdrModel *sdr, ContactPlan *contactPlan, string *path, string *cpJson, bool useHdtnRouter);
   virtual ~RoutingHdtn();
   virtual void routeAndQueueBundle(BundlePkt* bundle, double simTime);
   virtual void contactStart(Contact *c);
@@ -40,6 +40,7 @@ private:
   std::string hdtnSourceRoot;
   std::string cpFile;
   std::string configFile;
+  int (RoutingHdtn::*route_fn)(BundlePkt *bundle);
   virtual int routeHdtn(BundlePkt *bundle);
   virtual int routeLibcgr(BundlePkt *bundle);
   virtual bool attemptTransmission(BundlePkt *bundle, int neighborNodeNbr);

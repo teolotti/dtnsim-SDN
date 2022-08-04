@@ -1,14 +1,17 @@
 #include "RoutingHdtn.h"
 #include "src/hdtn/libcgr.h"
 
-#define ROUTING_FUNCTION routeHdtn
-
-RoutingHdtn::RoutingHdtn(int eid, SdrModel * sdr, ContactPlan * contactPlan, string * path, string * cpJson)
+RoutingHdtn::RoutingHdtn(int eid, SdrModel * sdr, ContactPlan * contactPlan, string * path, string * cpJson, bool useHdtnRouter)
 : RoutingDeterministic(eid, sdr, contactPlan)
 {
 	this->hdtnSourceRoot = string(*path);
 	this->cpFile = string(*cpJson);
-	createRouterConfigFile();
+	if (useHdtnRouter) {
+		this->route_fn = &RoutingHdtn::routeHdtn;
+		createRouterConfigFile();
+	} else {
+		this->route_fn = &RoutingHdtn::routeLibcgr;
+	}
 }
 
 RoutingHdtn::~RoutingHdtn()
@@ -58,7 +61,7 @@ int RoutingHdtn::routeLibcgr(BundlePkt * bundle) {
 
 void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
-	int nextHop = ROUTING_FUNCTION(bundle);
+	int nextHop = (this->*route_fn)(bundle);
 
 	// transmit or enqueue
 	bool success = attemptTransmission(bundle, nextHop);
