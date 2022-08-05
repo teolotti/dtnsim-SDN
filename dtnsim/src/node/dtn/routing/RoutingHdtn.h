@@ -8,7 +8,6 @@
 #define HDTN_ROUTER_ADDRESS "localhost"
 #define HDTN_BOUND_ROUTER_PUBSUB_PATH 10210
 #define HDTN_MSGTYPE_ROUTEUPDATE (0xFC07) //Route Update Event from Router process
-#define ZMQ_POLL_TIMEOUT 250
 
 struct cbhe_eid_t {
     uint64_t nodeId;
@@ -37,6 +36,7 @@ public:
   virtual void routeAndQueueBundle(BundlePkt* bundle, double simTime);
   virtual void contactStart(Contact *c);
 private:
+  map<int, int> routeTable;
   std::string hdtnSourceRoot;
   std::string cpFile;
   std::string configFile;

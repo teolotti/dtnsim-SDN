@@ -1,6 +1,9 @@
 #include "RoutingHdtn.h"
 #include "src/hdtn/libcgr.h"
 #include <signal.h>
+#include <cmath>
+
+#define ZMQ_POLL_TIMEOUT 50
 
 RoutingHdtn::RoutingHdtn(int eid, SdrModel * sdr, ContactPlan * contactPlan, string * path, string * cpJson, bool useHdtnRouter)
 : RoutingDeterministic(eid, sdr, contactPlan)
@@ -58,14 +61,23 @@ int RoutingHdtn::routeLibcgr(BundlePkt * bundle) {
 	string jsonEventFileName = this->hdtnSourceRoot + "/module/router/src/" + this->cpFile;
     vector<cgr::Contact> contactPlan = cgr::cp_load(jsonEventFileName);
     cgr::Contact rootContact = cgr::Contact(this->eid_, this->eid_, 0, cgr::MAX_SIZE, 100, 1.0, 0);
-	rootContact.arrival_time = 0;
+	rootContact.arrival_time = (int)ceil(simTime().dbl());
 	cgr::Route bestRoute = cgr::dijkstra(&rootContact, bundle->getDestinationEid(), contactPlan);
 	return bestRoute.next_node;
 }
 
 void RoutingHdtn::routeAndQueueBundle(BundlePkt * bundle, double simTime)
 {
-	int nextHop = (this->*route_fn)(bundle);
+	int nextHop;
+	int dest = bundle->getDestinationEid();
+
+	map<int, int>::iterator entry = routeTable.find(dest);
+	if (entry == routeTable.end()) {
+		nextHop = (this->*route_fn)(bundle);
+		routeTable[dest] = nextHop;
+	} else {
+		nextHop = entry->second;
+	}
 
 	// transmit or enqueue
 	bool success = attemptTransmission(bundle, nextHop);
@@ -185,7 +197,7 @@ void RouterListener::disconnect()
 bool RouterListener::check()
 {
 	zmq::pollitem_t items[] = {{this->sock->handle(), 0, ZMQ_POLLIN, 0}};
-	cout << "[listener] polling at " << this->path << endl;
+//	cout << "[listener] polling at " << this->path << endl;
 
 	int rc = zmq::poll(&items[0], 1, ZMQ_POLL_TIMEOUT);
 	assert(rc >= 0);
