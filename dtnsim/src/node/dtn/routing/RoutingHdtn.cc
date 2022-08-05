@@ -1,5 +1,6 @@
 #include "RoutingHdtn.h"
 #include "src/hdtn/libcgr.h"
+#include <signal.h>
 
 RoutingHdtn::RoutingHdtn(int eid, SdrModel * sdr, ContactPlan * contactPlan, string * path, string * cpJson, bool useHdtnRouter)
 : RoutingDeterministic(eid, sdr, contactPlan)
@@ -27,13 +28,11 @@ int RoutingHdtn::routeHdtn(BundlePkt * bundle) {
 	// run HDTN router
 	string hdtnExec = this->hdtnSourceRoot + "/build/module/router/hdtn-router";
 	string execString(
-//		this->hdtnSourceRoot + string("/build/module/router/hdtn-router") +
 		hdtnExec +
 		string(" --contact-plan-file=") + this->cpFile +
 		string(" --dest-uri-eid=ipn:") + to_string(bundle->getDestinationEid()) + string(".1") +
 		string(" --hdtn-config-file=") + this->configFile +
-//			string(""));
-		string(" & router_PID=$! && sleep 1 && kill $router_PID"));
+		string(" &"));
 
 	cout << "[RoutingHdtn] Running command: " << endl << execString << endl;
 	system(execString.c_str());
@@ -45,7 +44,12 @@ int RoutingHdtn::routeHdtn(BundlePkt * bundle) {
 	listener.disconnect();
 
 	// kill any HDTN process spawned
-	// TODO
+	char pidline[16];
+	FILE *cmd = popen("pidof hdtn-router", "r");
+	fgets(pidline, 16, cmd);
+	pid_t pid = strtoul(pidline, NULL, 10);
+	kill(pid, SIGTERM);
+	pclose(cmd);
 
 	return listener.getNextHop();
 }
