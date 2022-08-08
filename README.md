@@ -20,13 +20,23 @@ Note: Nodes will remain static in the simulation visualization. Indeed, the dyna
 
 ## HDTN Support ##
 
-HDTN (High-rate Delay Tolerant Network) flight code is supported in the master branch. To run DtnSim using HDTN routing you must 
-1. Install OMNeT++. While DtnSim is tested only for OMNeT++ 5.5.1, the HDTN support was developed and used on OMNeT++ 5.7 because the 5.5.1 version [contains a bug](https://github.com/omnetpp/omnetpp/issues/874) making it incompatible with the version of Qt packaged on the Debian 11 (bullseye) system on which this code was developed. OMNeT++ 5.7 is suggested for simulating HDTN on DtnSim but YMMV.
-2. Install DtnSim as described above. 
+HDTN (High-rate Delay Tolerant Network) flight code is supported in the master branch. To run DTNSIM using HDTN routing
+1. Install OMNeT++. While DtnSim is tested only for OMNeT++ 5.5.1, the HDTN support was developed and used on OMNeT++ 5.7 because the 5.5.1 version [contains a bug](https://github.com/omnetpp/omnetpp/issues/874) making it incompatible with the version of Qt packaged on the Debian 11 (bullseye) system on which this code was developed. OMNeT++ 5.7 is suggested for simulating HDTN on DTNSIM but YMMV.
+2. Install DTNSIM as described above. 
 3. Download the HDTN source code.
 4. Build HDTN from the source. This requires, among other dependencies, an installation of libzmq3.
 
-Follow the [instructions from the HDTN project](https://github.com/nasa/HDTN) for build and installation. Only the hdtn-router executable is actually needed from HDTN. If you wish to compile only this part you may replace the "make" step of HDTN build with "make hdtn-router" and skip the "make install" step.
+Follow the [instructions from the HDTN project](https://github.com/nasa/HDTN) to build HDTN. Only the hdtn-router executable is actually needed from HDTN. If you wish to compile only this part you may replace the "make" step of HDTN build with "make hdtn-router". The "make install" step may be skipped if desired; the simulator does not assume installation but does assume that HDTN has been built in a directory named "build" located in the source code root directory of HDTN.
+
+Three paremeters specific to HDTN should be provided in any ini file written for simulating HDTN:
+1. dtnsim.central.hdtnSourceRoot
+* An absolute path to a directory containing the HDTN source code
+2. dtnsim.central.contactsFileJson
+* A JSON version of the contact plan--should be the name of a file relative to the path hdtnSourceRoot/module/scheduler/src/, which is the canonical location for HDTN to keep contact plans. Any contact plans used in HDTN simulation must have JSON versions kept in that directory. This is in addition to the ION-like version of the contact plan that DTNSIM needs (provided as always by the dtnsim.central.contactsFile parameter)
+3. dtnsim.central.hdtnRoutingMode
+* One of "libcgr" or "hdtn-router". In the first mode DTNSIM nodes will directly call routing code copied from an old version of HDTN and compiled into the simulator (similar to the implementation strategy of the support-ion-350 branch). In the second mode nodes will instead run an hdtn-router executable and use ZeroMQ to listen for the route update messages that the HDTN Router publishes. The second mode is the preferred approach around which HDTN support in DTNSIM was designed. As long as the Router module in HDTN continues to respect the same CLI options and messaging protocol, "hdtn-router" mode will continue to accurately replicates HDTN's routing decisions while abstracting away its internal implementation details. Since HDTN routing algorithms and approaches are under active development and exploration, using these CLI and messaging APIs allows DTNSIM to stay up to date with HDTN without requiring maintenance every time HDTN changes. The "libcgr" mode remains available for the time being because it has proven useful for developing HDTN simulation (particularly as a target to benchmark the simulation performance of the "hdtn-router" mode against) and as a framework for comparing experimental proposed changes to the HDTN Router against the actual current HDTN Router.
+
+An example HDTN simulation scenario is available in simulations/hdtn_demo/
 
 ## ION Support ##
 
