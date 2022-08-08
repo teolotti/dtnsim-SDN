@@ -9,7 +9,7 @@ simple Central
         string hdtnSourceRoot;
         string contactsFileJson;
 //	    string routingMode = default("hdtn-router");
-		string routingMode;
+		string hdtnRoutingMode;
         
         bool saveTopology = default(false);
         bool saveFlows = default(false);

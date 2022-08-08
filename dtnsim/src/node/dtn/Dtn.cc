@@ -135,7 +135,7 @@ void Dtn::initialize(int stage)
 			bool useHdtnRouter;
 			string hdtnsource = this->getParentModule()->getParentModule()->getSubmodule("central")->par("hdtnSourceRoot");
 			string cpfile = this->getParentModule()->getParentModule()->getSubmodule("central")->par("contactsFileJson");
-			string routingMode = this->getParentModule()->getParentModule()->getSubmodule("central")->par("routingMode");
+			string routingMode = this->getParentModule()->getParentModule()->getSubmodule("central")->par("hdtnRoutingMode");
 			if (routingMode.compare("hdtn-router") == 0) {
 				useHdtnRouter = true;
 			} else if (routingMode.compare("libcgr") == 0) {
