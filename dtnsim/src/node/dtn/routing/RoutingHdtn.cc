@@ -23,12 +23,10 @@ RoutingHdtn::~RoutingHdtn()
 }
 
 int RoutingHdtn::routeHdtn(BundlePkt * bundle) {
-	// connect a listener
-//	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH + (this->eid_ - 1));
 	RouterListener listener = RouterListener(HDTN_BOUND_ROUTER_PUBSUB_PATH);
 	listener.connect();
 
-	// run HDTN router
+	// run an HDTN router
 	string hdtnExec = this->hdtnSourceRoot + "/build/module/router/hdtn-router";
 	string execString(
 		hdtnExec +
@@ -43,7 +41,6 @@ int RoutingHdtn::routeHdtn(BundlePkt * bundle) {
 	// wait to receive message from router
 	while (!listener.check());
 
-	// done with listener
 	listener.disconnect();
 
 	// kill any HDTN process spawned
@@ -124,36 +121,47 @@ void RoutingHdtn::createRouterConfigFile()
 	string path;
 
 	getcwd(cwd, sizeof(cwd));
-	path = string(cwd) + "/" + "template.json";
-	ifstream temp(path);
-	if (!temp) {
-		cerr << "can't open template" << endl;
-	}
-
-	chdir("hdtnFiles");
-	getcwd(cwd, sizeof(cwd));
-	setenv("HDTN_NODE_LIST_DIR", cwd, 1);
-
-	path = "node" + to_string(this->eid_);
-	mkdir(path.c_str(), 0700);
-	chdir(path.c_str());
-
-	ofstream file("cfg.json");
-	if (!file) {
-		cerr << "can't open cfg" << endl;
-	}
-
-	file << temp.rdbuf();
-	file << "    \"myNodeId\": " << this->eid_ << "," << endl;
-	file << "    \"zmqRouterAddress\": \"localhost\"," << endl;
-	file << "    \"zmqBoundRouterPubSubPortPath\": " << HDTN_BOUND_ROUTER_PUBSUB_PATH << endl;
-	file << "}" << endl;
-	temp.close();
-	file.close();
-
 	chdir("../../");
+	path = "src/hdtn/template.json";
 
-	this->configFile = string(cwd) + "/" + path + "/cfg.json";
+	struct stat buf;
+	if (stat(path.c_str(), &buf)) {
+		cerr << "stat: can't find template" << endl;
+		throw;
+	} else {
+		ifstream temp(path);
+		if (!temp) {
+			cerr << "can't open template" << endl;
+			throw;
+		}
+
+		chdir(cwd);
+
+		chdir("hdtnFiles");
+		getcwd(cwd, sizeof(cwd));
+		setenv("HDTN_NODE_LIST_DIR", cwd, 1);
+
+		path = "node" + to_string(this->eid_);
+		mkdir(path.c_str(), 0700);
+		chdir(path.c_str());
+
+		ofstream file("cfg.json");
+		if (!file) {
+			cerr << "can't open cfg" << endl;
+		}
+
+		file << temp.rdbuf();
+		file << "    \"myNodeId\": " << this->eid_ << "," << endl;
+		file << "    \"zmqRouterAddress\": \"localhost\"," << endl;
+		file << "    \"zmqBoundRouterPubSubPortPath\": " << HDTN_BOUND_ROUTER_PUBSUB_PATH << endl;
+		file << "}" << endl;
+		temp.close();
+		file.close();
+
+		chdir("../../");
+
+		this->configFile = string(cwd) + "/" + path + "/cfg.json";
+	}
 }
 
 RouterListener::RouterListener(int port)
