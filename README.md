@@ -21,6 +21,7 @@ Note: Nodes will remain static in the simulation visualization. Indeed, the dyna
 ## HDTN Support ##
 
 High-rate Delay Tolerant Network (HDTN) flight code is supported in the support-hdtn branch. To run DTNSIM using HDTN routing
+
 * Install OMNeT++. While DtnSim is tested only for OMNeT++ 5.5.1, the HDTN support was developed and used on OMNeT++ 5.7 because the 5.5.1 version [contains a bug](https://github.com/omnetpp/omnetpp/issues/874) making it incompatible with the version of Qt packaged on the Debian 11 (bullseye) system on which this code was developed. OMNeT++ 5.7 is suggested for simulating HDTN on DTNSIM but YMMV.
 * Install DTNSIM as described above. 
 * Download the HDTN source code.
@@ -29,6 +30,7 @@ High-rate Delay Tolerant Network (HDTN) flight code is supported in the support-
 Follow the [instructions from the HDTN project](https://github.com/nasa/HDTN) to build HDTN. Only the hdtn-router executable is actually needed from HDTN. If you wish to compile only this part you may replace the "make" step of HDTN build with "make hdtn-router". The "make install" step may be skipped if desired; the simulator does not assume installation but does assume that an HDTN Router has been built in a directory named "build" located in the source code root directory of HDTN.
 
 Three paremeters specific to HDTN should be provided in any ini file written for simulating HDTN:
+
 * dtnsim.central.hdtnSourceRoot
   * An absolute path to a directory containing the HDTN source code
 * dtnsim.central.contactsFileJson
