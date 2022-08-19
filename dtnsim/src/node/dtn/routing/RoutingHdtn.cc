@@ -38,7 +38,9 @@ int RoutingHdtn::routeHdtn(BundlePkt * bundle) {
 	cout << "[RoutingHdtn] Running command: " << endl << execString << endl;
 	system(execString.c_str());
 
-	// wait to receive message from router
+	// Wait to receive message from router.
+	// this will halt the progression of the simulation if
+	// the listener doesn't receive anything.
 	while (!listener.check());
 
 	listener.disconnect();
