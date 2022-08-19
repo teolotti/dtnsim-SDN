@@ -18,6 +18,10 @@ The simulator is still under development: this is a beta version. Nonetheless, f
 
 Note: Nodes will remain static in the simulation visualization. Indeed, the dynamic of the network is captured in the "contact plans" which comprises a list of all time-bound communication opportunities between nodes. In other words, if simulating mobile network, the mobility should be captured in such contact plans and provided to DTNSIM as input.
 
+## ION Support ##
+
+Interplanetary Overlay Network (ION) flight code is supported in the support-ion branch. Currenly, ION 3.5.0 Contact Graph Routing library is supported by DTNSIM.
+
 ## HDTN Support ##
 
 High-rate Delay Tolerant Network (HDTN) flight code is supported in the support-hdtn branch. To run DTNSIM using HDTN routing
@@ -40,10 +44,6 @@ Three paremeters specific to HDTN should be provided in any ini file written for
 
 Some example HDTN simulation scenario are available in simulations/hdtn_demo/
 
-## ION Support ##
-
-Interplanetary Overlay Network (ION) flight code is supported in the support-ion branch. Currenly, ION 3.5.0 Contact Graph Routing library is supported by DTNSIM.
-
 ## Contact Us ##
 
-If you have any comment, suggestion, or contribution you can reach us at madoerypablo@gmail.com and juanfraire@gmail.com.
+If you have any comment, suggestion, or contribution you can reach us at madoerypablo@gmail.com and juanfraire@gmail.com. For questions about HDTN contact tjr@berkeley.edu.
