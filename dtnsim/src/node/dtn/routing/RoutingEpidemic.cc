@@ -1,5 +1,12 @@
-#include "src/node/dtn/routing/RoutingEpidemic.h"
-#include "src/node/dtn/Dtn.h"
+/*
+ * RoutingEpidemic.cpp
+ *
+ *  Created on: July 13, 2017
+ *      Author: fraverta
+ */
+
+#include <src/node/dtn/routing/RoutingEpidemic.h>
+#include <src/node/dtn/Dtn.h>
 
 RoutingEpidemic::RoutingEpidemic(int eid, SdrModel * sdr, cModule * dtn)
 	:RoutingStochastic(eid,sdr,dtn)

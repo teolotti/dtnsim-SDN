@@ -38,7 +38,7 @@ public:
 	 * Method that will be called by Dtn module when a message to other destination in the
 	 * network  arrives.
 	 */
-	virtual void msgToOtherArrive(BundlePkt * bundle, double simTime) = 0;
+	virtual void msgToOtherArrive(BundlePkt * bundle, double simTime, int terminusNode) = 0;
 
 	/**
 	 * Method that will be called by Dtn module when a message to this node arrives.
@@ -60,14 +60,10 @@ public:
 	virtual void  refreshForwarding(Contact * c) = 0;
 
 	/**
-	 * Method to be called in case a contact plan was updated for opp. routing.
-	 */
-	virtual void updateContactPlan(Contact* c) = 0;
-
-	/**
 	 * Method that will be called by Dtn module when some bundle is forwarded successfully
 	 */
 	virtual void successfulBundleForwarded(long bundleId, Contact * contact, bool sentToDestination)=0;
+
 
 
 protected:
@@ -76,6 +72,7 @@ protected:
 
 	//Sdr model to enqueue bundles for transmission
 	SdrModel * sdr_;
+
 };
 
 #endif /* SRC_NODE_NET_ROUTING_H_ */

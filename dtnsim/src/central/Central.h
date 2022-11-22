@@ -5,18 +5,13 @@
 #include <src/node/dtn/Dtn.h>
 #include <src/node/com/Com.h>
 #include <omnetpp.h>
+#include <src/node/dtn/RegionDatabase.h>
 #include <string>
 #include <iostream>
 #include <map>
 #include <utility>
 #include <limits>
 #include <vector>
-
-#include "../utils/Lp.h"
-#include "src/utils/TopologyUtils.h"
-#include "src/utils/RouterUtils.h"
-#include "src/utils/LpUtils.h"
-#include "src/utils/MetricCollector.h"
 #include "src/node/app/App.h"
 
 #include "src/node/dtn/routing/RoutingCgrModel350.h"
@@ -27,7 +22,6 @@
 
 using namespace omnetpp;
 using namespace std;
-
 
 namespace dtnsim
 {
@@ -70,14 +64,6 @@ private:
 	/// @return vector of contact ids
 	vector<int> getRandomContactIds(int nContacts);
 
-	/// @brief get contacts randomly. Any contact is chosen with probability failureProbability.
-	/// @return vector of contact ids
-	vector<int> getRandomContactIdsWithFProb(double failureProbability);
-
-	/// @brief goes to the available contacts from the network topology and chooses their id, in case they have to be deleted
-	/// @return the ids of the chosen contacts to be deleted
-	vector<int> getContactIdsWithSpecificFProb();
-
 	/// @brief get nContacts by iteratively erasing contacts
 	/// with highest centrality
 	/// @return vector of contact ids
@@ -93,16 +79,13 @@ private:
 	// Nodes Number in the network
 	int nodesNumber_;
 
-	// Contact Plan passed to all nodes to feed CGR
-	// It can be different to the real topology
-	ContactPlan contactPlan_;
+	vector<ContactPlan> contactPlans_;
+	vector<ContactPlan> contactTopologies_;
 
-	// Contact Plan passed to all nodes to schedule Contacts
-	// and get transmission rates
-	ContactPlan contactTopology_;
+	vector<string> regions_;
 
-	//Observer used to collect and evaluate all the necessary metrics
-	MetricCollector metricCollector_;
+	// Region Plan passed to all nodes to feed IRR
+	RegionDatabase regionDatabase_;
 
 	// specify if there are ion nodes in the simulation
 	bool ionNodes_;

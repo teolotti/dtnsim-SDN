@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for dtnsim
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -I. -I/usr/include/python3.8 -lpython3.8 -Xsrc/node/dtn/routing/unibocgr/dtnme -Xtests
+#  opp_makemake -f --deep -O out -I. -I/usr/include/python3.8 -lpython3.8
 #
 
 # Name of target to be created (-o option)
@@ -35,59 +35,28 @@ OBJS = \
     $O/src/node/app/App.o \
     $O/src/node/com/Com.o \
     $O/src/node/dtn/Contact.o \
-    $O/src/node/dtn/ContactHistory.o \
     $O/src/node/dtn/ContactPlan.o \
     $O/src/node/dtn/CustodyModel.o \
     $O/src/node/dtn/Dtn.o \
+    $O/src/node/dtn/RegionDatabase.o \
     $O/src/node/dtn/SdrModel.o \
     $O/src/node/dtn/SdrStatus.o \
-    $O/src/node/dtn/routing/RoutingBRUF1T.o \
     $O/src/node/dtn/routing/RoutingCgrModel350.o \
-    $O/src/node/dtn/routing/RoutingCgrModel350_2Copies.o \
     $O/src/node/dtn/routing/RoutingCgrModel350_Hops.o \
+    $O/src/node/dtn/routing/RoutingCgrModel350_Proactive.o \
     $O/src/node/dtn/routing/RoutingCgrModel350_Probabilistic.o \
     $O/src/node/dtn/routing/RoutingCgrModelRev17.o \
     $O/src/node/dtn/routing/RoutingCgrModelYen.o \
     $O/src/node/dtn/routing/RoutingDeterministic.o \
     $O/src/node/dtn/routing/RoutingDirect.o \
     $O/src/node/dtn/routing/RoutingEpidemic.o \
-    $O/src/node/dtn/routing/RoutingOpportunistic.o \
-    $O/src/node/dtn/routing/RoutingORUCOP.o \
+    $O/src/node/dtn/routing/RoutingInterRegions.o \
     $O/src/node/dtn/routing/RoutingSprayAndWait.o \
     $O/src/node/dtn/routing/RoutingStochastic.o \
-    $O/src/node/dtn/routing/RoutingUncertainUniboCgr.o \
-    $O/src/node/dtn/routing/RoutingUniboCgr.o \
-    $O/src/node/dtn/routing/brufncopies/BRUFNCopies1TOracle.o \
-    $O/src/node/dtn/routing/brufncopies/BRUFNCopiesOracle.o \
-    $O/src/node/dtn/routing/brufncopies/RoutingBRUFNCopies.o \
-    $O/src/node/dtn/routing/cgrbrufpowered/CGRBRUFPowered.o \
-    $O/src/node/dtn/routing/unibocgr/core/bundles/bundles.o \
-    $O/src/node/dtn/routing/unibocgr/core/cgr/cgr.o \
-    $O/src/node/dtn/routing/unibocgr/core/cgr/phase_one.o \
-    $O/src/node/dtn/routing/unibocgr/core/cgr/phase_three.o \
-    $O/src/node/dtn/routing/unibocgr/core/cgr/phase_two.o \
-    $O/src/node/dtn/routing/unibocgr/core/contact_plan/contactPlan.o \
-    $O/src/node/dtn/routing/unibocgr/core/contact_plan/contacts/contacts.o \
-    $O/src/node/dtn/routing/unibocgr/core/contact_plan/nodes/nodes.o \
-    $O/src/node/dtn/routing/unibocgr/core/contact_plan/ranges/ranges.o \
-    $O/src/node/dtn/routing/unibocgr/core/library/commonFunctions.o \
-    $O/src/node/dtn/routing/unibocgr/core/library/list/list.o \
-    $O/src/node/dtn/routing/unibocgr/core/library/log/log.o \
-    $O/src/node/dtn/routing/unibocgr/core/library_from_ion/rbt/rbt.o \
-    $O/src/node/dtn/routing/unibocgr/core/library_from_ion/scalar/scalar.o \
-    $O/src/node/dtn/routing/unibocgr/core/msr/msr.o \
-    $O/src/node/dtn/routing/unibocgr/core/msr/msr_utils.o \
-    $O/src/node/dtn/routing/unibocgr/core/routes/routes.o \
-    $O/src/node/dtn/routing/unibocgr/core/time_analysis/time.o \
     $O/src/node/fault/Fault.o \
     $O/src/node/graphics/Graphics.o \
     $O/src/utils/ContactPlanUtils.o \
-    $O/src/utils/Lp.o \
-    $O/src/utils/LpUtils.o \
-    $O/src/utils/MetricCollector.o \
-    $O/src/utils/RouterUtils.o \
     $O/src/utils/Subject.o \
-    $O/src/utils/TopologyUtils.o \
     $O/src/dtnsim_m.o
 
 # Message files

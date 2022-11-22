@@ -1,0 +1,9 @@
+a node 1 A rx 
+a node 1 B tx
+a node 2 A rx
+a node 2 C tx
+a node 3 A rx tx
+a node 4 B rx
+a node 4 C tx
+a node 5 B rx tx
+a node 6 C rx tx

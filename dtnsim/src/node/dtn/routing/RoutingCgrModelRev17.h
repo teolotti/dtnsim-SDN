@@ -11,7 +11,7 @@ public:
 	RoutingCgrModelRev17(int eid, int nodeNum, SdrModel * sdr, ContactPlan * localContactPlan,
 			ContactPlan * globalContactPlan, string routingType, bool printDebug);
 	virtual ~RoutingCgrModelRev17();
-	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime, int terminusNode);
 
 	// stats recollection
 	int getDijkstraCalls();
@@ -41,7 +41,11 @@ private:
 	double routeTableLastEditTime = -1;
 
 	typedef struct {
+		Contact * contact;			// The owner contact of this Work
 		Contact * predecessor;		// Predecessor Contact
+		vector<int> visitedNodes;	// Dijkstra exploration: list of visited nodes
+		double arrivalTime;			// Dijkstra exploration: best arrival time so far
+		bool visited;				// Dijkstra exploration: visited
 		bool suppressed;			// Dijkstra exploration: suppressed
 	} Work;
 

@@ -1,7 +1,14 @@
-#include "src/node/dtn/routing/RoutingDirect.h"
+/*
+ * RoutingDirect.cpp
+ *
+ *  Created on: Nov 8, 2016
+ *      Author: juanfraire
+ */
+
+#include <src/node/dtn/routing/RoutingDirect.h>
 
 RoutingDirect::RoutingDirect(int eid, SdrModel * sdr, ContactPlan * contactPlan)
-	: RoutingDeterministic(eid, sdr, contactPlan)
+	: RoutingDeterministic(eid, sdr, contactPlan, NULL)
 {
 }
 
@@ -10,7 +17,7 @@ RoutingDirect::~RoutingDirect()
 
 }
 
-void RoutingDirect::routeAndQueueBundle(BundlePkt * bundle, double simTime)
+void RoutingDirect::routeAndQueueBundle(BundlePkt * bundle, double simTime, int terminusNode)
 {
 	int contactId=0; // contact 0 is the limbo
 

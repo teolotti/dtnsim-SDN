@@ -10,7 +10,7 @@ class RoutingDirect : public RoutingDeterministic
 public:
 	RoutingDirect(int eid, SdrModel * sdr, ContactPlan * contactPlan);
 	virtual ~RoutingDirect();
-	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime, int terminusNode);
 };
 
 #endif /* SRC_NODE_DTN_ROUTINGDIRECT_H_ */

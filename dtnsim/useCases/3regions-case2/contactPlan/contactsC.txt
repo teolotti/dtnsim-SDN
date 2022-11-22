@@ -1,0 +1,4 @@
+# Region C contacts
+a contact +10 +1000 2 6 1000
+a contact +10 +1000 4 6 1000
+a contact +10 +1000 6 4 1000

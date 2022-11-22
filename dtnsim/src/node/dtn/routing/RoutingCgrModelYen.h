@@ -16,7 +16,7 @@ class RoutingCgrModelYen: public RoutingDeterministic
 public:
 	RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug);
 	virtual ~RoutingCgrModelYen();
-	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime, int terminusNode);
 private:
 	bool printDebug_ = true;
 

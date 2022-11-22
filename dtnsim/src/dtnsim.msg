@@ -2,15 +2,21 @@
 
 cplusplus {{
     // Include Contact and CgrRoute structures
-    #include "src/node/dtn/routing/CgrRoute.h"
+    #include "CgrRoute.h"
+    #include "IrrRoute.h"
+    #include <string>
+    #include <set>
     
     typedef std::list<int> intList;
+    typedef std::set<string> strSet;
     typedef std::list<CgrRoute> cgrRouteList;
 }}
 
 struct CgrRoute;
+struct IrrRoute;
 class noncobject intList;
 class noncobject cgrRouteList;
+class noncobject strSet;
 
 packet BundlePkt{
 		////////////////////////////////////////////////    
@@ -18,7 +24,9 @@ packet BundlePkt{
     	////////////////////////////////////////////////
     	long bundleId;
     	int sourceEid;
+    	
         int destinationEid;
+      
         bool critical;
         simtime_t creationTimestamp;
         simtime_t ttl;
@@ -27,6 +35,9 @@ packet BundlePkt{
         
         // Source routing path
         CgrRoute cgrRoute;
+        
+        // Source inter regions routing path
+        IrrRoute irrRoute;
         
         // Bundle is a report
         bool bundleIsCustodyReport;
@@ -61,8 +72,8 @@ message TrafficGeneratorMsg{
     int bundlesNumber;
     int destinationEid;
     int size;
-    double ttl;
-    double interval;
+    int ttl;
+    int interval;
 };
 
 message ContactMsg{

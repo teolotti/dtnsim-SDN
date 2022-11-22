@@ -1,6 +1,6 @@
 
-#ifndef SRC_NODE_DTN_ROUTINGCGRMODEL_3_H_
-#define SRC_NODE_DTN_ROUTINGCGRMODEL_3_H_
+#ifndef SRC_NODE_DTN_ROUTINGCGRMODEL_HOPS_H_
+#define SRC_NODE_DTN_ROUTINGCGRMODEL_HOPS_H_
 
 #include <src/node/dtn/routing/CgrRoute.h>
 #include <src/node/dtn/routing/RoutingDeterministic.h>
@@ -11,7 +11,7 @@ class RoutingCgrModel350_Hops: public RoutingDeterministic
 public:
 	RoutingCgrModel350_Hops(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug);
 	virtual ~RoutingCgrModel350_Hops();
-	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime, int terminusNode);
 	virtual CgrRoute* getCgrBestRoute(BundlePkt * bundle, double simTime);
 	virtual vector<CgrRoute> getCgrRoutes(BundlePkt * bundle, double simTime);
 
@@ -81,4 +81,4 @@ private:
 	void bpEnqueue(BundlePkt * bundle, ProximateNode * selectedNeighbor);
 };
 
-#endif /* SRC_NODE_DTN_ROUTINGCGRMODEL_3_H_ */
+#endif /* SRC_NODE_DTN_ROUTINGCGRMODEL_HOPS_H_ */

@@ -1,0 +1,2 @@
+a contact 0 86400 20 21 1000000 #GS_WhiteSand -> GS_Canberra
+a contact 0 86400 21 20 1000000 #GS_Canberra -> GS_WhiteSand

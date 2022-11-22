@@ -1,0 +1,41 @@
+** Event #0   t=0   Elapsed: 0.000s (0m 00s)
+     Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
+     Messages:  created: 2522   present: 2522   in FES: 2522
+** Event #2560   t=2579   Elapsed: 9.976s (0m 09s)
+     Speed:     ev/sec=256.716   simsec/sec=258.52   ev/simsec=0.993021
+     Messages:  created: 3728   present: 3564   in FES: 2439
+** Event #9984   t=2692   Elapsed: 18.929s (0m 18s)
+     Speed:     ev/sec=829.219   simsec/sec=12.6215   ev/simsec=65.6991
+     Messages:  created: 4860   present: 3447   in FES: 2441
+** Event #18688   t=2944   Elapsed: 21.941s (0m 21s)
+     Speed:     ev/sec=2890.73   simsec/sec=83.6931   ev/simsec=34.5397
+     Messages:  created: 6195   present: 3325   in FES: 2406
+** Event #20992   t=3104   Elapsed: 27.151s (0m 27s)
+     Speed:     ev/sec=442.226   simsec/sec=30.7102   ev/simsec=14.4
+     Messages:  created: 6552   present: 3327   in FES: 2418
+** Event #27648   t=3191   Elapsed: 29.171s (0m 29s)
+     Speed:     ev/sec=3296.68   simsec/sec=43.0906   ev/simsec=76.5057
+     Messages:  created: 7593   present: 3244   in FES: 2439
+** Event #29952   t=3219   Elapsed: 31.202s (0m 31s)
+     Speed:     ev/sec=1134.42   simsec/sec=13.7863   ev/simsec=82.2857
+     Messages:  created: 7953   present: 3211   in FES: 2433
+** Event #33024   t=3259   Elapsed: 38.040s (0m 38s)
+     Speed:     ev/sec=449.32   simsec/sec=5.85052   ev/simsec=76.8
+     Messages:  created: 8431   present: 3166   in FES: 2427
+** Event #52480   t=3507   Elapsed: 41.858s (0m 41s)
+     Speed:     ev/sec=5095.86   simsec/sec=64.9555   ev/simsec=78.4516
+     Messages:  created: 11507   present: 2917   in FES: 2413
+** Event #78848   t=3939   Elapsed: 43.861s (0m 43s)
+     Speed:     ev/sec=13170.8   simsec/sec=215.784   ev/simsec=61.037
+     Messages:  created: 15591   present: 2471   in FES: 2392
+** Event #79104   t=3944   Elapsed: 49.756s (0m 49s)
+     Speed:     ev/sec=43.434   simsec/sec=0.84832   ev/simsec=51.2
+     Messages:  created: 15631   present: 2466   in FES: 2398
+** Event #80128   t=3967   Elapsed: 54.293s (0m 54s)
+     Speed:     ev/sec=225.75   simsec/sec=5.07055   ev/simsec=44.5217
+     Messages:  created: 15791   present: 2437   in FES: 2390
+** Event #84199   t=86400   Elapsed: 54.397s (0m 54s)
+     Speed:     ev/sec=39134.6   simsec/sec=792625   ev/simsec=0.0493734
+     Messages:  created: 17035   present: 0   in FES: 0
+
+<!> No more events, simulation completed -- at t=86400s, event #84199

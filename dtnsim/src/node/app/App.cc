@@ -1,4 +1,4 @@
-#include "src/node/app/App.h"
+#include "App.h"
 
 Define_Module (App);
 
@@ -52,8 +52,8 @@ void App::initialize()
 			trafficGenMsg->setBundlesNumber(bundlesNumberVec_.at(i));
 			trafficGenMsg->setDestinationEid(destinationEidVec_.at(i));
 			trafficGenMsg->setSize(sizeVec_.at(i));
-			trafficGenMsg->setInterval(par("interval"));
-			trafficGenMsg->setTtl(par("ttl"));
+			trafficGenMsg->setInterval(par("interval").doubleValue());
+			trafficGenMsg->setTtl(par("ttl").doubleValue());
 			scheduleAt(startVec_.at(i), trafficGenMsg);
 		}
 	}
@@ -102,8 +102,8 @@ void App::handleMessage(cMessage *msg)
 		bundle->setSchedulingPriority(BUNDLE);
 
 		// Bundle properties
-		char bundleName[200];
-		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", (int)this->eid_, (int)trafficGenMsg->getDestinationEid(), (int) bundle->getId());
+		char bundleName[10];
+		sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, trafficGenMsg->getDestinationEid(), (int) bundle->getId());
 		bundle->setBundleId(bundle->getId());
 		bundle->setName(bundleName);
 		bundle->setBitLength(trafficGenMsg->getSize() * 8);
@@ -111,7 +111,12 @@ void App::handleMessage(cMessage *msg)
 
 		// Bundle fields (set by source node)
 		bundle->setSourceEid(this->eid_);
+
+		// set local destination equal to final destination.
+		// the routing algorithm will change this destination to a destination inside the local region
+		// if necessary
 		bundle->setDestinationEid(trafficGenMsg->getDestinationEid());
+
 		bundle->setReturnToSender(par("returnToSender"));
 		bundle->setCritical(par("critical"));
 		bundle->setCustodyTransferRequested(par("custodyTransfer"));

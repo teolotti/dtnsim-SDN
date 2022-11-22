@@ -1,5 +1,12 @@
-#include "src/node/dtn/routing/RoutingSprayAndWait.h"
-#include "src/node/dtn/Dtn.h"
+/*
+ * RoutingSprayAndWait.cc
+ *
+ *  Created on: July 13, 2017
+ *      Author: fraverta
+ */
+
+#include <src/node/dtn/routing/RoutingSprayAndWait.h>
+#include <src/node/dtn/Dtn.h>
 
 RoutingSprayAndWait::RoutingSprayAndWait(int eid, SdrModel * sdr, cModule * dtn, int amountOfCopies, bool binary)
 	:RoutingStochastic(eid,sdr,dtn)
@@ -12,12 +19,12 @@ RoutingSprayAndWait::~RoutingSprayAndWait()
 {
 }
 
-void RoutingSprayAndWait::msgToOtherArrive(BundlePkt * bundle, double simTime)
+void RoutingSprayAndWait::msgToOtherArrive(BundlePkt * bundle, double simTime, int terminusNode)
 {
 	if( bundle->getSourceEid() == eid_ )
 		bundle->setBundlesCopies(amountOfCopies);
 
-	RoutingStochastic::msgToOtherArrive(bundle,simTime);
+	RoutingStochastic::msgToOtherArrive(bundle,simTime, terminusNode);
 }
 
 void RoutingSprayAndWait::contactEnd(Contact *c)

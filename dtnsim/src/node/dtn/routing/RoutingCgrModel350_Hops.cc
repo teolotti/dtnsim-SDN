@@ -1,7 +1,7 @@
 #include "RoutingCgrModel350_Hops.h"
 
 RoutingCgrModel350_Hops::RoutingCgrModel350_Hops(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug) :
-RoutingDeterministic(eid, sdr, contactPlan)
+RoutingDeterministic(eid, sdr, contactPlan, NULL)
 {
 	eid_ = eid;
 	sdr_ = sdr;
@@ -14,7 +14,7 @@ RoutingCgrModel350_Hops::~RoutingCgrModel350_Hops()
 
 }
 
-void RoutingCgrModel350_Hops::routeAndQueueBundle(BundlePkt * bundle, double simTime)
+void RoutingCgrModel350_Hops::routeAndQueueBundle(BundlePkt * bundle, double simTime, int terminusNode)
 {
 	if (!printDebug_) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);
@@ -153,7 +153,7 @@ void RoutingCgrModel350_Hops::cgrForward(BundlePkt * bundle, double simTime)
 		// TODO: manageOverbooking() function
 		// Only necesary for bundles with priority > bulk.
 		return;
-	} else
+	}else
 	{
 		if ((bundle->getCgrRoute().nextHop != EMPTY_ROUTE))
 		{

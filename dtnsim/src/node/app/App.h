@@ -5,6 +5,7 @@
 #include <string.h>
 #include <omnetpp.h>
 
+#include <src/node/dtn/Dtn.h>
 #include "src/node/MsgTypes.h"
 #include "src/dtnsim_m.h"
 

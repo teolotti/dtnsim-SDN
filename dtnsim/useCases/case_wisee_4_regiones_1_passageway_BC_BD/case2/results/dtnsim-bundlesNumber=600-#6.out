@@ -1,0 +1,35 @@
+** Event #0   t=0   Elapsed: 0.000s (0m 00s)
+     Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
+     Messages:  created: 5587   present: 5587   in FES: 5587
+** Event #1792   t=2581   Elapsed: 16.253s (0m 16s)
+     Speed:     ev/sec=110.318   simsec/sec=158.801   ev/simsec=0.694692
+     Messages:  created: 6357   present: 6028   in FES: 5388
+** Event #4864   t=2630   Elapsed: 41.834s (0m 41s)
+     Speed:     ev/sec=120.089   simsec/sec=1.91548   ev/simsec=62.6939
+     Messages:  created: 6811   present: 5982   in FES: 5404
+** Event #15360   t=2787   Elapsed: 43.879s (0m 43s)
+     Speed:     ev/sec=5132.52   simsec/sec=76.7726   ev/simsec=66.8535
+     Messages:  created: 8381   present: 5811   in FES: 5389
+** Event #16640   t=2870   Elapsed: 46.961s (0m 46s)
+     Speed:     ev/sec=415.315   simsec/sec=26.9306   ev/simsec=15.4217
+     Messages:  created: 8567   present: 5788   in FES: 5364
+** Event #17920   t=2943   Elapsed: 50.006s (0m 50s)
+     Speed:     ev/sec=420.499   simsec/sec=23.9816   ev/simsec=17.5342
+     Messages:  created: 8768   present: 5783   in FES: 5360
+** Event #20224   t=3103   Elapsed: 71.271s (1m 11s)
+     Speed:     ev/sec=108.352   simsec/sec=7.52445   ev/simsec=14.4
+     Messages:  created: 9126   present: 5780   in FES: 5383
+** Event #29696   t=3269   Elapsed: 74.727s (1m 14s)
+     Speed:     ev/sec=2741.53   simsec/sec=48.0463   ev/simsec=57.0602
+     Messages:  created: 10561   present: 5606   in FES: 5341
+** Event #32512   t=3795   Elapsed: 97.101s (1m 37s)
+     Speed:     ev/sec=125.86   simsec/sec=23.5094   ev/simsec=5.35361
+     Messages:  created: 11004   present: 5597   in FES: 5332
+** Event #48640   t=44400   Elapsed: 99.102s (1m 39s)
+     Speed:     ev/sec=8059.97   simsec/sec=20292.4   ev/simsec=0.397192
+     Messages:  created: 14225   present: 2768   in FES: 2710
+** Event #52678   t=86400   Elapsed: 99.267s (1m 39s)
+     Speed:     ev/sec=24466.7   simsec/sec=254545   ev/simsec=0.096119
+     Messages:  created: 15552   present: 0   in FES: 0
+
+<!> No more events, simulation completed -- at t=86400s, event #52678

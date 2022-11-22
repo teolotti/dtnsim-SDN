@@ -40,8 +40,6 @@ public:
 	virtual list<BundlePkt*> * getBundlesInLimbo();
 	virtual int getBytesStoredInSdr();
 	virtual int getBytesStoredToNeighbor(int eid);
-	virtual vector<int> getBundleSizesStoredToNeighbor(int eid);
-	virtual vector<int> getBundleSizesStoredToNeighborWithHigherPriority(int eid, bool critical);
 	virtual SdrStatus getSdrStatus();
 	virtual BundlePkt * getEnqueuedBundle(long bundleId);
 	bool isSdrFreeSpace(int sizeNewPacket);

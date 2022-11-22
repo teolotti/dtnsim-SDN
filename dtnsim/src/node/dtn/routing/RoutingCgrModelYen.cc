@@ -1,7 +1,14 @@
-#include "src/node/dtn/routing/RoutingCgrModelYen.h"
+/*
+ * RoutingCgrModelYen.cpp
+ *
+ *  Created on: Jan 24, 2017
+ *      Author: juanfraire
+ */
+
+#include <src/node/dtn/routing/RoutingCgrModelYen.h>
 
 RoutingCgrModelYen::RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug)
-	: RoutingDeterministic(eid, sdr, contactPlan)
+	: RoutingDeterministic(eid, sdr, contactPlan, NULL)
 {
 	printDebug_ = printDebug;
 }
@@ -10,7 +17,7 @@ RoutingCgrModelYen::~RoutingCgrModelYen()
 {
 }
 
-void RoutingCgrModelYen::routeAndQueueBundle(BundlePkt * bundle, double simTime)
+void RoutingCgrModelYen::routeAndQueueBundle(BundlePkt * bundle, double simTime, int terminusNode)
 {
 	if (!printDebug_) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);

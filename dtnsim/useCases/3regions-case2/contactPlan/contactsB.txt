@@ -1,0 +1,5 @@
+# Region B contacts
+a contact +10 +1000 1 5 1000
+a contact +10 +1000 5 4 1000
+
+
