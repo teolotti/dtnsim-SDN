@@ -17,6 +17,7 @@
 #include <queue>
 #include <limits>
 #include <algorithm>
+#include <unordered_set>
 #include "src/dtnsim_m.h"
 
 using namespace omnetpp;

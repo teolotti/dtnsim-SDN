@@ -25,6 +25,7 @@
 #define SRC_NODE_DTN_ROUTING_ROUTINGSTOCHASTIC_H_
 
 #include <src/node/dtn/routing/Routing.h>
+#include "src/utils/MetricCollector.h"
 
 class RoutingStochastic: public Routing
 {

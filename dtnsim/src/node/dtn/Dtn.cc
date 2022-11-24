@@ -171,12 +171,25 @@ void Dtn::initialize(int stage)
 		else if (routeString.compare("sprayAndWait") == 0)
 		{
 			int bundlesCopies = par("bundlesCopies");
-			routing = new RoutingSprayAndWait(eid_, &sdr_, this, bundlesCopies, false);
+			routing = new RoutingSprayAndWait(eid_, &sdr_, this, bundlesCopies, false, this->metricCollector_);
 		}
 		else if (routeString.compare("binarySprayAndWait") == 0)
 		{
 			int bundlesCopies = par("bundlesCopies");
-			routing = new RoutingSprayAndWait(eid_, &sdr_, this, bundlesCopies, true);
+			routing = new RoutingSprayAndWait(eid_, &sdr_, this, bundlesCopies, true, this->metricCollector_);
+		}
+		else if (routeString.compare("PRoPHET") == 0)
+		{
+			int numOfNodes = this->getParentModule()->getParentModule()->par("nodesNumber");
+			double p_enc_max = par("pEncouterMax");
+			double p_enc_first = par("pEncouterFirst");
+			double p_first_thresh = par("pFirstThreshold");
+			double forw_tresh = par("ForwThresh");
+			double alpha = par("alpha");
+			double beta = par("beta");
+			double gamma = par("gamma");
+			double delta = par("delta");
+			routing = new RoutingPRoPHET(eid_, &sdr_, this, p_enc_max, p_enc_first, p_first_thresh, forw_tresh, alpha, beta, gamma, delta, numOfNodes, this->metricCollector_);
 		}
 		else if (routeString.compare("cgrModel350_2Copies") == 0)
 			routing = new RoutingCgrModel350_2Copies(eid_, &sdr_, &contactPlan_, par("printRoutingDebug"), this);

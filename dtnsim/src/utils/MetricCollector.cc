@@ -54,6 +54,19 @@ void MetricCollector::updateSentBundles(int eid, int destinationEid, double time
 	this->nodeMetrics_.at(eid - 1).routingDecisions_[bundleId].push_back(make_tuple(destinationEid, time));
 }
 
+void MetricCollector::updateSentBundles(int eid, int destinationEid, double time,  long bundleId, int numBundles)
+{
+	if (this->nodeMetrics_.at(eid - 1).sentBundles_.find(bundleId) == this->nodeMetrics_.at(eid - 1).sentBundles_.end())
+	{
+		this->nodeMetrics_.at(eid - 1).sentBundles_[bundleId] = numBundles;
+	}
+	else
+	{
+		this->nodeMetrics_.at(eid - 1).sentBundles_[bundleId] = this->nodeMetrics_.at(eid - 1).sentBundles_[bundleId] + numBundles;
+	}
+
+	this->nodeMetrics_.at(eid - 1).routingDecisions_[bundleId].push_back(make_tuple(destinationEid, time));
+}
 void MetricCollector::updateReceivedBundles(int eid, long bundleId, double receivingTime)
 {
 

@@ -11,6 +11,7 @@
 #include <src/node/dtn/routing/RoutingDirect.h>
 #include <src/node/dtn/routing/RoutingEpidemic.h>
 #include <src/node/dtn/routing/RoutingSprayAndWait.h>
+#include <src/node/dtn/routing/RoutingPRoPHET.h>
 #include <src/node/dtn/routing/RoutingCgrModel350_Probabilistic.h>
 #include <src/node/dtn/routing/RoutingOpportunistic.h>
 #include <src/node/dtn/routing/RoutingUncertainUniboCgr.h>

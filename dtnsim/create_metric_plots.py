@@ -298,6 +298,10 @@ def analyze_simulation(path, pfs, num_of_seeds, num):
 	algorithm_results["ORUCoP"] = dict()
 	algorithm_results["CGR-UCoP"] = dict()
 	algorithm_results["CGR-UCoP-AK"] = dict()
+	algorithm_results["SW5"] = dict()
+	algorithm_results["SW10"] = dict()
+	algorithm_results["SW15"] = dict()
+	algorithm_results["PRoPHET"] = dict()
 	
 	for pf in pfs: #compare all algorithms with CGR for each pf
 		algorithm_results["OCGR"][pf] = analyze_run(path + '/OCGR/pf=' + str(pf) + '/opp_not_known', num_of_seeds, cgr_results[pf])
@@ -308,6 +312,10 @@ def analyze_simulation(path, pfs, num_of_seeds, num):
 		algorithm_results["ORUCoP"][pf] = analyze_run(path + '/ORUCoP/pf=' + str(pf) + '/opp_not_known', num_of_seeds, cgr_results[pf])
 		algorithm_results["CGR-UCoP"][pf] = analyze_run(path + '/OCGR-UCoP/pf=' + str(pf) + '/no_opp', num_of_seeds, cgr_results[pf])
 		algorithm_results["CGR-UCoP-AK"][pf] = analyze_run(path + '/OCGR-UCoP/pf=' + str(pf) + '/opp_known', num_of_seeds, cgr_results[pf])
+		algorithm_results["SW5"][pf] = analyze_run(path + '/SW5/pf=' + str(pf) + '/opp_not_known', num_of_seeds, cgr_results[pf])
+		algorithm_results["SW10"][pf] = analyze_run(path + '/SW10/pf=' + str(pf) + '/opp_not_known', num_of_seeds, cgr_results[pf])
+		algorithm_results["SW15"][pf] = analyze_run(path + '/SW15/pf=' + str(pf) + '/opp_not_known', num_of_seeds, cgr_results[pf])
+		algorithm_results["PRoPHET"][pf] = analyze_run(path + '/PRoPHET/pf=' + str(pf) + '/opp_not_known', num_of_seeds, cgr_results[pf])
 		
 	
 	return algorithm_results
@@ -325,7 +333,7 @@ This function prints one metric for simulations with multiple failure probabilit
 def print_metric_graph_non_specific(results, metric, pfs, num):
 	final_string = "x "
 	
-	for i in range(1, 17): #set up y values for each algorithm. These are the mean and their corresponding CI
+	for i in range(1, 25): #set up y values for each algorithm. These are the mean and their corresponding CI
 		final_string += "y" + str(i) + " "
 		
 	final_string += "\n"
@@ -350,6 +358,10 @@ def print_metric_graph_non_specific(results, metric, pfs, num):
 		final_string += str(round(results["CGR-UCoP"][pf][metric] * 100, 2))  + " "
 		final_string += str(round(results["OCGR-UCoP"][pf][metric] * 100, 2))  + " "
 		final_string += str(round(results["CGR-UCoP-AK"][pf][metric] * 100, 2) ) + " "
+		final_string += str(round(results["SW5"][pf][metric] * 100, 2) ) + " "
+		final_string += str(round(results["SW10"][pf][metric] * 100, 2) ) + " "
+		final_string += str(round(results["SW15"][pf][metric] * 100, 2) ) + " "
+		final_string += str(round(results["PRoPHET"][pf][metric] * 100, 2) ) + " "
 		final_string += str(round(results["OCGR"][pf][metric + "_ci"] * 100, 2)) + " "
 		final_string += str(round(results["CGR-AK"][pf][metric + "_ci"] * 100, 2))  + " "
 		final_string += str(round(results["RUCoP"][pf][metric + "_ci"] * 100, 2))  + " "
@@ -358,7 +370,10 @@ def print_metric_graph_non_specific(results, metric, pfs, num):
 		final_string += str(round(results["CGR-UCoP"][pf][metric + "_ci"] * 100, 2))  + " "
 		final_string += str(round(results["OCGR-UCoP"][pf][metric + "_ci"] * 100, 2))  + " "
 		final_string += str(round(results["CGR-UCoP-AK"][pf][metric + "_ci"] * 100, 2) ) + " "
-		
+		final_string += str(round(results["SW5"][pf][metric + "_ci"]  * 100, 2) ) + " "
+		final_string += str(round(results["SW10"][pf][metric + "_ci"] * 100, 2) ) + " "
+		final_string += str(round(results["SW15"][pf][metric + "_ci"] * 100, 2) ) + " "
+		final_string += str(round(results["PRoPHET"][pf][metric + "_ci"] * 100, 2) ) + " "		
 		final_string += "\n"
 		
 	with open("plots/sim_" + str(num) + "_" + metric, "w") as output:
@@ -376,7 +391,7 @@ This funtion prints one metric for a simulation with only one failure probabilit
 def print_metric_graph_specific(results, metric, num):
 	final_string = "x "
 	
-	for i in range(1, 17):  #set up y values for each algorithm. These are the mean and their corresponding CI
+	for i in range(1, 25):  #set up y values for each algorithm. These are the mean and their corresponding CI
 		final_string += "y" + str(i) + " "
 		
 	final_string += "\n"
@@ -395,6 +410,10 @@ def print_metric_graph_specific(results, metric, num):
 		final_string += str(round(results["CGR-UCoP"][-1][metric] * 100, 2))  + " "
 		final_string += str(round(results["OCGR-UCoP"][-1][metric] * 100, 2))  + " "
 		final_string += str(round(results["CGR-UCoP-AK"][-1][metric] * 100, 2) ) + " "
+		final_string += str(round(results["SW5"][-1][metric] * 100, 2) ) + " "
+		final_string += str(round(results["SW10"][-1][metric] * 100, 2) ) + " "
+		final_string += str(round(results["SW15"][-1][metric] * 100, 2) ) + " "
+		final_string += str(round(results["PRoPHET"][-1][metric] * 100, 2) ) + " "			
 		final_string += str(round(results["OCGR"][-1][metric + "_ci"] * 100, 2)) + " "
 		final_string += str(round(results["CGR-AK"][-1][metric + "_ci"] * 100, 2))  + " "
 		final_string += str(round(results["RUCoP"][-1][metric + "_ci"] * 100, 2))  + " "
@@ -403,6 +422,10 @@ def print_metric_graph_specific(results, metric, num):
 		final_string += str(round(results["CGR-UCoP"][-1][metric + "_ci"] * 100, 2))  + " "
 		final_string += str(round(results["OCGR-UCoP"][-1][metric + "_ci"] * 100, 2))  + " "
 		final_string += str(round(results["CGR-UCoP-AK"][-1][metric + "_ci"] * 100, 2) ) + " "
+		final_string += str(round(results["SW5"][-1][metric + "_ci"]  * 100, 2) ) + " "
+		final_string += str(round(results["SW10"][-1][metric + "_ci"] * 100, 2) ) + " "
+		final_string += str(round(results["SW15"][-1][metric + "_ci"] * 100, 2) ) + " "
+		final_string += str(round(results["PRoPHET"][-1][metric + "_ci"] * 100, 2) ) + " "		
 	
 		final_string += "\n"
 	

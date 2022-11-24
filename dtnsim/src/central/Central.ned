@@ -28,7 +28,7 @@ simple Central
         	       
         int deleteNContacts = default(0);
         bool useSpecificFailureProbabilities = default(false);
-        double failureProbability = default(-1.00); //Probability of failure of any contact in the contact plan 
+        double failureProbability = default(0); //Probability of failure of any contact in the contact plan 
 		string contactIdsToDelete = default(""); //Ids of contact to be deleted
 		
 		bool useCentrality = default(false);

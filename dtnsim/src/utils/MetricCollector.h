@@ -56,6 +56,7 @@ public:
 	void setPath(string path);
 	void updateStartedBundles(int eid, long bundleId, int sourceEid, int destinationEid, double startTime);
 	void updateSentBundles(int eid, int destinationEid, double time,  long bundleId);
+	void updateSentBundles(int eid, int destinationEid, double time,  long bundleId, int numBundles);
 	void updateReceivedBundles(int eid, long bundleId, double receivingTime);
 	void updateRUCoPComputationTime(long computationTime);
 	void updateCGRComputationTime(long computationTime);
