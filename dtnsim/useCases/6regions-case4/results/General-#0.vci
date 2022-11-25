@@ -1,0 +1,241 @@
+file 9095 1517871396                                            
+version 2
+run General-0-20180205-14:56:24-7809
+attr configname General
+attr datetime 20180205-14:56:24
+attr experiment General
+attr inifile regions.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network dtnsim.dtnsim
+attr processid 7809
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param dtnsim.central.contactsFile "\"contactPlan/contactsA.txt,contactPlan/contactsB.txt,contactPlan/contactsC.txt,contactPlan/contactsD.txt,contactPlan/contactsE.txt\""
+param dtnsim.central.contactsFileRegions "\"A,B,C,D,E\""
+param dtnsim.central.regionsFile "\"regions/regions2.txt\""
+param dtnsim.node[*].dtn.interRegionsRoutingType "\"IRR,extensionBlock:off\""
+param dtnsim.node[*].dtn.printInterRegionsRoutingDebug true
+param dtnsim.node[*].dtn.printRoutingDebug true
+param dtnsim.node[*].dtn.routing "\"cgrModel350\""
+param dtnsim.node[1].app.bundlesNumber "\"1\""
+param dtnsim.node[1].app.destinationEid "\"10\""
+param dtnsim.node[1].app.enable true
+param dtnsim.node[1].app.size "\"1\""
+param dtnsim.node[1].app.start "\"0\""
+param dtnsim.nodesNumber 11
+
+vector 9  dtnsim.node[1].dtn  sdrBundleStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBundleStored
+attr title  "sdrBundleStored, vector"
+vector 10  dtnsim.node[1].dtn  sdrBytesStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBytesStored
+attr title  "sdrBytesStored, vector"
+vector 17  dtnsim.node[2].dtn  sdrBundleStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBundleStored
+attr title  "sdrBundleStored, vector"
+vector 18  dtnsim.node[2].dtn  sdrBytesStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBytesStored
+attr title  "sdrBytesStored, vector"
+vector 25  dtnsim.node[3].dtn  sdrBundleStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBundleStored
+attr title  "sdrBundleStored, vector"
+vector 26  dtnsim.node[3].dtn  sdrBytesStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBytesStored
+attr title  "sdrBytesStored, vector"
+vector 33  dtnsim.node[4].dtn  sdrBundleStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBundleStored
+attr title  "sdrBundleStored, vector"
+vector 34  dtnsim.node[4].dtn  sdrBytesStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBytesStored
+attr title  "sdrBytesStored, vector"
+vector 41  dtnsim.node[5].dtn  sdrBundleStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBundleStored
+attr title  "sdrBundleStored, vector"
+vector 42  dtnsim.node[5].dtn  sdrBytesStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBytesStored
+attr title  "sdrBytesStored, vector"
+vector 49  dtnsim.node[6].dtn  sdrBundleStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBundleStored
+attr title  "sdrBundleStored, vector"
+vector 50  dtnsim.node[6].dtn  sdrBytesStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBytesStored
+attr title  "sdrBytesStored, vector"
+vector 57  dtnsim.node[7].dtn  sdrBundleStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBundleStored
+attr title  "sdrBundleStored, vector"
+vector 58  dtnsim.node[7].dtn  sdrBytesStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBytesStored
+attr title  "sdrBytesStored, vector"
+vector 65  dtnsim.node[8].dtn  sdrBundleStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBundleStored
+attr title  "sdrBundleStored, vector"
+vector 66  dtnsim.node[8].dtn  sdrBytesStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBytesStored
+attr title  "sdrBytesStored, vector"
+vector 73  dtnsim.node[9].dtn  sdrBundleStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBundleStored
+attr title  "sdrBundleStored, vector"
+vector 74  dtnsim.node[9].dtn  sdrBytesStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBytesStored
+attr title  "sdrBytesStored, vector"
+vector 81  dtnsim.node[10].dtn  sdrBundleStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBundleStored
+attr title  "sdrBundleStored, vector"
+vector 82  dtnsim.node[10].dtn  sdrBytesStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBytesStored
+attr title  "sdrBytesStored, vector"
+vector 89  dtnsim.node[11].dtn  sdrBundleStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBundleStored
+attr title  "sdrBundleStored, vector"
+vector 90  dtnsim.node[11].dtn  sdrBytesStored:vector  ETV
+attr interpolationmode  none
+attr source  sdrBytesStored
+attr title  "sdrBytesStored, vector"
+vector 15  dtnsim.node[1].dtn  routeDijkstraCallsXnodes:vector  ETV
+attr interpolationmode  none
+attr source  routeDijkstraCallsXnodes
+attr title  "routeDijkstraCallsXnodes, vector"
+vector 11  dtnsim.node[1].dtn  routeCgrDijkstraCalls:vector  ETV
+attr interpolationmode  none
+attr source  routeCgrDijkstraCalls
+attr title  "routeCgrDijkstraCalls, vector"
+vector 12  dtnsim.node[1].dtn  routeCgrDijkstraLoops:vector  ETV
+attr interpolationmode  none
+attr source  routeCgrDijkstraLoops
+attr title  "routeCgrDijkstraLoops, vector"
+vector 14  dtnsim.node[1].dtn  routeCgrRouteTableEntriesExplored:vector  ETV
+attr interpolationmode  none
+attr source  routeCgrRouteTableEntriesExplored
+attr title  "routeCgrRouteTableEntriesExplored, vector"
+vector 23  dtnsim.node[2].dtn  routeDijkstraCallsXnodes:vector  ETV
+attr interpolationmode  none
+attr source  routeDijkstraCallsXnodes
+attr title  "routeDijkstraCallsXnodes, vector"
+vector 19  dtnsim.node[2].dtn  routeCgrDijkstraCalls:vector  ETV
+attr interpolationmode  none
+attr source  routeCgrDijkstraCalls
+attr title  "routeCgrDijkstraCalls, vector"
+vector 20  dtnsim.node[2].dtn  routeCgrDijkstraLoops:vector  ETV
+attr interpolationmode  none
+attr source  routeCgrDijkstraLoops
+attr title  "routeCgrDijkstraLoops, vector"
+vector 22  dtnsim.node[2].dtn  routeCgrRouteTableEntriesExplored:vector  ETV
+attr interpolationmode  none
+attr source  routeCgrRouteTableEntriesExplored
+attr title  "routeCgrRouteTableEntriesExplored, vector"
+vector 95  dtnsim.node[11].dtn  routeDijkstraCallsXnodes:vector  ETV
+attr interpolationmode  none
+attr source  routeDijkstraCallsXnodes
+attr title  "routeDijkstraCallsXnodes, vector"
+vector 91  dtnsim.node[11].dtn  routeCgrDijkstraCalls:vector  ETV
+attr interpolationmode  none
+attr source  routeCgrDijkstraCalls
+attr title  "routeCgrDijkstraCalls, vector"
+vector 92  dtnsim.node[11].dtn  routeCgrDijkstraLoops:vector  ETV
+attr interpolationmode  none
+attr source  routeCgrDijkstraLoops
+attr title  "routeCgrDijkstraLoops, vector"
+vector 94  dtnsim.node[11].dtn  routeCgrRouteTableEntriesExplored:vector  ETV
+attr interpolationmode  none
+attr source  routeCgrRouteTableEntriesExplored
+attr title  "routeCgrRouteTableEntriesExplored, vector"
+vector 80  dtnsim.node[10].dtn  dtnBundleSentToAppHopCount:vector  ETV
+attr interpolationmode  none
+attr source  dtnBundleSentToAppHopCount
+attr title  "dtnBundleSentToAppHopCount, vector"
+vector 31  dtnsim.node[3].dtn  routeDijkstraCallsXnodes:vector  ETV
+attr interpolationmode  none
+attr source  routeDijkstraCallsXnodes
+attr title  "routeDijkstraCallsXnodes, vector"
+vector 39  dtnsim.node[4].dtn  routeDijkstraCallsXnodes:vector  ETV
+attr interpolationmode  none
+attr source  routeDijkstraCallsXnodes
+attr title  "routeDijkstraCallsXnodes, vector"
+vector 47  dtnsim.node[5].dtn  routeDijkstraCallsXnodes:vector  ETV
+attr interpolationmode  none
+attr source  routeDijkstraCallsXnodes
+attr title  "routeDijkstraCallsXnodes, vector"
+vector 55  dtnsim.node[6].dtn  routeDijkstraCallsXnodes:vector  ETV
+attr interpolationmode  none
+attr source  routeDijkstraCallsXnodes
+attr title  "routeDijkstraCallsXnodes, vector"
+vector 63  dtnsim.node[7].dtn  routeDijkstraCallsXnodes:vector  ETV
+attr interpolationmode  none
+attr source  routeDijkstraCallsXnodes
+attr title  "routeDijkstraCallsXnodes, vector"
+vector 71  dtnsim.node[8].dtn  routeDijkstraCallsXnodes:vector  ETV
+attr interpolationmode  none
+attr source  routeDijkstraCallsXnodes
+attr title  "routeDijkstraCallsXnodes, vector"
+vector 79  dtnsim.node[9].dtn  routeDijkstraCallsXnodes:vector  ETV
+attr interpolationmode  none
+attr source  routeDijkstraCallsXnodes
+attr title  "routeDijkstraCallsXnodes, vector"
+9	8178 38 0 52 0 1000 4 0 1 1 1
+10	8216 42 0 52 0 1000 4 0 1 1 1
+11	8258 9 2 2 0 0 1 2 2 2 4
+12	8267 9 2 2 0 0 1 3 3 3 9
+14	8276 9 2 2 0 0 1 1 1 1 1
+15	8285 44 2 43 0 1000 4 2 4 14 52
+17	8329 44 0 52 0 1000 4 0 1 1 1
+18	8373 44 0 52 0 1000 4 0 1 1 1
+19	8417 11 17 17 10 10 1 2 2 2 4
+20	8428 11 17 17 10 10 1 3 3 3 9
+22	8439 11 17 17 10 10 1 1 1 1 1
+23	8450 35 17 44 10 1000 3 2 4 10 36
+25	8485 22 0 52 0 1000 2 0 0 0 0
+26	8507 22 0 52 0 1000 2 0 0 0 0
+31	8529 13 45 45 1000 1000 1 0 0 0 0
+33	8542 22 0 52 0 1000 2 0 0 0 0
+34	8564 22 0 52 0 1000 2 0 0 0 0
+39	8586 13 46 46 1000 1000 1 0 0 0 0
+41	8599 22 0 52 0 1000 2 0 0 0 0
+42	8621 22 0 52 0 1000 2 0 0 0 0
+47	8643 13 47 47 1000 1000 1 0 0 0 0
+49	8656 22 0 52 0 1000 2 0 0 0 0
+50	8678 22 0 52 0 1000 2 0 0 0 0
+55	8700 13 48 48 1000 1000 1 0 0 0 0
+57	8713 22 0 52 0 1000 2 0 0 0 0
+58	8735 22 0 52 0 1000 2 0 0 0 0
+63	8757 13 49 49 1000 1000 1 0 0 0 0
+65	8770 22 0 52 0 1000 2 0 0 0 0
+66	8792 22 0 52 0 1000 2 0 0 0 0
+71	8814 13 50 50 1000 1000 1 0 0 0 0
+73	8827 22 0 52 0 1000 2 0 0 0 0
+74	8849 22 0 52 0 1000 2 0 0 0 0
+79	8871 13 51 51 1000 1000 1 0 0 0 0
+80	8884 11 33 33 10 10 1 3 3 3 9
+81	8895 22 0 52 0 1000 2 0 0 0 0
+82	8917 22 0 52 0 1000 2 0 0 0 0
+89	8939 44 0 52 0 1000 4 0 1 1 1
+90	8983 44 0 52 0 1000 4 0 1 1 1
+91	9027 11 22 22 10 10 1 2 2 2 4
+92	9038 11 22 22 10 10 1 3 3 3 9
+94	9049 11 22 22 10 10 1 1 1 1 1
+95	9060 35 22 52 10 1000 3 2 4 10 36

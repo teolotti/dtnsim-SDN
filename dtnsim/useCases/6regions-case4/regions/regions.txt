@@ -1,0 +1,20 @@
+a node 1 A rx tx
+a node 1 B rx tx
+a node 2 A rx
+a node 2 D tx
+a node 3 B rx tx
+a node 4 B rx tx
+a node 5 B rx tx
+a node 6 B rx
+a node 6 C tx
+a node 7 C rx tx
+a node 8 C rx tx
+a node 9 C rx tx
+a node 10 C rx
+a node 10 E rx
+a node 11 D rx
+a node 11 E tx
+
+
+
+
