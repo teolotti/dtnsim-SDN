@@ -205,6 +205,12 @@ void Dtn::initialize(int stage)
 			int repetition = this->getParentModule()->getParentModule()->getSubmodule("central")->par("repetition");
 			routing = new RoutingUncertainUniboCgr(eid_, &sdr_, &contactPlan_, this, this->metricCollector_, -1, useUncertainty, repetition, numOfNodes);
 		}
+		else if (routeString.compare("uniboCgr") == 0)
+		{
+			int numOfNodes = this->getParentModule()->getParentModule()->par("nodesNumber");
+			int repetition = this->getParentModule()->getParentModule()->getSubmodule("central")->par("repetition");
+			routing = new RoutingUncertainUniboCgr(eid_, &sdr_, &contactPlan_, this, this->metricCollector_, -1, false, repetition, numOfNodes);
+		}
 		else if (routeString.compare("ORUCOP") == 0)
 		{
 			int numOfNodes = this->getParentModule()->getParentModule()->par("nodesNumber");
