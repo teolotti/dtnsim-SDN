@@ -530,7 +530,7 @@ vector<int> Central::getCentralityContactIds(int nContacts, int nodesNumber)
 					bundle->setHopCount(0);
 					bundle->setNextHopEid(0);
 					bundle->setSenderEid(0);
-					bundle->getVisitedNodes().clear();
+					bundle->getVisitedNodesForUpdate().clear();
 					CgrRoute emptyRoute;
 					emptyRoute.nextHop = EMPTY_ROUTE;
 					bundle->setCgrRoute(emptyRoute);
@@ -658,7 +658,7 @@ int Central::computeTotalRoutesNumber(ContactPlan &contactPlan, int nodesNumber,
 				bundle->setHopCount(0);
 				bundle->setNextHopEid(0);
 				bundle->setSenderEid(0);
-				bundle->getVisitedNodes().clear();
+				bundle->getVisitedNodesForUpdate().clear();
 				CgrRoute emptyRoute;
 				emptyRoute.nextHop = EMPTY_ROUTE;
 				bundle->setCgrRoute(emptyRoute);

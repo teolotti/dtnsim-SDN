@@ -72,7 +72,8 @@ typedef struct {
 
 extern ContactPlanSAP get_contact_plan_sap(ContactPlanSAP *newSap);
 
-extern void set_time_contact_plan_updated(__time_t seconds, __suseconds_t micro_seconds);
+//extern void set_time_contact_plan_updated(__time_t seconds, __suseconds_t micro_seconds);
+extern void set_time_contact_plan_updated(time_t seconds, suseconds_t micro_seconds);
 
 extern int initialize_contact_plan(bool newNode);
 

@@ -94,7 +94,7 @@ ContactPlanSAP get_contact_plan_sap(ContactPlanSAP *newSap) {
  *  -------- | --------------- | -----------------------------------------------
  *  02/07/20 | L. Persampieri  |  Initial Implementation and documentation.
  *****************************************************************************/
-void set_time_contact_plan_updated(__time_t seconds, __suseconds_t micro_seconds) {
+void set_time_contact_plan_updated(time_t seconds, suseconds_t micro_seconds) {
 	ContactPlanSAP sap = get_contact_plan_sap(NULL);
 
 	sap.contactPlanEditTime.tv_sec = seconds;

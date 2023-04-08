@@ -55,7 +55,7 @@ void RoutingBRUFNCopies::msgToOtherArrive(BundlePkt * bundle, double simTime)
 		int copies = bundle->getBundlesCopies();
 
 		//The bundle was transmitted from other node. So, it checks if the bundle has to be sent now or if it has to be stored.
-		CgrRoute * route = &(bundle->getCgrRoute());
+		CgrRoute * route = &(bundle->getCgrRouteForUpdate());
 		if (route->terminusNode == eid_)
 		{
 			// Bundle has to be stored

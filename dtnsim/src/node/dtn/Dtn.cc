@@ -481,7 +481,7 @@ void Dtn::handleMessage(cMessage *msg)
 					// Set bundle metadata (set by intermediate nodes)
 					bundle->setSenderEid(eid_);
 					bundle->setHopCount(bundle->getHopCount() + 1);
-					bundle->getVisitedNodes().push_back(eid_);
+					bundle->getVisitedNodesForUpdate().push_back(eid_);
 					bundle->setXmitCopiesCount(0);
 
 					//cout<<"-----> sending bundle to node "<<bundle->getNextHopEid()<<endl;
@@ -572,8 +572,8 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 		// We are the final destination of this bundle
 		emit(dtnBundleSentToApp, true);
 		emit(dtnBundleSentToAppHopCount, bundle->getHopCount());
-		bundle->getVisitedNodes().sort();
-		bundle->getVisitedNodes().unique();
+		bundle->getVisitedNodesForUpdate().sort();
+		bundle->getVisitedNodesForUpdate().unique();
 		emit(dtnBundleSentToAppRevisitedHops, bundle->getHopCount() - bundle->getVisitedNodes().size());
 
 		// Check if this bundle has previously arrived here

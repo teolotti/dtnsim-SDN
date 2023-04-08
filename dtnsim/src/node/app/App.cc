@@ -125,7 +125,7 @@ void App::handleMessage(cMessage *msg)
 		bundle->setNextHopEid(0);
 		bundle->setSenderEid(0);
 		bundle->setCustodianEid(this->eid_);
-		bundle->getVisitedNodes().clear();
+		bundle->getVisitedNodesForUpdate().clear();
 		CgrRoute emptyRoute;
 		emptyRoute.nextHop = EMPTY_ROUTE;
 		bundle->setCgrRoute(emptyRoute);

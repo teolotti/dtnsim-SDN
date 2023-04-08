@@ -1,16 +1,22 @@
 
 
 cplusplus {{
-    // Include Contact and CgrRoute structures
     #include "src/node/dtn/routing/CgrRoute.h"
-    
     typedef std::list<int> intList;
-    typedef std::list<CgrRoute> cgrRouteList;
 }}
 
-struct CgrRoute;
-class noncobject intList;
-class noncobject cgrRouteList;
+class CgrRoute
+{
+    @existingClass;
+}
+
+class intList
+{
+    @existingClass;
+}
+
+//struct CgrRoute;
+//class noncobject cgrRouteList;
 
 packet BundlePkt{
 		////////////////////////////////////////////////    

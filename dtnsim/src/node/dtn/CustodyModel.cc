@@ -136,7 +136,7 @@ BundlePkt * CustodyModel::getNewCustodyReport(bool accept, BundlePkt *bundleInCu
 	custodyReport->setNextHopEid(0);
 	custodyReport->setSenderEid(0);
 	custodyReport->setCustodianEid(0);
-	custodyReport->getVisitedNodes().clear();
+	custodyReport->getVisitedNodesForUpdate().clear();
 	CgrRoute emptyRoute;
 	emptyRoute.nextHop = EMPTY_ROUTE;
 	custodyReport->setCgrRoute(emptyRoute);
