@@ -52,7 +52,7 @@ private:
 	vector<double> pred_table_;
 	vector<double> last_seen_;
 	vector<double> last_updated_;
-	unordered_map<int, int> currently_active_;
+	std::unordered_map<int, int> currently_active_;
 	MetricCollector* metricCollector_;
 	vector<vector<double>> inactive_intervals_;
 	float p_encouter_max_;

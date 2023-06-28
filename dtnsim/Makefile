@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for dtnsim
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -I. -I/usr/include/python3.8 -lpython3.8 -Xsrc/node/dtn/routing/unibocgr/dtnme -Xtests
+#  opp_makemake -f --deep -O out -e cc -I/home/madoery/cplex/concert/include -I/home/madoery/cplex/cplex/include -I/home/madoery/boost_1_79_0 -I. -I/usr/include/python3.8 -L/home/madoery/cplex/cplex/lib/x86-64_linux/static_pic/ -L/home/madoery/cplex/concert/lib/x86-64_linux/static_pic/ -lpthread -lconcert -lilocplex -lcplex -lm -ldl -lpython3.8 -Xsrc/node/dtn/routing/unibocgr/dtnme -Xtests
 #
 
 # Name of target to be created (-o option)
@@ -19,13 +19,13 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(QTENV_LIBS) $(CMDENV_LIBS)
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I. -I/usr/include/python3.8
+INCLUDE_PATH = -I/home/madoery/cplex/concert/include -I/home/madoery/cplex/cplex/include -I/home/madoery/boost_1_79_0 -I. -I/usr/include/python3.8
 
 # Additional object and library files to link with
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS =  -lpython3.8
+LIBS = $(LDFLAG_LIBPATH)/home/madoery/cplex/cplex/lib/x86-64_linux/static_pic/ $(LDFLAG_LIBPATH)/home/madoery/cplex/concert/lib/x86-64_linux/static_pic/  -lpthread -lconcert -lilocplex -lcplex -lm -ldl -lpython3.8
 
 # Output directory
 PROJECT_OUTPUT_DIR = out
@@ -119,6 +119,9 @@ include $(CONFIGFILE)
 
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
+ifneq ($(PLATFORM),win32)
+LIBS += -Wl,-rpath,$(abspath /home/madoery/cplex/cplex/lib/x86-64_linux/static_pic/) -Wl,-rpath,$(abspath /home/madoery/cplex/concert/lib/x86-64_linux/static_pic/)
+endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES)  $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
 MSGCOPTS = $(INCLUDE_PATH)

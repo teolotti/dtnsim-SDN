@@ -87,7 +87,7 @@ public:
 	void addCurrentNeighbor(int neighborEid);
 	void removeCurrentNeighbor(int neighborEid);
 	int checkExistenceOfContact(int sourceEid, int destinationEid, int start);
-
+	double getSdrSize() const;
 
 protected:
 	virtual void initialize(int stage);
@@ -130,6 +130,8 @@ private:
 	double custodyTimeout_;
 
 	SdrModel sdr_;
+
+	double sdrSize_;
 
 	// BundlesMap
 	bool saveBundleMap_;

@@ -134,20 +134,23 @@ void saveGraphs(map<double, TopologyGraph> *topology, std::string outFileLocatio
 	ofs << "nodesep=equally; " << endl;
 	ofs << "\n\n";
 
+    //ofs << "label= \"\\n\\nDotted Lines = Contacts \\n" << "-------------------------------" << "\"";
+    //ofs << "\n\n";
+
 	int k = 1;
 	for (; it1 != it2; ++it1)
 	{
 		double state = it1->first;
 		TopologyGraph graph = it1->second;
 
-		ofs << "// k = " << k << ", state start = " << state << "s" << endl;
+		ofs << "// k = " << k << ", state start = " << state << "k" << endl;
 
 		// write all vertices labels
 		typename TopologyGraph::vertex_iterator vi, vi_end, vi2, vi2_end;
 		for (tie(vi, vi_end) = vertices(graph); vi != vi_end; ++vi)
 		{
 			int vertexId = graph[*vi].eid;
-			ofs << vertexId << "." << state << " [label=L" << vertexId << "];" << endl;
+			ofs << vertexId << "." << state << " [label=N" << vertexId << "];" << endl;
 		}
 
 		// write last dummy vertex that will contain state data
@@ -182,8 +185,9 @@ void saveGraphs(map<double, TopologyGraph> *topology, std::string outFileLocatio
 		{
 			int v1Id = graph[source(*ei, graph)].eid;
 			int v2Id = graph[target(*ei, graph)].eid;
-			string weight = string("id:") + to_string(graph[*ei].id) + string("\\n") + to_string((int) graph[*ei].stateCapacity);
-			ofs << v1Id << "." << state << edgeString << v2Id << "." << state << " [color=black,fontcolor=black,label=\"" << weight << "\",penwidth=2];" << endl;
+			//string weight = string("id:") + to_string(graph[*ei].id) + string("\\n") + to_string((int) graph[*ei].stateCapacity);
+			string weight = to_string((int) graph[*ei].stateCapacity);
+			ofs << v1Id << "." << state << edgeString << v2Id << "." << state << " [color=grey,fontcolor=grey, style=\"dotted\", label=\"" << weight << "\",penwidth=2];" << endl;
 		}
 
 		ofs << "\n";
@@ -235,6 +239,10 @@ void saveGraphs(map<double, TopologyGraph> *topology, std::string outFileLocatio
 	//create pdf from .dot
 	string command = "dot -Tpdf " + outFileLocation + " -o " + outFileLocation + string(".pdf");
 	system(command.c_str());
+
+    //create png from .dot
+    string command2 = "dot -Tpng " + outFileLocation + " -o " + outFileLocation + string(".png");
+    system(command2.c_str());
 }
 
 void printGraph(TopologyGraph topologyGraph)

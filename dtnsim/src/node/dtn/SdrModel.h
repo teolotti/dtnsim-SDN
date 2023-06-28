@@ -30,7 +30,7 @@ public:
 	virtual void setEid(int eid);
 	virtual void setNodesNumber(int nodesNumber);
 	virtual void setContactPlan(ContactPlan *contactPlan);
-	virtual void setSize(int size);
+	virtual void setSize(double size);
 	virtual void freeSdr(int eid);
 
 	// Get information
@@ -65,7 +65,7 @@ public:
 
 private:
 
-	int size_;  		// Capacity of sdr in bytes
+	double size_;  		// Capacity of sdr in bytes
 	int eid_;  			// Local eid of the node
 	int nodesNumber_;	// Number of nodes in the network
 	int bytesStored_;	// Total Bytes stored in Sdr

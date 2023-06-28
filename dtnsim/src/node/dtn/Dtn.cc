@@ -48,6 +48,8 @@ void Dtn::initialize(int stage)
 		// Store this node eid
 		this->eid_ = this->getParentModule()->getIndex();
 
+		this->sdrSize_ = par("sdrSize");
+
 		this->custodyTimeout_ = par("custodyTimeout");
 		this->custodyModel_.setEid(eid_);
 		this->custodyModel_.setSdr(&sdr_);
@@ -1183,3 +1185,7 @@ int Dtn::checkExistenceOfContact(int sourceEid, int destinationEid, int start)
 	}
 }
 
+double Dtn::getSdrSize() const
+{
+	return sdrSize_;
+}

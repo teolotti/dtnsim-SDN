@@ -19,37 +19,6 @@ void Central::initialize()
 {
 	nodesNumber_ = this->getParentModule()->par("nodesNumber");
 
-//	// If There are nodes which will use ION environment
-//	// several folders and processes may be deleted or killed
-//	ionNodes_ = false;
-//	for (int i = 0; i < nodesNumber_; i++)
-//	{
-//		string routing = this->getParentModule()->getSubmodule("node", i)->getSubmodule("dtn")->par("routing");
-//		if (routing == "cgrIon350")
-//		{
-//			ionNodes_ = true;
-//			break;
-//		}
-//	}
-//	if (ionNodes_)
-//	{
-//		// create result folder if it doesn't exist
-//		struct stat st =
-//		{ 0 };
-//		if (stat("ionFiles", &st) == -1)
-//		{
-//			mkdir("ionFiles", 0700);
-//		}
-//
-//		// erase old folders and processes
-//		bubble("Killing ION processes ...");
-//		system("rm -rf ionFiles/ion_nodes");
-//		string command1 = "rm -rf ionFiles/node*";
-//		system(command1.c_str());
-//		system("chmod +x ../../src/ion/killm");
-//		system("../../src/ion/killm");
-//	}
-
 	// Initialize contact plan
 	contactPlan_.parseContactPlanFile(par("contactsFile"), nodesNumber_, this->par("mode"), this->par("failureProbability"));
 
@@ -182,12 +151,6 @@ void Central::finish()
 {
 	if (nodesNumber_ >= 1)
 	{
-//		if (ionNodes_)
-//		{
-//			bubble("Killing ION processes ...");
-//			system("../../src/ion/killm");
-//		}
-
 		this->metricCollector_.evaluateAndPrintResults();
 
 		if (this->par("saveTopology"))
@@ -268,7 +231,7 @@ void Central::saveLpFlows()
 	// traffic[k][k1][k2] generated in state k by commodity k1-k2
 	map<int, map<int, map<int, double> > > traffic = getTraffics();
 
-	Lp lp(&this->contactTopology_, nodesNumber_, traffic);
+	Lp lp(&this->contactTopology_, nodesNumber_, traffic, getNodesBuffersSizes());
 
 	lp.exportModel("results/lpModel");
 	bool solved = lp.solve();
@@ -716,6 +679,17 @@ set<int> Central::getAffectedContacts(vector<CgrRoute> shortestPaths)
 	}
 
 	return affectedContacts;
+}
+
+vector<double> Central::getNodesBuffersSizes()
+{
+	vector<double> sizes;
+	for (int i = 0; i <= nodesNumber_; i++)
+	{
+		Dtn *dtn = check_and_cast<Dtn *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("dtn"));
+		sizes.push_back(dtn->getSdrSize());
+	}
+	return sizes;
 }
 
 }

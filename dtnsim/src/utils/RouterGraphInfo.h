@@ -24,8 +24,8 @@ struct RouterVertexInfo
 	RouterVertexInfo()
 	{
 		bufferCapacity = 0;
-		initialBufferOccupancy.resize(extents[20][20]);
-		finalBufferOccupancy.resize(extents[20][20]);
+		initialBufferOccupancy.resize(extents[100][100]);
+		finalBufferOccupancy.resize(extents[100][100]);
 	}
 };
 
@@ -44,7 +44,7 @@ struct RouterEdgeInfo
 	RouterEdgeInfo()
 	{
 	    stateCapacity = 0.0;
-		flows.resize(extents[20][20]);
+		flows.resize(extents[100][100]);
 	}
 };
 

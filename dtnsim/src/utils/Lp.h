@@ -1,3 +1,4 @@
+
 #ifndef LP_H_
 #define LP_H_
 
@@ -13,12 +14,12 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/bimap.hpp>
 #include <boost/multi_array.hpp>
-#include "RouterGraphInfo.h"
+#include "src/utils/RouterGraphInfo.h"
 #include "boost/date_time/posix_time/posix_time.hpp"
-#include "ContactPlan.h"
-#include "TopologyUtils.h"
-#include "RouterUtils.h"
-#include "ContactPlan.h"
+#include "src/node/dtn/ContactPlan.h"
+#include "src/utils/TopologyUtils.h"
+#include "src/utils/RouterUtils.h"
+#include "src/node/dtn/ContactPlan.h"
 
 using namespace std;
 using namespace boost;
@@ -33,7 +34,7 @@ public:
 	/// by source node k1 to destination node k2
 	/// solve() must be called to solve the constructed model
 	/// getSolvedStates must be called to get the solution/solutions
-	Lp(ContactPlan *contactPlan, int nodesNumber, map<int, map<int, map<int, double> > > traffic);
+	Lp(ContactPlan *contactPlan, int nodesNumber, map<int, map<int, map<int, double> > > traffic, vector<double>);
 
 	/// @brief Destructor
 	virtual ~Lp();
@@ -140,4 +141,3 @@ private:
 #endif /* LP_H_ */
 #endif /* USE_BOOST_LIBRARIES */
 #endif /* USE_CPLEX_LIBRARY */
-

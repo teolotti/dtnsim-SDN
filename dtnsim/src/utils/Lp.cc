@@ -3,7 +3,7 @@
 #ifdef USE_CPLEX_LIBRARY
 #ifdef USE_BOOST_LIBRARIES
 
-Lp::Lp(ContactPlan *contactPlan, int nodesNumber, map<int, map<int, map<int, double> > > traffic)
+Lp::Lp(ContactPlan *contactPlan, int nodesNumber, map<int, map<int, map<int, double> > > traffic, vector<double> buffersSizes)
 {
 	contactPlan_ = contactPlan;
 	nodesNumber_ = nodesNumber;
@@ -27,8 +27,14 @@ Lp::Lp(ContactPlan *contactPlan, int nodesNumber, map<int, map<int, map<int, dou
 			RouterGraph::vertex_descriptor vertex = add_vertex(routerGraph);
 			routerGraph[vertex].eid = i;
 
-			// todo set the real buffer capacities (sdr size)
-			routerGraph[vertex].bufferCapacity = numeric_limits<double>::max();
+			if(buffersSizes.at(i) == 0)
+			{
+				routerGraph[vertex].bufferCapacity = numeric_limits<double>::max();
+			}
+			else
+			{
+				routerGraph[vertex].bufferCapacity = buffersSizes.at(i);
+			}
 		}
 
 		//double stateTime = it1->first;
@@ -148,6 +154,9 @@ void Lp::populateModel()
 	// Ad Hoc Networks, Volume 47, 1 September 2016, Pages 41-52, ISSN 1570-8705,
 	// http://doi.org/10.1016/j.adhoc.2016.04.007.
 
+	// Weight in Objective function
+	double alpha = 0.5;
+
 	// bimapa de boost utilizado para acceder a los nombres e índices de las variables
 	typedef bimap<string, int>::value_type bimapElement;
 
@@ -184,7 +193,9 @@ void Lp::populateModel()
 				dVars_.add(IloNumVar(env_, 0, IloInfinity, IloNumVar::Int, xName.c_str()));
 				variables_.insert(bimapElement(xName, dVars_.getSize() - 1));
 
-				fObj.operator +=(tqAccum * dVars_[dVars_.getSize() - 1]);
+				// El termino de la derecha es mayor mientras mas arcos se utilicen.
+				// Necesitamos minimizarlo. Como estamos maximizando la funcion objetivo, ponemos ese termino restando.
+				fObj.operator -= ((1-alpha) * dVars_[dVars_.getSize() - 1]);
 			}
 		}
 		// Se agregan variables de ocupación de buffers
@@ -204,9 +215,10 @@ void Lp::populateModel()
 				dVars_.add(IloNumVar(env_, 0, IloInfinity, IloNumVar::Int, nName.c_str()));
 				variables_.insert(bimapElement(nName, dVars_.getSize() - 1));
 
+				// Mientras antes lleguen los traficos a sus buffer destino, este termino será mayor. Necesitamos maximizarlo.
 				if (graph[*vi].eid == k2)
 				{
-					fObj.operator -=(pow(tq, 3) * dVars_[dVars_.getSize() - 1]);
+					fObj.operator += (alpha * tq * dVars_[dVars_.getSize() - 1]);
 				}
 			}
 		}
@@ -238,7 +250,7 @@ void Lp::populateModel()
 		}
 	}
 
-	model_.add(IloMinimize(env_, fObj, "K"));
+	model_.add(IloMaximize(env_, fObj, "K"));
 	fObj.end();
 
 	// Se agregan restricciones de conservación de flujo
@@ -306,7 +318,7 @@ void Lp::populateModel()
 				}
 
 				IloRange c(expr == 0);
-				c.setName((string("FlowConservationConstraint_n") + lexical_cast < string > (graph[*vi].eid) + string("_t") + lexical_cast < string > (s)).c_str());
+				//c.setName((string("FlowConservationConstraint_n") + lexical_cast < string > (graph[*vi].eid) + string("_t") + lexical_cast < string > (s)).c_str());
 
 				constraints_.add(c);
 				expr.end();
@@ -339,7 +351,7 @@ void Lp::populateModel()
 			}
 
 			IloRange c(expr <= bufferCapacity);
-			c.setName((string("BufferCapacityConstraint_n") + lexical_cast < string > (graph[*vi].eid)).c_str());
+			//c.setName((string("BufferCapacityConstraint_n") + lexical_cast < string > (graph[*vi].eid)).c_str());
 
 			constraints_.add(c);
 			expr.end();
@@ -369,7 +381,7 @@ void Lp::populateModel()
 				}
 
 				IloRange c(expr <= bufferCapacity);
-				c.setName((string("BufferCapacityConstraint_n") + lexical_cast < string > (graph[*vi].eid)).c_str());
+				//c.setName((string("BufferCapacityConstraint_n") + lexical_cast < string > (graph[*vi].eid)).c_str());
 
 				constraints_.add(c);
 				expr.end();
@@ -405,7 +417,7 @@ void Lp::populateModel()
 			}
 
 			IloRange c(expr <= (stateCapacity));
-			c.setName((string("ArcCapacityConstraint_e") + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (graph[v].eid)).c_str());
+			//c.setName((string("ArcCapacityConstraint_e") + lexical_cast < string > (graph[u].eid) + "." + lexical_cast < string > (graph[v].eid)).c_str());
 
 			constraints_.add(c);
 			expr.end();
@@ -435,13 +447,13 @@ void Lp::populateModel()
 			if (graph1[*vi].eid == k1)
 			{
 				IloRange c(expr == this->getTraffic(0, k1, k2));
-				c.setName((string("InitialConditionConstraint_n") + lexical_cast < string > (graph1[*vi].eid)).c_str());
+				//c.setName((string("InitialConditionConstraint_n") + lexical_cast < string > (graph1[*vi].eid)).c_str());
 				constraints_.add(c);
 			}
 			else
 			{
 				IloRange c(expr == 0);
-				c.setName((string("InitialConditionConstraint_n") + lexical_cast < string > (graph1[*vi].eid)).c_str());
+				//c.setName((string("InitialConditionConstraint_n") + lexical_cast < string > (graph1[*vi].eid)).c_str());
 				constraints_.add(c);
 			}
 
@@ -476,7 +488,7 @@ void Lp::populateModel()
 						expr.operator +=(dVars_[nVarIndex]);
 
 						IloRange c(expr >= traffic);
-						c.setName((string("InitialConditionConstraint_n") + lexical_cast < string > (graph3[*vi].eid)).c_str());
+						//c.setName((string("InitialConditionConstraint_n") + lexical_cast < string > (graph3[*vi].eid)).c_str());
 						constraints_.add(c);
 
 						expr.end();
@@ -508,7 +520,7 @@ void Lp::populateModel()
 		}
 
 		IloRange c(expr == this->getTrafficForDestination(graph2[*vi].eid));
-		c.setName((string("FinalConditionConstraint_n") + lexical_cast < string > (graph2[*vi].eid)).c_str());
+		//c.setName((string("FinalConditionConstraint_n") + lexical_cast < string > (graph2[*vi].eid)).c_str());
 		constraints_.add(c);
 		expr.end();
 	}
@@ -894,3 +906,4 @@ ContactPlan* Lp::getContactPlan()
 
 #endif /* USE_BOOST_LIBRARIES */
 #endif /* USE_CPLEX_LIBRARY */
+

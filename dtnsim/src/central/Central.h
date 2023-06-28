@@ -59,6 +59,8 @@ private:
 
 	map<int, map<int, map<int, double > > > getTraffics();
 
+	vector<double> getNodesBuffersSizes();
+
 	double getState(double trafficStart);
 
 	/// @brief delete contacts from contactPlan_

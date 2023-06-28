@@ -12,7 +12,7 @@ simple Dtn
         double sContactProb = default(1.0);
         bool printRoutingDebug = default(false);
         bool saveBundleMap = default(false);
-        int sdrSize = default(0); // SDR Memory Size in Bytes (0 = infinite)
+        double sdrSize = default(0); // SDR Memory Size in Bytes (0 = infinite)
         string frouting = default(""); //Path to file wich encodes routing decisions (only valid for BRUF1T/BRUFNCopies routing)
         int ts_duration = default(-1); //The timestamp duration in seconds (only valid for CGR_BRUFPowered routing). Use ts_duration or ts_start_times both are not possible
         string ts_start_times = default(""); //"a,b,c,..." a,b,c are integer and they indicate the second of start of 0, 1, 2,.. time stamp (only valid for CGR_BRUFPowered routing) Use ts_duration or ts_start_times both are not possible.
