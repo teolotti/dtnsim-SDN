@@ -64,7 +64,7 @@ mar2 = 7
 mar3 = 7
 mar4 = 9
 
-TTF = [200, 400, 600, 800, 1000, 1200]
+TTF = [10] + list(range(20,100,20)) + list(range(100,1100,100))
 repetitions = list(range(0,50))
 results1 = get_delivery_ratio(INPUT_PATH, scenarios, TTF, repetitions)
 
@@ -82,7 +82,7 @@ ax.set_xlabel("TTF [s]", fontsize=13)
 ax.set_ylabel("Delivery ratio", fontsize=13)
 plt.tight_layout()
 plt.grid(linewidth=LINEWIDTH, zorder=0)
-ax.legend(loc='lower left', prop={'size': 12})
+ax.legend(loc='lower right', prop={'size': 12})
 plt.savefig("delivery_ratio.png")
 plt.cla()
 plt.clf()
