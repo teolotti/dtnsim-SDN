@@ -1,0 +1,14 @@
+a contact +0 +86400 10 1 1
+a contact +0 +86400 1 10 1
+a contact +0 +86400 11 10 1
+a contact +0 +86400 10 11 1
+a contact +28961 +29650 44 11 1
+a contact +28961 +29650 11 44 1
+a contact +34929 +35808 44 11 1
+a contact +34929 +35808 11 44 1
+a contact +41195 +41492 44 11 1
+a contact +41195 +41492 11 44 1
+a contact +75193 +76035 44 11 1
+a contact +75193 +76035 11 44 1
+a contact +81235 +82069 44 11 1
+a contact +81235 +82069 11 44 1

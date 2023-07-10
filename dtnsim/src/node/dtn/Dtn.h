@@ -20,6 +20,7 @@
 #include <src/node/dtn/routing/brufncopies/RoutingBRUFNCopies.h>
 #include <src/node/dtn/routing/cgrbrufpowered/CGRBRUFPowered.h>
 #include <src/node/dtn/SdrModel.h>
+#include <src/central/Central.h>
 #include <cstdio>
 #include <string>
 #include <omnetpp.h>

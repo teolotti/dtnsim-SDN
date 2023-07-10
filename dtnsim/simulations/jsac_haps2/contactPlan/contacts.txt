@@ -1,4 +1,0 @@
-m horizon  +0
-a contact +10 +20 1 2 1
-a contact +0 +100 2 3 1
-

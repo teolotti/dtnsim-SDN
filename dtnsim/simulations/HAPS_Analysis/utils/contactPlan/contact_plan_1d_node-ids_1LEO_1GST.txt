@@ -1,0 +1,10 @@
+a contact +0 +86400 10 1 1
+a contact +0 +86400 1 10 1
+a contact +29067 +29547 44 10 1
+a contact +29067 +29547 10 44 1
+a contact +35001 +35737 44 10 1
+a contact +35001 +35737 10 44 1
+a contact +75271 +75957 44 10 1
+a contact +75271 +75957 10 44 1
+a contact +81316 +81987 44 10 1
+a contact +81316 +81987 10 44 1

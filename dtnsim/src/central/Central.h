@@ -41,6 +41,7 @@ public:
 	void finish();
 	virtual void initialize();
 	virtual void handleMessage(cMessage * msg);
+	int getNodesNumber();
 
 private:
 

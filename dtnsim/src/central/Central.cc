@@ -692,5 +692,10 @@ vector<double> Central::getNodesBuffersSizes()
 	return sizes;
 }
 
+int Central::getNodesNumber()
+{
+	return nodesNumber_;
+}
+
 }
 
