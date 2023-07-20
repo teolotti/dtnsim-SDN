@@ -5,3 +5,6 @@
 # Ignore binaries
 dtnsim/out/
 dtnsim/dtnsim
+
+# user-specific files
+.vscode/*
