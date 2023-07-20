@@ -1,0 +1,32 @@
+** Event #0   t=0   Elapsed: 1.7e-05s (0m 00s)
+     Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
+     Messages:  created: 64988   present: 64988   in FES: 64988
+** Event #204544   t=93600   Elapsed: 2.00625s (0m 02s)
+     Speed:     ev/sec=101954   simsec/sec=46654.4   ev/simsec=2.18531
+     Messages:  created: 94438   present: 56020   in FES: 54638
+** Event #448000   t=180003.583999999965   Elapsed: 4.00703s (0m 04s)
+     Speed:     ev/sec=121681   simsec/sec=43185.1   ev/simsec=2.81766
+     Messages:  created: 124848   present: 46425   in FES: 45273
+** Event #656896   t=253725.219733333214   Elapsed: 6.00871s (0m 06s)
+     Speed:     ev/sec=104360   simsec/sec=36829.7   ev/simsec=2.83358
+     Messages:  created: 150886   present: 38773   in FES: 37618
+** Event #870912   t=343622.394133333363   Elapsed: 8.01033s (0m 08s)
+     Speed:     ev/sec=106922   simsec/sec=44912.4   ev/simsec=2.38068
+     Messages:  created: 179491   present: 28973   in FES: 27938
+** Event #1097984   t=450001   Elapsed: 10.0147s (0m 10s)
+     Speed:     ev/sec=113286   simsec/sec=53072   ev/simsec=2.13456
+     Messages:  created: 211363   present: 17472   in FES: 16425
+** Event #1297408   t=522284.58133333323   Elapsed: 12.0149s (0m 12s)
+     Speed:     ev/sec=99702.1   simsec/sec=36138.2   ev/simsec=2.75891
+     Messages:  created: 236460   present: 9513   in FES: 8591
+** Event #1388800   t=561600.107519999999   Elapsed: 14.0236s (0m 14s)
+     Speed:     ev/sec=45498   simsec/sec=19572.6   ev/simsec=2.32458
+     Messages:  created: 248070   present: 5434   in FES: 4424
+** Event #1472256   t=597601   Elapsed: 16.0428s (0m 16s)
+     Speed:     ev/sec=41332.1   simsec/sec=17829.6   ev/simsec=2.31816
+     Messages:  created: 259330   present: 756   in FES: 655
+** Event #1473436   t=604800   Elapsed: 16.2828s (0m 16s)
+     Speed:     ev/sec=4912.6   simsec/sec=29996.5   ev/simsec=0.163773
+     Messages:  created: 259842   present: 0   in FES: 0
+
+<!> No more events, simulation completed -- at t=604800s, event #1473436

@@ -1,0 +1,65 @@
+{ "regions" : [
+    {
+        "name" : "A",
+        "regionNodes" : [
+        ],
+        "passagewayNodes" : [
+            {"eid" : 0, "home" : "A", "outer" : "Z"}
+        ]
+    },
+    {
+        "name" : "B",
+        "regionNodes" : [
+        ],
+        "passagewayNodes" : [
+            {"eid" : 1, "home" : "B", "outer" : "A"}
+        ]
+    },
+    {
+        "name" : "C",
+        "regionNodes" : [
+        ],
+        "passagewayNodes" : [
+            {"eid" : 2, "home" : "C", "outer" : "A"}
+        ]
+    },
+    {
+        "name" : "D",
+        "regionNodes" : [
+            {"eid" : 7, "traffic" : [
+                {"destination" : "E8", "distribution" : "uniform2", "bundles" : 2, "start" : 0, "size" : 1024, "ttl" : 1000}
+            ]}
+        ],
+        "passagewayNodes" : [
+            {"eid" : 3, "home" : "D", "outer" : "B"}
+        ]
+    },
+    {
+        "name" : "F",
+        "regionNodes" : [
+            {"eid" : 9}
+        ],
+        "passagewayNodes" : [
+            {"eid" : 5, "home" : "F", "outer" : "B"}
+        ]
+    },
+    {
+        "name" : "E",
+        "regionNodes" : [
+            {"eid" : 8}
+        ],
+        "passagewayNodes" : [
+            {"eid" : 4, "home" : "E", "outer" : "C"}
+        ]
+    },
+    {
+        "name" : "G",
+        "regionNodes" : [
+            {"eid" : 10}
+        ],
+        "passagewayNodes" : [
+            {"eid" : 6, "home" : "G", "outer" : "C"}
+        ]
+    }
+]
+}

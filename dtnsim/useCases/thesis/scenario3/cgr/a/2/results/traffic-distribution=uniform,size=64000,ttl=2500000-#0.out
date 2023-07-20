@@ -1,0 +1,14 @@
+** Event #0   t=0   Elapsed: 1.4e-05s (0m 00s)
+     Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
+     Messages:  created: 64988   present: 64988   in FES: 64988
+** Event #1002752   t=343610.822933333408   Elapsed: 2.00039s (0m 02s)
+     Speed:     ev/sec=501280   simsec/sec=171772   ev/simsec=2.91828
+     Messages:  created: 178652   present: 29562   in FES: 28136
+** Event #1640448   t=556460   Elapsed: 4.08954s (0m 04s)
+     Speed:     ev/sec=305243   simsec/sec=101884   ev/simsec=2.996
+     Messages:  created: 248407   present: 6009   in FES: 5225
+** Event #1758221   t=604800   Elapsed: 5.76537s (0m 05s)
+     Speed:     ev/sec=70277.1   simsec/sec=28845.5   ev/simsec=2.43633
+     Messages:  created: 262388   present: 0   in FES: 0
+
+<!> No more events, simulation completed -- at t=604800s, event #1758221

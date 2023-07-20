@@ -1,0 +1,32 @@
+** Event #0   t=0   Elapsed: 1.6e-05s (0m 00s)
+     Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
+     Messages:  created: 247000   present: 247000   in FES: 247000
+** Event #763136   t=360970   Elapsed: 2.00078s (0m 02s)
+     Speed:     ev/sec=381421   simsec/sec=180415   ev/simsec=2.11413
+     Messages:  created: 361940   present: 211311   in FES: 210084
+** Event #1546752   t=718360.00512   Elapsed: 4.0009s (0m 04s)
+     Speed:     ev/sec=391785   simsec/sec=178685   ev/simsec=2.19261
+     Messages:  created: 476449   present: 174803   in FES: 173537
+** Event #2320640   t=1050982.298133333554   Elapsed: 6.00143s (0m 06s)
+     Speed:     ev/sec=386841   simsec/sec=166267   ev/simsec=2.32663
+     Messages:  created: 589683   present: 140061   in FES: 139617
+** Event #2987008   t=1358317   Elapsed: 8.00823s (0m 08s)
+     Speed:     ev/sec=332055   simsec/sec=153147   ev/simsec=2.16822
+     Messages:  created: 688828   present: 111069   in FES: 108282
+** Event #3592192   t=1606570   Elapsed: 10.0093s (0m 10s)
+     Speed:     ev/sec=302438   simsec/sec=124063   ev/simsec=2.43777
+     Messages:  created: 776585   present: 84498   in FES: 82943
+** Event #4086272   t=1837670.62816   Elapsed: 12.0093s (0m 12s)
+     Speed:     ev/sec=247028   simsec/sec=115545   ev/simsec=2.13794
+     Messages:  created: 850776   present: 61625   in FES: 59383
+** Event #4628480   t=2058000.017066666667   Elapsed: 14.0099s (0m 14s)
+     Speed:     ev/sec=271036   simsec/sec=110137   ev/simsec=2.4609
+     Messages:  created: 930274   present: 38307   in FES: 36909
+** Event #5204992   t=2283560   Elapsed: 16.0101s (0m 16s)
+     Speed:     ev/sec=288216   simsec/sec=112764   ev/simsec=2.55591
+     Messages:  created: 1013170   present: 14769   in FES: 13901
+** Event #5489205   t=2419200   Elapsed: 17.2023s (0m 17s)
+     Speed:     ev/sec=238406   simsec/sec=113779   ev/simsec=2.09534
+     Messages:  created: 1055207   present: 0   in FES: 0
+
+<!> No more events, simulation completed -- at t=2419200s, event #5489205

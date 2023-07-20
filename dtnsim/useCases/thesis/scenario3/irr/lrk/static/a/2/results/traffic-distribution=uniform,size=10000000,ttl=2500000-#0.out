@@ -1,0 +1,23 @@
+** Event #0   t=0   Elapsed: 1.5e-05s (0m 00s)
+     Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
+     Messages:  created: 62272   present: 62272   in FES: 62272
+** Event #1130240   t=412710   Elapsed: 2.00012s (0m 02s)
+     Speed:     ev/sec=565091   simsec/sec=206344   ev/simsec=2.73858
+     Messages:  created: 204178   present: 21259   in FES: 19801
+** Event #1637366   t=604800   Elapsed: 2.88386s (0m 02s)
+     Speed:     ev/sec=573836   simsec/sec=217359   ev/simsec=2.64004
+     Messages:  created: 268011   present: 12   in FES: 0
+
+<!> No more events, simulation completed -- at t=604800s, event #1637366
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267632 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267634 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267635 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267636 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267637 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267638 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267639 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267640 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267641 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267642 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267643 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[5].dtn.Src:A6,Dst:A2,ID:267644 -- check module destructor

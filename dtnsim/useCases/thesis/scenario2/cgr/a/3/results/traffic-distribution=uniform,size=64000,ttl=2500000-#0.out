@@ -1,0 +1,18 @@
+** Event #0   t=0   Elapsed: 1.5e-05s (0m 00s)
+     Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
+     Messages:  created: 123588   present: 123588   in FES: 123588
+** Event #911872   t=433210.652266666738   Elapsed: 2.00011s (0m 02s)
+     Speed:     ev/sec=455914   simsec/sec=216594   ev/simsec=2.10492
+     Messages:  created: 260839   present: 80456   in FES: 79282
+** Event #1833984   t=846061.075200000021   Elapsed: 4.00031s (0m 04s)
+     Speed:     ev/sec=461009   simsec/sec=206404   ev/simsec=2.23353
+     Messages:  created: 395665   present: 38510   in FES: 37099
+** Event #2630144   t=1203690   Elapsed: 6.01085s (0m 06s)
+     Speed:     ev/sec=395994   simsec/sec=177877   ev/simsec=2.22622
+     Messages:  created: 512817   present: 2476   in FES: 652
+** Event #2665727   t=1209600   Elapsed: 6.11021s (0m 06s)
+     Speed:     ev/sec=358105   simsec/sec=59479.5   ev/simsec=6.02064
+     Messages:  created: 517747   present: 1   in FES: 0
+
+<!> No more events, simulation completed -- at t=1209600s, event #2665727
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[3].dtn.Src:A4,Dst:A3,ID:130295 -- check module destructor

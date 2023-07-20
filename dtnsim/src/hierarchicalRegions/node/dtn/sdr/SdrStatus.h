@@ -1,0 +1,14 @@
+#ifndef SRC_HIERARCHICALREGIONS_NODE_DTN_SDR_SDRSTATUS_H_
+#define SRC_HIERARCHICALREGIONS_NODE_DTN_SDR_SDRSTATUS_H_
+
+namespace dtnsimhierarchical {
+
+
+struct SdrStatus {
+
+	int size[128];
+};
+
+}
+
+#endif /*SRC_HIERARCHICALREGIONS_NODE_DTN_SDR_SDRSTATUS_H_*/

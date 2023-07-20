@@ -1,0 +1,88 @@
+{
+    "regions": [
+        {
+            "name": "A",
+            "regionNodes": [
+                {
+                    "eid": 1
+                },
+                {
+                    "eid": 2
+                },
+                {
+                    "eid": 3
+                },
+                {
+                    "eid": 4
+                },
+                {
+                    "eid": 5
+                },
+                {
+                    "eid": 6
+                },
+                {
+                    "eid": 7
+                },
+                {
+                    "eid": 8
+                },
+                {
+                    "eid": 9
+                },
+                {
+                    "eid": 10
+                },
+                {
+                    "eid": 11
+                },
+                {
+                    "eid": 12
+                },
+                {
+                    "eid": 13
+                },
+                {
+                    "eid": 14,
+                    "traffic" : [{"destination" : "A20", "distribution" : "uniform2", "bundles" : 10, "start" : 0, "size" : 1024, "ttl" : 10000}]
+                },
+                {
+                    "eid": 15
+                },
+                {
+                    "eid": 16
+                },
+                {
+                    "eid": 17
+                },
+                {
+                    "eid": 18
+                },
+                {
+                    "eid": 19
+                },
+                {
+                    "eid": 20
+                },
+                {
+                    "eid": 21
+                },
+                {
+                    "eid": 22
+                },
+                {
+                    "eid": 23
+                },
+                {
+                    "eid": 24
+                },
+                {
+                    "eid": 25
+                }
+            ],
+            "passagewayNodes": [],
+            "backboneNodes": [],
+            "routing": "cgr"
+        }
+    ]
+}

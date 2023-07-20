@@ -1,0 +1,5 @@
+A
+a contact +0 +50 0 1 1000
+a contact +50 +100 1 2 1000
+B
+a contact +150 +200 5 4 1000

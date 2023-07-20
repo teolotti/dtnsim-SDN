@@ -1,0 +1,45 @@
+{ "regions" : [
+    {
+        "name" : "A",
+        "regionNodes" : [
+            {"eid" : 0, "capacity" : 90000, "traffic" : [
+                {"destination" : "B4", "distribution" : "uniform1", "bundles" : 4, "start" : 0, "size" : 1024, "ttl" : 1000}
+            ]},
+            {"eid" : 1, "capacity" : 90000}
+        ],
+        "passagewayNodes" : [
+            {"eid" : 2}
+        ],
+        "backboneNodes" : [
+
+        ],
+        "routing" : "cgr"
+    },
+    {
+        "name" : "B",
+        "regionNodes" : [
+            {"eid" : 3},
+            {"eid" : 4}
+        ],
+        "passagewayNodes" : [
+            {"eid" : 5}
+        ],
+        "backboneNodes" : [
+
+        ],
+        "routing" : "cgr"
+    },
+    {
+        "name" : "C",
+        "regionNodes" : [
+
+        ],
+        "passagewayNodes" : [
+
+        ],
+        "backboneNodes" : [
+            {"eid" : 6}
+        ]
+    }
+]
+}

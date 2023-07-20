@@ -1,0 +1,11 @@
+** Event #0   t=0   Elapsed: 2.5e-05s (0m 00s)
+     Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
+     Messages:  created: 29140   present: 29140   in FES: 29140
+** Event #798208   t=245740   Elapsed: 2.08692s (0m 02s)
+     Speed:     ev/sec=382485   simsec/sec=117753   ev/simsec=3.24819
+     Messages:  created: 107925   present: 3537   in FES: 1614
+** Event #865875   t=259200   Elapsed: 2.65582s (0m 02s)
+     Speed:     ev/sec=118941   simsec/sec=23659.4   ev/simsec=5.02719
+     Messages:  created: 114024   present: 0   in FES: 0
+
+<!> No more events, simulation completed -- at t=259200s, event #865875

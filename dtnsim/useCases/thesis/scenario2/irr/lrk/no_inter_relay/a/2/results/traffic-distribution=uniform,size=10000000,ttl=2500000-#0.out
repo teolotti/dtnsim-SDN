@@ -1,0 +1,45 @@
+** Event #0   t=0   Elapsed: 1.5e-05s (0m 00s)
+     Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
+     Messages:  created: 61144   present: 61144   in FES: 61144
+** Event #685824   t=316640   Elapsed: 2.0006s (0m 02s)
+     Speed:     ev/sec=342811   simsec/sec=158273   ev/simsec=2.16595
+     Messages:  created: 178398   present: 31255   in FES: 29147
+** Event #1335296   t=598330   Elapsed: 4.01971s (0m 04s)
+     Speed:     ev/sec=321664   simsec/sec=139512   ev/simsec=2.30563
+     Messages:  created: 287734   present: 826   in FES: 667
+** Event #1338195   t=604800   Elapsed: 4.47871s (0m 04s)
+     Speed:     ev/sec=6313.64   simsec/sec=14095.7   ev/simsec=0.447913
+     Messages:  created: 288610   present: 31   in FES: 0
+
+<!> No more events, simulation completed -- at t=604800s, event #1338195
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254363 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254383 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254378 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254307 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254282 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254310 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254416 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254335 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254325 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254421 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254292 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254411 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254315 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254287 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254368 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254391 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254396 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254358 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254320 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254406 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254340 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254401 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254277 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254373 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254386 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254330 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254348 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254297 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254302 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254353 -- check module destructor
+undisposed object: (BundlePacket) RegionsNetwork.regionNode[1].dtn.Src:A3,Dst:A15,ID:254345 -- check module destructor

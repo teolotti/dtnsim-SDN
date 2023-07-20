@@ -1,0 +1,1059 @@
+version 2
+run General-0-20230124-15:30:33-41867
+attr configname General
+attr datetime 20230124-15:30:33
+attr experiment General
+attr inifile regions.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network src.distinctRegions.RegionsNetwork
+attr processid 41867
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param RegionsNetwork.central.backboneContactPlan "\"backboneContactPlan.txt\""
+param RegionsNetwork.central.regionContactPlan "\"regionContactPlan.txt\""
+param RegionsNetwork.regionNodeNumber 25
+param RegionsNetwork.passagewayNodeNumber 0
+param RegionsNetwork.backboneNodeNumber 0
+param RegionsNetwork.regionNode[0].eid 1
+param RegionsNetwork.regionNode[0].region "\"A\""
+param RegionsNetwork.regionNode[0].text "\"Region: A EID: 1\""
+param RegionsNetwork.regionNode[0].posX 900.0
+param RegionsNetwork.regionNode[0].posY 400.0
+param RegionsNetwork.regionNode[1].eid 2
+param RegionsNetwork.regionNode[1].region "\"A\""
+param RegionsNetwork.regionNode[1].text "\"Region: A EID: 2\""
+param RegionsNetwork.regionNode[1].posX 896.8585004462886
+param RegionsNetwork.regionNode[1].posY 424.86827077414716
+param RegionsNetwork.regionNode[2].eid 3
+param RegionsNetwork.regionNode[2].region "\"A\""
+param RegionsNetwork.regionNode[2].text "\"Region: A EID: 3\""
+param RegionsNetwork.regionNode[2].posX 887.6313821740739
+param RegionsNetwork.regionNode[2].posY 448.1740683175232
+param RegionsNetwork.regionNode[3].eid 4
+param RegionsNetwork.regionNode[3].region "\"A\""
+param RegionsNetwork.regionNode[3].text "\"Region: A EID: 4\""
+param RegionsNetwork.regionNode[3].posX 872.89838494204
+param RegionsNetwork.regionNode[3].posY 468.45308957850006
+param RegionsNetwork.regionNode[4].eid 5
+param RegionsNetwork.regionNode[4].region "\"A\""
+param RegionsNetwork.regionNode[4].text "\"Region: A EID: 5\""
+param RegionsNetwork.regionNode[4].posX 853.5851828347721
+param RegionsNetwork.regionNode[4].posY 484.43120383225653
+param RegionsNetwork.regionNode[5].eid 6
+param RegionsNetwork.regionNode[5].region "\"A\""
+param RegionsNetwork.regionNode[5].text "\"Region: A EID: 6\""
+param RegionsNetwork.regionNode[5].posX 830.9052241682847
+param RegionsNetwork.regionNode[5].posY 495.104506302846
+param RegionsNetwork.regionNode[6].eid 7
+param RegionsNetwork.regionNode[6].region "\"A\""
+param RegionsNetwork.regionNode[6].text "\"Region: A EID: 7\""
+param RegionsNetwork.regionNode[6].posX 806.2834905431569
+param RegionsNetwork.regionNode[6].posY 499.8023934913089
+param RegionsNetwork.regionNode[7].eid 8
+param RegionsNetwork.regionNode[7].region "\"A\""
+param RegionsNetwork.regionNode[7].text "\"Region: A EID: 8\""
+param RegionsNetwork.regionNode[7].posX 781.2669652632876
+param RegionsNetwork.regionNode[7].posY 498.22969718752637
+param RegionsNetwork.regionNode[8].eid 9
+param RegionsNetwork.regionNode[8].region "\"A\""
+param RegionsNetwork.regionNode[8].text "\"Region: A EID: 9\""
+param RegionsNetwork.regionNode[8].posX 757.4274363887191
+param RegionsNetwork.regionNode[8].posY 490.48522988622756
+param RegionsNetwork.regionNode[9].eid 10
+param RegionsNetwork.regionNode[9].region "\"A\""
+param RegionsNetwork.regionNode[9].text "\"Region: A EID: 10\""
+param RegionsNetwork.regionNode[9].posX 736.2627413058544
+param RegionsNetwork.regionNode[9].posY 477.0555763988276
+param RegionsNetwork.regionNode[10].eid 11
+param RegionsNetwork.regionNode[10].region "\"A\""
+param RegionsNetwork.regionNode[10].text "\"Region: A EID: 11\""
+param RegionsNetwork.regionNode[10].posX 719.1026576178385
+param RegionsNetwork.regionNode[10].posY 458.7845217340699
+param RegionsNetwork.regionNode[11].eid 12
+param RegionsNetwork.regionNode[11].region "\"A\""
+param RegionsNetwork.regionNode[11].text "\"Region: A EID: 12\""
+param RegionsNetwork.regionNode[11].posX 707.0253532296226
+param RegionsNetwork.regionNode[11].posY 436.82003609345793
+param RegionsNetwork.regionNode[12].eid 13
+param RegionsNetwork.regionNode[12].region "\"A\""
+param RegionsNetwork.regionNode[12].text "\"Region: A EID: 13\""
+param RegionsNetwork.regionNode[12].posX 700.7896450681188
+param RegionsNetwork.regionNode[12].posY 412.54214791374125
+param RegionsNetwork.regionNode[13].eid 14
+param RegionsNetwork.regionNode[13].region "\"A\""
+param RegionsNetwork.regionNode[13].text "\"Region: A EID: 14\""
+param RegionsNetwork.regionNode[13].posX 700.7873226214562
+param RegionsNetwork.regionNode[13].posY 387.4762366925526
+param RegionsNetwork.regionNode[13].app.enable true
+param RegionsNetwork.regionNode[13].app.numberOfFlows 1
+param RegionsNetwork.regionNode[13].app.destinationEids "\"A20,\""
+param RegionsNetwork.regionNode[13].app.distributions "\"uniform2,\""
+param RegionsNetwork.regionNode[13].app.numbersOfBundles "\"10,\""
+param RegionsNetwork.regionNode[13].app.startTimes "\"0,\""
+param RegionsNetwork.regionNode[13].app.bundleSizes "\"1024,\""
+param RegionsNetwork.regionNode[13].app.ttls "\"10000,\""
+param RegionsNetwork.regionNode[14].eid 15
+param RegionsNetwork.regionNode[14].region "\"A\""
+param RegionsNetwork.regionNode[14].text "\"Region: A EID: 15\""
+param RegionsNetwork.regionNode[14].posX 707.0185318089375
+param RegionsNetwork.regionNode[14].posY 363.19719340818654
+param RegionsNetwork.regionNode[15].eid 16
+param RegionsNetwork.regionNode[15].region "\"A\""
+param RegionsNetwork.regionNode[15].text "\"Region: A EID: 16\""
+param RegionsNetwork.regionNode[15].posX 719.0917658129318
+param RegionsNetwork.regionNode[15].posY 341.23047013349066
+param RegionsNetwork.regionNode[16].eid 17
+param RegionsNetwork.regionNode[16].region "\"A\""
+param RegionsNetwork.regionNode[16].text "\"Region: A EID: 17\""
+param RegionsNetwork.regionNode[16].posX 736.2484634487312
+param RegionsNetwork.regionNode[16].posY 322.9562358957441
+param RegionsNetwork.regionNode[17].eid 18
+param RegionsNetwork.regionNode[17].region "\"A\""
+param RegionsNetwork.regionNode[17].text "\"Region: A EID: 18\""
+param RegionsNetwork.regionNode[17].posX 757.4106695570149
+param RegionsNetwork.regionNode[17].posY 309.5226606689928
+param RegionsNetwork.regionNode[18].eid 19
+param RegionsNetwork.regionNode[18].region "\"A\""
+param RegionsNetwork.regionNode[18].text "\"Region: A EID: 19\""
+param RegionsNetwork.regionNode[18].posX 781.2487629168887
+param RegionsNetwork.regionNode[18].posY 301.7737758648285
+param RegionsNetwork.regionNode[19].eid 20
+param RegionsNetwork.regionNode[19].region "\"A\""
+param RegionsNetwork.regionNode[19].text "\"Region: A EID: 20\""
+param RegionsNetwork.regionNode[19].posX 806.2649963353252
+param RegionsNetwork.regionNode[19].posY 300.196443846332
+param RegionsNetwork.regionNode[20].eid 21
+param RegionsNetwork.regionNode[20].region "\"A\""
+param RegionsNetwork.regionNode[20].text "\"Region: A EID: 21\""
+param RegionsNetwork.regionNode[20].posX 830.8876000899331
+param RegionsNetwork.regionNode[20].posY 304.8897683701466
+param RegionsNetwork.regionNode[21].eid 22
+param RegionsNetwork.regionNode[21].region "\"A\""
+param RegionsNetwork.regionNode[21].text "\"Region: A EID: 22\""
+param RegionsNetwork.regionNode[21].posX 853.5695362065862
+param RegionsNetwork.regionNode[21].posY 315.5588678983326
+param RegionsNetwork.regionNode[22].eid 23
+param RegionsNetwork.regionNode[22].region "\"A\""
+param RegionsNetwork.regionNode[22].text "\"Region: A EID: 23\""
+param RegionsNetwork.regionNode[22].posX 872.8856988415291
+param RegionsNetwork.regionNode[22].posY 331.53340300276403
+param RegionsNetwork.regionNode[23].eid 24
+param RegionsNetwork.regionNode[23].region "\"A\""
+param RegionsNetwork.regionNode[23].text "\"Region: A EID: 24\""
+param RegionsNetwork.regionNode[23].posX 887.6224536688198
+param RegionsNetwork.regionNode[23].posY 351.8096937854144
+param RegionsNetwork.regionNode[24].eid 25
+param RegionsNetwork.regionNode[24].region "\"A\""
+param RegionsNetwork.regionNode[24].text "\"Region: A EID: 25\""
+param RegionsNetwork.regionNode[24].posX 896.8538905141967
+param RegionsNetwork.regionNode[24].posY 375.11378107739154
+
+scalar RegionsNetwork.regionNode[0].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[0].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[0].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[0].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[0].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[0].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[1].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[1].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[1].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[1].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[1].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[1].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[2].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[2].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[2].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[2].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[2].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[2].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[3].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[3].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[3].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[3].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[3].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[3].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[4].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[4].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[4].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[4].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[4].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[4].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[5].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[5].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[5].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[5].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[5].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[5].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[6].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[6].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[6].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[6].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[6].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[6].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[7].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[7].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[7].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[7].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[7].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[7].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[8].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[8].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[8].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[8].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[8].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[8].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[9].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[9].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[9].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[9].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[9].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[9].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[10].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[10].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[10].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[10].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[10].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[10].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[11].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[11].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[11].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[11].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[11].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[11].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[12].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[12].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[12].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[12].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[12].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[12].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[13].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[13].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[13].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[13].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[13].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[13].app appBundleSent:count 10
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[14].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[14].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[14].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[14].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[14].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[14].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[15].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[15].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[15].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[15].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[15].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[15].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[16].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[16].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[16].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[16].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[16].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[16].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[17].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[17].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[17].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[17].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[17].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[17].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[18].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[18].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[18].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[18].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[18].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[18].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[19].app appBundleReceivedDelay:mean 1560.129
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[19].app appBundleReceivedDelay:max 1578.021
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[19].app appBundleReceivedDelay:min 1542.237
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[19].app appBundleReceivedDelay:histogram
+field count 10
+field mean 1560.129
+field stddev 12.03793780786
+field min 1542.237
+field max 1578.021
+field sum 15601.29
+field sqrsum 24341329.17393
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	1533	0
+bin	1534	0
+bin	1535	0
+bin	1536	0
+bin	1537	0
+bin	1538	0
+bin	1539	0
+bin	1540	0
+bin	1541	0
+bin	1542	1
+bin	1543	0
+bin	1544	0
+bin	1545	0
+bin	1546	1
+bin	1547	0
+bin	1548	0
+bin	1549	0
+bin	1550	1
+bin	1551	0
+bin	1552	0
+bin	1553	0
+bin	1554	1
+bin	1555	0
+bin	1556	0
+bin	1557	0
+bin	1558	1
+bin	1559	0
+bin	1560	0
+bin	1561	0
+bin	1562	1
+bin	1563	0
+bin	1564	0
+bin	1565	0
+bin	1566	1
+bin	1567	0
+bin	1568	0
+bin	1569	0
+bin	1570	1
+bin	1571	0
+bin	1572	0
+bin	1573	0
+bin	1574	1
+bin	1575	0
+bin	1576	0
+bin	1577	0
+bin	1578	1
+bin	1579	0
+bin	1580	0
+bin	1581	0
+bin	1582	0
+bin	1583	0
+bin	1584	0
+bin	1585	0
+bin	1586	0
+bin	1587	0
+scalar RegionsNetwork.regionNode[19].app appBundleReceived:count 10
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[19].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[20].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[20].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[20].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[20].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[20].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[20].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[21].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[21].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[21].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[21].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[21].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[21].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[22].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[22].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[22].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[22].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[22].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[22].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[23].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[23].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[23].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[23].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[23].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[23].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+scalar RegionsNetwork.regionNode[24].app appBundleReceivedDelay:mean -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, mean"
+scalar RegionsNetwork.regionNode[24].app appBundleReceivedDelay:max -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, max"
+scalar RegionsNetwork.regionNode[24].app appBundleReceivedDelay:min -nan
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, min"
+statistic RegionsNetwork.regionNode[24].app appBundleReceivedDelay:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr source appBundleReceivedDelay
+attr title "appBundleReceivedDelay, histogram"
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar RegionsNetwork.regionNode[24].app appBundleReceived:count 0
+attr interpolationmode none
+attr source appBundleReceived
+attr title "appBundleReceived, count"
+scalar RegionsNetwork.regionNode[24].app appBundleSent:count 0
+attr interpolationmode none
+attr source appBundleSent
+attr title "appBundleSent, count"
+
