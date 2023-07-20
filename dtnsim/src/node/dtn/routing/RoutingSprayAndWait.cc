@@ -1,38 +1,30 @@
-#include "src/node/dtn/routing/RoutingSprayAndWait.h"
-#include "src/node/dtn/Dtn.h"
+/*
+ * RoutingSprayAndWait.cc
+ *
+ *  Created on: July 13, 2017
+ *      Author: fraverta
+ */
 
-RoutingSprayAndWait::RoutingSprayAndWait(int eid, SdrModel * sdr, cModule * dtn, int amountOfCopies, bool binary, MetricCollector* metricCollector)
+#include <src/node/dtn/routing/RoutingSprayAndWait.h>
+#include <src/node/dtn/Dtn.h>
+
+RoutingSprayAndWait::RoutingSprayAndWait(int eid, SdrModel * sdr, cModule * dtn, int amountOfCopies, bool binary)
 	:RoutingStochastic(eid,sdr,dtn)
 {
 	this->binary = binary;
 	this->amountOfCopies = amountOfCopies;
-	this->metricCollector = metricCollector;
-	this->metricCollector->setAlgorithm("SW" + to_string(amountOfCopies));
 }
 
 RoutingSprayAndWait::~RoutingSprayAndWait()
 {
 }
 
-void RoutingSprayAndWait::msgToOtherArrive(BundlePkt * bundle, double simTime)
+void RoutingSprayAndWait::msgToOtherArrive(BundlePkt * bundle, double simTime, int terminusNode)
 {
-	if( bundle->getSourceEid() == eid_ ) {
+	if( bundle->getSourceEid() == eid_ )
 		bundle->setBundlesCopies(amountOfCopies);
-		this->metricCollector->updateStartedBundles(eid_, bundle->getBundleId(), bundle->getSourceEid(), bundle->getDestinationEid(), simTime);
-	}
 
-	RoutingStochastic::msgToOtherArrive(bundle,simTime);
-}
-
-bool RoutingSprayAndWait::msgToMeArrive(BundlePkt * bundle)
-{
-	bool alreadyReceived = RoutingStochastic::msgToMeArrive(bundle);
-
-	if (alreadyReceived) {
-
-		this->metricCollector->updateReceivedBundles(this->eid_, bundle->getBundleId(), simTime().dbl());
-	}
-	return alreadyReceived;
+	RoutingStochastic::msgToOtherArrive(bundle,simTime, terminusNode);
 }
 
 void RoutingSprayAndWait::contactEnd(Contact *c)
@@ -46,7 +38,6 @@ void RoutingSprayAndWait::contactEnd(Contact *c)
 	{
 		BundlePkt* bundle = sdr_->getNextBundleForContact(c->getId());
 		sdr_->popNextBundleForContact(c->getId());
-		this->metricCollector->updateSentBundles(eid_, c->getDestinationEid(), c->getStart(), bundle->getBundleId(), -bundle->getBundlesCopies());
 
 
 		BundlePkt*  enqueueBundle = sdr_->getEnqueuedBundle(bundle->getBundleId());
@@ -107,7 +98,6 @@ void RoutingSprayAndWait::routeAndQueueBundle(Contact *c)
 				bundleCopy->setNextHopEid(c->getDestinationEid());
 				bundleCopy->setBundlesCopies(1);
 				sdr_->enqueueBundleToContact(bundleCopy, c->getId());
-				this->metricCollector->updateSentBundles(eid_, c->getDestinationEid(), c->getStart(), bundleCopy->getBundleId());
 				return;
 			}
 			else
@@ -134,7 +124,6 @@ void RoutingSprayAndWait::routeAndQueueBundle(Contact *c)
 			bundleCopy->setNextHopEid(c->getDestinationEid());
 			bundleCopy->setBundlesCopies( (binary)? copies / 2 : 1 );
 			sdr_->enqueueBundleToContact(bundleCopy, c->getId());
-			this->metricCollector->updateSentBundles(eid_, c->getDestinationEid(), c->getStart(), bundleCopy->getBundleId(), bundleCopy->getBundlesCopies());
 
 			(*it)->setBundlesCopies( (binary)? copies / 2 +  copies % 2 : copies - 1 );
 			return;

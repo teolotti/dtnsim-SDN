@@ -1,7 +1,14 @@
-#include "src/node/dtn/routing/RoutingCgrModelYen.h"
+/*
+ * RoutingCgrModelYen.cpp
+ *
+ *  Created on: Jan 24, 2017
+ *      Author: juanfraire
+ */
 
-RoutingCgrModelYen::RoutingCgrModelYen(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug)
-	: RoutingDeterministic(eid, sdr, contactPlan)
+#include <src/node/dtn/routing/RoutingCgrModelYen.h>
+
+RoutingCgrModelYen::RoutingCgrModelYen(int eid, SdrModel * sdr, map<string, ContactPlan> * contactPlans, bool printDebug)
+	: RoutingDeterministic(eid, sdr, contactPlans, NULL)
 {
 	printDebug_ = printDebug;
 }
@@ -10,7 +17,7 @@ RoutingCgrModelYen::~RoutingCgrModelYen()
 {
 }
 
-void RoutingCgrModelYen::routeAndQueueBundle(BundlePkt * bundle, double simTime)
+void RoutingCgrModelYen::routeAndQueueBundle(BundlePkt * bundle, double simTime, int terminusNode)
 {
 	if (!printDebug_) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);
@@ -513,6 +520,7 @@ void RoutingCgrModelYen::loadRouteListYen(int terminusNode, double simTime)
 		// modification which starts from the node where the previous route deviated
 		// from the rootPath.
 		vector<Contact *>::iterator it = routeList_[terminusNode].back().hops.begin();
+
 		std::advance(it, routeList_[terminusNode].back().rootPathLenght);
 		for (; it != --routeList_[terminusNode].back().hops.end(); ++it)
 		{
@@ -606,14 +614,14 @@ void RoutingCgrModelYen::loadRouteListYen(int terminusNode, double simTime)
 				if (rootPathIsContained)
 				{
 					((Work *) rootPath.hops.back()->work)->suppressedNextContact.push_back(nextContact);
-					cout << "          remove edge " << rootPath.hops.back()->getId() << " to " << nextContact->getId() << endl;
+					//cout << "          remove edge " << rootPath.hops.back()->getId() << " to " << nextContact->getId() << endl; TODO
 				}
 			}
 
 			// Remove the links that are part of the rootPath (except spurNode)
 			for (vector<Contact *>::iterator it2 = rootPath.hops.begin(); it2 != --rootPath.hops.end(); ++it2)
 			{
-				cout << "          remove node " << (*it2)->getId() << endl;
+				//cout << "          remove node " << (*it2)->getId() << endl; TODO
 				((Work *) (*it2)->work)->suppressed = true;
 			}
 

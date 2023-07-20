@@ -17,6 +17,8 @@
 #include "src/dtnsim_m.h"
 #include "assert.h"
 
+#include <queue>
+
 using namespace omnetpp;
 using namespace std;
 
@@ -40,8 +42,6 @@ public:
 	virtual list<BundlePkt*> * getBundlesInLimbo();
 	virtual int getBytesStoredInSdr();
 	virtual int getBytesStoredToNeighbor(int eid);
-	virtual vector<int> getBundleSizesStoredToNeighbor(int eid);
-	virtual vector<int> getBundleSizesStoredToNeighborWithHigherPriority(int eid, bool critical);
 	virtual SdrStatus getSdrStatus();
 	virtual BundlePkt * getEnqueuedBundle(long bundleId);
 	bool isSdrFreeSpace(int sizeNewPacket);
@@ -63,6 +63,12 @@ public:
 	virtual BundlePkt * getTransmittedBundleInCustody(long bundleId);
 	virtual list<BundlePkt *> getTransmittedBundlesInCustody();
 
+
+	virtual bool isBundleWaiting(int eid);
+	virtual BundlePkt* getBundleWaiting(int eid);
+	virtual bool enqueueBundle(int eid, BundlePkt *bundle);
+	virtual void dequeueBundle(int eid);
+
 private:
 
 	int size_;  		// Capacity of sdr in bytes
@@ -77,7 +83,6 @@ private:
 	// to enqueue bundles to specific contacts or nodes. When there
 	// is no need for an indexed queue, a generic one can be used instead
 	map<int, list<BundlePkt *> > perContactBundleQueue_;
-	map<int, list<BundlePkt *> > perNodeBundleQueue_;
 	list<BundlePkt *> genericBundleQueue_;
 
 	// A separate area of memory to store transmitted bundles for which
@@ -86,6 +91,7 @@ private:
 	list<BundlePkt *> transmittedBundlesInCustody_;
 
 
+	map<int, queue<BundlePkt *> > perNodeBundleQueue_;
 
 };
 

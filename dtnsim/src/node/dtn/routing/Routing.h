@@ -17,29 +17,28 @@
 #include <queue>
 #include <limits>
 #include <algorithm>
-#include <unordered_set>
 #include "src/dtnsim_m.h"
 
 using namespace omnetpp;
 using namespace std;
 
-class Routing
-{
+class Routing {
+
 public:
-	Routing(int eid, SdrModel * sdr)
-	{
+
+	Routing(int eid, SdrModel * sdr) {
 		eid_ = eid;
 		sdr_ = sdr;
 	}
-	virtual ~Routing()
-	{
+
+	virtual ~Routing() {
 	}
 
 	/**
 	 * Method that will be called by Dtn module when a message to other destination in the
 	 * network  arrives.
 	 */
-	virtual void msgToOtherArrive(BundlePkt * bundle, double simTime) = 0;
+	virtual void msgToOtherArrive(BundlePkt * bundle, double simTime, int terminusNode) = 0;
 
 	/**
 	 * Method that will be called by Dtn module when a message to this node arrives.
@@ -61,22 +60,20 @@ public:
 	virtual void  refreshForwarding(Contact * c) = 0;
 
 	/**
-	 * Method to be called in case a contact plan was updated for opp. routing.
-	 */
-	virtual void updateContactPlan(Contact* c) = 0;
-
-	/**
 	 * Method that will be called by Dtn module when some bundle is forwarded successfully
 	 */
 	virtual void successfulBundleForwarded(long bundleId, Contact * contact, bool sentToDestination)=0;
 
 
+
 protected:
+
 	//Endpoint id
 	int eid_;
 
 	//Sdr model to enqueue bundles for transmission
 	SdrModel * sdr_;
+
 };
 
 #endif /* SRC_NODE_NET_ROUTING_H_ */

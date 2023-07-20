@@ -2,20 +2,17 @@
 # OMNeT++/OMNEST Makefile for dtnsim
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -I. -I/usr/include/python3.8 -lpython3.8 -Xsrc/node/dtn/routing/unibocgr/dtnme -Xtests
+#  opp_makemake -f --deep -O out -I. -I/usr/include/python3.8 -lpython3.8
 #
 
 # Name of target to be created (-o option)
+TARGET = dtnsim$(D)$(EXE_SUFFIX)
 TARGET_DIR = .
-TARGET_NAME = dtnsim$(D)
-TARGET = $(TARGET_NAME)$(EXE_SUFFIX)
-TARGET_IMPLIB = $(TARGET_NAME)$(IMPLIB_SUFFIX)
-TARGET_IMPDEF = $(TARGET_NAME)$(IMPDEF_SUFFIX)
-TARGET_FILES = $(TARGET_DIR)/$(TARGET)
 
 # User interface (uncomment one) (-u option)
-USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(QTENV_LIBS) $(CMDENV_LIBS)
+USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LIBS)
 #USERIF_LIBS = $(CMDENV_LIBS)
+#USERIF_LIBS = $(TKENV_LIBS)
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
@@ -35,68 +32,66 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 # Object files for local .cc, .msg and .sm files
 OBJS = \
     $O/src/central/Central.o \
+    $O/src/distinctRegions/central/Central.o \
+    $O/src/distinctRegions/node/app/App.o \
+    $O/src/distinctRegions/node/app/Flow.o \
+    $O/src/distinctRegions/node/com/Com.o \
+    $O/src/distinctRegions/node/dtn/Dtn.o \
+    $O/src/distinctRegions/node/dtn/contacts/Contact.o \
+    $O/src/distinctRegions/node/dtn/contacts/ContactPlan.o \
+    $O/src/distinctRegions/node/dtn/routing/CgrRoute.o \
+    $O/src/distinctRegions/node/dtn/routing/RegionDatabase.o \
+    $O/src/distinctRegions/node/dtn/routing/RoutingCgrModelYen.o \
+    $O/src/distinctRegions/node/dtn/routing/RoutingDeterministic.o \
+    $O/src/distinctRegions/node/dtn/routing/RoutingInterRegions.o \
+    $O/src/distinctRegions/node/dtn/sdr/SdrModel.o \
+    $O/src/distinctRegions/node/graphics/Graphics.o \
+    $O/src/hierarchicalRegions/central/Central.o \
+    $O/src/hierarchicalRegions/node/app/App.o \
+    $O/src/hierarchicalRegions/node/app/Flow.o \
+    $O/src/hierarchicalRegions/node/com/Com.o \
+    $O/src/hierarchicalRegions/node/dtn/Dtn.o \
+    $O/src/hierarchicalRegions/node/dtn/contacts/Contact.o \
+    $O/src/hierarchicalRegions/node/dtn/contacts/ContactPlan.o \
+    $O/src/hierarchicalRegions/node/dtn/routing/RoutingCgrModel350.o \
+    $O/src/hierarchicalRegions/node/dtn/routing/RoutingDeterministic.o \
+    $O/src/hierarchicalRegions/node/dtn/sdr/SdrModel.o \
+    $O/src/hierarchicalRegions/node/graphics/Graphics.o \
     $O/src/node/app/App.o \
+    $O/src/node/app/Flow.o \
     $O/src/node/com/Com.o \
     $O/src/node/dtn/Contact.o \
-    $O/src/node/dtn/ContactHistory.o \
     $O/src/node/dtn/ContactPlan.o \
     $O/src/node/dtn/CustodyModel.o \
     $O/src/node/dtn/Dtn.o \
+    $O/src/node/dtn/RegionDatabase.o \
     $O/src/node/dtn/SdrModel.o \
     $O/src/node/dtn/SdrStatus.o \
-    $O/src/node/dtn/routing/RoutingBRUF1T.o \
     $O/src/node/dtn/routing/RoutingCgrModel350.o \
-    $O/src/node/dtn/routing/RoutingCgrModel350_2Copies.o \
     $O/src/node/dtn/routing/RoutingCgrModel350_Hops.o \
+    $O/src/node/dtn/routing/RoutingCgrModel350_Proactive.o \
     $O/src/node/dtn/routing/RoutingCgrModel350_Probabilistic.o \
     $O/src/node/dtn/routing/RoutingCgrModelRev17.o \
     $O/src/node/dtn/routing/RoutingCgrModelYen.o \
     $O/src/node/dtn/routing/RoutingDeterministic.o \
     $O/src/node/dtn/routing/RoutingDirect.o \
     $O/src/node/dtn/routing/RoutingEpidemic.o \
-    $O/src/node/dtn/routing/RoutingOpportunistic.o \
-    $O/src/node/dtn/routing/RoutingORUCOP.o \
-    $O/src/node/dtn/routing/RoutingPRoPHET.o \
+    $O/src/node/dtn/routing/RoutingInterRegions.o \
     $O/src/node/dtn/routing/RoutingSprayAndWait.o \
     $O/src/node/dtn/routing/RoutingStochastic.o \
-    $O/src/node/dtn/routing/RoutingUncertainUniboCgr.o \
-    $O/src/node/dtn/routing/RoutingUniboCgr.o \
-    $O/src/node/dtn/routing/brufncopies/BRUFNCopies1TOracle.o \
-    $O/src/node/dtn/routing/brufncopies/BRUFNCopiesOracle.o \
-    $O/src/node/dtn/routing/brufncopies/RoutingBRUFNCopies.o \
-    $O/src/node/dtn/routing/cgrbrufpowered/CGRBRUFPowered.o \
-    $O/src/node/dtn/routing/unibocgr/core/bundles/bundles.o \
-    $O/src/node/dtn/routing/unibocgr/core/cgr/cgr.o \
-    $O/src/node/dtn/routing/unibocgr/core/cgr/phase_one.o \
-    $O/src/node/dtn/routing/unibocgr/core/cgr/phase_three.o \
-    $O/src/node/dtn/routing/unibocgr/core/cgr/phase_two.o \
-    $O/src/node/dtn/routing/unibocgr/core/contact_plan/contactPlan.o \
-    $O/src/node/dtn/routing/unibocgr/core/contact_plan/contacts/contacts.o \
-    $O/src/node/dtn/routing/unibocgr/core/contact_plan/nodes/nodes.o \
-    $O/src/node/dtn/routing/unibocgr/core/contact_plan/ranges/ranges.o \
-    $O/src/node/dtn/routing/unibocgr/core/library/commonFunctions.o \
-    $O/src/node/dtn/routing/unibocgr/core/library/list/list.o \
-    $O/src/node/dtn/routing/unibocgr/core/library/log/log.o \
-    $O/src/node/dtn/routing/unibocgr/core/library_from_ion/rbt/rbt.o \
-    $O/src/node/dtn/routing/unibocgr/core/library_from_ion/scalar/scalar.o \
-    $O/src/node/dtn/routing/unibocgr/core/msr/msr.o \
-    $O/src/node/dtn/routing/unibocgr/core/msr/msr_utils.o \
-    $O/src/node/dtn/routing/unibocgr/core/routes/routes.o \
-    $O/src/node/dtn/routing/unibocgr/core/time_analysis/time.o \
     $O/src/node/fault/Fault.o \
     $O/src/node/graphics/Graphics.o \
     $O/src/utils/ContactPlanUtils.o \
-    $O/src/utils/Lp.o \
-    $O/src/utils/LpUtils.o \
-    $O/src/utils/MetricCollector.o \
-    $O/src/utils/RouterUtils.o \
     $O/src/utils/Subject.o \
-    $O/src/utils/TopologyUtils.o \
-    $O/src/dtnsim_m.o
+    $O/src/dtnsim_m.o \
+    $O/src/distinctRegions/RegionsNetwork_m.o \
+    $O/src/hierarchicalRegions/HierarchicalRegionsNetwork_m.o
 
 # Message files
 MSGFILES = \
-    src/dtnsim.msg
+    src/dtnsim.msg \
+    src/distinctRegions/RegionsNetwork.msg \
+    src/hierarchicalRegions/HierarchicalRegionsNetwork.msg
 
 # SM files
 SMFILES =
@@ -108,7 +103,11 @@ SMFILES =
 ifneq ("$(OMNETPP_CONFIGFILE)","")
 CONFIGFILE = $(OMNETPP_CONFIGFILE)
 else
+ifneq ("$(OMNETPP_ROOT)","")
+CONFIGFILE = $(OMNETPP_ROOT)/Makefile.inc
+else
 CONFIGFILE = $(shell opp_configfilepath)
+endif
 endif
 
 ifeq ("$(wildcard $(CONFIGFILE))","")
@@ -125,30 +124,27 @@ MSGCOPTS = $(INCLUDE_PATH)
 SMCOPTS =
 
 # we want to recompile everything if COPTS changes,
-# so we store COPTS into $COPTS_FILE (if COPTS has changed since last build)
-# and make the object files depend on it
+# so we store COPTS into $COPTS_FILE and have object
+# files depend on it (except when "make depend" was called)
 COPTS_FILE = $O/.last-copts
 ifneq ("$(COPTS)","$(shell cat $(COPTS_FILE) 2>/dev/null || echo '')")
-  $(shell $(MKPATH) "$O")
-  $(file >$(COPTS_FILE),$(COPTS))
+$(shell $(MKPATH) "$O" && echo "$(COPTS)" >$(COPTS_FILE))
 endif
 
 #------------------------------------------------------------------------------
 # User-supplied makefile fragment(s)
--include makefrag
-
+# >>>
+# <<<
 #------------------------------------------------------------------------------
 
 # Main target
-all: $(TARGET_FILES)
+all: $(TARGET_DIR)/$(TARGET)
 
 $(TARGET_DIR)/% :: $O/%
 	@mkdir -p $(TARGET_DIR)
 	$(Q)$(LN) $< $@
-ifeq ($(TOOLCHAIN_NAME),clang-msabi)
-	-$(Q)-$(LN) $(<:%.dll=%.lib) $(@:%.dll=%.lib) 2>/dev/null
-
-$O/$(TARGET_NAME).pdb: $O/$(TARGET)
+ifeq ($(TOOLCHAIN_NAME),clangc2)
+	$(Q)-$(LN) $(<:%.dll=%.lib) $(@:%.dll=%.lib)
 endif
 
 $O/$(TARGET): $(OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
@@ -158,8 +154,7 @@ $O/$(TARGET): $(OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
 
 .PHONY: all clean cleanall depend msgheaders smheaders
 
-# disabling all implicit rules
-.SUFFIXES :
+.SUFFIXES: .cc
 
 $O/%.o: %.cc $(COPTS_FILE) | msgheaders smheaders
 	@$(MKPATH) $(dir $@)
@@ -181,18 +176,14 @@ smheaders: $(SMFILES:.sm=_sm.h)
 clean:
 	$(qecho) Cleaning $(TARGET)
 	$(Q)-rm -rf $O
-	$(Q)-rm -f $(TARGET_FILES)
+	$(Q)-rm -f $(TARGET_DIR)/$(TARGET)
+	$(Q)-rm -f $(TARGET_DIR)/$(TARGET:%.dll=%.lib)
 	$(Q)-rm -f $(call opp_rwildcard, . , *_m.cc *_m.h *_sm.cc *_sm.h)
 
 cleanall:
-	$(Q)$(CLEANALL_COMMAND)
+	$(Q)$(MAKE) -s clean MODE=release
+	$(Q)$(MAKE) -s clean MODE=debug
 	$(Q)-rm -rf $(PROJECT_OUTPUT_DIR)
-
-help:
-	@echo "$$HELP_SYNOPSYS"
-	@echo "$$HELP_TARGETS"
-	@echo "$$HELP_VARIABLES"
-	@echo "$$HELP_EXAMPLES"
 
 # include all dependencies
 -include $(OBJS:%=%.d) $(MSGFILES:%.msg=$O/%_m.h.d)

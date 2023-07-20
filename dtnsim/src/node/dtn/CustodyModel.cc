@@ -1,4 +1,11 @@
-#include "src/node/dtn/CustodyModel.h"
+/*
+ * CustodyModel.cpp
+ *
+ *  Created on: Dec 5, 2017
+ *      Author: juanfraire
+ */
+
+#include <src/node/dtn/CustodyModel.h>
 
 CustodyModel::CustodyModel()
 {
@@ -109,7 +116,7 @@ BundlePkt * CustodyModel::getNewCustodyReport(bool accept, BundlePkt *bundleInCu
 	custodyReport->setSchedulingPriority(BUNDLE_CUSTODY_REPORT);
 
 	// Bundle properties
-	char bundleName[100];
+	char bundleName[15];
 	sprintf(bundleName, "Src:%d,Dst:%d(id:%d)", this->eid_, bundleInCustody->getCustodianEid(), (int) custodyReport->getId());
 	custodyReport->setBundleId(custodyReport->getId());
 	custodyReport->setName(bundleName);
@@ -136,7 +143,7 @@ BundlePkt * CustodyModel::getNewCustodyReport(bool accept, BundlePkt *bundleInCu
 	custodyReport->setNextHopEid(0);
 	custodyReport->setSenderEid(0);
 	custodyReport->setCustodianEid(0);
-	custodyReport->getVisitedNodesForUpdate().clear();
+	custodyReport->getVisitedNodes().clear();
 	CgrRoute emptyRoute;
 	emptyRoute.nextHop = EMPTY_ROUTE;
 	custodyReport->setCgrRoute(emptyRoute);

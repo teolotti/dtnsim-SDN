@@ -1,75 +1,81 @@
 #include <src/central/Central.h>
 
-
 Define_Module (dtnsim::Central);
 
-namespace dtnsim
-{
+namespace dtnsim {
 
-Central::Central()
-{
-
+Central::Central() {
 }
 
-Central::~Central()
-{
+Central::~Central() {
 }
 
-void Central::initialize()
-{
+void Central::initialize() {
+
 	nodesNumber_ = this->getParentModule()->par("nodesNumber");
 
-//	// If There are nodes which will use ION environment
-//	// several folders and processes may be deleted or killed
-//	ionNodes_ = false;
-//	for (int i = 0; i < nodesNumber_; i++)
-//	{
-//		string routing = this->getParentModule()->getSubmodule("node", i)->getSubmodule("dtn")->par("routing");
-//		if (routing == "cgrIon350")
-//		{
-//			ionNodes_ = true;
-//			break;
-//		}
-//	}
-//	if (ionNodes_)
-//	{
-//		// create result folder if it doesn't exist
-//		struct stat st =
-//		{ 0 };
-//		if (stat("ionFiles", &st) == -1)
-//		{
-//			mkdir("ionFiles", 0700);
-//		}
-//
-//		// erase old folders and processes
-//		bubble("Killing ION processes ...");
-//		system("rm -rf ionFiles/ion_nodes");
-//		string command1 = "rm -rf ionFiles/node*";
-//		system(command1.c_str());
-//		system("chmod +x ../../src/ion/killm");
-//		system("../../src/ion/killm");
-//	}
+	// Initialize region plan (if network is divided into regions)
+	// the same for all nodes
+	cout << "initializing regionDatabase" << endl;
+	string regionsFile = par("regionsFile");
 
-	// Initialize contact plan
-	contactPlan_.parseContactPlanFile(par("contactsFile"), nodesNumber_, this->par("mode"), this->par("failureProbability"));
+	if (!regionsFile.empty()) {
+		regionDatabase_.parseRegionDatabaseFile(regionsFile);
+		regionDatabase_.printRegionDatabase();
 
-	// Initialize topology
-	int mode = this->par("mode");
-	if (mode < 2) {
-	contactTopology_.parseOpportunisticContactPlanFile(par("contactsFile"), nodesNumber_, mode, this->par("failureProbability"));
-	}
-	else
-	{
-		contactTopology_.parseContactPlanFile(par("contactsFile"), nodesNumber_, 2, this->par("failureProbability"));
+		// parse region specific contact plans and region names
+		cout << "initializing one contact plan per region" << endl;
+
+		const char *contactsFileChar = par("contactsFile");
+		cStringTokenizer contactsFileTokenizer(contactsFileChar, ",");
+
+		const char *contactsFileRegionsChar = par("contactsFileRegions");
+		cStringTokenizer contactsFileRegionsTokenizer(contactsFileRegionsChar, ",");
+
+		int lastContactId = 1;
+		while (contactsFileTokenizer.hasMoreTokens() && contactsFileRegionsTokenizer.hasMoreTokens()) {
+
+			string regionStr = string(contactsFileRegionsTokenizer.nextToken());
+			regions_.push_back(regionStr);
+
+			// Initialize Contact Plan
+			ContactPlan contactPlan;
+			string cpFile = string(contactsFileTokenizer.nextToken());
+			contactPlan.parseContactPlanFile(cpFile, lastContactId);
+			contactPlans_.push_back(contactPlan);
+			contactTopologies_.push_back(contactPlan);
+
+			lastContactId = contactPlan.getLastContactId() + 1;
+		}
+
+		// input files are not structured correctly
+		if(regions_.size() != contactPlans_.size()) {
+			string str1 = string("Error in Central Module: ") + string("Missmatch between contactsFile and contactsFileRegions");
+			throw cException((str1).c_str());
+		}
+
+	} else {
+
+		// Initialize unique global contact plan for all nodes
+		ContactPlan contactPlan;
+		contactPlan.parseContactPlanFile(par("contactsFile"));
+
+		contactPlans_.push_back(contactPlan);
+
+		// Initialize topology
+		ContactPlan contactTopology;
+		contactTopology.parseContactPlanFile(par("contactsFile"));
+		contactTopologies_.push_back(contactTopology);
+		cout << "Parsed CP" << endl;
 	}
 
 	// schedule dummy event to make time pass until
 	// last potential contact. This is mandatory in order for nodes
 	// finish() method to be called and collect some statistics when
 	// none contact is scheduled.
-	if (!contactTopology_.getContacts()->empty())
-	{
-		double topologyEndTime = contactTopology_.getContacts()->back().getEnd();
+	if (!contactTopologies_.at(0).getContacts()->empty()) {
+
+		double topologyEndTime = contactTopologies_.at(0).getContacts()->back().getEnd();
 		ContactMsg *contactMsgEnd = new ContactMsg("contactEnd", CONTACT_END_TIMER);
 		contactMsgEnd->setSchedulingPriority(CONTACT_END_TIMER);
 		scheduleAt(topologyEndTime, contactMsgEnd);
@@ -77,95 +83,90 @@ void Central::initialize()
 
 	// emit contactsNumber statistic
 	contactsNumber = registerSignal("contactsNumber");
-	emit(contactsNumber, contactPlan_.getContacts()->size());
+	emit(contactsNumber, contactPlans_.at(0).getContacts()->size());
 
 	bool faultsAware = this->par("faultsAware");
 
-	if (par("enableAvailableRoutesCalculation"))
-	{
+	if (par("enableAvailableRoutesCalculation")) {
+
 		int totalRoutesVar = 0;
 		set < pair<int, int> > nodePairsRoutes1;
-		totalRoutesVar = this->computeTotalRoutesNumber(contactPlan_, nodesNumber_, nodePairsRoutes1);
+		totalRoutesVar = this->computeTotalRoutesNumber(contactPlans_.at(0), nodesNumber_, nodePairsRoutes1);
 
 		// emit totalRoutes statistic
 		totalRoutes = registerSignal("totalRoutes");
 		emit(totalRoutes, totalRoutesVar);
 	}
 
-
 	int deleteNContacts = this->par("deleteNContacts");
-
-	if (deleteNContacts > 0)
-	{
+	if (deleteNContacts > 0) {
 		// delete N contacts
 		vector<int> contactIdsToDelete;
-		if (par("useCentrality"))
-		{
+
+		if (par("useCentrality")) {
 			contactIdsToDelete = getCentralityContactIds(deleteNContacts, nodesNumber_);
-		}
-		else
-		{
+		} else {
 			contactIdsToDelete = getRandomContactIds(deleteNContacts);
 		}
 
 		deleteContacts(contactIdsToDelete, faultsAware);
-	} else if (this->par("useSpecificFailureProbabilities")) {
-		vector<int> contactIdsToDelete;
-
-		contactIdsToDelete = this->getContactIdsWithSpecificFProb();
-		deleteContacts(contactIdsToDelete, false);
-	}
-	else{
-        double failureProbability = this->par("failureProbability");
-        vector<int> contactIdsToDelete;
-        if (failureProbability > 0)
-        {
-	        contactIdsToDelete = getRandomContactIdsWithFProb(failureProbability);
-	        deleteContacts(contactIdsToDelete, faultsAware);
-	    } else{
-	    	 string toDeleteContactsIds = this->par("contactIdsToDelete");
-	    	 stringstream stream(toDeleteContactsIds);
-	    	 vector<int> contactIdsToDelete;
-	    	 if (toDeleteContactsIds != "") {
-	    		 while(1) {
-	    			 int n; stream >> n;
-	    			 contactIdsToDelete.push_back(n);
-	    			 if(!stream)
-	    				 break;
-	             }
-	    	 }
-	         if (contactIdsToDelete.size() > 0 ){
-	             deleteContacts(contactIdsToDelete, faultsAware);
-	         }
-
-	    }
 	}
 
+	// setting modified contact plan and contact topology each node
+	for (int i = 0; i <= nodesNumber_; i++) {
 
-	this->metricCollector_.initialize(nodesNumber_);
-	this->metricCollector_.setMode(mode);
-	this->metricCollector_.setFailureProb(this->par("failureProbability"));
-	this->metricCollector_.setPath(this->par("collectorPath"));
-
-	// setting modified contact plan and contact topology
-	// to each node
-	for (int i = 0; i <= nodesNumber_; i++)
-	{
 		Dtn *dtn = check_and_cast<Dtn *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("dtn"));
-		dtn->setContactPlan(contactPlan_);
-		dtn->setContactTopology(contactTopology_);
-		dtn->setMetricCollector(&metricCollector_);
-
-
 		Com *com = check_and_cast<Com *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("com"));
-		com->setContactTopology(contactTopology_);
+
+		if(regionsFile.empty()) {
+
+			map<string, ContactPlan> cps;
+			cps[""] = contactPlans_.at(0);
+			dtn->setContactPlans(cps);
+			dtn->setContactTopology(contactTopologies_.at(0));
+			com->setContactTopology(contactTopologies_.at(0));
+			cout << "Set CPs in modules" << endl;
+
+		} else {
+
+			// each node receives a map<regionID, contactPlan> with all
+			// the contact plans where this node is a member
+			dtn->setRegionDatabase(regionDatabase_);
+			set<string> regionsOfNodei = regionDatabase_.getRegions(i);
+			map<string, ContactPlan> cps;
+			ContactPlan contactTopology;
+			for(auto it = regionsOfNodei.begin(); it != regionsOfNodei.end(); ++it) {
+
+				string regionOfNodei = *it;
+
+				for(unsigned int i = 0; i<regions_.size(); i++) {
+
+					if(regions_.at(i) == regionOfNodei) {
+						cps[regions_.at(i)] = contactPlans_.at(i);
+						contactTopology.addContactPlan(contactPlans_.at(i));
+					}
+				}
+			}
+
+			dtn->setContactPlans(cps);
+			dtn->setContactTopology(contactTopology);
+			com->setContactTopology(contactTopology);
+
+//			cout<<"central printing contact Topology"<<endl;
+//			vector<Contact> *cnts = contactTopology.getContacts();
+//			for(unsigned int i = 0; i<cnts->size(); i++)
+//			{
+//				cout<<"id = "<<cnts->at(i).getId()<<endl;
+//			}
+//			exit(0);
+		}
 	}
 
-	if (par("enableAvailableRoutesCalculation"))
-	{
+	if (par("enableAvailableRoutesCalculation")) {
+
 		int availableRoutesVar = 0;
 		set < pair<int, int> > nodePairsRoutes2;
-		availableRoutesVar = this->computeTotalRoutesNumber(contactPlan_, nodesNumber_, nodePairsRoutes2);
+		availableRoutesVar = this->computeTotalRoutesNumber(contactPlans_.at(0), nodesNumber_, nodePairsRoutes2);
 
 		// emit availableRoutes statistic
 		availableRoutes = registerSignal("availableRoutes");
@@ -178,78 +179,38 @@ void Central::initialize()
 	}
 }
 
-void Central::finish()
-{
-	if (nodesNumber_ >= 1)
-	{
-//		if (ionNodes_)
-//		{
-//			bubble("Killing ION processes ...");
-//			system("../../src/ion/killm");
-//		}
+void Central::finish() {
 
-		this->metricCollector_.evaluateAndPrintResults();
+	if (nodesNumber_ >= 1) {
 
-		if (this->par("saveTopology"))
-		{
+		if (this->par("saveTopology")) {
 			this->saveTopology();
 		}
 
-		if (this->par("saveFlows"))
-		{
+		if (this->par("saveFlows")) {
 			this->saveFlows();
 		}
 
-		if (this->par("saveLpFlows"))
-		{
+		if (this->par("saveLpFlows")) {
 			this->saveLpFlows();
 		}
 	}
 }
 
-void Central::handleMessage(cMessage * msg)
-{
+void Central::handleMessage(cMessage * msg) {
 	// delete dummy msg
 	delete msg;
 }
 
-void Central::computeFlowIds()
-{
-	int flowId = 0;
 
-	for (int i = 1; i <= nodesNumber_; i++)
-	{
-		App *app = check_and_cast<App *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("app"));
-
-		int src = i;
-		vector<int> dsts = app->getDestinationEidVec();
-
-		vector<int>::iterator it1 = dsts.begin();
-		vector<int>::iterator it2 = dsts.end();
-		for (; it1 != it2; ++it1)
-		{
-			int dst = *it1;
-			pair<int, int> pSrcDst(src, dst);
-
-			map<pair<int, int>, unsigned int>::iterator iit = flowIds_.find(pSrcDst);
-			if (iit == flowIds_.end())
-			{
-				flowIds_[pSrcDst] = flowId++;
-			}
-		}
-	}
-}
-
-void Central::saveTopology()
-{
+void Central::saveTopology() {
 #ifdef USE_BOOST_LIBRARIES
 	map<double, TopologyGraph> topology = topologyUtils::computeTopology(&this->contactTopology_, nodesNumber_);
 	topologyUtils::saveGraphs(&topology, "results/topology.dot");
 #endif
 }
 
-void Central::saveFlows()
-{
+void Central::saveFlows() {
 #ifdef USE_BOOST_LIBRARIES
 	this->computeFlowIds();
 	vector < string > dotColors = routerUtils::getDotColors();
@@ -258,8 +219,7 @@ void Central::saveFlows()
 #endif
 }
 
-void Central::saveLpFlows()
-{
+void Central::saveLpFlows() {
 #ifdef USE_BOOST_LIBRARIES
 #ifdef USE_CPLEX_LIBRARY
 	this->computeFlowIds();
@@ -283,82 +243,18 @@ void Central::saveLpFlows()
 #endif
 }
 
-map<int, map<int, map<int, double> > > Central::getTraffics()
-{
-	/// traffic[k][k1][k2] tráfico generado en el estado k desde el nodo k1 hacia el nodo k2
-	map<int, map<int, map<int, double> > > traffics;
 
-	for (int i = 1; i <= nodesNumber_; i++)
-	{
-		App *app = check_and_cast<App *>(this->getParentModule()->getSubmodule("node", i)->getSubmodule("app"));
 
-		int src = i;
+double Central::getState(double trafficStart) {
 
-		vector<int> bundlesNumberVec = app->getBundlesNumberVec();
-		vector<int> destinationEidVec = app->getDestinationEidVec();
-		vector<int> sizeVec = app->getSizeVec();
-		vector<double> startVec = app->getStartVec();
-
-		for (size_t j = 0; j < bundlesNumberVec.size(); j++)
-		{
-			double stateStart = this->getState(startVec.at(j));
-
-			int dst = destinationEidVec.at(j);
-
-			double totalSize = bundlesNumberVec.at(j) * sizeVec.at(j);
-
-			map<int, map<int, map<int, double> > >::iterator it1 = traffics.find(stateStart);
-			if (it1 != traffics.end())
-			{
-				map<int, map<int, double> > m1 = it1->second;
-				map<int, map<int, double> >::iterator it2 = m1.find(src);
-
-				if (it2 != m1.end())
-				{
-					map<int, double> m2 = it2->second;
-					map<int, double>::iterator it3 = m2.find(dst);
-
-					if (it3 != m2.end())
-					{
-						m2[dst] += totalSize;
-					}
-					else
-					{
-						m2[dst] = totalSize;
-					}
-					m1[src] = m2;
-				}
-				else
-				{
-					map<int, double> m2;
-					m2[dst] = totalSize;
-					m1[src] = m2;
-				}
-				traffics[stateStart] = m1;
-			}
-			else
-			{
-				map<int, map<int, double> > m1;
-				m1[src][dst] = totalSize;
-				traffics[stateStart] = m1;
-			}
-		}
-	}
-
-	return traffics;
-}
-
-double Central::getState(double trafficStart)
-{
 	// compute state times
 	vector<double> stateTimes;
 	stateTimes.push_back(0);
 
-	vector<Contact> *contacts = contactTopology_.getContacts();
+	vector<Contact> *contacts = contactTopologies_.at(0).getContacts();
 	vector<Contact>::iterator it1 = contacts->begin();
 	vector<Contact>::iterator it2 = contacts->end();
-	for (; it1 != it2; ++it1)
-	{
+	for (; it1 != it2; ++it1) {
 		Contact contact = *it1;
 
 		stateTimes.push_back(contact.getStart());
@@ -372,20 +268,17 @@ double Central::getState(double trafficStart)
 	double state = 0;
 	vector<double>::iterator iit1 = stateTimes.begin();
 	vector<double>::iterator iit2 = stateTimes.end();
-	for (; iit1 != iit2; ++iit1)
-	{
+	for (; iit1 != iit2; ++iit1) {
 		double stateStart = *iit1;
 		double stateEnd = stateTimes.back();
 
 		++iit1;
-		if (iit1 != iit2)
-		{
+		if (iit1 != iit2) {
 			stateEnd = *iit1;
 		}
 		--iit1;
 
-		if (trafficStart >= stateStart && trafficStart < stateEnd)
-		{
+		if (trafficStart >= stateStart && trafficStart < stateEnd) {
 			state = stateStart;
 		}
 	}
@@ -393,37 +286,32 @@ double Central::getState(double trafficStart)
 	return state;
 }
 
-void Central::deleteContacts(vector<int> contactsToDelete, bool faultsAware)
-{
-	for (size_t i = 0; i < contactsToDelete.size(); i++)
-	{
+void Central::deleteContacts(vector<int> contactsToDelete, bool faultsAware) {
+
+	for (size_t i = 0; i < contactsToDelete.size(); i++) {
 		int contactId = contactsToDelete.at(i);
 
-		contactTopology_.deleteContactById(contactId);
+		contactTopologies_.at(0).deleteContactById(contactId);
 
 		// if faultsAware we delete contacts also from contactPlan
 		// so CGR will take better decisions
-		if (faultsAware)
-		{
-			contactPlan_.deleteContactById(contactId);
+		if (faultsAware) {
+			contactPlans_.at(0).deleteContactById(contactId);
 		}
 	}
 }
 
-vector<int> Central::getRandomContactIds(int nContacts)
-{
+vector<int> Central::getRandomContactIds(int nContacts) {
 	vector<int> contactIds;
 
 	// get working copy of contactPlan_
-	ContactPlan workCP(contactPlan_);
+	ContactPlan workCP(contactPlans_.at(0));
 
 	int contactsDeleted = 0;
-	while (contactsDeleted < nContacts)
-	{
+	while (contactsDeleted < nContacts) {
 		vector<Contact> *contacts = workCP.getContacts();
 
-		if (contacts->size() == 0)
-		{
+		if (contacts->size() == 0) {
 			break;
 		}
 
@@ -438,69 +326,31 @@ vector<int> Central::getRandomContactIds(int nContacts)
 	return contactIds;
 }
 
-vector<int> Central::getRandomContactIdsWithFProb(double failureProbability)
-{
-       vector<int> contactIds;
+vector<int> Central::getCentralityContactIds(int nContacts, int nodesNumber) {
 
-       // get working copy of contactPlan_
-       ContactPlan workCP(contactPlan_);
-       vector<Contact> *contacts = workCP.getContacts();
-
-       for(unsigned int i=0; i < contacts->size(); i++){
-               double randomNumber =  uniform(0, 1);
-               if (randomNumber < failureProbability)
-                       contactIds.push_back(contacts->at(i).getId());
-       }
-
-       return contactIds;
-}
-
-vector<int> Central::getContactIdsWithSpecificFProb()
-{
-	vector<int> contactIds;
-
-	ContactPlan workCP(contactPlan_);
-	ContactPlan workCT(contactTopology_);
-	vector<Contact>* contacts = workCT.getContacts();
-
-	for(size_t i = 0; i < contacts->size(); i++) {
-		double randomNumber = uniform(0,1, 0.5);
-		if (randomNumber < contacts->at(i).getFailureProbability()) {
-			contactIds.push_back(contacts->at(i).getId());
-		}
-	}
-
-	return contactIds;
-}
-
-vector<int> Central::getCentralityContactIds(int nContacts, int nodesNumber)
-{
 	//cout<<"delete central contacts"<<endl;
 
 	vector<int> contactIds;
 
 	// get working copy of contactPlan_
-	ContactPlan workCP(contactPlan_);
+	ContactPlan workCP(contactPlans_.at(0));
 
 	// contact id -> centrality
 	map<int, double> centralityMap;
 
 	int contactsDeleted = 0;
-	while (contactsDeleted < nContacts)
-	{
+	while (contactsDeleted < nContacts) {
+
 		vector<Contact> *contacts = workCP.getContacts();
-		if (contacts->size() == 0)
-		{
+		if (contacts->size() == 0) {
 			break;
 		}
 
-		for (size_t i = 0; i < contacts->size(); i++)
-		{
+		for (size_t i = 0; i < contacts->size(); i++) {
 			centralityMap[contacts->at(i).getId()] = 0;
 		}
 
-		for (int i = 1; i <= nodesNumber; i++)
-		{
+		for (int i = 1; i <= nodesNumber; i++) {
 			SdrModel sdr;
 			int eid = i;
 			sdr.setEid(eid);
@@ -508,12 +358,12 @@ vector<int> Central::getCentralityContactIds(int nContacts, int nodesNumber)
 			sdr.setContactPlan(&workCP);
 			bool printDebug = false;
 
-			Routing *routing = new RoutingCgrModel350(eid, &sdr, &workCP, printDebug);
+			map<string, ContactPlan> workCPs;
+			workCPs[""] = workCP;
+			Routing *routing = new RoutingCgrModel350(eid, &sdr, &workCPs, NULL, printDebug);
 
-			for (int j = 1; j <= nodesNumber; j++)
-			{
-				if (i != j)
-				{
+			for (int j = 1; j <= nodesNumber; j++) {
+				if (i != j) {
 					//cout<<"!!! source = "<<i<<endl;
 					//cout<<"!!! destination = "<<j<<endl;
 
@@ -530,7 +380,7 @@ vector<int> Central::getCentralityContactIds(int nContacts, int nodesNumber)
 					bundle->setHopCount(0);
 					bundle->setNextHopEid(0);
 					bundle->setSenderEid(0);
-					bundle->getVisitedNodesForUpdate().clear();
+					bundle->getVisitedNodes().clear();
 					CgrRoute emptyRoute;
 					emptyRoute.nextHop = EMPTY_ROUTE;
 					bundle->setCgrRoute(emptyRoute);
@@ -539,15 +389,11 @@ vector<int> Central::getCentralityContactIds(int nContacts, int nodesNumber)
 					vector<CgrRoute> shortestPaths;
 
 					time_t bestArrivalTime = 10000000;
-					for (size_t k = 0; k < routes.size(); k++)
-					{
+					for (size_t k = 0; k < routes.size(); k++) {
 						CgrRoute route = routes.at(k);
-						if (route.arrivalTime == bestArrivalTime)
-						{
+						if (route.arrivalTime == bestArrivalTime) {
 							shortestPaths.push_back(route);
-						}
-						else if (route.arrivalTime < bestArrivalTime)
-						{
+						} else if (route.arrivalTime < bestArrivalTime) {
 							shortestPaths.clear();
 							shortestPaths.push_back(route);
 							bestArrivalTime = route.arrivalTime;
@@ -559,8 +405,7 @@ vector<int> Central::getCentralityContactIds(int nContacts, int nodesNumber)
 					set<int> affectedContacts = this->getAffectedContacts(shortestPaths);
 					set<int>::iterator cit1 = affectedContacts.begin();
 					set<int>::iterator cit2 = affectedContacts.end();
-					for (; cit1 != cit2; ++cit1)
-					{
+					for (; cit1 != cit2; ++cit1) {
 						int cId = *cit1;
 						int routesThroughContact = computeNumberOfRoutesThroughContact(cId, shortestPaths);
 						double centrality = (double) routesThroughContact / (double) shortestPaths.size();
@@ -581,10 +426,8 @@ vector<int> Central::getCentralityContactIds(int nContacts, int nodesNumber)
 		vector < pair<int, double> > allMaxElements;
 		map<int, double>::iterator ii1 = centralityMap.begin();
 		map<int, double>::iterator ii2 = centralityMap.end();
-		for (; ii1 != ii2; ++ii1)
-		{
-			if (ii1->second == (*x).second)
-			{
+		for (; ii1 != ii2; ++ii1) {
+			if (ii1->second == (*x).second) {
 				allMaxElements.push_back(make_pair(ii1->first, ii1->second));
 			}
 		}
@@ -614,21 +457,18 @@ vector<int> Central::getCentralityContactIds(int nContacts, int nodesNumber)
 }
 
 /// @brief compute total routes from all to all nodes
-int Central::computeTotalRoutesNumber(ContactPlan &contactPlan, int nodesNumber, set<pair<int, int> > &nodePairsRoutes)
-{
+int Central::computeTotalRoutesNumber(ContactPlan &contactPlan, int nodesNumber, set<pair<int, int> > &nodePairsRoutes) {
 	int totalRoutesNumber = 0;
 
 	// get working copy of contactPlan_
-	ContactPlan workCP(contactPlan_);
+	ContactPlan workCP(contactPlans_.at(0));
 
 	vector<Contact> *contacts = workCP.getContacts();
-	if (contacts->size() == 0)
-	{
+	if (contacts->size() == 0) {
 		return 0;
 	}
 
-	for (int i = 1; i <= nodesNumber; i++)
-	{
+	for (int i = 1; i <= nodesNumber; i++) {
 		SdrModel sdr;
 		int eid = i;
 		sdr.setEid(eid);
@@ -636,12 +476,12 @@ int Central::computeTotalRoutesNumber(ContactPlan &contactPlan, int nodesNumber,
 		sdr.setContactPlan(&workCP);
 		bool printDebug = false;
 
-		Routing *routing = new RoutingCgrModel350(eid, &sdr, &workCP, printDebug);
+		map<string, ContactPlan> workCPs;
+		workCPs[""] = workCP;
+		Routing *routing = new RoutingCgrModel350(eid, &sdr, &workCPs, NULL, printDebug);
 
-		for (int j = 1; j <= nodesNumber; j++)
-		{
-			if (i != j)
-			{
+		for (int j = 1; j <= nodesNumber; j++) {
+			if (i != j) {
 				//cout<<"!!! source = "<<i<<endl;
 				//cout<<"!!! destination = "<<j<<endl;
 
@@ -658,15 +498,14 @@ int Central::computeTotalRoutesNumber(ContactPlan &contactPlan, int nodesNumber,
 				bundle->setHopCount(0);
 				bundle->setNextHopEid(0);
 				bundle->setSenderEid(0);
-				bundle->getVisitedNodesForUpdate().clear();
+				bundle->getVisitedNodes().clear();
 				CgrRoute emptyRoute;
 				emptyRoute.nextHop = EMPTY_ROUTE;
 				bundle->setCgrRoute(emptyRoute);
 
 				vector<CgrRoute> routes = check_and_cast<RoutingCgrModel350 *>(routing)->getCgrRoutes(bundle, simTime().dbl());
 
-				if (!routes.empty())
-				{
+				if (!routes.empty()) {
 					nodePairsRoutes.insert(make_pair(i, j));
 				}
 
@@ -682,18 +521,14 @@ int Central::computeTotalRoutesNumber(ContactPlan &contactPlan, int nodesNumber,
 	return totalRoutesNumber;
 }
 
-int Central::computeNumberOfRoutesThroughContact(int contactId, vector<CgrRoute> shortestPaths)
-{
+int Central::computeNumberOfRoutesThroughContact(int contactId, vector<CgrRoute> shortestPaths) {
 	int numberOfRoutesThroughContact = 0;
-	for (size_t r = 0; r < shortestPaths.size(); r++)
-	{
+	for (size_t r = 0; r < shortestPaths.size(); r++) {
 		CgrRoute route = shortestPaths.at(r);
 		vector<Contact *> hops = route.hops;
-		for (size_t h = 0; h < hops.size(); h++)
-		{
+		for (size_t h = 0; h < hops.size(); h++) {
 			Contact *contact = hops.at(h);
-			if (contact->getId() == contactId)
-			{
+			if (contact->getId() == contactId) {
 				numberOfRoutesThroughContact++;
 			}
 		}
@@ -702,15 +537,12 @@ int Central::computeNumberOfRoutesThroughContact(int contactId, vector<CgrRoute>
 	return numberOfRoutesThroughContact;
 }
 
-set<int> Central::getAffectedContacts(vector<CgrRoute> shortestPaths)
-{
+set<int> Central::getAffectedContacts(vector<CgrRoute> shortestPaths) {
 	set<int> affectedContacts;
-	for (size_t r = 0; r < shortestPaths.size(); r++)
-	{
+	for (size_t r = 0; r < shortestPaths.size(); r++) {
 		CgrRoute route = shortestPaths.at(r);
 		vector<Contact *> hops = route.hops;
-		for (size_t h = 0; h < hops.size(); h++)
-		{
+		for (size_t h = 0; h < hops.size(); h++) {
 			affectedContacts.insert(hops.at(h)->getId());
 		}
 	}

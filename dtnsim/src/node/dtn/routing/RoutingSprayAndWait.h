@@ -33,10 +33,9 @@
 class RoutingSprayAndWait : public RoutingStochastic
 {
 public:
-	RoutingSprayAndWait(int eid, SdrModel * sdr, cModule * dtn, int amountOfCopies, bool binary, MetricCollector* metricCollector);
+	RoutingSprayAndWait(int eid, SdrModel * sdr, cModule * dtn, int amountOfCopies, bool binary);
 	virtual ~RoutingSprayAndWait();
-	virtual void msgToOtherArrive(BundlePkt * bundle, double simTime);
-	virtual bool msgToMeArrive(BundlePkt * bundle);
+	virtual void msgToOtherArrive(BundlePkt * bundle, double simTime, int terminusNode);
 	virtual void contactEnd(Contact *c);
 	virtual void successfulBundleForwarded(long bundleId, Contact * contact, bool sentToDestination);
 	virtual void routeAndQueueBundle(Contact *c);
@@ -44,7 +43,6 @@ public:
 private:
 	int amountOfCopies;
 	bool binary;
-	MetricCollector* metricCollector;
 };
 
 #endif /* SRC_NODE_DTN_ROUTINGSPRAYANDWAIT_H_ */

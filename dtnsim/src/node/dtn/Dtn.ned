@@ -8,22 +8,13 @@ simple Dtn
 
         string routing = default("direct");
         string routingType = default("none");
+        string interRegionsRoutingType = default("IRR,extensionBlock:off");
         int bundlesCopies = default(1);
         double sContactProb = default(1.0);
         bool printRoutingDebug = default(false);
+        bool printInterRegionsRoutingDebug = default(false);
         bool saveBundleMap = default(false);
         int sdrSize = default(0); // SDR Memory Size in Bytes (0 = infinite)
-        string frouting = default(""); //Path to file wich encodes routing decisions (only valid for BRUF1T/BRUFNCopies routing)
-        int ts_duration = default(-1); //The timestamp duration in seconds (only valid for CGR_BRUFPowered routing). Use ts_duration or ts_start_times both are not possible
-        string ts_start_times = default(""); //"a,b,c,..." a,b,c are integer and they indicate the second of start of 0, 1, 2,.. time stamp (only valid for CGR_BRUFPowered routing) Use ts_duration or ts_start_times both are not possible.
-        double pEncouterMax = default(0.7);
-		double pEncouterFirst = default(0.5);
-		double pFirstThreshold = default(0.1);
-		double ForwThresh = default(0);
-		double alpha = default(0.5);
-		double beta = default(0.9);
-		double gamma = default(0.999);
-		double delta = default(0.01);
         
         // Custody
         int custodyReportByteSize = default(20);
@@ -40,9 +31,12 @@ simple Dtn
         @signal[sdrBundleStored];
         @signal[sdrBytesStored];
         @signal[routeCgrDijkstraCalls];
+        @signal[routeDijkstraCallsXnodes];
+        @signal[routeDijkstraCallsXcomplexity];
         @signal[routeCgrDijkstraLoops];
         @signal[routeCgrRouteTableEntriesCreated];
         @signal[routeCgrRouteTableEntriesExplored];
+        @signal[routeExecutionTimeUs];
 
         @statistic[dtnBundleSentToCom](title="dtnBundleSentToCom"; source="dtnBundleSentToCom"; record=count; interpolationmode=none);
         @statistic[dtnBundleSentToApp](title="dtnBundleSentToApp"; source="dtnBundleSentToApp"; record=count; interpolationmode=none);
@@ -57,6 +51,12 @@ simple Dtn
         @statistic[routeCgrDijkstraLoops](title="routeCgrDijkstraLoops"; source="routeCgrDijkstraLoops"; record=sum,vector; interpolationmode=none);
         @statistic[routeCgrRouteTableEntriesCreated](title="routeCgrRouteTableEntriesCreated"; source="routeCgrRouteTableEntriesCreated"; record=max,sum,vector; interpolationmode=none);
         @statistic[routeCgrRouteTableEntriesExplored](title="routeCgrRouteTableEntriesExplored"; source="routeCgrRouteTableEntriesExplored"; record=max,sum,vector; interpolationmode=none);
+        @statistic[routeDijkstraCallsXnodes](title="routeDijkstraCallsXnodes"; source="routeDijkstraCallsXnodes"; record=sum,vector; interpolationmode=none);
+        @statistic[routeDijkstraCallsXcomplexity](title="routeDijkstraCallsXcomplexity"; source="routeDijkstraCallsXcomplexity"; record=sum,vector; interpolationmode=none);
+        @statistic[routeExecutionTimeUs](title="routeExecutionTimeUs"; source="routeExecutionTimeUs"; record=sum,vector; interpolationmode=none);
+        
+        @signal[routeTableSize];
+        @statistic[routeTableSize](title="routeTableSize"; source="routeTableSize"; record=mean,sum,vector; interpolationmode=none);
 
     gates:
         inout gateToApp;

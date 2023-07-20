@@ -5,17 +5,19 @@ simple App
     parameters:
         @display("i=block/telnet");
         
-        bool enable = default(false); // Traffic Generator Enabled
-        string destinationEid = default("1"); // Generated Bundles destination EiD
-        string bundlesNumber = default("1"); // Number of Bundles to Generate
-        string size = default("1024"); // Generated Bundles Size in Bytes
-        string start = default("0"); // tiempo de generación de mensajes
-        double interval = default(0); // Bundles Generation Interval in Secs
-        double ttl = default(9000000); // Generated Bundles Time to Live in Secs
-        bool returnToSender = default(true);
-        bool critical = default(false);
-        bool custodyTransfer = default(false);
-        string externalTrafficEvents = default("");
+        bool enable = default(false); 				// enable traffic generation
+        											// TG is based on flows (flows of bundles between Src and Dst)
+        											// Each flow follows a given distribution
+        
+        string destinationEids = default("1");		// comma-separated list of destination EIDs per flow
+        
+        string distribution = default("uniform1");	// distribution used for each flow
+                
+        string startTimes = default("0");			// comma-separated list of start times per flow (TODO times 3600)
+        
+        int bundleSize = default(1024);				// bundle size used for each flow
+        
+        int ttl = default(9000000);					// bundle TTL used for each flow
         
         // Signals and Statistics
         @signal[appBundleSent];

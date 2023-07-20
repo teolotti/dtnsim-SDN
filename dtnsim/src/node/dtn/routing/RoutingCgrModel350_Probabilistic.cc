@@ -1,8 +1,10 @@
 #include <src/node/dtn/routing/RoutingCgrModel350_Probabilistic.h>
 #include <src/node/dtn/Dtn.h>
 
+
+
 RoutingCgrModel350_Probabilistic::RoutingCgrModel350_Probabilistic(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug,cModule * dtn, double sContactProb) :
-		RoutingDeterministic(eid, sdr, contactPlan)
+		RoutingDeterministic(eid, sdr, contactPlan, NULL)
 {
 	printDebug_ = printDebug;
 	dtn_ = dtn;
@@ -13,7 +15,7 @@ RoutingCgrModel350_Probabilistic::~RoutingCgrModel350_Probabilistic()
 {
 }
 
-void RoutingCgrModel350_Probabilistic::routeAndQueueBundle(BundlePkt * bundle, double simTime)
+void RoutingCgrModel350_Probabilistic::routeAndQueueBundle(BundlePkt * bundle, double simTime, int terminusNode)
 {
 	if (!printDebug_) // disable cout if degug disabled
 		cout.setstate(std::ios_base::failbit);

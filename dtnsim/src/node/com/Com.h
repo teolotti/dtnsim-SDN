@@ -15,8 +15,8 @@
 using namespace std;
 using namespace omnetpp;
 
-class Com: public cSimpleModule
-{
+class Com: public cSimpleModule {
+
 public:
 	Com();
 	virtual ~Com();
@@ -28,10 +28,8 @@ protected:
 	virtual void finish();
 
 private:
-
 	int eid_;
 	ContactPlan contactTopology_;
-
 	double packetLoss_;
 
 };

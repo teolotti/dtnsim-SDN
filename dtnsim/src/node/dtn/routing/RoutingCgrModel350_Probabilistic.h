@@ -11,7 +11,7 @@ class RoutingCgrModel350_Probabilistic: public RoutingDeterministic
 public:
 	RoutingCgrModel350_Probabilistic(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug, cModule * dtn, double sLinkProbability);
 	virtual ~RoutingCgrModel350_Probabilistic();
-	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime, int terminusNode);
 	virtual CgrRoute* getCgrBestRoute(BundlePkt * bundle, double simTime);
 	virtual vector<CgrRoute> getCgrRoutes(BundlePkt * bundle, double simTime);
 	virtual bool msgToMeArrive(BundlePkt * bundle);

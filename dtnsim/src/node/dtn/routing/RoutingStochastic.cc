@@ -1,4 +1,12 @@
-#include "src/node/dtn/routing/RoutingStochastic.h"
+/*
+ * RoutingStochastic.cc
+ *
+ *  Created on: Jul 18, 2017
+ *      Author: FRaverta
+ *
+ */
+
+#include <src/node/dtn/routing/RoutingStochastic.h>
 
 RoutingStochastic::RoutingStochastic(int eid, SdrModel * sdr, cModule * dtn)
 	:Routing(eid,sdr)
@@ -11,7 +19,7 @@ RoutingStochastic::~RoutingStochastic()
 
 }
 
-void RoutingStochastic::msgToOtherArrive(BundlePkt * bundle, double simTime)
+void RoutingStochastic::msgToOtherArrive(BundlePkt * bundle, double simTime, int terminusNode)
 {
 	//Check if message is already in bundles list, if it isn't, insert it.
 	if(!isCarryingBundle(bundle->getBundleId()) and !isDeliveredBundle(bundle->getBundleId()))
@@ -70,11 +78,6 @@ void RoutingStochastic::successfulBundleForwarded(long bundleId, Contact * conta
 		sdr_->removeBundle(bundleId);
 		deliveredBundles_.push_back(bundleId);
 	}
-}
-
-void RoutingStochastic::updateContactPlan(Contact* c)
-{
-
 }
 
 void  RoutingStochastic::refreshForwarding(Contact * c)

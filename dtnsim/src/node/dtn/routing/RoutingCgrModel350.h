@@ -5,26 +5,37 @@
 #include <src/node/dtn/routing/CgrRoute.h>
 #include <src/node/dtn/routing/RoutingDeterministic.h>
 #include <src/node/dtn/SdrModel.h>
+#include <src/node/dtn/routing/RoutingInterRegions.h>
 
 class RoutingCgrModel350: public RoutingDeterministic
 {
 public:
-	RoutingCgrModel350(int eid, SdrModel * sdr, ContactPlan * contactPlan, bool printDebug);
+	RoutingCgrModel350(int eid, SdrModel * sdr, map<string, ContactPlan> *contactPlans, RoutingInterRegions *routingInterRegions, bool printDebug);
 	virtual ~RoutingCgrModel350();
-	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime);
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime, int terminusNode);
 	virtual CgrRoute* getCgrBestRoute(BundlePkt * bundle, double simTime);
 	virtual vector<CgrRoute> getCgrRoutes(BundlePkt * bundle, double simTime);
 
+
 	// stats recollection
-	int getDijkstraCalls();
-	int getDijkstraLoops();
-	int getRouteTableEntriesExplored();
+	double getDijkstraCalls();
+	double getDijkstraLoops();
+	double getRouteTableEntriesExplored();
+	double getEdgesOneDijkstra() const;
+	double getNodesOneDijkstra() const;
+	double getOneDijkstraComplexity() const;
+	double getRouteTableSize();
 
 private:
 
-	int dijkstraCalls;
-	int dijkstraLoops;
-	int tableEntriesExplored;
+	double dijkstraCalls;
+	double dijkstraLoops;
+	double tableEntriesExplored;
+	double routeTableSize;
+
+	double nodesOneDijkstra;
+	double edgesOneDijkstra;
+
 
 	bool printDebug_ = false;
 
@@ -59,11 +70,12 @@ private:
 		bool suppressed;
 	} Work;
 
-	map<int, vector<CgrRoute> > routeList_;
-	double routeListLastEditTime = -1;
+	map<string, map<int, vector<CgrRoute> > >routeLists_;
 
-	void cgrForward(BundlePkt * bundle, double simTime);
-	void identifyProximateNodes(BundlePkt * bundle, double simTime, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes);
+	map<string, double> routeListLastEditTimes_;
+
+	void cgrForward(BundlePkt * bundle, double simTime, int terminusNode);
+	void identifyProximateNodes(BundlePkt * bundle, double simTime, int terminusNode, vector<int> excludedNodes, vector<ProximateNode> * proximateNodes);
 	void loadRouteList(int terminusNode, double simTime);
 
 	void findNextBestRoute(Contact * rootContact, int terminusNode, CgrRoute * route);

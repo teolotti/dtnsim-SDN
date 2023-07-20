@@ -1,4 +1,9 @@
 /*
+ * RoutingDeterministic.h
+ *
+ *  Created on: Jul 18, 2017
+ *      Author: FRaverta
+ *
  * According to Zhang's taxonomy which classifies routing protocols based on the availability
  * of knowledge about the network topology, We have two different kind of them:
  *
@@ -24,14 +29,17 @@
 #define SRC_NODE_DTN_ROUTING_ROUTINGDETERMINISTIC_H_
 
 #include <src/node/dtn/routing/Routing.h>
+#include <src/node/dtn/routing/RoutingInterRegions.h>
 
 class RoutingDeterministic: public Routing
 {
 public:
-	RoutingDeterministic(int eid, SdrModel * sdr, ContactPlan * contactPlan);
+	RoutingDeterministic(int eid, SdrModel * sdr, map<string, ContactPlan> *contactPlans, RoutingInterRegions *routingInterRegions);
+	RoutingDeterministic(int eid, SdrModel * sdr, ContactPlan *contactPlan, RoutingInterRegions *routingInterRegions);
+
 	virtual ~RoutingDeterministic();
 
-	virtual void msgToOtherArrive(BundlePkt * bundle, double simTime);
+	virtual void msgToOtherArrive(BundlePkt * bundle, double simTime, int terminusNode);
 
 	virtual bool msgToMeArrive(BundlePkt * bundle);
 
@@ -41,16 +49,41 @@ public:
 
 	virtual void successfulBundleForwarded(long bundleId, Contact * contact,  bool sentToDestination);
 
-	virtual void updateContactPlan(Contact* c);
-
 	virtual void  refreshForwarding(Contact * c);
 
 	// This is a pure virtual method (all deterministic routing must at least
 	// implement this function)
-	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime) = 0;
+	virtual void routeAndQueueBundle(BundlePkt *bundle, double simTime, int terminusNode) = 0;
+
+	virtual bool haveElementsInCommon(set<string> la, set<string> lb);
+
+	virtual void setCurrentRegionId(string currentRegionId)
+	{
+		this->currentRegionId_ = currentRegionId;
+		this->contactPlan_ = &(contactPlans_->operator[](currentRegionId));
+	}
+
+	virtual string getCurrentRegionId()
+	{
+		return this->currentRegionId_;
+	}
+
+	virtual ContactPlan *getContactPlan()
+	{
+		return contactPlan_;
+	}
 
 protected:
-	ContactPlan * contactPlan_;
+
+	// we use this variable so that CGR consider only contacts from a specific region
+	string currentRegionId_;
+
+	// this contact plan pointer is changed with the method setCurrentRegion of routing
+	ContactPlan *contactPlan_;
+
+	map<string, ContactPlan> *contactPlans_;
+
+	RoutingInterRegions *routingInterRegions_;
 };
 
 #endif /* SRC_NODE_DTN_ROUTING_ROUTINGDETERMINISTIC_H_ */
