@@ -52,6 +52,10 @@ void RoutingCgrModelYen::cgrForward(BundlePacket *bundle, double simTime, int de
 	// Candidate route(s) for current bundle
 	vector<CgrRoute> candidateRoutes;
 	identifyCandidateRoutes(bundle, simTime, destinationEid, &candidateRoutes);
+	// the below code executes the theoretically correct version of CGR using Yen's algorithm
+	// the value of K has to be changed in code
+	//identifyCandidateRoutesRework(bundle, simTime, destinationEid, &candidateRoutes);
+
 
 	// Select most suitable route out of candidates
 	CgrRoute* selectedRoute = NULL;
@@ -154,7 +158,7 @@ void RoutingCgrModelYen::identifyCandidateRoutes(BundlePacket *bundle, double si
 	potentialRoutes.push_back(bestRoute);
 
 	int k = 0;
-	while (candidateRoutes->empty() && k < 500) { //TODO make cap for K adjustable
+	while (candidateRoutes->empty() && k < 50) { //TODO make cap for K adjustable
 
 		cout << "STARTING NEW YEN ITERATION" << endl;
 		yenIterations++;
@@ -238,6 +242,156 @@ void RoutingCgrModelYen::identifyCandidateRoutes(BundlePacket *bundle, double si
 				}
 			}
 		} // loop through spur contacts of most recently added route
+		k++;
+	} // while candidateRoutes.empty() loop
+}
+
+void RoutingCgrModelYen::identifyCandidateRoutesRework(BundlePacket *bundle, double simTime, int destinationEid, vector<CgrRoute> *candidateRoutes) {
+
+	// Test, if any of the previously calculated routes are suitable for this bundle
+	for (auto & route : routeLists_[destinationEid]) {
+ 		if (isCandidateRoute(bundle, &route, simTime)) {
+			candidateRoutes->push_back(route);
+		}
+	}
+
+	if (!candidateRoutes->empty()) {
+		return;
+	}
+
+	routeSearchStarts++;
+
+	// If none of the previously calculated routes are suitable, use Yen
+	// to compute the next best route and add it to candidate list if suitable
+
+	vector<CgrRoute> routes;
+	vector<CgrRoute> potentialRoutes;
+
+	// Create rootContact
+	Contact rootContact(0, 0, numeric_limits<double>::max(), eid_, eid_, 0, 0);
+	rootContact.routeSearchWork.arrivalTime = simTime;
+
+	// Clear working area of each contact
+	currentContactPlan_->clearAllRouteSearchWorkingArea();
+	currentContactPlan_->clearAllRouteManagementWorkingArea();
+
+	// Determine best path and record it
+	CgrRoute bestRoute;
+	findNextBestRoute(&rootContact, destinationEid, &bestRoute);
+	if (bestRoute.nextHopNode == -1) {
+		return;
+	} else {
+		routeLists_[destinationEid].push_back(bestRoute);
+		tableEntriesCreated++;
+		if (isCandidateRoute(bundle, &bestRoute, simTime)) {
+			candidateRoutes->push_back(bestRoute);
+			return;
+		}
+	}
+
+	// Add root contact to best route
+	bestRoute.hops.insert(bestRoute.hops.begin(), &rootContact);
+	routes.push_back(bestRoute);
+
+	int k = 0;
+	while (candidateRoutes->empty() && k < 50) { //TODO make cap for K adjustable
+
+		cout << "STARTING NEW YEN ITERATION" << endl;
+		yenIterations++;
+
+		// Iterate through all contacts of most recently added route
+		CgrRoute* mostRecentlyAddedRoute = &routes.back();
+		vector<Contact*> hops = mostRecentlyAddedRoute->hops;
+		for (int spurIndex = 0; spurIndex < hops.size()-1; ++spurIndex) {
+
+			Contact* spurContact = hops[spurIndex];
+
+			// Create a root path for all spur contacts
+			CgrRoute rootPath;
+			for (size_t hopIndex = 0; hopIndex < spurIndex+1; ++hopIndex) {
+				Contact* hop = hops[hopIndex];
+				rootPath.hops.push_back(hop);
+			}
+			rootPath.refreshMetrics();
+
+			// Clear working area of each contact
+			currentContactPlan_->clearAllRouteSearchWorkingArea();
+			currentContactPlan_->clearAllRouteManagementWorkingArea();
+
+			// Suppress all hops of root path (except spur contact at end)
+			for (auto & rootHop : rootPath.hops) {
+				if (rootHop->getId() != spurContact->getId()) {
+					rootHop->routeManagementWork.suppressed = true;
+				}
+			}
+
+			// Suppress all edges from spurContact to neighbors
+			// considered in previous routes with same rootPath
+			for (auto & route : potentialRoutes) {
+				bool isRootPathContained = true;
+				vector<Contact *> hops = route.hops;
+				for (size_t index = 0; index < rootPath.hops.size(); ++index) {
+					Contact* rootHop = rootPath.hops[index];
+					Contact* hop = hops[index];
+					if (rootHop->getId() != hop->getId()) {
+						isRootPathContained = false;
+						break;
+					}
+				}
+				if (isRootPathContained) {
+					Contact* nextContact = hops[rootPath.hops.size()];
+					if (!count(spurContact->routeManagementWork.suppressedNextContacts.begin(), spurContact->routeManagementWork.suppressedNextContacts.end(), nextContact->getId())) {
+						spurContact->routeManagementWork.suppressedNextContacts.push_back(nextContact->getId());
+					}
+				}
+			}
+
+			spurContact->clearRouteSearchWorkingArea();
+			spurContact->routeSearchWork.arrivalTime = rootPath.arrivalTime;
+			for (auto & rootHop : rootPath.hops) {
+				spurContact->routeSearchWork.visitedNodes.push_back(rootHop->getDestinationEid());
+			}
+
+			CgrRoute spurPath;
+			findNextBestRoute(spurContact, destinationEid, &spurPath);
+			if (spurPath.nextHopNode == -1) {
+				continue; // try next spur contact
+			} else {
+
+				// combine root path and spur path and add to potentialRoutes container
+				for(vector<Contact*>::reverse_iterator rootHop = rootPath.hops.rbegin(); rootHop != rootPath.hops.rend(); ++rootHop) {
+					spurPath.hops.insert(spurPath.hops.begin(), *rootHop);
+				}
+				spurPath.refreshMetrics();
+				spurPath.rootPathLength = rootPath.hops.size();
+				potentialRoutes.push_back(spurPath);
+			}
+		} // loop through spur contacts of most recently added route
+
+		// All possible spur contacts have been tested, get best calculated path (earliest arrival time)
+
+		if (potentialRoutes.empty()) {
+			break;
+		}
+
+		sort(potentialRoutes.begin(), potentialRoutes.end());
+		CgrRoute bestPotentialRoute = potentialRoutes.front();
+		routes.push_back(bestPotentialRoute);
+		potentialRoutes.erase(potentialRoutes.begin());
+
+		// Check most recently added route for candidacy
+		CgrRoute potentialCandidate;
+		for(vector<Contact*>::reverse_iterator hop = bestPotentialRoute.hops.rbegin(); hop != bestPotentialRoute.hops.rend(); ++hop) {
+			potentialCandidate.hops.insert(potentialCandidate.hops.begin(), *hop);
+		}
+		potentialCandidate.hops.erase(potentialCandidate.hops.begin());
+		potentialCandidate.refreshMetrics();
+		routeLists_[destinationEid].push_back(potentialCandidate);
+		tableEntriesCreated++;
+		if (isCandidateRoute(bundle, &potentialCandidate, simTime)) {
+			candidateRoutes->push_back(potentialCandidate);
+		}
+
 		k++;
 	} // while candidateRoutes.empty() loop
 }
@@ -517,3 +671,4 @@ int RoutingCgrModelYen::getRouteSearchStarts() {
 }
 
 }
+
