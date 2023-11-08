@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for dtnsim
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -I. -I/usr/include/python3.8 -lpython3.8 -Xsrc/node/dtn/routing/unibocgr/dtnme -Xtests
+#  opp_makemake -f --deep -O out -I. -I/usr/include/python3.8 -L/home/matteo/anaconda3/envs/DTNsim/lib -lpython3.8 -Xsrc/node/dtn/routing/unibocgr/dtnme -Xtests
 #
 
 # Name of target to be created (-o option)
@@ -25,7 +25,7 @@ INCLUDE_PATH = -I. -I/usr/include/python3.8
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS =  -lpython3.8
+LIBS = $(LDFLAG_LIBPATH)/home/matteo/anaconda3/envs/DTNsim/lib  -lpython3.8
 
 # Output directory
 PROJECT_OUTPUT_DIR = out
@@ -65,6 +65,7 @@ OBJS = \
     $O/src/node/dtn/routing/brufncopies/BRUFNCopiesOracle.o \
     $O/src/node/dtn/routing/brufncopies/RoutingBRUFNCopies.o \
     $O/src/node/dtn/routing/cgrbrufpowered/CGRBRUFPowered.o \
+    $O/src/node/dtn/routing/routingSDN/Controller.o \
     $O/src/node/dtn/routing/unibocgr/core/bundles/bundles.o \
     $O/src/node/dtn/routing/unibocgr/core/cgr/cgr.o \
     $O/src/node/dtn/routing/unibocgr/core/cgr/phase_one.o \
@@ -119,6 +120,9 @@ include $(CONFIGFILE)
 
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
+ifneq ($(PLATFORM),win32)
+LIBS += -Wl,-rpath,$(abspath /home/matteo/anaconda3/envs/DTNsim/lib)
+endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES)  $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
 MSGCOPTS = $(INCLUDE_PATH)
@@ -160,6 +164,7 @@ $O/$(TARGET): $(OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
 
 # disabling all implicit rules
 .SUFFIXES :
+.PRECIOUS : %_m.h %_m.cc
 
 $O/%.o: %.cc $(COPTS_FILE) | msgheaders smheaders
 	@$(MKPATH) $(dir $@)

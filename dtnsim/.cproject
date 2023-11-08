@@ -30,6 +30,12 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.293214820" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.1369494304" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.link.option.libs.791263478" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/home/matteo/anaconda3/envs/DTNsim/lib/libpython3.8.so"/>
+								</option>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.link.option.paths.1149896128" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="/home/matteo/anaconda3/envs/DTNsim/lib"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1181268733" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -40,6 +46,7 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="org.omnetpp.cdt.gnu.config.debug.79163353.310554060" name="dtnsim_demo.ini" rcbsApplicability="disable" resourcePath="simulations/dtnsim_demo/dtnsim_demo.ini" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry excluding="src/node/dtn/routing/unibocgr/dtnme|tests|dtnme" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
@@ -76,6 +83,12 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1332131015" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.1284511351" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.link.option.libs.457614458" superClass="gnu.cpp.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/home/matteo/anaconda3/envs/DTNsim/lib/libpython3.8.so"/>
+								</option>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.link.option.paths.149987652" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="/home/matteo/anaconda3/envs/DTNsim/lib"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.426900073" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -86,6 +99,7 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="org.omnetpp.cdt.gnu.config.release.1611026188.92727951" name="dtnsim_demo.ini" rcbsApplicability="disable" resourcePath="simulations/dtnsim_demo/dtnsim_demo.ini" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry excluding="src/node/dtn/routing/unibocgr/dtnme|tests|dtnme" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
