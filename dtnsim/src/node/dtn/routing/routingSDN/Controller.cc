@@ -7,11 +7,28 @@
 
 #include "Controller.h"
 
-Controller::Controller()
-{
-	// TODO Auto-generated constructor stub
-
+Controller::Controller(){
 }
+
+Controller::setContactPlan(ContactPlan* contactPlan){
+	contactplan_ = contactPlan;
+}
+
+Controller::getInstance(ContactPlan* contactPlan){
+
+	if (instancePtr == nullptr){
+
+		instancePtr = new Controller();
+		instancePtr->setContactPlan(contactPlan);
+		return instancePtr;
+
+		} else {
+
+		return instancePtr;
+
+		}
+}
+
 
 Controller::~Controller()
 {

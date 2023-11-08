@@ -18,22 +18,18 @@ private:
 
 	Controller();
 
+	ContactPlan* contactplan_;
+
 public:
 	Controller(const Controller& obj) = delete;
 
-	static Controller* getInstance(){
+	void setContactPlan(ContactPlan* contactPlan);
 
-		if (instancePtr == nullptr){
+	static Controller* getInstance(ContactPlan* contactPlan);
 
-			instancePtr = new Controller();
-			return instancePtr;
 
-		} else {
 
-			return instancePtr;
 
-		}
-	}
 
 
 	virtual ~Controller();
