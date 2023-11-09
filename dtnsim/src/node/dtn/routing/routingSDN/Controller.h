@@ -9,6 +9,13 @@
 #define SRC_NODE_DTN_ROUTING_ROUTINGSDN_CONTROLLER_H_
 
 #include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <queue>
+#include <climits>
+#include <src/node/dtn/ContactPlan.h>
+#include <src/node/dtn/SdrModel.h>
 
 
 class Controller
@@ -20,6 +27,8 @@ private:
 
 	ContactPlan* contactplan_;
 
+	map<BundlePkt*, vector<int>> routes;
+
 public:
 	Controller(const Controller& obj) = delete;
 
@@ -27,8 +36,9 @@ public:
 
 	static Controller* getInstance(ContactPlan* contactPlan);
 
+	vector<pair<int, pair<int, int>>> getWeights(double simTime);
 
-
+	void getRoute(BundlePkt* bundle, double simTime);
 
 
 
