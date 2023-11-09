@@ -36,7 +36,7 @@ public:
 
 	static Controller* getInstance(ContactPlan* contactPlan);
 
-	vector<pair<int, pair<int, int>>> getWeights(double simTime);
+	vector<pair<int, pair<int, int>>> getWeightsAvailableContacts(BundlePkt* bundle, double simTime);
 
 	void getRoute(BundlePkt* bundle, double simTime);
 
@@ -44,5 +44,7 @@ public:
 
 	virtual ~Controller();
 };
+
+Controller* Controller::instancePtr = nullptr;
 
 #endif /* SRC_NODE_DTN_ROUTING_ROUTINGSDN_CONTROLLER_H_ */
