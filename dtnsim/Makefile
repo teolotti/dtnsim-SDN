@@ -57,6 +57,7 @@ OBJS = \
     $O/src/node/dtn/routing/RoutingOpportunistic.o \
     $O/src/node/dtn/routing/RoutingORUCOP.o \
     $O/src/node/dtn/routing/RoutingPRoPHET.o \
+    $O/src/node/dtn/routing/RoutingSDN.o \
     $O/src/node/dtn/routing/RoutingSprayAndWait.o \
     $O/src/node/dtn/routing/RoutingStochastic.o \
     $O/src/node/dtn/routing/RoutingUncertainUniboCgr.o \

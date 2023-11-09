@@ -23,18 +23,8 @@ void Controller::setNodeNum(int nodeNum){
 
 Controller* Controller::getInstance(ContactPlan* contactPlan, int nodeNum){
 
-	if (Controller::instancePtr == nullptr){
-
-		instancePtr = new Controller();
-		instancePtr->setContactPlan(contactPlan);
-		instancePtr->setNodeNum(nodeNum);
-		return instancePtr;
-
-		} else {
-
-		return instancePtr;
-
-		}
+	static Controller* instance;
+	return instance;
 }
 
 vector<pair<int, pair<int,int>>> Controller::getWeightsAvailableContacts(BundlePkt* bundle, double simTime){
@@ -56,7 +46,7 @@ vector<pair<int, pair<int,int>>> Controller::getWeightsAvailableContacts(BundleP
 	return weightedContacts;
 }
 
-void Controller::getRoute(BundlePkt* bundle, double simTime){
+vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime){
 	int source = bundle->getSenderEid();
 
 	vector<int> sum_weight(nodeNum_, INT_MAX);
@@ -113,6 +103,12 @@ void Controller::getRoute(BundlePkt* bundle, double simTime){
     reverse(shortest_route.begin(), shortest_route.end());
 
     routes[bundle] = shortest_route;
+
+    return shortest_route;
+}
+
+vector<int> Controller::getRoute(BundlePkt* bundle){
+	return routes[bundle];
 }
 
 Controller::~Controller()

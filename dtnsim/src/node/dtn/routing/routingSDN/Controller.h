@@ -21,7 +21,6 @@
 class Controller
 {
 private:
-	static Controller* instancePtr; //pointer to the object, singleton
 
 	Controller();
 
@@ -30,6 +29,8 @@ private:
 	map<BundlePkt*, vector<int>> routes;
 
 	int nodeNum_;
+
+	friend class RoutingSDN;
 
 public:
 
@@ -43,13 +44,15 @@ public:
 
 	vector<pair<int, pair<int, int>>> getWeightsAvailableContacts(BundlePkt* bundle, double simTime);
 
-	void getRoute(BundlePkt* bundle, double simTime);
+	vector<int> buildRoute(BundlePkt* bundle, double simTime);
+
+	vector<int> getRoute(BundlePkt* bundle);
+
+
 
 
 
 	virtual ~Controller();
 };
-
-Controller* Controller::instancePtr = nullptr;
 
 #endif /* SRC_NODE_DTN_ROUTING_ROUTINGSDN_CONTROLLER_H_ */
