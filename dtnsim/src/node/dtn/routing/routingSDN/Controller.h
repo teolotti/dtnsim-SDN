@@ -29,12 +29,17 @@ private:
 
 	map<BundlePkt*, vector<int>> routes;
 
+	int nodeNum_;
+
 public:
+
 	Controller(const Controller& obj) = delete;
+
+	void setNodeNum(int nodeNum);
 
 	void setContactPlan(ContactPlan* contactPlan);
 
-	static Controller* getInstance(ContactPlan* contactPlan);
+	static Controller* getInstance(ContactPlan* contactPlan, int nodeNum);
 
 	vector<pair<int, pair<int, int>>> getWeightsAvailableContacts(BundlePkt* bundle, double simTime);
 
