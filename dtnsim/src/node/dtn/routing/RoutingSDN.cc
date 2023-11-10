@@ -22,7 +22,7 @@ RoutingSDN::RoutingSDN(int eid, SdrModel * sdr, ContactPlan * contactPlan, int n
 
 void RoutingSDN::routeAndQueueBundle(BundlePkt* bundle, double simTime){
 
-	vector<int> route = controllerPtr->getRoute(bundle);  //values in the vector are ID of Nodes
+	vector<int> route = controllerPtr->getRoute(bundle);  //values in the vector are ID of Contacts
 
 	if(route.empty()){
 
@@ -30,13 +30,23 @@ void RoutingSDN::routeAndQueueBundle(BundlePkt* bundle, double simTime){
 
 	}
 
-	std::vector<int>::iterator nextIDit = find(route.begin(), route.end(), this->eid_); //nextIDit represents iterator to next Node ID
+
+
+	int targetEid = this->eid_;
+
+	auto nextContactIDit = std::find_if(route.begin(), route.end(),
+	    [this, targetEid](const int& x) {
+			int source = contactPlan_->getContactById(x)->getSourceEid();
+	        return source == targetEid;
+	    });//Search for the next contact for the bundle, contact whose SourceId is this Node's Id
+
 	int destID = bundle->getDestinationEid();
-	if((destID != this->eid_) && (nextIDit != route.end())){
-		++nextIDit;
-		bundle->setNextHopEid(nextIDit);
-		//serve il contact
-		sdr_->enqueueBundleToContact(bundle, *contactIDit);
+
+	Contact* nextContact = contactPlan_->getContactById(*nextContactIDit);
+
+	if((destID != this->eid_) && (nextContactIDit != route.end())){
+		bundle->setNextHopEid(nextContact->getDestinationEid());		//serve il contact
+		sdr_->enqueueBundleToContact(bundle, *nextContactIDit);
 	}
 }
 

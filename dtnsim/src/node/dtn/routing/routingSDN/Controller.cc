@@ -50,10 +50,10 @@ vector<pair<int, pair<int,int>>> Controller::getWeightsAvailableContacts(BundleP
 }
 
 vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime){
-	int source = bundle->getSenderEid();
+	int source = bundle->getSourceEid();
 
 	vector<int> sum_weight(nodeNum_, INT_MAX);
-	vector<int> predecessor(nodeNum_, -1);
+	vector<int> predecessor(nodeNum_, -1); //vector, predecessor[idNode] is the contactID of the contact that lead to that node
 
 	sum_weight[source] = 0; //weight from source node to itself is 0
 
@@ -87,7 +87,7 @@ vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime){
 
     			if(new_weight < sum_weight[v]){
     				sum_weight[v] = new_weight;
-    				predecessor[v] = u;
+    				predecessor[v] = current->getId(); //contactId that leads to v from u
     				pq.push({new_weight, v});
     			}
     		}
@@ -97,10 +97,11 @@ vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime){
     //Build the route and store it in map<BundlePkt*, vector<int>> routes;
 
     vector<int> shortest_route;
-    int current = bundle->getDestinationEid();
-    while(current != -1) {
-    	shortest_route.push_back(current);
-    	current = predecessor[current];
+    int destID = bundle->getDestinationEid();
+    int currentContact = predecessor[destID];
+    while(currentContact != -1) {
+    	shortest_route.push_back(currentContact);
+    	currentContact = predecessor[contactplan_->getContactById(currentContact)->getSourceEid()];
     }
 
     reverse(shortest_route.begin(), shortest_route.end());
@@ -122,7 +123,7 @@ vector<int> Controller::getRoute(BundlePkt* bundle){
 
 	vector<int> emptyRoute;
 
-	cout << "CIAO" << endl;
+
 
     vector<pair<BundlePkt*, vector<int>>>::iterator it = find_if(routes.begin(), routes.end(),
             [bundle](const std::pair<BundlePkt*, std::vector<int>>& element) {
