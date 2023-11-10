@@ -17,6 +17,9 @@
 #include <src/node/dtn/routing/RoutingUncertainUniboCgr.h>
 #include <src/node/dtn/routing/RoutingBRUF1T.h>
 #include <src/node/dtn/routing/RoutingORUCOP.h>
+//added
+#include <src/node/dtn/routing/RoutingSDN.h>
+//
 #include <src/node/dtn/routing/brufncopies/RoutingBRUFNCopies.h>
 #include <src/node/dtn/routing/cgrbrufpowered/CGRBRUFPowered.h>
 #include <src/node/dtn/SdrModel.h>

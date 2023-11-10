@@ -8,6 +8,7 @@
 #include "Controller.h"
 using namespace std;
 #include <iterator>
+#include <iostream>
 #include <map>
 
 Controller::Controller(){
@@ -23,8 +24,10 @@ void Controller::setNodeNum(int nodeNum){
 
 Controller* Controller::getInstance(ContactPlan* contactPlan, int nodeNum){
 
-	static Controller* instance;
-	return instance;
+	static Controller instance;
+	instance.contactplan_ = contactPlan;
+	instance.nodeNum_ = nodeNum;
+	return &instance;
 }
 
 vector<pair<int, pair<int,int>>> Controller::getWeightsAvailableContacts(BundlePkt* bundle, double simTime){
@@ -61,7 +64,7 @@ vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime){
     	int u = pq.top().second;
     	pq.pop();
 
-    	for(const pair<int, pair<int, int>> contact : getWeightsAvailableContacts(bundle, simTime)){
+    	for(pair<int, pair<int, int>> contact : getWeightsAvailableContacts(bundle, simTime)){
     		Contact * current = contactplan_->getContactById(contact.first);
     		if(current->getSourceEid() == u){  //if source node of this contact is u ok, else next
     			int v = current->getDestinationEid();
@@ -102,13 +105,36 @@ vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime){
 
     reverse(shortest_route.begin(), shortest_route.end());
 
-    routes[bundle] = shortest_route;
+    auto it = find_if(routes.begin(), routes.end(),
+            [bundle](const std::pair<BundlePkt*, std::vector<int>>& element) {
+                return element.first == bundle;
+            });
+
+    if (it != routes.end())
+    	it->second = shortest_route;
+    else
+    	routes.push_back(make_pair(bundle, shortest_route));
 
     return shortest_route;
 }
 
 vector<int> Controller::getRoute(BundlePkt* bundle){
-	return routes[bundle];
+
+	vector<int> emptyRoute;
+
+	cout << "CIAO" << endl;
+
+    vector<pair<BundlePkt*, vector<int>>>::iterator it = find_if(routes.begin(), routes.end(),
+            [bundle](const std::pair<BundlePkt*, std::vector<int>>& element) {
+                return element.first == bundle;
+            });
+
+
+	if (it != routes.end())
+		return it->second;
+	else
+		return emptyRoute;
+
 }
 
 Controller::~Controller()

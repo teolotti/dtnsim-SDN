@@ -26,7 +26,7 @@ private:
 
 	ContactPlan* contactplan_;
 
-	map<BundlePkt*, vector<int>> routes;
+	std::vector<pair<BundlePkt*, vector<int>>> routes;   //int sono id del nodo
 
 	int nodeNum_;
 

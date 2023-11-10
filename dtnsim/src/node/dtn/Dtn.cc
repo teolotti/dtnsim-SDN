@@ -164,6 +164,14 @@ void Dtn::initialize(int stage)
 			ContactPlan *globalContactPlan = ((Dtn*) this->getParentModule()->getParentModule()->getSubmodule("node", 0)->getSubmodule("dtn"))->getContactPlanPointer();
 			routing = new RoutingCgrModelRev17(eid_, this->getParentModule()->getVectorSize(), &sdr_, &contactPlan_, globalContactPlan, par("routingType"), par("printRoutingDebug"));
 		}
+		//
+		// added
+		else if (routeString.compare("SDN") == 0)
+		{
+			routing = new RoutingSDN(eid_, &sdr_, &contactPlan_, this->getParentModule()->getParentModule()->par("nodesNumber"));
+		}
+		//
+		//
 		else if (routeString.compare("epidemic") == 0)
 		{
 			routing = new RoutingEpidemic(eid_, &sdr_, this);
