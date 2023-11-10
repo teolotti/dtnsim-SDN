@@ -152,6 +152,8 @@ private:
 	simsignal_t routeCgrDijkstraLoops;
 	simsignal_t routeCgrRouteTableEntriesCreated;
 	simsignal_t routeCgrRouteTableEntriesExplored;
+	//add
+	simsignal_t dtnBundleArrivalTime;
 };
 
 #endif /* DTN_H_ */

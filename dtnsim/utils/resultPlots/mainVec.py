@@ -26,7 +26,7 @@ def main():
     # execute sql query to get nodesNumber
     cur.execute("SELECT * FROM runConfig WHERE configKey='dtnsim.nodesNumber'")     #SELECT * FROM runparam WHERE parName='dtnsim.nodesNumber'
     rows0 = cur.fetchall()
-    nodesNumber = rows0[0]["parValue"]
+    nodesNumber = rows0[0]["configValue"]
 
     # plot stats for each node
     for n in range(1, (int(nodesNumber) + 1)):

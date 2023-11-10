@@ -286,6 +286,8 @@ void Dtn::initialize(int stage)
 		routeCgrDijkstraLoops = registerSignal("routeCgrDijkstraLoops");
 		routeCgrRouteTableEntriesCreated = registerSignal("routeCgrRouteTableEntriesCreated");
 		routeCgrRouteTableEntriesExplored = registerSignal("routeCgrRouteTableEntriesExplored");
+		dtnBundleArrivalTime = registerSignal("dtnBundleArrivalTime");
+		//added
 
 		if (eid_ != 0)
 		{
@@ -578,6 +580,7 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 	if (this->eid_ == bundle->getDestinationEid())
 	{
 		// We are the final destination of this bundle
+		emit(dtnBundleArrivalTime, simTime());
 		emit(dtnBundleSentToApp, true);
 		emit(dtnBundleSentToAppHopCount, bundle->getHopCount());
 		bundle->getVisitedNodesForUpdate().sort();
