@@ -49,7 +49,7 @@ vector<pair<int, pair<int,int>>> Controller::getWeightsAvailableContacts(BundleP
 	return weightedContacts;
 }
 
-vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime){
+vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime, string routingType){
 	int source = bundle->getSourceEid();
 
 	vector<int> sum_weight(nodeNum_, INT_MAX);
@@ -64,34 +64,58 @@ vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime){
     	int u = pq.top().second;
     	pq.pop();
 
-    	for(pair<int, pair<int, int>> contact : getWeightsAvailableContacts(bundle, simTime)){
-    		Contact * current = contactplan_->getContactById(contact.first);
-    		if(current->getSourceEid() == u){  //if source node of this contact is u ok, else next
-    			int v = current->getDestinationEid();
+    	if(routingType.find("weight:arrivalTime") != std::string::npos){
 
-    			double w_var = contact.second.first;
-    			double w_fis = contact.second.second;
+			for(pair<int, pair<int, int>> contact : getWeightsAvailableContacts(bundle, simTime)){
+				Contact * current = contactplan_->getContactById(contact.first);
+				if(current->getSourceEid() == u){  //if source node of this contact is u ok, else next
+					int v = current->getDestinationEid();
 
-    			double t_end = current->getEnd();
+					double w_var = contact.second.first;
+					double w_fis = contact.second.second;
 
-    			if(w_var > sum_weight[u]){
-    				w_var -= sum_weight[u];
-    			} else {
-    				if((t_end > sum_weight[u]) && ((t_end-sum_weight[u]) > w_fis))
-    					w_var = 0;
-    				else if((t_end < sum_weight[u]) || ((t_end-sum_weight[u]) < w_fis))
-    					w_var = INT_MAX;
-    			}
+					double t_end = current->getEnd();
 
-    			int new_weight = sum_weight[u] + w_var + w_fis;
+					if(w_var > sum_weight[u]){
+						w_var -= sum_weight[u];
+					} else {
+						if((t_end > sum_weight[u]) && ((t_end-sum_weight[u]) > w_fis))
+							w_var = 0;
+						else if((t_end < sum_weight[u]) || ((t_end-sum_weight[u]) < w_fis))
+							w_var = INT_MAX;
+					}
 
-    			if(new_weight < sum_weight[v]){
-    				sum_weight[v] = new_weight;
-    				predecessor[v] = current->getId(); //contactId that leads to v from u
-    				pq.push({new_weight, v});
-    			}
-    		}
+					int new_weight = sum_weight[u] + w_var + w_fis;
+
+					if(new_weight < sum_weight[v]){
+						sum_weight[v] = new_weight;
+						predecessor[v] = current->getId(); //contactId that leads to v from u
+						pq.push({new_weight, v});
+					}
+				}
+			}
     	}
+
+    	else if(routingType.find("weight:hopsNum") != std::string::npos){
+    		for(pair<int, pair<int, int>> contact : getWeightsAvailableContacts(bundle, simTime)){
+    	    	Contact * current = contactplan_->getContactById(contact.first);
+    	    	if(current->getSourceEid() == u){  //if source node of this contact is u ok, else next
+    	   			int v = current->getDestinationEid();
+
+    	    		int new_weight = sum_weight[u] + 1;
+
+    	    		if(new_weight < sum_weight[v]){
+    	   				sum_weight[v] = new_weight;
+    	   				predecessor[v] = current->getId(); //contactId that leads to v from u
+    	   				pq.push({new_weight, v});
+    	   			}
+        		}
+   	    	}
+    	}
+    	else {
+    		cout<<"routingType not valid!"<<endl;
+    	}
+
     }
 
     //Build the route and store it in map<BundlePkt*, vector<int>> routes;
@@ -122,8 +146,6 @@ vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime){
 vector<int> Controller::getRoute(BundlePkt* bundle){
 
 	vector<int> emptyRoute;
-
-
 
     vector<pair<BundlePkt*, vector<int>>>::iterator it = find_if(routes.begin(), routes.end(),
             [bundle](const std::pair<BundlePkt*, std::vector<int>>& element) {

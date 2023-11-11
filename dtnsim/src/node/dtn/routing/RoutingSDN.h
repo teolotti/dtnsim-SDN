@@ -21,8 +21,10 @@ private:
 	static Controller* controllerPtr;
 
 	int nodeNum_;
+
+	string routingType_;
 public:
-	RoutingSDN(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodeNum);
+	RoutingSDN(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodeNum, string routingType);
 	virtual ~RoutingSDN();
 
 	void routeAndQueueBundle(BundlePkt *bundle, double simTime);

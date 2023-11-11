@@ -168,7 +168,7 @@ void Dtn::initialize(int stage)
 		// added
 		else if (routeString.compare("SDN") == 0)
 		{
-			routing = new RoutingSDN(eid_, &sdr_, &contactPlan_, this->getParentModule()->getParentModule()->par("nodesNumber"));
+			routing = new RoutingSDN(eid_, &sdr_, &contactPlan_, this->getParentModule()->getParentModule()->par("nodesNumber"), par("routingType"));
 		}
 		//
 		//
@@ -580,7 +580,7 @@ void Dtn::dispatchBundle(BundlePkt *bundle)
 	if (this->eid_ == bundle->getDestinationEid())
 	{
 		// We are the final destination of this bundle
-		emit(dtnBundleArrivalTime, simTime());
+		emit(dtnBundleArrivalTime, simTime(), bundle);
 		emit(dtnBundleSentToApp, true);
 		emit(dtnBundleSentToAppHopCount, bundle->getHopCount());
 		bundle->getVisitedNodesForUpdate().sort();

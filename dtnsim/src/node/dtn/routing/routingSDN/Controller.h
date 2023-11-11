@@ -44,7 +44,7 @@ public:
 
 	vector<pair<int, pair<int, int>>> getWeightsAvailableContacts(BundlePkt* bundle, double simTime);
 
-	vector<int> buildRoute(BundlePkt* bundle, double simTime);
+	vector<int> buildRoute(BundlePkt* bundle, double simTime, string routingType);
 
 	vector<int> getRoute(BundlePkt* bundle);
 

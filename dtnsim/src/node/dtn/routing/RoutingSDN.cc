@@ -13,9 +13,11 @@ using namespace std;
 
 Controller* RoutingSDN::controllerPtr = nullptr;
 
-RoutingSDN::RoutingSDN(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodeNum) : RoutingDeterministic(eid, sdr, contactPlan){
+RoutingSDN::RoutingSDN(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodeNum, string routingType) : RoutingDeterministic(eid, sdr, contactPlan){
 
 	nodeNum_ = nodeNum;
+
+	routingType_ = routingType;
 
 	controllerPtr = controllerPtr->getInstance(contactPlan, nodeNum);
 }
@@ -26,7 +28,7 @@ void RoutingSDN::routeAndQueueBundle(BundlePkt* bundle, double simTime){
 
 	if(route.empty()){
 
-		route = controllerPtr->buildRoute(bundle, simTime);
+		route = controllerPtr->buildRoute(bundle, simTime, routingType_);
 
 	}
 
