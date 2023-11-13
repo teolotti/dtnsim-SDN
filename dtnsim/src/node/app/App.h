@@ -43,6 +43,8 @@ class App : public cSimpleModule
         simsignal_t appBundleReceivedHops;
         simsignal_t appBundleReceivedDelay;
 
+        simsignal_t appBundleArrivalTime;
+
 };
 
 #endif /* APP_H_ */

@@ -43,6 +43,8 @@ simple Dtn
         @signal[routeCgrDijkstraLoops];
         @signal[routeCgrRouteTableEntriesCreated];
         @signal[routeCgrRouteTableEntriesExplored];
+        
+        //@signal[dtnBundleArrivalTime];
 
         @statistic[dtnBundleSentToCom](title="dtnBundleSentToCom"; source="dtnBundleSentToCom"; record=count; interpolationmode=none);
         @statistic[dtnBundleSentToApp](title="dtnBundleSentToApp"; source="dtnBundleSentToApp"; record=count; interpolationmode=none);
@@ -57,6 +59,8 @@ simple Dtn
         @statistic[routeCgrDijkstraLoops](title="routeCgrDijkstraLoops"; source="routeCgrDijkstraLoops"; record=sum,vector; interpolationmode=none);
         @statistic[routeCgrRouteTableEntriesCreated](title="routeCgrRouteTableEntriesCreated"; source="routeCgrRouteTableEntriesCreated"; record=max,sum,vector; interpolationmode=none);
         @statistic[routeCgrRouteTableEntriesExplored](title="routeCgrRouteTableEntriesExplored"; source="routeCgrRouteTableEntriesExplored"; record=max,sum,vector; interpolationmode=none);
+
+		//@statistic[dtnBundleArrivalTime];
 
     gates:
         inout gateToApp;
