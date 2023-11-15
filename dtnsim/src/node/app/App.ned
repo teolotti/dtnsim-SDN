@@ -23,14 +23,14 @@ simple App
         @signal[appBundleReceivedHops];
         @signal[appBundleReceivedDelay];
         
-        @signal[appBundleArrivalTime];
+        //@signal[appBundleArrivalTime];
         
         @statistic[appBundleSent](title="appBundleSent"; source="appBundleSent"; record=count; interpolationmode=none);
         @statistic[appBundleReceived](title="appBundleReceived"; source="appBundleReceived"; record=count; interpolationmode=none);
         @statistic[appBundleReceivedHops](title="appBundleReceivedHops"; source="appBundleReceivedHops"; record=mean,max,min,histogram; interpolationmode=none);
         @statistic[appBundleReceivedDelay](title="appBundleReceivedDelay"; source="appBundleReceivedDelay"; record=mean,max,min,histogram; interpolationmode=none);
         
-        @statistic[appBundleArrivalTime](title="appBundleArrivalTime"; source="appBundleArrivalTime"; record=mean,max,min,histogram; interpolationmode=none);           
+        //@statistic[appBundleArrivalTime](title="appBundleArrivalTime"; source="appBundleArrivalTime"; record=vector; interpolationmode=none);           
                       
     gates:
         inout gateToDtn;

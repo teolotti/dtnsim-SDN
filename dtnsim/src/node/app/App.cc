@@ -92,7 +92,7 @@ void App::initialize()
 	appBundleReceivedHops = registerSignal("appBundleReceivedHops");
 	appBundleReceivedDelay = registerSignal("appBundleReceivedDelay");
 
-	appBundleArrivalTime = registerSignal("appBundleArrivalTime");
+	//appBundleArrivalTime = registerSignal("appBundleArrivalTime");
 }
 
 void App::handleMessage(cMessage *msg)
@@ -155,7 +155,7 @@ void App::handleMessage(cMessage *msg)
 			emit(appBundleReceivedHops, bundle->getHopCount());
 			emit(appBundleReceivedDelay, simTime() - bundle->getCreationTimestamp());
 			//
-			emit(appBundleArrivalTime, simTime());
+
 			delete msg;
 		}
 		else
