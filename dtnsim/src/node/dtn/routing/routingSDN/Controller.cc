@@ -11,6 +11,8 @@ using namespace std;
 #include <iostream>
 #include <map>
 
+Controller* Controller::instance = nullptr;
+
 Controller::Controller(){
 }
 
@@ -23,11 +25,13 @@ void Controller::setNodeNum(int nodeNum){
 }
 
 Controller* Controller::getInstance(ContactPlan* contactPlan, int nodeNum){
+	if(!instance){
+		instance = new Controller();
+		instance->contactplan_ = contactPlan;
+		instance->nodeNum_ = nodeNum;
+	}
 
-	static Controller instance;
-	instance.contactplan_ = contactPlan;
-	instance.nodeNum_ = nodeNum;
-	return &instance;
+	return instance;
 }
 
 vector<pair<int, pair<int,int>>> Controller::getWeightsAvailableContacts(BundlePkt* bundle, double simTime){
@@ -121,14 +125,19 @@ vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime, string rou
     //Build the route and store it in map<BundlePkt*, vector<int>> routes;
 
     vector<int> shortest_route;
+    vector<int> route_nodes;
     int destID = bundle->getDestinationEid();
+    route_nodes.push_back(destID);
     int currentContact = predecessor[destID];
     while(currentContact != -1) {
+    	int first = contactplan_->getContactById(currentContact)->getSourceEid();
     	shortest_route.push_back(currentContact);
-    	currentContact = predecessor[contactplan_->getContactById(currentContact)->getSourceEid()];
+    	currentContact = predecessor[first];
+    	route_nodes.push_back(first);
     }
 
     reverse(shortest_route.begin(), shortest_route.end());
+    reverse(route_nodes.begin(), route_nodes.end());
 
     auto it = find_if(routes.begin(), routes.end(),
             [bundle](const std::pair<BundlePkt*, std::vector<int>>& element) {
@@ -140,24 +149,27 @@ vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime, string rou
     else
     	routes.push_back(make_pair(bundle, shortest_route));
 
+    for(auto node : nodes){
+    	for (auto eid : route_nodes){
+    		if (node->eid_==eid){
+    		    auto it = find_if((node->routes).begin(), (node->routes).end(),
+    		            [bundle](const std::pair<BundlePkt*, std::vector<int>>& element) {
+    		                return element.first == bundle;
+    		            });
+
+    		    if (it != (node->routes).end())
+    		    	it->second = shortest_route;
+    		    else
+    		    	node->routes.push_back(make_pair(bundle, shortest_route));
+    		}
+    	}
+    }
+
     return shortest_route;
 }
 
-vector<int> Controller::getRoute(BundlePkt* bundle){
-
-	vector<int> emptyRoute;
-
-    vector<pair<BundlePkt*, vector<int>>>::iterator it = find_if(routes.begin(), routes.end(),
-            [bundle](const std::pair<BundlePkt*, std::vector<int>>& element) {
-                return element.first == bundle;
-            });
-
-
-	if (it != routes.end())
-		return it->second;
-	else
-		return emptyRoute;
-
+void Controller::addRoutingSDNInstance(RoutingSDN* routingSDNInstance) {
+    nodes.push_back(routingSDNInstance);
 }
 
 Controller::~Controller()

@@ -18,16 +18,22 @@ class Controller;
 class RoutingSDN: public RoutingDeterministic
 {
 private:
-	static Controller* controllerPtr;
+	Controller* controllerPtr;
 
 	int nodeNum_;
 
 	string routingType_;
+
+	std::vector<pair<BundlePkt*, vector<int>>> routes;
+
+	friend class Controller;
 public:
-	RoutingSDN(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodeNum, string routingType);
+	RoutingSDN(int eid, SdrModel * sdr, ContactPlan * contactPlan, int nodeNum, string routingType, Controller* instance);
 	virtual ~RoutingSDN();
 
 	void routeAndQueueBundle(BundlePkt *bundle, double simTime);
+
+	vector<int> getRoute(BundlePkt* bundle);
 };
 
 #endif /* SRC_NODE_DTN_ROUTING_ROUTINGSDN_ROUTINGSDN_H_ */

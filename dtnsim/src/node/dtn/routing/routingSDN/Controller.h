@@ -16,7 +16,9 @@
 #include <climits>
 #include <src/node/dtn/ContactPlan.h>
 #include <src/node/dtn/SdrModel.h>
+#include <src/node/dtn/routing/RoutingSDN.h>
 
+class RoutingSDN;
 
 class Controller
 {
@@ -24,11 +26,15 @@ private:
 
 	Controller();
 
+	static Controller* instance;
+
 	ContactPlan* contactplan_;
 
 	std::vector<pair<BundlePkt*, vector<int>>> routes;   //int sono id del nodo
 
 	int nodeNum_;
+
+	vector<RoutingSDN*> nodes;
 
 	friend class RoutingSDN;
 
@@ -46,7 +52,7 @@ public:
 
 	vector<int> buildRoute(BundlePkt* bundle, double simTime, string routingType);
 
-	vector<int> getRoute(BundlePkt* bundle);
+	void addRoutingSDNInstance(RoutingSDN* routingSDNInstance);
 
 
 

@@ -168,7 +168,8 @@ void Dtn::initialize(int stage)
 		// added
 		else if (routeString.compare("SDN") == 0)
 		{
-			routing = new RoutingSDN(eid_, &sdr_, &contactPlan_, this->getParentModule()->getParentModule()->par("nodesNumber"), par("routingType"));
+			Controller* instance = Controller::getInstance(&contactPlan_,  this->getParentModule()->getParentModule()->par("nodesNumber"));
+			routing = new RoutingSDN(eid_, &sdr_, &contactPlan_, this->getParentModule()->getParentModule()->par("nodesNumber"), par("routingType"), instance);
 		}
 		//
 		//
