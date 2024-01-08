@@ -21,8 +21,10 @@ class App : public cSimpleModule
         int getEid() const;
         virtual vector<int> getBundlesNumberVec();
         virtual vector<int> getDestinationEidVec();
+        virtual vector<int> getTargetEidVec();
         virtual vector<int> getSizeVec();
         virtual vector<double> getStartVec();
+
 
     protected:
         virtual void initialize();
@@ -34,6 +36,7 @@ class App : public cSimpleModule
 
         std::vector<int> bundlesNumberVec_;
         std::vector<int> destinationEidVec_;
+        std::vector<int> targetEidVec_;
         std::vector<int> sizeVec_;
         std::vector<double> startVec_;
 

@@ -28,6 +28,22 @@ void App::initialize()
 			destinationEidVec_.push_back(destinationEid);
 		}
 
+		//Control Section
+		if(par("control")){
+			const char *targetEidChar = par("targetEid");
+			cStringTokenizer targetEidTokenizer(targetEidChar, ",");
+			while (targetEidTokenizer.hasMoreTokens())
+			{
+				string targetEidStr = targetEidTokenizer.nextToken();
+				int targetEid = stoi(targetEidStr);
+				if (targetEid > this->getParentModule()->getVectorSize())
+				{
+					throw cException((string("Error: wrong targetEid = ") + targetEidStr).c_str());
+				}
+				targetEidVec_.push_back(targetEid);
+			}
+		}
+
 		const char *sizeChar = par("size");
 		cStringTokenizer sizeTokenizer(sizeChar, ",");
 		while (sizeTokenizer.hasMoreTokens())
@@ -51,6 +67,7 @@ void App::initialize()
 			trafficGenMsg->setKind(TRAFFIC_TIMER);
 			trafficGenMsg->setBundlesNumber(bundlesNumberVec_.at(i));
 			trafficGenMsg->setDestinationEid(destinationEidVec_.at(i));
+			trafficGenMsg->setTargetEid(targetEidVec_.at(i));
 			trafficGenMsg->setSize(sizeVec_.at(i));
 			trafficGenMsg->setInterval(par("interval"));
 			trafficGenMsg->setTtl(par("ttl"));
@@ -97,7 +114,7 @@ void App::initialize()
 
 void App::handleMessage(cMessage *msg)
 {
-	if (msg->getKind() == TRAFFIC_TIMER) //TODO: qui avviene creazione bundle, provare a generare un nuovo bundle
+	if (msg->getKind() == TRAFFIC_TIMER)
 	{
 		TrafficGeneratorMsg* trafficGenMsg = check_and_cast<TrafficGeneratorMsg *>(msg);
 		BundlePkt* bundle = new BundlePkt("bundle", BUNDLE);
@@ -131,6 +148,14 @@ void App::handleMessage(cMessage *msg)
 		CgrRoute emptyRoute;
 		emptyRoute.nextHop = EMPTY_ROUTE;
 		bundle->setCgrRoute(emptyRoute);
+
+		//Control Section
+		bool control = par("control");
+		if (control){
+			bundle->setControl(control);
+			bundle->setTargetEid(trafficGenMsg->getTargetEid());
+			//Mancano numero di bundle e size dei bundle da controllare
+		}
 
 		// Keep generating traffic
 		trafficGenMsg->setBundlesNumber((trafficGenMsg->getBundlesNumber() - 1));
@@ -193,6 +218,11 @@ vector<int> App::getBundlesNumberVec()
 vector<int> App::getDestinationEidVec()
 {
 	return this->destinationEidVec_;
+}
+
+vector<int> App::getTargetEidVec()
+{
+	return this->targetEidVec_;
 }
 
 vector<int> App::getSizeVec()

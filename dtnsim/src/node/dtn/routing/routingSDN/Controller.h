@@ -56,7 +56,7 @@ public:
 
 	void addRoutingSDNInstance(RoutingSDN* routingSDNInstance);
 
-	bool visited(COntact * contact);
+	bool visited(Contact * contact);
 
 
 
