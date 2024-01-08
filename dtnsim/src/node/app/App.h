@@ -24,6 +24,8 @@ class App : public cSimpleModule
         virtual vector<int> getTargetEidVec();
         virtual vector<int> getSizeVec();
         virtual vector<double> getStartVec();
+        virtual vector<int> getBundlesNumberVecControl();
+        virtual vector<int> getSizeVecControl();
 
 
     protected:
