@@ -68,11 +68,13 @@ vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime, string rou
     	int u = pq.top().second;
     	pq.pop();
 
+
     	if(routingType.find("weight:arrivalTime") != std::string::npos){
 
 			for(pair<int, pair<int, int>> contact : getWeightsAvailableContacts(bundle, simTime)){
 				Contact * current = contactplan_->getContactById(contact.first);
-				if(current->getSourceEid() == u){  //if source node of this contact is u ok, else next
+				if(current->getSourceEid() == u){//if source node of this contact is u ok, else next
+
 					int v = current->getDestinationEid();
 
 					double w_var = contact.second.first;
@@ -120,6 +122,7 @@ vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime, string rou
     		cout<<"routingType not valid!"<<endl;
     	}
 
+
     }
 
     //Build the route and store it in map<BundlePkt*, vector<int>> routes;
@@ -127,6 +130,7 @@ vector<int> Controller::buildRoute(BundlePkt* bundle, double simTime, string rou
     vector<int> shortest_route;
     vector<int> route_nodes;
     int destID = bundle->getDestinationEid();
+
     route_nodes.push_back(destID);
     int currentContact = predecessor[destID];
     while(currentContact != -1) {
@@ -172,6 +176,10 @@ void Controller::addRoutingSDNInstance(RoutingSDN* routingSDNInstance) {
     nodes.push_back(routingSDNInstance);
 }
 
+
+bool Controller::visited(Contact * contact){
+
+}
 Controller::~Controller()
 {
 	// TODO Auto-generated destructor stub

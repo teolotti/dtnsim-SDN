@@ -317,6 +317,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		if (routeTable_.at(terminusNode).empty()) {
 
 			vector<int> suppressedContactIds;
+			//TODO: add to suppressedContacts the ones involving controller node
 
 			while (1) {
 				CgrRoute route;
@@ -646,6 +647,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 
 		// Enqueue bundle to route and update volumes
 		this->cgrEnqueue(bundle, &(*bestRoute));
+		//TODO: CONTROLLER AWARE, if a route from controller exists, use it
 	} else {
 		// Enqueue to limbo
 		bundle->setNextHopEid(NO_ROUTE_FOUND);

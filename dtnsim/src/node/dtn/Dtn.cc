@@ -147,7 +147,7 @@ void Dtn::initialize(int stage)
 
 		// Initialize routing
 		this->sdr_.setEid(eid_);
-		this->sdr_.setSize(par("sdrSize"));
+		this->sdr_.setSize(par("sdrSize")); //TODO: capacity
 		this->sdr_.setNodesNumber(this->getParentModule()->getParentModule()->par("nodesNumber"));
 		this->sdr_.setContactPlan(&contactTopology_);
 

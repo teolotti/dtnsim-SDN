@@ -38,6 +38,8 @@ private:
 
 	friend class RoutingSDN;
 
+	std::map<pair<int, int>, bool> visited_contacts;
+
 public:
 
 	Controller(const Controller& obj) = delete;
@@ -53,6 +55,8 @@ public:
 	vector<int> buildRoute(BundlePkt* bundle, double simTime, string routingType);
 
 	void addRoutingSDNInstance(RoutingSDN* routingSDNInstance);
+
+	bool visited(COntact * contact);
 
 
 

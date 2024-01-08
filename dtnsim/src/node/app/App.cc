@@ -97,7 +97,7 @@ void App::initialize()
 
 void App::handleMessage(cMessage *msg)
 {
-	if (msg->getKind() == TRAFFIC_TIMER)
+	if (msg->getKind() == TRAFFIC_TIMER) //TODO: qui avviene creazione bundle, provare a generare un nuovo bundle
 	{
 		TrafficGeneratorMsg* trafficGenMsg = check_and_cast<TrafficGeneratorMsg *>(msg);
 		BundlePkt* bundle = new BundlePkt("bundle", BUNDLE);
