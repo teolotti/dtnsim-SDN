@@ -39,6 +39,8 @@ class App : public cSimpleModule
         std::vector<int> targetEidVec_;
         std::vector<int> sizeVec_;
         std::vector<double> startVec_;
+        std::vector<int> bundlesNumberVec_control;
+        std::vector<int> sizeVec_control;
 
         // Signal
         simsignal_t appBundleSent;

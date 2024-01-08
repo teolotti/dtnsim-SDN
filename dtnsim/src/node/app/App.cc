@@ -30,6 +30,7 @@ void App::initialize()
 
 		//Control Section
 		if(par("control")){
+
 			const char *targetEidChar = par("targetEid");
 			cStringTokenizer targetEidTokenizer(targetEidChar, ",");
 			while (targetEidTokenizer.hasMoreTokens())
@@ -42,6 +43,16 @@ void App::initialize()
 				}
 				targetEidVec_.push_back(targetEid);
 			}
+
+			const char *bundlesNumberControlChar = par("bundlesNumberControl");
+			cStringTokenizer bundlesNumberControlTokenizer(bundlesNumberControlChar, ",");
+			while (bundlesNumberControlTokenizer.hasMoreTokens())
+				bundlesNumberVec_control.push_back(atoi(bundlesNumberControlTokenizer.nextToken()));
+
+			const char *sizeControlChar = par("sizeControl");
+			cStringTokenizer sizeControlTokenizer(sizeControlChar, ",");
+			while (sizeControlTokenizer.hasMoreTokens())
+				sizeVec_control.push_back(atoi(sizeControlTokenizer.nextToken()));
 		}
 
 		const char *sizeChar = par("size");
@@ -67,10 +78,15 @@ void App::initialize()
 			trafficGenMsg->setKind(TRAFFIC_TIMER);
 			trafficGenMsg->setBundlesNumber(bundlesNumberVec_.at(i));
 			trafficGenMsg->setDestinationEid(destinationEidVec_.at(i));
-			trafficGenMsg->setTargetEid(targetEidVec_.at(i));
 			trafficGenMsg->setSize(sizeVec_.at(i));
 			trafficGenMsg->setInterval(par("interval"));
 			trafficGenMsg->setTtl(par("ttl"));
+
+			//Control Section
+			trafficGenMsg->setTargetEid(targetEidVec_.at(i));
+			trafficGenMsg->setBundlesNumberControl(bundlesNumberVec_control.at(i));
+			trafficGenMsg->setSizeControl(sizeVec_control.at(i));
+
 			scheduleAt(startVec_.at(i), trafficGenMsg);
 		}
 	}
@@ -154,7 +170,8 @@ void App::handleMessage(cMessage *msg)
 		if (control){
 			bundle->setControl(control);
 			bundle->setTargetEid(trafficGenMsg->getTargetEid());
-			//Mancano numero di bundle e size dei bundle da controllare
+			bundle->setControlBundleNumber(trafficGenMsg->getBundlesNumberControl());
+			bundle->setBundleByteLength(trafficGenMsg->getSizeControl());
 		}
 
 		// Keep generating traffic
@@ -233,4 +250,14 @@ vector<int> App::getSizeVec()
 vector<double> App::getStartVec()
 {
 	return this->startVec_;
+}
+
+vector<int> App::getBundlesNumberVecControl()
+{
+	return this->bundlesNumberVec_control;
+}
+
+vector<int> App::getSizeVecControl()
+{
+	return this->sizeVec_control;
 }
