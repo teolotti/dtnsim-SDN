@@ -33,7 +33,7 @@ void Graphics::initialize()
 		posAngle = 2 * (3.1415) / ((float) numNodes);
 		if(this->getParentModule()->par("controller")){
 			posX = marginX + posRadius;
-			posY = marginY;
+			posY = marginY + posRadius;
 		} else {
 			posX = marginX + posRadius * cos((eid_ - 1) * posAngle) + posRadius;
 			posY = marginY + posRadius * sin((eid_ - 1) * posAngle) + posRadius;

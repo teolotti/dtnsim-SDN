@@ -7,6 +7,8 @@ void App::initialize()
 	// Store this node eid
 	this->eid_ = this->getParentModule()->getIndex();
 
+	bool control = par("control");
+
 	// Configure Traffic Generator
 	if (par("enable"))
 	{
@@ -29,7 +31,8 @@ void App::initialize()
 		}
 
 		//Control Section
-		if(par("control")){
+
+		if(control){
 
 			const char *targetEidChar = par("targetEid");
 			cStringTokenizer targetEidTokenizer(targetEidChar, ",");
@@ -83,9 +86,11 @@ void App::initialize()
 			trafficGenMsg->setTtl(par("ttl"));
 
 			//Control Section
-			trafficGenMsg->setTargetEid(targetEidVec_.at(i));
-			trafficGenMsg->setBundlesNumberControl(bundlesNumberVec_control.at(i));
-			trafficGenMsg->setSizeControl(sizeVec_control.at(i));
+			if(control){
+				trafficGenMsg->setTargetEid(targetEidVec_.at(i));
+				trafficGenMsg->setBundlesNumberControl(bundlesNumberVec_control.at(i));
+				trafficGenMsg->setSizeControl(sizeVec_control.at(i));
+			}
 
 			scheduleAt(startVec_.at(i), trafficGenMsg);
 		}
