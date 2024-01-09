@@ -31,8 +31,14 @@ void Graphics::initialize()
 		// Set circular position
 		posRadius = numNodes * 250 / (2 * (3.1415));
 		posAngle = 2 * (3.1415) / ((float) numNodes);
-		posX = marginX + posRadius * cos((eid_ - 1) * posAngle) + posRadius;
-		posY = marginY + posRadius * sin((eid_ - 1) * posAngle) + posRadius;
+		if(this->getParentModule()->par("controller")){
+			posX = marginX + posRadius;
+			posY = marginY;
+		} else {
+			posX = marginX + posRadius * cos((eid_ - 1) * posAngle) + posRadius;
+			posY = marginY + posRadius * sin((eid_ - 1) * posAngle) + posRadius;
+		}
+
 		dispStr.setTagArg("p", 0, posX);
 		dispStr.setTagArg("p", 1, posY);
 

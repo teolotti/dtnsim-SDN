@@ -138,6 +138,10 @@ private:
 	bool saveBundleMap_;
 	ofstream bundleMap_;
 
+	//Control Section (Data to be stored by the controller
+	bool controller = false;
+	std::vector<int>* nodesState;
+
 	// Signals
 	simsignal_t dtnBundleSentToCom;
 	simsignal_t dtnBundleSentToApp;

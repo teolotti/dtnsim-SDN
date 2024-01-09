@@ -17,6 +17,12 @@ simple App
         bool custodyTransfer = default(false);
         string externalTrafficEvents = default("");
         
+        //Control Section
+        bool control = default(false); //Control Bundle
+        string targetEid = default("1"); //Destination of the data bundle
+        string bundlesNumberControl = default("1"); // Number of Bundles to Control
+        string sizeControl = default("1024"); // Controlled Bundles Size in Bytes
+        
         // Signals and Statistics
         @signal[appBundleSent];
         @signal[appBundleReceived];

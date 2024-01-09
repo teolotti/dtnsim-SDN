@@ -125,6 +125,11 @@ void Dtn::initialize(int stage)
 			scheduleAt((*it).getStart() + (*it).getDuration(), contactMsgEnd);
 		}
 
+		//Control Section
+		if(this->getParentModule()->par("controller"))
+			controller = true;
+		nodesState = new std::vector<int>(this->getParentModule()->getParentModule()->par("nodesNumber"));
+
 		string routeString = par("routing");
 
 		if (routeString.compare("uncertainUniboCgr") == 0) //only done for (O)CGR-UCoP

@@ -48,6 +48,17 @@ packet BundlePkt{
         int hopCount;
         intList visitedNodes;
         
+        //SDN enabled
+	    bool SDNenabled;
+	    //vector<Contact*> SDNhops;
+	
+	    //Control Bundle
+	    bool control;
+	    //firstEid == destionationEid for the control bundle
+	    int targetEid;  //this id the destinationEid of the data bundle
+	    int bundleByteLength;
+	    int controlBundleNumber;
+        
         // Probabilistic routing meta-data
         int xmitCopiesCount;
         double dlvConfidence;
@@ -69,6 +80,12 @@ message TrafficGeneratorMsg{
     int size;
     double ttl;
     double interval;
+    
+     //Control Section
+
+    int targetEid;
+    int bundlesNumberControl;
+    int sizeControl;
 };
 
 message ContactMsg{
