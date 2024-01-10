@@ -18,7 +18,7 @@
 #include <src/node/dtn/routing/RoutingBRUF1T.h>
 #include <src/node/dtn/routing/RoutingORUCOP.h>
 //added
-#include <src/node/dtn/routing/RoutingSDN.h>
+#include <src/node/dtn/routing/SdnRoute.h>
 //
 #include <src/node/dtn/routing/brufncopies/RoutingBRUFNCopies.h>
 #include <src/node/dtn/routing/cgrbrufpowered/CGRBRUFPowered.h>
@@ -141,6 +141,7 @@ private:
 	//Control Section (Data to be stored by the controller
 	bool controller = false;
 	std::vector<int>* nodesState;
+	std::vector<SdnRoute>* sdnRouteTable;
 
 	// Signals
 	simsignal_t dtnBundleSentToCom;

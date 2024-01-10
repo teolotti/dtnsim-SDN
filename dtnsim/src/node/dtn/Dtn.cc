@@ -126,10 +126,13 @@ void Dtn::initialize(int stage)
 		}
 
 		//Control Section
-		if(this->getParentModule()->par("controller"))
+		if(this->getParentModule()->par("controller")){
 			controller = true;
-		nodesState = new std::vector<int>(this->getParentModule()->getParentModule()->par("nodesNumber"));
+			nodesState = new std::vector<int>(this->getParentModule()->getParentModule()->par("nodesNumber"));
+		}
+		sdnRouteTable = new std::vector<SdnRoute>(this->getParentModule()->getParentModule()->par("nodesNumber"));
 
+		//
 		string routeString = par("routing");
 
 		if (routeString.compare("uncertainUniboCgr") == 0) //only done for (O)CGR-UCoP
@@ -152,7 +155,7 @@ void Dtn::initialize(int stage)
 
 		// Initialize routing
 		this->sdr_.setEid(eid_);
-		this->sdr_.setSize(par("sdrSize")); //TODO: capacity
+		this->sdr_.setSize(par("sdrSize")); //capacity in bytes, defaul is 0, change in .ini file
 		this->sdr_.setNodesNumber(this->getParentModule()->getParentModule()->par("nodesNumber"));
 		this->sdr_.setContactPlan(&contactTopology_);
 
@@ -360,14 +363,28 @@ void Dtn::handleMessage(cMessage *msg)
 	///////////////////////////////////////////
 	// New Bundle (from App or Com):
 	///////////////////////////////////////////
+	///////////////////////////////////////////
+	// Control case: from App if it is the controller, from com if it is the node to be controlled
+	///////////////////////////////////////////
+
 	if (msg->getKind() == BUNDLE || msg->getKind() == BUNDLE_CUSTODY_REPORT)
 	{
-		if (msg->arrivedOn("gateToCom$i"))
-			emit(dtnBundleReceivedFromCom, true);
-		if (msg->arrivedOn("gateToApp$i"))
-			emit(dtnBundleReceivedFromApp, true);
-
 		BundlePkt *bundle = check_and_cast<BundlePkt*>(msg);
+
+		if(controller){
+
+		} else {
+			if (!(bundle->getControl())){
+				if (msg->arrivedOn("gateToCom$i"))
+					emit(dtnBundleReceivedFromCom, true);
+				if (msg->arrivedOn("gateToApp$i"))
+					emit(dtnBundleReceivedFromApp, true);
+			}
+
+		}
+
+
+
 		dispatchBundle(bundle);
 	}
 	else if (msg->getKind() == CONTACT_FAILED) //A failed contact was noticed!

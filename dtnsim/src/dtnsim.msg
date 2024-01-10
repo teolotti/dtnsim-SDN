@@ -2,10 +2,16 @@
 
 cplusplus {{
     #include "src/node/dtn/routing/CgrRoute.h"
+    #include "src/node/dtn/routing/SdnRoute.h"
     typedef std::list<int> intList;
 }}
 
 class CgrRoute
+{
+    @existingClass;
+}
+
+class SdnRoute
 {
     @existingClass;
 }
@@ -16,6 +22,7 @@ class intList
 }
 
 //struct CgrRoute;
+//struct SdnRoute;
 //class noncobject cgrRouteList;
 
 packet BundlePkt{
@@ -50,7 +57,7 @@ packet BundlePkt{
         
         //SDN enabled
 	    bool SDNenabled;
-	    //vector<Contact*> SDNhops;
+	    SdnRoute sdnRoute;
 	
 	    //Control Bundle
 	    bool control;
