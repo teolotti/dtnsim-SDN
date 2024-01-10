@@ -372,7 +372,7 @@ void Dtn::handleMessage(cMessage *msg)
 		BundlePkt *bundle = check_and_cast<BundlePkt*>(msg);
 
 		if(controller){
-
+			bundle->setSdnRoute(computeRoute(bundle));
 		} else {
 			if (!(bundle->getControl())){
 				if (msg->arrivedOn("gateToCom$i"))
@@ -382,8 +382,11 @@ void Dtn::handleMessage(cMessage *msg)
 			} else {
 				SdnRoute tempRoute = bundle->getSdnRoute();
 				sdnRouteTable->at(tempRoute.terminusNode) = tempRoute;
-
-				//scheduleAfter(delay, msg); timer per la durata della modifica, messaggio di tipo SdnRouteTimeout, all'arrivo del messaggio di quel tipo (associare anche il Kind) eliminare entri della table
+				SdnRouteTimeout* tMsg = new SdnRouteTimeout("sdnRouteTimeout");
+				tMsg->setKind(SDN_ROUTE_TIMEOUT);
+				tMsg->setBundleId(bundle->getBundleId());
+				tMsg->setDestEid(tempRoute.terminusNode);
+				scheduleAfter(3, tMsg); //timer per la durata della modifica, messaggio di tipo SdnRouteTimeout, all'arrivo del messaggio di quel tipo (associare anche il Kind) eliminare entri della table
 			}
 
 		}
@@ -597,6 +600,20 @@ void Dtn::handleMessage(cMessage *msg)
 
 		delete custodyTimout;
 	}
+	else if (msg->getKind() == SDN_ROUTE_TIMEOUT)
+	{
+		SdnRouteTimeout *sdnRouteTimeout = check_and_cast<SdnRouteTimeout*>(msg);
+		int destId = sdnRouteTimeout->getDestEid();
+		if ((sdnRouteTable->at(destId)).bundleId == sdnRouteTimeout->getBundleId())
+			sdnRouteTable->at(destId).active = false;
+		//else
+		//	Route already overwritten by controller
+		delete sdnRouteTimeout;
+	}
+}
+
+SdnRoute Dtn::computeRoute(BundlePkt *bundle){
+
 }
 
 void Dtn::dispatchBundle(BundlePkt *bundle)

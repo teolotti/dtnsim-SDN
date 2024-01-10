@@ -16,6 +16,7 @@ typedef struct {
 	int terminusNode;			// Destination node
 	int nextHop; 				// Entry node
 	vector<Contact *> hops;		// contact list
+	bool active;
 } SdnRoute;
 
 #endif /* SRC_NODE_DTN_ROUTING_SDNROUTE_H_ */

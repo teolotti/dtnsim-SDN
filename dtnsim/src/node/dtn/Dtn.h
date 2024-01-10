@@ -101,6 +101,9 @@ protected:
 
 	virtual void dispatchBundle(BundlePkt *bundle);
 
+	//control section
+	virtual SdnRoute computeRoute(BundlePkt *bundle);
+
 private:
 
 	int eid_;
