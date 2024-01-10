@@ -379,6 +379,11 @@ void Dtn::handleMessage(cMessage *msg)
 					emit(dtnBundleReceivedFromCom, true);
 				if (msg->arrivedOn("gateToApp$i"))
 					emit(dtnBundleReceivedFromApp, true);
+			} else {
+				SdnRoute tempRoute = bundle->getSdnRoute();
+				sdnRouteTable->at(tempRoute.terminusNode) = tempRoute;
+
+				//scheduleAfter(delay, msg); timer per la durata della modifica, messaggio di tipo SdnRouteTimeout, all'arrivo del messaggio di quel tipo (associare anche il Kind) eliminare entri della table
 			}
 
 		}

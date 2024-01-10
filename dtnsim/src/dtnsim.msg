@@ -121,4 +121,13 @@ message CustodyTimout{
     int bundleId;
 };
 
+message SdnRouteTimeout{
+	int bundleId;
+	int destEid;
+};
+
+message OccupationTimeout{
+	int nodeEid;
+};
+
 

@@ -12,6 +12,7 @@ using namespace std;
 #define EMPTY_ROUTE (-2)
 
 typedef struct {
+	int bundleId; 				//Control bundle that generates the route
 	int terminusNode;			// Destination node
 	int nextHop; 				// Entry node
 	vector<Contact *> hops;		// contact list
