@@ -130,7 +130,8 @@ void Dtn::initialize(int stage)
 			controller = true;
 			nodesState = new std::vector<int>(this->getParentModule()->getParentModule()->par("nodesNumber"));
 		}
-		sdnRouteTable = new std::vector<SdnRoute>(this->getParentModule()->getParentModule()->par("nodesNumber"));
+		std::vector<SdnRoute*> sdnTable = std::vector<SdnRoute*>(this->getParentModule()->getParentModule()->par("nodesNumber"));
+		sdr_.setSdnRouteTable(sdnTable);
 
 		//
 		string routeString = par("routing");
@@ -381,7 +382,7 @@ void Dtn::handleMessage(cMessage *msg)
 					emit(dtnBundleReceivedFromApp, true);
 			} else {
 				SdnRoute tempRoute = bundle->getSdnRoute();
-				sdnRouteTable->at(tempRoute.terminusNode) = tempRoute;
+				sdr_.getSdnRouteTable().at(tempRoute.terminusNode) = &tempRoute;
 				SdnRouteTimeout* tMsg = new SdnRouteTimeout("sdnRouteTimeout");
 				tMsg->setKind(SDN_ROUTE_TIMEOUT);
 				tMsg->setBundleId(bundle->getBundleId());
@@ -604,15 +605,44 @@ void Dtn::handleMessage(cMessage *msg)
 	{
 		SdnRouteTimeout *sdnRouteTimeout = check_and_cast<SdnRouteTimeout*>(msg);
 		int destId = sdnRouteTimeout->getDestEid();
-		if ((sdnRouteTable->at(destId)).bundleId == sdnRouteTimeout->getBundleId())
-			sdnRouteTable->at(destId).active = false;
+		if ((sdr_.getSdnRouteTable().at(destId))->bundleId == sdnRouteTimeout->getBundleId())
+			sdr_.getSdnRouteTable().at(destId)->active = false;
 		//else
-		//	Route already overwritten by controller
+		//	Route already overwritten by another control bundle
 		delete sdnRouteTimeout;
 	}
 }
 
 SdnRoute Dtn::computeRoute(BundlePkt *bundle){
+
+	/*vector<int> suppressedContactIds;
+	//TODO: add to suppressedContacts the ones involving controller node
+
+	while (1) {
+		SdnRoute route;
+		this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
+
+		// If no more routes were found, stop search loop
+		if (route.nextHop == NO_ROUTE_FOUND)
+			break;
+
+		// Add new valid route to route table
+		routeTable_.at(terminusNode).push_back(route);
+
+		// Suppress the first ending contact of the last route found
+		double earliestEndingTime = numeric_limits<double>::max();
+		int earliestEndingContactId;
+		vector<Contact *>::iterator hop;
+		for (hop = route.hops.begin(); hop != route.hops.end(); ++hop)
+			if ((*hop)->getEnd() < earliestEndingTime) {
+				earliestEndingTime = (*hop)->getEnd();
+				earliestEndingContactId = (*hop)->getId();
+			}
+		suppressedContactIds.push_back(earliestEndingContactId);
+
+		tableEntriesCreated++;
+	}*/
+
 
 }
 

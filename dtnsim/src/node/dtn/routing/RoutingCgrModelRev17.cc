@@ -645,8 +645,40 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		// explored also includes filtered routes (i.e., pessimistic)
 		tableEntriesExplored = routeTable_.at(terminusNode).size();
 
-		// Enqueue bundle to route and update volumes
-		this->cgrEnqueue(bundle, &(*bestRoute));
+		bool enqueued = false;
+
+		if (routingType_.find("SDNenabled") != std::string::npos){
+			if (bundle->getSDNenabled()){
+				SdnRoute route = bundle->getSdnRouteForUpdate();
+				if (route.active){
+					if(contactPlan_->getContactById(route.nextHop)->getSourceEid() == this->eid_){
+						sdr_->enqueueBundleToContact(bundle, route.nextHop);
+						route.hops.erase(route.hops.begin());
+						Contact* nH = *(route.hops.begin());
+						route.nextHop = nH->getId();
+						enqueued = true;
+					}
+				}
+			}
+
+			if (sdr_->getSdnRouteTable().at(bundle->getDestinationEid())->active  && !enqueued){
+				SdnRoute route = *(sdr_->getSdnRouteTable().at(bundle->getDestinationEid()));
+				if(contactPlan_->getContactById(route.nextHop)->getSourceEid() == this->eid_){
+					bundle->setSDNenabled(true);
+					bundle->setSdnRoute(route);
+					sdr_->enqueueBundleToContact(bundle, route.nextHop);
+					route.hops.erase(route.hops.begin());
+					Contact* nH = *(route.hops.begin());
+					route.nextHop = nH->getId();
+					enqueued = true;
+				}
+			}
+		}
+
+		if(!enqueued){
+			// Enqueue bundle to route and update volumes
+			this->cgrEnqueue(bundle, &(*bestRoute));
+		}
 		//TODO: CONTROLLER AWARE, if a route from controller exists, use it
 	} else {
 		// Enqueue to limbo
@@ -656,6 +688,8 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		cout << "*BestRoute not found (enqueing to limbo)" << endl;
 	}
 }
+
+
 
 // This function enqueues the bundle in the best found path.
 // To this end, it updates contacts volume depending on the volume-awareness

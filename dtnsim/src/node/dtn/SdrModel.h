@@ -63,6 +63,16 @@ public:
 	virtual BundlePkt * getTransmittedBundleInCustody(long bundleId);
 	virtual list<BundlePkt *> getTransmittedBundlesInCustody();
 
+	std::vector<SdnRoute*>& getSdnRouteTable()
+	{
+		return sdnRouteTable;
+	}
+
+	void setSdnRouteTable(const std::vector<SdnRoute*> &sdnRouteTable)
+	{
+		this->sdnRouteTable = sdnRouteTable;
+	}
+
 private:
 
 	int size_;  		// Capacity of sdr in bytes
@@ -72,6 +82,9 @@ private:
 	int bundlesNumber_;	// Total bundles enqueued in all sdr queues (index, generic, in custody)
 
 	ContactPlan *contactPlan_;
+
+	//Control section
+	std::vector<SdnRoute*> sdnRouteTable;
 
 	// Indexed queues where index can be used by routing algorithms
 	// to enqueue bundles to specific contacts or nodes. When there

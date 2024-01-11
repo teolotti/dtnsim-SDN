@@ -145,7 +145,6 @@ private:
 	//Control Section (Data to be stored by the controller
 	bool controller = false;
 	std::vector<int>* nodesState;
-	std::vector<SdnRoute>* sdnRouteTable;
 
 	// Signals
 	simsignal_t dtnBundleSentToCom;
