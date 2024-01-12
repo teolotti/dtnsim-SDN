@@ -153,6 +153,7 @@ private:
 	//Control Section (Data to be stored by the controller
 	bool controller = false;
 	std::vector<int>* nodesState;
+	std::vector<SdnRoute*> sdnTable;
 
 	typedef struct {
 		Contact * predecessor;		// Predecessor Contact

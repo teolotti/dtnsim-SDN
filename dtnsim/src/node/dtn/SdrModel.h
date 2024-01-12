@@ -63,16 +63,6 @@ public:
 	virtual BundlePkt * getTransmittedBundleInCustody(long bundleId);
 	virtual list<BundlePkt *> getTransmittedBundlesInCustody();
 
-	std::vector<SdnRoute*>& getSdnRouteTable()
-	{
-		return sdnRouteTable;
-	}
-
-	void setSdnRouteTable(const std::vector<SdnRoute*> &sdnRouteTable)
-	{
-		this->sdnRouteTable = sdnRouteTable;
-	}
-
 	int getSize() const
 	{
 		return size_;
@@ -93,6 +83,16 @@ public:
 		this->idController = idController;
 	}
 
+	std::vector<SdnRoute*>* getSdnRouteTable()
+	{
+		return sdnRouteTable;
+	}
+
+	void setSdnRouteTable(std::vector<SdnRoute*> *sdnRouteTable)
+	{
+		this->sdnRouteTable = sdnRouteTable;
+	}
+
 private:
 
 	int size_;  		// Capacity of sdr in bytes
@@ -104,7 +104,7 @@ private:
 	ContactPlan *contactPlan_;
 
 	//Control section
-	std::vector<SdnRoute*> sdnRouteTable;
+	std::vector<SdnRoute*>* sdnRouteTable;
 	int idController;
 
 	// Indexed queues where index can be used by routing algorithms

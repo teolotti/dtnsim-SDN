@@ -668,9 +668,9 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 					}
 				}
 
-				if (sdr_->getSdnRouteTable().at(bundle->getDestinationEid())->active  && !enqueued){
+				if (sdr_->getSdnRouteTable()->at(bundle->getDestinationEid())->active  && !enqueued){
 					cout << "CIAO" << eid_ << " " << bundle->getByteLength() << endl;
-					SdnRoute route = *(sdr_->getSdnRouteTable().at(bundle->getDestinationEid()));
+					SdnRoute route = *(sdr_->getSdnRouteTable()->at(bundle->getDestinationEid()));
 					if(contactPlan_->getContactById(route.nextHop)->getSourceEid() == this->eid_){
 						bundle->setSDNenabled(true);
 						bundle->setSdnRoute(route);

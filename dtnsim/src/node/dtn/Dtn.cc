@@ -135,8 +135,8 @@ void Dtn::initialize(int stage)
 		}
 		SdnRoute emptyRoute;
 		emptyRoute.active = false;
-		std::vector<SdnRoute*> sdnTable(nodesNum+1, &emptyRoute);
-		sdr_.setSdnRouteTable(sdnTable);
+		sdnTable = std::vector<SdnRoute*>(nodesNum+1, &emptyRoute);
+		sdr_.setSdnRouteTable(&sdnTable);
 
 
 
@@ -389,7 +389,7 @@ void Dtn::handleMessage(cMessage *msg)
 					emit(dtnBundleReceivedFromApp, true);
 			} else {
 				SdnRoute tempRoute = bundle->getSdnRoute();
-				sdr_.getSdnRouteTable().at(tempRoute.terminusNode) = &tempRoute;
+				sdr_.getSdnRouteTable()->at(tempRoute.terminusNode) = &tempRoute;
 				SdnRouteTimeout* tMsg = new SdnRouteTimeout("sdnRouteTimeout");
 				tMsg->setKind(SDN_ROUTE_TIMEOUT);
 				tMsg->setBundleId(bundle->getBundleId());
@@ -613,8 +613,8 @@ void Dtn::handleMessage(cMessage *msg)
 		SdnRouteTimeout *sdnRouteTimeout = check_and_cast<SdnRouteTimeout*>(msg);
 
 		int destId = sdnRouteTimeout->getDestEid();
-		if ((sdr_.getSdnRouteTable().at(destId))->bundleId == sdnRouteTimeout->getBundleId())
-			sdr_.getSdnRouteTable().at(destId)->active = false;
+		if ((sdr_.getSdnRouteTable()->at(destId))->bundleId == sdnRouteTimeout->getBundleId())
+			sdr_.getSdnRouteTable()->at(destId)->active = false;
 		//else
 		//	Route already overwritten by another control bundle
 		delete sdnRouteTimeout;
