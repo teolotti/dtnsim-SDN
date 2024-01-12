@@ -103,6 +103,9 @@ protected:
 
 	//control section
 	virtual SdnRoute computeRoute(BundlePkt *bundle);
+	virtual void findNextBestSdnRoute(vector<int> suppressedContactIds, BundlePkt *bundle, SdnRoute * route);
+	virtual void checkCongestion(vector <int>* suppressedContactIds);
+	virtual SdnRoute selectBestRoute(vector<SdnRoute> routes);
 
 private:
 
@@ -145,6 +148,11 @@ private:
 	//Control Section (Data to be stored by the controller
 	bool controller = false;
 	std::vector<int>* nodesState;
+
+	typedef struct {
+			Contact * predecessor;		// Predecessor Contact
+			bool suppressed;			// Dijkstra exploration: suppressed
+		} Work;
 
 	// Signals
 	simsignal_t dtnBundleSentToCom;

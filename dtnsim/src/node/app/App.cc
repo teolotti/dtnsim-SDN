@@ -56,6 +56,12 @@ void App::initialize()
 			cStringTokenizer sizeControlTokenizer(sizeControlChar, ",");
 			while (sizeControlTokenizer.hasMoreTokens())
 				sizeVec_control.push_back(atoi(sizeControlTokenizer.nextToken()));
+
+			const char *controlStartChar = par("controlStart");
+			cStringTokenizer controlStartTokenizer(controlStartChar, ",");
+			while (controlStartTokenizer.hasMoreTokens())
+				startVec_control.push_back(atof(controlStartTokenizer.nextToken()));
+
 		}
 
 		const char *sizeChar = par("size");

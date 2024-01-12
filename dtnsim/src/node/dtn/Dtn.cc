@@ -125,13 +125,17 @@ void Dtn::initialize(int stage)
 			scheduleAt((*it).getStart() + (*it).getDuration(), contactMsgEnd);
 		}
 
+		int nodesNum = this->getParentModule()->getParentModule()->par("nodesNumber");
 		//Control Section
-		if(this->getParentModule()->par("controller")){
+		sdr_.setIdController(par("controllerId"));
+		if(this->eid_ == sdr_.getIdController()){
 			controller = true;
-			nodesState = new std::vector<int>(this->getParentModule()->getParentModule()->par("nodesNumber"));
+			nodesState = new std::vector<int>(nodesNum+1);
 		}
-		std::vector<SdnRoute*> sdnTable = std::vector<SdnRoute*>(this->getParentModule()->getParentModule()->par("nodesNumber"));
+		std::vector<SdnRoute*> sdnTable = std::vector<SdnRoute*>(nodesNum+1);
 		sdr_.setSdnRouteTable(sdnTable);
+
+
 
 		//
 		string routeString = par("routing");
@@ -156,7 +160,7 @@ void Dtn::initialize(int stage)
 
 		// Initialize routing
 		this->sdr_.setEid(eid_);
-		this->sdr_.setSize(par("sdrSize")); //capacity in bytes, defaul is 0, change in .ini file
+		this->sdr_.setSize(par("sdrSize")); //capacity in bytes, default is 0(infinite), change in .ini file
 		this->sdr_.setNodesNumber(this->getParentModule()->getParentModule()->par("nodesNumber"));
 		this->sdr_.setContactPlan(&contactTopology_);
 
@@ -615,19 +619,28 @@ void Dtn::handleMessage(cMessage *msg)
 
 SdnRoute Dtn::computeRoute(BundlePkt *bundle){
 
-	/*vector<int> suppressedContactIds;
-	//TODO: add to suppressedContacts the ones involving controller node
+	vector<int> suppressedContactIds;
+	//add to suppressedContacts the ones congested
+	checkCongestion(&suppressedContactIds);
+	//add to suppressedContacts the ones involving controller node
+	vector<Contact> allContacts = *(contactPlan_.getContacts());
+	for(auto contact : allContacts){
+		if (contact.getSourceEid() == this->eid_ || contact.getDestinationEid() == this->eid_){
+			suppressedContactIds.push_back(contact.getId());
+		}
 
+	}
+	vector<SdnRoute> routes;
 	while (1) {
 		SdnRoute route;
-		this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
+		this->findNextBestSdnRoute(suppressedContactIds, bundle, &route); //traget eid is the destination of the data bundle to be controlled
 
 		// If no more routes were found, stop search loop
 		if (route.nextHop == NO_ROUTE_FOUND)
 			break;
 
 		// Add new valid route to route table
-		routeTable_.at(terminusNode).push_back(route);
+		routes.push_back(route);
 
 		// Suppress the first ending contact of the last route found
 		double earliestEndingTime = numeric_limits<double>::max();
@@ -639,12 +652,140 @@ SdnRoute Dtn::computeRoute(BundlePkt *bundle){
 				earliestEndingContactId = (*hop)->getId();
 			}
 		suppressedContactIds.push_back(earliestEndingContactId);
+	}
 
-		tableEntriesCreated++;
-	}*/
+	return selectBestRoute(routes);
 
 
 }
+
+void Dtn::checkCongestion(vector<int>* suppressedContactIds){
+	int i = 0;
+	for(auto nodeOcc : *nodesState){
+		if (i>0 && nodeOcc/sdr_.getSize()>0.75){
+			for(auto contact : contactPlan_.getContactsBySrc(i))
+				suppressedContactIds->push_back(contact.getId());
+			for(auto contact : contactPlan_.getContactsByDst(i))
+				suppressedContactIds->push_back(contact.getId());
+		}
+		i++;
+	}
+}
+
+//DA FARE/CONTROLLARE: SELECT BEST ROUTE, MESSAGGIO/TIMER PER CONGESTIONE, CONTROLLO RESIDUAL VOLUME
+
+SdnRoute Dtn::selectBestRoute(vector<SdnRoute> routes){
+
+}
+
+void Dtn::findNextBestSdnRoute(vector<int> suppressedContactIds, BundlePkt* bundle, SdnRoute * route) {
+	// increment metrics counter
+	//dijkstraCalls++;
+
+	// Suppress edges
+	for (auto& contact : *contactPlan_.getContacts()) {
+		contact.work = new Work();
+		auto it = std::find(suppressedContactIds.begin(), suppressedContactIds.end(), contact.getId());
+		((Work *) contact.work)->suppressed = it != suppressedContactIds.end();
+	}
+	int nodeNum_ = sdr_.getNodesNumber();
+	// Initialize Dijkstra
+	double arrivalTimes[nodeNum_ + 1];
+	bool visitedNodes[nodeNum_ + 1];
+	Contact * predecesors[nodeNum_ + 1];
+	for (int i = 1; i <= nodeNum_; i++) {
+		arrivalTimes[i] = std::numeric_limits<double>::max();
+		visitedNodes[i] = false;
+		predecesors[i] = NULL;
+	}
+	arrivalTimes[bundle->getDestinationEid()] = bundle->getStartBundleTimeControl(); //questo è un control bundle, destId è l'id del nodo di partenza del data bundle
+
+	// Queue for queueing (arrival time, node) in order to get best node first
+	// Use std::greater to sort arrival time from low to high
+	priority_queue<pair<double, int>, vector<pair<double, int>>, std::greater<pair<double, int>>> pq;
+	pq.push(make_pair(arrivalTimes[bundle->getDestinationEid()], bundle->getDestinationEid()));
+
+	// Start Dijkstra
+	while (!pq.empty() && pq.top().second != bundle->getTargetEid()) {
+		double arrivalTime = pq.top().first;
+		int currentNode = pq.top().second;
+		pq.pop();
+
+		if (visitedNodes[currentNode])
+			continue;
+		visitedNodes[currentNode] = true;
+
+		// Explore current node's neighbors
+		for (auto& edgeId : *contactPlan_.getContactIdsBySrc(currentNode)) {
+			Contact * edgeToNeighbor = contactPlan_.getContactById(edgeId);
+			int neighbor = edgeToNeighbor->getDestinationEid();
+
+			if (visitedNodes[neighbor])
+				continue;
+
+			// If edge is suppressed or has already ended, ignore
+			if (((Work *) edgeToNeighbor->work)->suppressed  || edgeToNeighbor->getEnd() <= arrivalTime)
+				continue;
+
+			double owlt = edgeToNeighbor->getRange();
+			double newArrivalTime = max(arrivalTime, edgeToNeighbor->getStart());
+			newArrivalTime += owlt;
+
+			if (newArrivalTime < arrivalTimes[neighbor]) {
+				arrivalTimes[neighbor] = newArrivalTime;
+				predecesors[neighbor] = edgeToNeighbor;
+
+				pq.push(make_pair(newArrivalTime, neighbor));
+			}
+		}
+	}
+	// End Dijkstra
+
+	// If we got a final contact to destination
+	// then it is the best route and we need to
+	// recover the route
+	if (predecesors[bundle->getTargetEid()]!= NULL) {
+		// Add all contacts in the path
+		route->hops.clear();
+		for (Contact * contact = predecesors[bundle->getTargetEid()]; contact != NULL; contact =
+				predecesors[contact->getSourceEid()]) {
+			route->hops.push_back(contact);
+		}
+		std::reverse(route->hops.begin(), route->hops.end());
+
+		// Set route metrics
+		route->filtered = false;
+		route->terminusNode = bundle->getTargetEid();
+		route->arrivalTime = arrivalTimes[bundle->getTargetEid()];
+		route->confidence = 1.0;
+		route->nextHop = route->hops[0]->getDestinationEid();
+		route->fromTime = route->hops[0]->getStart();
+		route->maxVolume = numeric_limits<double>::max();
+		route->residualVolume = numeric_limits<double>::max();
+		route->toTime = numeric_limits<double>::max();
+		double accumulatedRange = 0;
+		for (Contact * contact : route->hops) {
+			route->toTime = std::min(route->toTime,
+					contact->getEnd() - accumulatedRange);
+			accumulatedRange += contact->getRange();
+
+			route->maxVolume = std::min(route->maxVolume, contact->getVolume());
+			route->residualVolume = std::min(route->residualVolume, contact->getResidualVolume());
+			route->confidence *= contact->getConfidence();
+		}
+	} else {
+		// No route found
+		route->terminusNode = NO_ROUTE_FOUND;
+		route->nextHop = NO_ROUTE_FOUND;
+		route->arrivalTime = numeric_limits<double>::max();	// never chosen as best route
+	}
+
+	// Delete working area in each contact.
+	for (auto& contact: *contactPlan_.getContacts()) {
+		delete ((Work *) contact.work);
+	}
+}
+
 
 void Dtn::dispatchBundle(BundlePkt *bundle)
 {

@@ -317,375 +317,384 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 		if (routeTable_.at(terminusNode).empty()) {
 
 			vector<int> suppressedContactIds;
-			//TODO: add to suppressedContacts the ones involving controller node
-
-			while (1) {
-				CgrRoute route;
-				this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
-
-				// If no more routes were found, stop search loop
-				if (route.nextHop == NO_ROUTE_FOUND)
-					break;
-
-				// Add new valid route to route table
-				routeTable_.at(terminusNode).push_back(route);
-
-				// Suppress the first ending contact of the last route found
-				double earliestEndingTime = numeric_limits<double>::max();
-				int earliestEndingContactId;
-				vector<Contact *>::iterator hop;
-				for (hop = route.hops.begin(); hop != route.hops.end(); ++hop)
-					if ((*hop)->getEnd() < earliestEndingTime) {
-						earliestEndingTime = (*hop)->getEnd();
-						earliestEndingContactId = (*hop)->getId();
-					}
-				suppressedContactIds.push_back(earliestEndingContactId);
-
-				tableEntriesCreated++;
-			}
-		}
-	}
-	if (routingType_.find("routeListType:allPaths-firstDepleted") != std::string::npos) {
-		//////////////////////////////////////////////////
-		// allPaths-firstDepleted: All paths are calculated at once
-		// when the contact plan changes. The route list
-		// is completed removing the first depleted contact.
-		//////////////////////////////////////////////////
-
-		// If this is the route list to this terminus is empty,
-		// populate it with all paths to the destination. This
-		// should only happen once per contact plan update.
-		if (routeTable_.at(terminusNode).empty()) {
-
-			// Temporarily store the residual capacity of each
-			// contact so we can use in the route calculation
-			// stage to determine how this capacity would get
-			// occupied as traffic is sent to this target node.
-			vector<double> contactVolume(contactPlan_->getContacts()->size());
-			vector<double>::iterator it1 = contactVolume.begin();
-			vector<Contact>::iterator it2 = contactPlan_->getContacts()->begin();
-			for (; it1 != contactVolume.end(); ++it1, ++it2)
-				(*it1) = (*it2).getResidualVolume();
-
-			vector<int> suppressedContactIds;
-
-			while (1) {
-				CgrRoute route;
-				this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
-
-				// If no more routes were found, stop search loop
-				if (route.nextHop == NO_ROUTE_FOUND)
-					break;
-
-				// Add new valid route to route table
-				routeTable_.at(terminusNode).push_back(route);
-
-				// Consume route residual volume and suppress the contact
-				// with least residual volume on the route
-				vector<Contact *>::iterator hop;
-				for (hop = route.hops.begin(); hop != route.hops.end(); ++hop) {
-
-					// Consume route residual volume
-					(*hop)->setResidualVolume((*hop)->getResidualVolume() - route.residualVolume);
-
-					// If this is the limiting contact, suppress
-					// it from further route searches (other contacts
-					// in the path will remain with a reduced residual
-					// volume.
-					if ((*hop)->getResidualVolume() == 0) {
-						suppressedContactIds.push_back((*hop)->getId());
-					}
+			//suppress all contacts involving the controller node
+			vector<Contact> allContacts = *(contactPlan_->getContacts());
+			for(auto contact : allContacts){
+				if (contact.getSourceEid() == sdr_->getIdController() || contact.getDestinationEid() == sdr_->getIdController()){
+					suppressedContactIds.push_back(contact.getId());
 				}
-				tableEntriesCreated++;
-			}
 
-			// Restore original residual capacities in the contact plan
-			it1 = contactVolume.begin();
-			it2 = contactPlan_->getContacts()->begin();
-			for (; it1 != contactVolume.end(); ++it1, ++it2)
-				(*it2).setResidualVolume(*it1);
-		}
+				while (1) {
+					CgrRoute route;
+					this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
 
-	}
-	if (routingType_.find("routeListType:oneBestPath") != std::string::npos) {
-		//////////////////////////////////////////////////
-		// oneBestPath: Only a best path is
-		// calculated for a given destination. The entry
-		// is updated by the ending or depletion of a contact in the path
-		//////////////////////////////////////////////////
+					// If no more routes were found, stop search loop
+					if (route.nextHop == NO_ROUTE_FOUND)
+						break;
 
-		// If this is the route list to this terminus is empty,
-		// create a single entry place to hold the route
-		if (routeTable_.at(terminusNode).empty()) {
-			routeTable_.at(terminusNode).resize(2);
-			CgrRoute route;
-			route.nextHop = EMPTY_ROUTE;
-			route.arrivalTime = numeric_limits<double>::max(); // never chosen as best route
-			routeTable_.at(terminusNode).at(0) = route;
-			routeTable_.at(terminusNode).at(1) = route;
-		}
+					// Add new valid route to route table
+					routeTable_.at(terminusNode).push_back(route);
 
-		// Explore list and recalculate if necessary
-		bool needRecalculation = false;
+					// Suppress the first ending contact of the last route found
+					double earliestEndingTime = numeric_limits<double>::max();
+					int earliestEndingContactId;
+					vector<Contact *>::iterator hop;
+					for (hop = route.hops.begin(); hop != route.hops.end(); ++hop)
+						if ((*hop)->getEnd() < earliestEndingTime) {
+							earliestEndingTime = (*hop)->getEnd();
+							earliestEndingContactId = (*hop)->getId();
+						}
+					suppressedContactIds.push_back(earliestEndingContactId);
 
-		// Empty route condition
-		if (routeTable_.at(terminusNode).at(0).nextHop == EMPTY_ROUTE) {
-			cout << "needRecalculation = true 1" << endl;
-			needRecalculation = true;
-		}
-
-		// Due route condition
-		// todo
-		if (routeTable_.at(terminusNode).at(0).toTime < simTime_) {
-			cout << "needRecalculation = true 2" << endl;
-			needRecalculation = true;
-		}
-
-		// Depleted route condition
-		if (routeTable_.at(terminusNode).at(0).residualVolume < bundle->getByteLength()) {
-			// Make sure that the capacity-limiting contact is marked as depleted
-			vector<Contact *>::iterator hop;
-			for (hop = routeTable_.at(terminusNode).at(0).hops.begin();
-					hop != routeTable_.at(terminusNode).at(0).hops.end(); ++hop)
-				if (routeTable_.at(terminusNode).at(0).residualVolume == (*hop)->getResidualVolume())
-					(*hop)->setResidualVolume(0);
-
-			cout << "needReclculation = true 3" << endl;
-			needRecalculation = true;
-		}
-
-		if (needRecalculation) {
-			vector<int> suppressedContactIds; // no suppressed contacts here
-			CgrRoute route;
-			this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
-			routeTable_.at(terminusNode).at(0) = route;
-
-			// Also create a secondary route thorugh a different entry node
-			// in order to have an alternative when return to sender is forbidden
-			// through this entry node. set not found if not primary route found.
-
-			if (route.nextHop != NO_ROUTE_FOUND) {
-				tableEntriesCreated++;
-
-				// Suppress all contacts which connect this node with the entry node of
-				// the route found. All other neighbors should be considered
-				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
-						it != contactPlan_->getContacts()->end(); ++it)
-					if ((*it).getSourceEid() == eid_ && (*it).getDestinationEid() == route.nextHop)
-						suppressedContactIds.push_back((*it).getId());
-				CgrRoute route2;
-				this->findNextBestRoute(suppressedContactIds, terminusNode, &route2);
-				routeTable_.at(terminusNode).at(1) = route2;
-
-				if (route2.nextHop != NO_ROUTE_FOUND)
 					tableEntriesCreated++;
-
-			} else {
-				routeTable_.at(terminusNode).at(1).nextHop = NO_ROUTE_FOUND;
+				}
 			}
-		} else {
-			// Principal route is still valid. Now check if
-			// secondary (backup) route needs recalculation
-			bool needRecalculation = false;
+		}
+		if (routingType_.find("routeListType:allPaths-firstDepleted") != std::string::npos) {
+			//////////////////////////////////////////////////
+			// allPaths-firstDepleted: All paths are calculated at once
+			// when the contact plan changes. The route list
+			// is completed removing the first depleted contact.
+			//////////////////////////////////////////////////
 
-			// Empty route condition
-			if (routeTable_.at(terminusNode).at(1).nextHop == EMPTY_ROUTE)
-				needRecalculation = true;
+			// If this is the route list to this terminus is empty,
+			// populate it with all paths to the destination. This
+			// should only happen once per contact plan update.
+			if (routeTable_.at(terminusNode).empty()) {
 
-			// Due route condition
-			// todo
-			if (routeTable_.at(terminusNode).at(1).toTime <= simTime_)
-				needRecalculation = true;
+				// Temporarily store the residual capacity of each
+				// contact so we can use in the route calculation
+				// stage to determine how this capacity would get
+				// occupied as traffic is sent to this target node.
+				vector<double> contactVolume(contactPlan_->getContacts()->size());
+				vector<double>::iterator it1 = contactVolume.begin();
+				vector<Contact>::iterator it2 = contactPlan_->getContacts()->begin();
+				for (; it1 != contactVolume.end(); ++it1, ++it2)
+					(*it1) = (*it2).getResidualVolume();
 
-			// Depleted route condition
-			if (routeTable_.at(terminusNode).at(1).residualVolume < bundle->getByteLength()) {
-				// Make sure that the capacity-limiting contact is marked as depleted
-				vector<Contact *>::iterator hop;
-				for (hop = routeTable_.at(terminusNode).at(1).hops.begin();
-						hop != routeTable_.at(terminusNode).at(1).hops.end(); ++hop)
-					if (routeTable_.at(terminusNode).at(1).residualVolume == (*hop)->getResidualVolume())
-						(*hop)->setResidualVolume(0);
-
-				needRecalculation = true;
-			}
-
-			if (needRecalculation) {
-				// Suppress all contacts which connect this node with the entry node of
-				// the route found. All other neighbors should be considered
 				vector<int> suppressedContactIds;
-				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
-						it != contactPlan_->getContacts()->end(); ++it)
-					if ((*it).getSourceEid() == eid_
-							&& (*it).getDestinationEid() == routeTable_.at(terminusNode).at(0).nextHop)
-						suppressedContactIds.push_back((*it).getId());
-				CgrRoute route2;
-				this->findNextBestRoute(suppressedContactIds, terminusNode, &route2);
-				routeTable_.at(terminusNode).at(1) = route2;
 
-				if (route2.nextHop != NO_ROUTE_FOUND)
+				while (1) {
+					CgrRoute route;
+					this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
+
+					// If no more routes were found, stop search loop
+					if (route.nextHop == NO_ROUTE_FOUND)
+						break;
+
+					// Add new valid route to route table
+					routeTable_.at(terminusNode).push_back(route);
+
+					// Consume route residual volume and suppress the contact
+					// with least residual volume on the route
+					vector<Contact *>::iterator hop;
+					for (hop = route.hops.begin(); hop != route.hops.end(); ++hop) {
+
+						// Consume route residual volume
+						(*hop)->setResidualVolume((*hop)->getResidualVolume() - route.residualVolume);
+
+						// If this is the limiting contact, suppress
+						// it from further route searches (other contacts
+						// in the path will remain with a reduced residual
+						// volume.
+						if ((*hop)->getResidualVolume() == 0) {
+							suppressedContactIds.push_back((*hop)->getId());
+						}
+					}
 					tableEntriesCreated++;
-			}
-		}
-	}
-	if (routingType_.find("routeListType:perNeighborBestPath") != std::string::npos) {
-		//////////////////////////////////////////////////
-		// perNeighborBestPath: A best path per
-		// neighbor is calculated for a given destination. The entry
-		// is updated by the ending or depletion of a contact in the paths
-		//////////////////////////////////////////////////
+				}
 
-		// If this is the route list to this terminus is empty,
-		// create list with nodeNum_ EMPTY_ROUTE entries
-		if (routeTable_.at(terminusNode).empty()) {
-			routeTable_.at(terminusNode).resize(nodeNum_);
-			for (int r = 0; r < nodeNum_; r++) {
+				// Restore original residual capacities in the contact plan
+				it1 = contactVolume.begin();
+				it2 = contactPlan_->getContacts()->begin();
+				for (; it1 != contactVolume.end(); ++it1, ++it2)
+					(*it2).setResidualVolume(*it1);
+			}
+
+		}
+		if (routingType_.find("routeListType:oneBestPath") != std::string::npos) {
+			//////////////////////////////////////////////////
+			// oneBestPath: Only a best path is
+			// calculated for a given destination. The entry
+			// is updated by the ending or depletion of a contact in the path
+			//////////////////////////////////////////////////
+
+			// If this is the route list to this terminus is empty,
+			// create a single entry place to hold the route
+			if (routeTable_.at(terminusNode).empty()) {
+				routeTable_.at(terminusNode).resize(2);
 				CgrRoute route;
 				route.nextHop = EMPTY_ROUTE;
 				route.arrivalTime = numeric_limits<double>::max(); // never chosen as best route
-				routeTable_.at(terminusNode).at(r) = route;
+				routeTable_.at(terminusNode).at(0) = route;
+				routeTable_.at(terminusNode).at(1) = route;
 			}
-		}
 
-		// Explore list and recalculate if necessary
-		for (int r = 0; r < nodeNum_; r++) {
-			// NO_ROUTE_FOUND does not trigger a recalculation
-			if (routeTable_.at(terminusNode).at(r).nextHop == NO_ROUTE_FOUND)
-				continue;
-
+			// Explore list and recalculate if necessary
 			bool needRecalculation = false;
 
 			// Empty route condition
-			if (routeTable_.at(terminusNode).at(r).nextHop == EMPTY_ROUTE)
+			if (routeTable_.at(terminusNode).at(0).nextHop == EMPTY_ROUTE) {
+				cout << "needRecalculation = true 1" << endl;
 				needRecalculation = true;
+			}
 
 			// Due route condition
 			// todo
-			if (routeTable_.at(terminusNode).at(r).toTime <= simTime_)
+			if (routeTable_.at(terminusNode).at(0).toTime < simTime_) {
+				cout << "needRecalculation = true 2" << endl;
 				needRecalculation = true;
+			}
 
 			// Depleted route condition
-			if (routeTable_.at(terminusNode).at(r).residualVolume < bundle->getByteLength()) {
+			if (routeTable_.at(terminusNode).at(0).residualVolume < bundle->getByteLength()) {
 				// Make sure that the capacity-limiting contact is marked as depleted
 				vector<Contact *>::iterator hop;
-				for (hop = routeTable_.at(terminusNode).at(r).hops.begin();
-						hop != routeTable_.at(terminusNode).at(r).hops.end(); ++hop)
-					if (routeTable_.at(terminusNode).at(r).residualVolume == (*hop)->getResidualVolume())
+				for (hop = routeTable_.at(terminusNode).at(0).hops.begin();
+						hop != routeTable_.at(terminusNode).at(0).hops.end(); ++hop)
+					if (routeTable_.at(terminusNode).at(0).residualVolume == (*hop)->getResidualVolume())
 						(*hop)->setResidualVolume(0);
 
+				cout << "needReclculation = true 3" << endl;
 				needRecalculation = true;
 			}
 
 			if (needRecalculation) {
-
-				// Suppress all contacts which connect his node with other nodes
-				// different than the entry node of this route table entry (r)
-				vector<int> suppressedContactIds;
-				for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
-						it != contactPlan_->getContacts()->end(); ++it)
-					if ((*it).getSourceEid() == eid_ && (*it).getDestinationEid() != r)
-						suppressedContactIds.push_back((*it).getId());
-
+				vector<int> suppressedContactIds; // no suppressed contacts here
 				CgrRoute route;
 				this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
-				routeTable_.at(terminusNode).at(r) = route;
+				routeTable_.at(terminusNode).at(0) = route;
 
-				if (route.nextHop != NO_ROUTE_FOUND)
+				// Also create a secondary route thorugh a different entry node
+				// in order to have an alternative when return to sender is forbidden
+				// through this entry node. set not found if not primary route found.
+
+				if (route.nextHop != NO_ROUTE_FOUND) {
 					tableEntriesCreated++;
+
+					// Suppress all contacts which connect this node with the entry node of
+					// the route found. All other neighbors should be considered
+					for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
+							it != contactPlan_->getContacts()->end(); ++it)
+						if ((*it).getSourceEid() == eid_ && (*it).getDestinationEid() == route.nextHop)
+							suppressedContactIds.push_back((*it).getId());
+					CgrRoute route2;
+					this->findNextBestRoute(suppressedContactIds, terminusNode, &route2);
+					routeTable_.at(terminusNode).at(1) = route2;
+
+					if (route2.nextHop != NO_ROUTE_FOUND)
+						tableEntriesCreated++;
+
+				} else {
+					routeTable_.at(terminusNode).at(1).nextHop = NO_ROUTE_FOUND;
+				}
+			} else {
+				// Principal route is still valid. Now check if
+				// secondary (backup) route needs recalculation
+				bool needRecalculation = false;
+
+				// Empty route condition
+				if (routeTable_.at(terminusNode).at(1).nextHop == EMPTY_ROUTE)
+					needRecalculation = true;
+
+				// Due route condition
+				// todo
+				if (routeTable_.at(terminusNode).at(1).toTime <= simTime_)
+					needRecalculation = true;
+
+				// Depleted route condition
+				if (routeTable_.at(terminusNode).at(1).residualVolume < bundle->getByteLength()) {
+					// Make sure that the capacity-limiting contact is marked as depleted
+					vector<Contact *>::iterator hop;
+					for (hop = routeTable_.at(terminusNode).at(1).hops.begin();
+							hop != routeTable_.at(terminusNode).at(1).hops.end(); ++hop)
+						if (routeTable_.at(terminusNode).at(1).residualVolume == (*hop)->getResidualVolume())
+							(*hop)->setResidualVolume(0);
+
+					needRecalculation = true;
+				}
+
+				if (needRecalculation) {
+					// Suppress all contacts which connect this node with the entry node of
+					// the route found. All other neighbors should be considered
+					vector<int> suppressedContactIds;
+					for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
+							it != contactPlan_->getContacts()->end(); ++it)
+						if ((*it).getSourceEid() == eid_
+								&& (*it).getDestinationEid() == routeTable_.at(terminusNode).at(0).nextHop)
+							suppressedContactIds.push_back((*it).getId());
+					CgrRoute route2;
+					this->findNextBestRoute(suppressedContactIds, terminusNode, &route2);
+					routeTable_.at(terminusNode).at(1) = route2;
+
+					if (route2.nextHop != NO_ROUTE_FOUND)
+						tableEntriesCreated++;
+				}
 			}
 		}
-	}
+		if (routingType_.find("routeListType:perNeighborBestPath") != std::string::npos) {
+			//////////////////////////////////////////////////
+			// perNeighborBestPath: A best path per
+			// neighbor is calculated for a given destination. The entry
+			// is updated by the ending or depletion of a contact in the paths
+			//////////////////////////////////////////////////
 
-	// At this point routeTable must be updated
-	// no matter which routingType was chosen
+			// If this is the route list to this terminus is empty,
+			// create list with nodeNum_ EMPTY_ROUTE entries
+			if (routeTable_.at(terminusNode).empty()) {
+				routeTable_.at(terminusNode).resize(nodeNum_);
+				for (int r = 0; r < nodeNum_; r++) {
+					CgrRoute route;
+					route.nextHop = EMPTY_ROUTE;
+					route.arrivalTime = numeric_limits<double>::max(); // never chosen as best route
+					routeTable_.at(terminusNode).at(r) = route;
+				}
+			}
 
-	// Print route table for this terminus
-	this->printRouteTable(terminusNode);
+			// Explore list and recalculate if necessary
+			for (int r = 0; r < nodeNum_; r++) {
+				// NO_ROUTE_FOUND does not trigger a recalculation
+				if (routeTable_.at(terminusNode).at(r).nextHop == NO_ROUTE_FOUND)
+					continue;
 
-	// Filter routes
-	for (unsigned int r = 0; r < routeTable_.at(terminusNode).size(); r++) {
+				bool needRecalculation = false;
 
-		routeTable_.at(terminusNode).at(r).filtered = false;
+				// Empty route condition
+				if (routeTable_.at(terminusNode).at(r).nextHop == EMPTY_ROUTE)
+					needRecalculation = true;
 
-		// Filter those that should not be considered in
-		// the next best route determination calculation.
-		// Should have no effect when using dynamically updated
-		// route tables (perNeighborBestPath and oneBestPath),
-		// but on allPaths routing types.
+				// Due route condition
+				// todo
+				if (routeTable_.at(terminusNode).at(r).toTime <= simTime_)
+					needRecalculation = true;
 
-		// criteria 1) filter route: capacity is depleted
-		if (routeTable_.at(terminusNode).at(r).residualVolume < bundle->getByteLength()) {
-			routeTable_.at(terminusNode).at(r).filtered = true;
-			cout << "setting filtered true due to capacity to route next hop = "
-					<< routeTable_.at(terminusNode).at(r).nextHop << endl;
+				// Depleted route condition
+				if (routeTable_.at(terminusNode).at(r).residualVolume < bundle->getByteLength()) {
+					// Make sure that the capacity-limiting contact is marked as depleted
+					vector<Contact *>::iterator hop;
+					for (hop = routeTable_.at(terminusNode).at(r).hops.begin();
+							hop != routeTable_.at(terminusNode).at(r).hops.end(); ++hop)
+						if (routeTable_.at(terminusNode).at(r).residualVolume == (*hop)->getResidualVolume())
+							(*hop)->setResidualVolume(0);
+
+					needRecalculation = true;
+				}
+
+				if (needRecalculation) {
+
+					// Suppress all contacts which connect his node with other nodes
+					// different than the entry node of this route table entry (r)
+					vector<int> suppressedContactIds;
+					for (vector<Contact>::iterator it = contactPlan_->getContacts()->begin();
+							it != contactPlan_->getContacts()->end(); ++it)
+						if ((*it).getSourceEid() == eid_ && (*it).getDestinationEid() != r)
+							suppressedContactIds.push_back((*it).getId());
+
+					CgrRoute route;
+					this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
+					routeTable_.at(terminusNode).at(r) = route;
+
+					if (route.nextHop != NO_ROUTE_FOUND)
+						tableEntriesCreated++;
+				}
+			}
 		}
-		// criteria 2) filter route: due time is passed
-		if (routeTable_.at(terminusNode).at(r).toTime <= simTime_) {
-			routeTable_.at(terminusNode).at(r).filtered = true;
-			cout << "setting filtered true due to time to route next hop = "
-					<< routeTable_.at(terminusNode).at(r).nextHop << endl;
-		}
 
-		// Filter those that goes back to sender if such
-		// type of forwarding is forbidden as per .ini file
-		if (bundle->getReturnToSender() == false)
-			if (routeTable_.at(terminusNode).at(r).nextHop == bundle->getSenderEid()) {
+		// At this point routeTable must be updated
+		// no matter which routingType was chosen
+
+		// Print route table for this terminus
+		this->printRouteTable(terminusNode);
+
+		// Filter routes
+		for (unsigned int r = 0; r < routeTable_.at(terminusNode).size(); r++) {
+
+			routeTable_.at(terminusNode).at(r).filtered = false;
+
+			// Filter those that should not be considered in
+			// the next best route determination calculation.
+			// Should have no effect when using dynamically updated
+			// route tables (perNeighborBestPath and oneBestPath),
+			// but on allPaths routing types.
+
+			// criteria 1) filter route: capacity is depleted
+			if (routeTable_.at(terminusNode).at(r).residualVolume < bundle->getByteLength()) {
 				routeTable_.at(terminusNode).at(r).filtered = true;
-				cout << "setting filtered true due to not-return-to-sender to route next hop = "
+				cout << "setting filtered true due to capacity to route next hop = "
 						<< routeTable_.at(terminusNode).at(r).nextHop << endl;
 			}
-	}
+			// criteria 2) filter route: due time is passed
+			if (routeTable_.at(terminusNode).at(r).toTime <= simTime_) {
+				routeTable_.at(terminusNode).at(r).filtered = true;
+				cout << "setting filtered true due to time to route next hop = "
+						<< routeTable_.at(terminusNode).at(r).nextHop << endl;
+			}
 
-	if (!routeTable_.at(terminusNode).empty()) {
-		// Select best route
-		vector<CgrRoute>::iterator bestRoute;
-		bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(),
-				this->compareRoutes);
+			// Filter those that goes back to sender if such
+			// type of forwarding is forbidden as per .ini file
+			if (bundle->getReturnToSender() == false)
+				if (routeTable_.at(terminusNode).at(r).nextHop == bundle->getSenderEid()) {
+					routeTable_.at(terminusNode).at(r).filtered = true;
+					cout << "setting filtered true due to not-return-to-sender to route next hop = "
+							<< routeTable_.at(terminusNode).at(r).nextHop << endl;
+				}
+		}
 
-		// Save tableEntriesExplored metric. Notice that
-		// explored also includes filtered routes (i.e., pessimistic)
-		tableEntriesExplored = routeTable_.at(terminusNode).size();
+		if (!routeTable_.at(terminusNode).empty()) {
+			// Select best route
+			vector<CgrRoute>::iterator bestRoute;
+			bestRoute = min_element(routeTable_.at(terminusNode).begin(), routeTable_.at(terminusNode).end(),
+					this->compareRoutes);
 
-		bool enqueued = false;
+			// Save tableEntriesExplored metric. Notice that
+			// explored also includes filtered routes (i.e., pessimistic)
+			tableEntriesExplored = routeTable_.at(terminusNode).size();
 
-		if (routingType_.find("SDNenabled") != std::string::npos){
-			if (bundle->getSDNenabled()){
-				SdnRoute route = bundle->getSdnRouteForUpdate();
-				if (route.active){
+			//Control Section
+			bool enqueued = false;
+
+			if (routingType_.find("SDN:on") != std::string::npos){
+				if (bundle->getSDNenabled()){
+					SdnRoute route = bundle->getSdnRouteForUpdate();
+					if (route.active){
+						if(contactPlan_->getContactById(route.nextHop)->getSourceEid() == this->eid_){
+							sdr_->enqueueBundleToContact(bundle, route.nextHop);
+							route.hops.erase(route.hops.begin());
+							Contact* nH = *(route.hops.begin());
+							route.nextHop = nH->getId();
+							bundle->setNextHopEid(route.nextHop);
+							enqueued = true;
+						}
+					}
+				}
+
+				if (sdr_->getSdnRouteTable().at(bundle->getDestinationEid())->active  && !enqueued){
+					SdnRoute route = *(sdr_->getSdnRouteTable().at(bundle->getDestinationEid()));
 					if(contactPlan_->getContactById(route.nextHop)->getSourceEid() == this->eid_){
+						bundle->setSDNenabled(true);
+						bundle->setSdnRoute(route);
 						sdr_->enqueueBundleToContact(bundle, route.nextHop);
 						route.hops.erase(route.hops.begin());
 						Contact* nH = *(route.hops.begin());
 						route.nextHop = nH->getId();
+						bundle->setNextHopEid(route.nextHop);
 						enqueued = true;
 					}
 				}
 			}
 
-			if (sdr_->getSdnRouteTable().at(bundle->getDestinationEid())->active  && !enqueued){
-				SdnRoute route = *(sdr_->getSdnRouteTable().at(bundle->getDestinationEid()));
-				if(contactPlan_->getContactById(route.nextHop)->getSourceEid() == this->eid_){
-					bundle->setSDNenabled(true);
-					bundle->setSdnRoute(route);
-					sdr_->enqueueBundleToContact(bundle, route.nextHop);
-					route.hops.erase(route.hops.begin());
-					Contact* nH = *(route.hops.begin());
-					route.nextHop = nH->getId();
-					enqueued = true;
-				}
+			if(!enqueued){
+				// Enqueue bundle to route and update volumes
+				this->cgrEnqueue(bundle, &(*bestRoute));
 			}
-		}
+			//CONTROLLER AWARE, if a route from controller exists, use it
+		} else {
+			// Enqueue to limbo
+			bundle->setNextHopEid(NO_ROUTE_FOUND);
+			sdr_->enqueueBundleToContact(bundle, 0);
 
-		if(!enqueued){
-			// Enqueue bundle to route and update volumes
-			this->cgrEnqueue(bundle, &(*bestRoute));
+			cout << "*BestRoute not found (enqueing to limbo)" << endl;
 		}
-		//TODO: CONTROLLER AWARE, if a route from controller exists, use it
-	} else {
-		// Enqueue to limbo
-		bundle->setNextHopEid(NO_ROUTE_FOUND);
-		sdr_->enqueueBundleToContact(bundle, 0);
-
-		cout << "*BestRoute not found (enqueing to limbo)" << endl;
 	}
 }
 

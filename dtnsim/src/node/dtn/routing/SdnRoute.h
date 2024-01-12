@@ -14,9 +14,16 @@ using namespace std;
 typedef struct {
 	int bundleId; 				//Control bundle that generates the route
 	int terminusNode;			// Destination node
-	int nextHop; 				// Contact id of next hop
-	vector<Contact*> hops;		// contact list
+	int nextHop;
+	double fromTime; 			// Init time
+	double toTime;	 			// Due time (earliest contact end time among all)// Contact id of next hop
 	bool active = false;
+	float confidence;
+	double arrivalTime;
+	double maxVolume; 			// In Bytes
+	double residualVolume;		// In Bytes
+	bool filtered;
+	vector<Contact*> hops;		// contact list
 } SdnRoute;
 
 #endif /* SRC_NODE_DTN_ROUTING_SDNROUTE_H_ */

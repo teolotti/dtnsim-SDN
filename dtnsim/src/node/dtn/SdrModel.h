@@ -73,6 +73,26 @@ public:
 		this->sdnRouteTable = sdnRouteTable;
 	}
 
+	int getSize() const
+	{
+		return size_;
+	}
+
+	int getNodesNumber() const
+	{
+		return nodesNumber_;
+	}
+
+	int getIdController() const
+	{
+		return idController;
+	}
+
+	void setIdController(int idController)
+	{
+		this->idController = idController;
+	}
+
 private:
 
 	int size_;  		// Capacity of sdr in bytes
@@ -85,6 +105,7 @@ private:
 
 	//Control section
 	std::vector<SdnRoute*> sdnRouteTable;
+	int idController;
 
 	// Indexed queues where index can be used by routing algorithms
 	// to enqueue bundles to specific contacts or nodes. When there

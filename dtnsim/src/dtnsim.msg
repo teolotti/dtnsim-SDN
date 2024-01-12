@@ -65,6 +65,7 @@ packet BundlePkt{
 	    int targetEid;  //this id the destinationEid of the data bundle
 	    int bundleByteLength;
 	    int controlBundleNumber;
+	    double startBundleTimeControl;
         
         // Probabilistic routing meta-data
         int xmitCopiesCount;
@@ -93,6 +94,7 @@ message TrafficGeneratorMsg{
     int targetEid;
     int bundlesNumberControl;
     int sizeControl;
+    double startControl;
 };
 
 message ContactMsg{

@@ -43,6 +43,7 @@ class App : public cSimpleModule
         std::vector<double> startVec_;
         std::vector<int> bundlesNumberVec_control;
         std::vector<int> sizeVec_control;
+        std::vector<double> startVec_control;
 
         // Signal
         simsignal_t appBundleSent;
