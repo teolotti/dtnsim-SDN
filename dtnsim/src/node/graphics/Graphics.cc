@@ -31,7 +31,8 @@ void Graphics::initialize()
 		// Set circular position
 		posRadius = numNodes * 250 / (2 * (3.1415));
 		posAngle = 2 * (3.1415) / ((float) numNodes);
-		if(this->getParentModule()->par("controller")){
+		int controllerId = this->getParentModule()->par("controllerId");
+		if(controllerId == this->eid_){
 			posX = marginX + posRadius;
 			posY = marginY + posRadius;
 		} else {

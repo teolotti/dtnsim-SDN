@@ -318,36 +318,36 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 
 			vector<int> suppressedContactIds;
 			//suppress all contacts involving the controller node
+
 			vector<Contact> allContacts = *(contactPlan_->getContacts());
 			for(auto contact : allContacts){
 				if (contact.getSourceEid() == sdr_->getIdController() || contact.getDestinationEid() == sdr_->getIdController()){
 					suppressedContactIds.push_back(contact.getId());
 				}
+			}
+			while (1) {
+				CgrRoute route;
+				this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
 
-				while (1) {
-					CgrRoute route;
-					this->findNextBestRoute(suppressedContactIds, terminusNode, &route);
+				// If no more routes were found, stop search loop
+				if (route.nextHop == NO_ROUTE_FOUND)
+					break;
 
-					// If no more routes were found, stop search loop
-					if (route.nextHop == NO_ROUTE_FOUND)
-						break;
+				// Add new valid route to route table
+				routeTable_.at(terminusNode).push_back(route);
 
-					// Add new valid route to route table
-					routeTable_.at(terminusNode).push_back(route);
+				// Suppress the first ending contact of the last route found
+				double earliestEndingTime = numeric_limits<double>::max();
+				int earliestEndingContactId;
+				vector<Contact *>::iterator hop;
+				for (hop = route.hops.begin(); hop != route.hops.end(); ++hop)
+					if ((*hop)->getEnd() < earliestEndingTime) {
+						earliestEndingTime = (*hop)->getEnd();
+						earliestEndingContactId = (*hop)->getId();
+					}
+				suppressedContactIds.push_back(earliestEndingContactId);
 
-					// Suppress the first ending contact of the last route found
-					double earliestEndingTime = numeric_limits<double>::max();
-					int earliestEndingContactId;
-					vector<Contact *>::iterator hop;
-					for (hop = route.hops.begin(); hop != route.hops.end(); ++hop)
-						if ((*hop)->getEnd() < earliestEndingTime) {
-							earliestEndingTime = (*hop)->getEnd();
-							earliestEndingContactId = (*hop)->getId();
-						}
-					suppressedContactIds.push_back(earliestEndingContactId);
-
-					tableEntriesCreated++;
-				}
+				tableEntriesCreated++;
 			}
 		}
 		if (routingType_.find("routeListType:allPaths-firstDepleted") != std::string::npos) {
@@ -669,6 +669,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				}
 
 				if (sdr_->getSdnRouteTable().at(bundle->getDestinationEid())->active  && !enqueued){
+					cout << "CIAO" << eid_ << " " << bundle->getByteLength() << endl;
 					SdnRoute route = *(sdr_->getSdnRouteTable().at(bundle->getDestinationEid()));
 					if(contactPlan_->getContactById(route.nextHop)->getSourceEid() == this->eid_){
 						bundle->setSDNenabled(true);

@@ -22,6 +22,7 @@ simple App
         string targetEid = default("1"); //Destination of the data bundle
         string bundlesNumberControl = default("1"); // Number of Bundles to Control
         string sizeControl = default("1024"); // Controlled Bundles Size in Bytes
+        string controlStart = default("0");
         
         // Signals and Statistics
         @signal[appBundleSent];

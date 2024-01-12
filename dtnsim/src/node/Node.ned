@@ -11,6 +11,7 @@ module Node
     parameters:
         @display("i=device/satellite");
         string icon = default("satellite");
+        int controllerId;
        
     submodules:
         app: App {

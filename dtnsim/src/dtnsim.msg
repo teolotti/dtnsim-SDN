@@ -130,6 +130,7 @@ message SdnRouteTimeout{
 
 message OccupationTimeout{
 	int nodeEid;
+	int occupation;
 };
 
 

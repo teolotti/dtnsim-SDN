@@ -32,6 +32,9 @@
 #include <map>
 #include <set>
 #include <queue>
+#include <limits>
+#include <algorithm>
+#include <unordered_set>
 
 #include "src/node/MsgTypes.h"
 #include "src/Config.h"
@@ -105,7 +108,9 @@ protected:
 	virtual SdnRoute computeRoute(BundlePkt *bundle);
 	virtual void findNextBestSdnRoute(vector<int> suppressedContactIds, BundlePkt *bundle, SdnRoute * route);
 	virtual void checkCongestion(vector <int>* suppressedContactIds);
-	virtual SdnRoute selectBestRoute(vector<SdnRoute> routes);
+	virtual SdnRoute selectBestRoute(vector<SdnRoute> routes, BundlePkt* bundle);
+	static bool compareRoutes(SdnRoute i, SdnRoute j);
+	virtual void updateResidualVolume(SdnRoute* route, BundlePkt* bundle);
 
 private:
 
@@ -150,9 +155,9 @@ private:
 	std::vector<int>* nodesState;
 
 	typedef struct {
-			Contact * predecessor;		// Predecessor Contact
-			bool suppressed;			// Dijkstra exploration: suppressed
-		} Work;
+		Contact * predecessor;		// Predecessor Contact
+		bool suppressed;			// Dijkstra exploration: suppressed
+	} Work;
 
 	// Signals
 	simsignal_t dtnBundleSentToCom;

@@ -127,12 +127,15 @@ void Dtn::initialize(int stage)
 
 		int nodesNum = this->getParentModule()->getParentModule()->par("nodesNumber");
 		//Control Section
-		sdr_.setIdController(par("controllerId"));
-		if(this->eid_ == sdr_.getIdController()){
+		int controllerId = this->getParentModule()->par("controllerId");
+		sdr_.setIdController(controllerId);
+		if(this->eid_ == controllerId){
 			controller = true;
 			nodesState = new std::vector<int>(nodesNum+1);
 		}
-		std::vector<SdnRoute*> sdnTable = std::vector<SdnRoute*>(nodesNum+1);
+		SdnRoute emptyRoute;
+		emptyRoute.active = false;
+		std::vector<SdnRoute*> sdnTable(nodesNum+1, &emptyRoute);
 		sdr_.setSdnRouteTable(sdnTable);
 
 
@@ -608,12 +611,22 @@ void Dtn::handleMessage(cMessage *msg)
 	else if (msg->getKind() == SDN_ROUTE_TIMEOUT)
 	{
 		SdnRouteTimeout *sdnRouteTimeout = check_and_cast<SdnRouteTimeout*>(msg);
+
 		int destId = sdnRouteTimeout->getDestEid();
 		if ((sdr_.getSdnRouteTable().at(destId))->bundleId == sdnRouteTimeout->getBundleId())
 			sdr_.getSdnRouteTable().at(destId)->active = false;
 		//else
 		//	Route already overwritten by another control bundle
 		delete sdnRouteTimeout;
+	}
+	else if (msg->getKind() == OCCUPATION_TIMEOUT)
+	{
+		OccupationTimeout *occTimeout = check_and_cast<OccupationTimeout*>(msg);
+
+		if(nodesState->at(occTimeout->getNodeEid())<0)
+			nodesState->at(occTimeout->getNodeEid()) -= occTimeout->getOccupation();
+
+		delete occTimeout;
 	}
 }
 
@@ -654,7 +667,7 @@ SdnRoute Dtn::computeRoute(BundlePkt *bundle){
 		suppressedContactIds.push_back(earliestEndingContactId);
 	}
 
-	return selectBestRoute(routes);
+	return selectBestRoute(routes, bundle);
 
 
 }
@@ -674,8 +687,113 @@ void Dtn::checkCongestion(vector<int>* suppressedContactIds){
 
 //DA FARE/CONTROLLARE: SELECT BEST ROUTE, MESSAGGIO/TIMER PER CONGESTIONE, CONTROLLO RESIDUAL VOLUME
 
-SdnRoute Dtn::selectBestRoute(vector<SdnRoute> routes){
+SdnRoute Dtn::selectBestRoute(vector<SdnRoute> routes, BundlePkt* bundle){
+	// Filter routes
+	for (unsigned int r = 0; r < routes.size(); r++) {
 
+		routes.at(r).filtered = false;
+
+		// Filter those that should not be considered in
+		// the next best route determination calculation.
+
+		// criteria 1) filter route: capacity is depleted
+		if (routes.at(r).residualVolume < bundle->getByteLength()) {
+			routes.at(r).filtered = true;
+			cout << "setting filtered true due to capacity to route next hop = "
+					<< routes.at(r).nextHop << endl;
+		}
+		// criteria 2) filter route: due time is passed
+		if (routes.at(r).toTime <= simTime().dbl()) {
+			routes.at(r).filtered = true;
+			cout << "setting filtered true due to time to route next hop = "
+					<< routes.at(r).nextHop << endl;
+		}
+
+		// Filter those that goes back to sender if such
+		// type of forwarding is forbidden as per .ini file
+		if (bundle->getReturnToSender() == false)
+			if (routes.at(r).nextHop == bundle->getSenderEid()) {
+				routes.at(r).filtered = true;
+				cout << "setting filtered true due to not-return-to-sender to route next hop = "
+						<< routes.at(r).nextHop << endl;
+			}
+	}
+
+	if (!routes.empty()) {
+		// Select best route
+		vector<SdnRoute>::iterator bestRoute;
+		bestRoute = min_element(routes.begin(), routes.end(), this->compareRoutes);
+		for(auto contact : bestRoute->hops){
+			if(contact->getDestinationEid() != bestRoute->terminusNode){
+				int occupation = (bundle->getBundleByteLength())*(bundle->getControlBundleNumber());
+				nodesState->at(contact->getDestinationEid()) += occupation;
+				OccupationTimeout* tmsg = new OccupationTimeout("Occupation Timeout");
+				tmsg->setKind(OCCUPATION_TIMEOUT);
+				tmsg->setNodeEid(contact->getDestinationEid());
+				tmsg->setOccupation(occupation);
+				scheduleAfter(3, tmsg); //timer per la durata dell'ocupazione di un nodo da parte di un bundle, quando ricevo questo messaggio diminuisco di 1 l'occupazione del nodo
+			}
+		}
+		this->updateResidualVolume(&(*bestRoute), bundle);
+		bestRoute->active = true;
+		bundle->setSDNenabled(true);
+		return *bestRoute;
+	} else {
+		SdnRoute emptyRoute;
+		emptyRoute.active = false;
+		bundle->setSDNenabled(false);
+		bundle->setNextHopEid(EMPTY_ROUTE);
+		cout << "Sdn Route not found; delegated to cgr" << endl;
+		return emptyRoute;
+	}
+}
+
+void Dtn::updateResidualVolume(SdnRoute* route, BundlePkt* bundle){
+	for (vector<Contact *>::iterator hop = route->hops.begin(); hop != route->hops.end(); ++hop) {
+		(*hop)->setResidualVolume((*hop)->getResidualVolume() - bundle->getByteLength());
+
+		// This should never happen. We'ĺl temporarily leave
+		// this exit code 1 here to detect potential issues
+		// with the volume booking algorithms
+		if ((*hop)->getResidualVolume() < 0)
+			exit(1);
+	}
+}
+
+bool Dtn::compareRoutes(SdnRoute i, SdnRoute j) {
+
+	// If one is filtered, the other is the best
+	if (i.filtered && !j.filtered)
+		return false;
+	if (!i.filtered && j.filtered)
+		return true;
+
+	// If both are not filtered, then compare criteria,
+	// If both are filtered, return any of them.
+
+	// criteria 1) lowest arrival time
+	if (i.arrivalTime < j.arrivalTime)
+		return true;
+	else if (i.arrivalTime > j.arrivalTime)
+		return false;
+	else {
+		// if equal, criteria 2) lowest hop count
+		if (i.hops.size() < j.hops.size())
+			return true;
+		else if (i.hops.size() > j.hops.size())
+			return false;
+		else {
+			// if equal, criteria 3) larger residual volume
+			if (i.residualVolume > j.residualVolume)
+				return true;
+			else if (i.residualVolume < j.residualVolume)
+				return false;
+			else {
+				// if equal, first is better.
+				return true;
+			}
+		}
+	}
 }
 
 void Dtn::findNextBestSdnRoute(vector<int> suppressedContactIds, BundlePkt* bundle, SdnRoute * route) {

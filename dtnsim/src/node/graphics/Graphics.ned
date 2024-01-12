@@ -6,7 +6,7 @@ simple Graphics
         @display("i=block/network2");
         
         bool enable = default(true);
-                      
+                    
     gates:
 }
 

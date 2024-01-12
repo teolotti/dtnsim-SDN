@@ -24,6 +24,7 @@ simple Dtn
 		double beta = default(0.9);
 		double gamma = default(0.999);
 		double delta = default(0.01);
+		
         
         // Custody
         int custodyReportByteSize = default(20);
