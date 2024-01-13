@@ -133,10 +133,12 @@ void Dtn::initialize(int stage)
 			controller = true;
 			nodesState = new std::vector<int>(nodesNum+1);
 		}
-		SdnRoute emptyRoute;
-		emptyRoute.active = false;
-		sdnTable = std::vector<SdnRoute*>(nodesNum+1, &emptyRoute);
-		sdr_.setSdnRouteTable(&sdnTable);
+		std::vector<SdnRoute*> sdnTable(nodesNum + 1);
+		for (int i = 0; i <= nodesNum; ++i) {
+		    sdnTable[i] = new SdnRoute();
+		    sdnTable[i]->active = false;
+		}
+		sdr_.setSdnRouteTable(sdnTable);
 
 
 
@@ -388,17 +390,15 @@ void Dtn::handleMessage(cMessage *msg)
 				if (msg->arrivedOn("gateToApp$i"))
 					emit(dtnBundleReceivedFromApp, true);
 			} else {
-				SdnRoute tempRoute = bundle->getSdnRoute();
-				sdr_.getSdnRouteTable()->at(tempRoute.terminusNode) = &tempRoute;
+				sdr_.getSdnRouteTable().at(bundle->getSdnRoute().terminusNode) = &(bundle->getSdnRouteForUpdate());
 				SdnRouteTimeout* tMsg = new SdnRouteTimeout("sdnRouteTimeout");
 				tMsg->setKind(SDN_ROUTE_TIMEOUT);
 				tMsg->setBundleId(bundle->getBundleId());
-				tMsg->setDestEid(tempRoute.terminusNode);
+				tMsg->setDestEid(bundle->getSdnRoute().terminusNode);
 				scheduleAfter(3, tMsg); //timer per la durata della modifica, messaggio di tipo SdnRouteTimeout, all'arrivo del messaggio di quel tipo (associare anche il Kind) eliminare entri della table
 			}
 
 		}
-
 
 
 		dispatchBundle(bundle);
@@ -613,8 +613,8 @@ void Dtn::handleMessage(cMessage *msg)
 		SdnRouteTimeout *sdnRouteTimeout = check_and_cast<SdnRouteTimeout*>(msg);
 
 		int destId = sdnRouteTimeout->getDestEid();
-		if ((sdr_.getSdnRouteTable()->at(destId))->bundleId == sdnRouteTimeout->getBundleId())
-			sdr_.getSdnRouteTable()->at(destId)->active = false;
+		if ((sdr_.getSdnRouteTable().at(destId))->bundleId == sdnRouteTimeout->getBundleId())
+			sdr_.getSdnRouteTable().at(destId)->active = false;
 		//else
 		//	Route already overwritten by another control bundle
 		delete sdnRouteTimeout;
