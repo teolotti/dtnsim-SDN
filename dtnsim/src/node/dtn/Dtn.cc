@@ -738,6 +738,7 @@ SdnRoute Dtn::selectBestRoute(vector<SdnRoute> routes, BundlePkt* bundle){
 		}
 		this->updateResidualVolume(&(*bestRoute), bundle);
 		bestRoute->active = true;
+		bestRoute->bundleId = bundle->getBundleId();
 		bundle->setSDNenabled(true);
 		return *bestRoute;
 	} else {

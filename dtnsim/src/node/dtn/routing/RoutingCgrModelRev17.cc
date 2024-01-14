@@ -657,11 +657,18 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				if (bundle->getSDNenabled()){
 					SdnRoute route = bundle->getSdnRouteForUpdate();
 					if (route.active){
-						if(contactPlan_->getContactById(route.nextHop)->getSourceEid() == this->eid_){
-							sdr_->enqueueBundleToContact(bundle, route.nextHop);
+						Contact* nextContact;
+						for (const auto& contact : route.hops){
+							if(contact->getDestinationEid() == route.nextHop){
+								nextContact = contact;
+								break;
+							}
+						}
+						if(nextContact->getSourceEid() == this->eid_){
+							sdr_->enqueueBundleToContact(bundle, nextContact->getId());
 							route.hops.erase(route.hops.begin());
-							Contact* nH = *(route.hops.begin());\
-							route.nextHop = nH->getId();
+							Contact* nH = *(route.hops.begin());
+							route.nextHop = nH->getDestinationEid();
 							bundle->setNextHopEid(route.nextHop);
 							enqueued = true;
 						}
@@ -669,15 +676,22 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 				}
 
 				if (sdr_->getSdnRouteTable().at(bundle->getDestinationEid())->active  && !enqueued){
-					SdnRoute route = *(sdr_->getSdnRouteTable().at(bundle->getDestinationEid()));
-					if(contactPlan_->getContactById(route.nextHop)->getSourceEid() == this->eid_){
+					SdnRoute* route = sdr_->getSdnRouteTable().at(bundle->getDestinationEid());
+					Contact* nextContact;
+						for (const auto& contact : route->hops){
+							if(contact->getDestinationEid() == route->nextHop){
+								nextContact = contact;
+								break;
+							}
+						}
+					if(nextContact->getSourceEid() == this->eid_){
 						bundle->setSDNenabled(true);
-						bundle->setSdnRoute(route);
-						sdr_->enqueueBundleToContact(bundle, route.nextHop);
-						route.hops.erase(route.hops.begin());
-						Contact* nH = *(route.hops.begin());
-						route.nextHop = nH->getId();
-						bundle->setNextHopEid(contactPlan_->getContactById(route.nextHop)->getDestinationEid());
+						sdr_->enqueueBundleToContact(bundle, nextContact->getId());
+						route->hops.erase(route->hops.begin());
+						Contact* nH = *(route->hops.begin());
+						route->nextHop = nH->getDestinationEid();
+						bundle->setSdnRoute(*(route));
+						bundle->setNextHopEid(nextContact->getDestinationEid());
 						enqueued = true;
 					}
 				}
