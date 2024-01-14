@@ -14,7 +14,7 @@ using namespace std;
 typedef struct {
 	int bundleId; 				//Control bundle that generates the route
 	int terminusNode;			// Destination node
-	int nextHop;
+	int nextHop;				//contact id of the next hop
 	double fromTime; 			// Init time
 	double toTime;	 			// Due time (earliest contact end time among all)// Contact id of next hop
 	bool active = false;

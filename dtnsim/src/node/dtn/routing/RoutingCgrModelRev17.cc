@@ -654,14 +654,13 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 			bool enqueued = false;
 
 			if (routingType_.find("SDN:on") != std::string::npos){
-				cout << "CIAO" << eid_ << " " << bundle->getId() << endl;
 				if (bundle->getSDNenabled()){
 					SdnRoute route = bundle->getSdnRouteForUpdate();
 					if (route.active){
 						if(contactPlan_->getContactById(route.nextHop)->getSourceEid() == this->eid_){
 							sdr_->enqueueBundleToContact(bundle, route.nextHop);
 							route.hops.erase(route.hops.begin());
-							Contact* nH = *(route.hops.begin());
+							Contact* nH = *(route.hops.begin());\
 							route.nextHop = nH->getId();
 							bundle->setNextHopEid(route.nextHop);
 							enqueued = true;
@@ -678,7 +677,7 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 						route.hops.erase(route.hops.begin());
 						Contact* nH = *(route.hops.begin());
 						route.nextHop = nH->getId();
-						bundle->setNextHopEid(route.nextHop);
+						bundle->setNextHopEid(contactPlan_->getContactById(route.nextHop)->getDestinationEid());
 						enqueued = true;
 					}
 				}

@@ -390,7 +390,8 @@ void Dtn::handleMessage(cMessage *msg)
 				if (msg->arrivedOn("gateToApp$i"))
 					emit(dtnBundleReceivedFromApp, true);
 			} else {
-				sdr_.getSdnRouteTable().at(bundle->getSdnRoute().terminusNode) = &(bundle->getSdnRouteForUpdate());
+				delete sdr_.getSdnRouteTable().at(bundle->getSdnRoute().terminusNode);
+				sdr_.getSdnRouteTable().at(bundle->getSdnRoute().terminusNode) = new SdnRoute(bundle->getSdnRouteForUpdate());
 				SdnRouteTimeout* tMsg = new SdnRouteTimeout("sdnRouteTimeout");
 				tMsg->setKind(SDN_ROUTE_TIMEOUT);
 				tMsg->setBundleId(bundle->getBundleId());
@@ -615,6 +616,7 @@ void Dtn::handleMessage(cMessage *msg)
 		int destId = sdnRouteTimeout->getDestEid();
 		if ((sdr_.getSdnRouteTable().at(destId))->bundleId == sdnRouteTimeout->getBundleId())
 			sdr_.getSdnRouteTable().at(destId)->active = false;
+
 		//else
 		//	Route already overwritten by another control bundle
 		delete sdnRouteTimeout;
