@@ -625,8 +625,10 @@ void Dtn::handleMessage(cMessage *msg)
 	{
 		OccupationTimeout *occTimeout = check_and_cast<OccupationTimeout*>(msg);
 
+		nodesState->at(occTimeout->getNodeEid()) -= occTimeout->getOccupation();
+
 		if(nodesState->at(occTimeout->getNodeEid())<0)
-			nodesState->at(occTimeout->getNodeEid()) -= occTimeout->getOccupation();
+			nodesState->at(occTimeout->getNodeEid()) = 0;
 
 		delete occTimeout;
 	}
@@ -677,7 +679,7 @@ SdnRoute Dtn::computeRoute(BundlePkt *bundle){
 void Dtn::checkCongestion(vector<int>* suppressedContactIds){
 	int i = 0;
 	for(auto nodeOcc : *nodesState){
-		if (i>0 && nodeOcc/sdr_.getSize()>0.75){
+		if (i>0 && (double)nodeOcc/(double)sdr_.getSize()>0.75){
 			for(auto contact : contactPlan_.getContactsBySrc(i))
 				suppressedContactIds->push_back(contact.getId());
 			for(auto contact : contactPlan_.getContactsByDst(i))
@@ -733,7 +735,7 @@ SdnRoute Dtn::selectBestRoute(vector<SdnRoute> routes, BundlePkt* bundle){
 				tmsg->setKind(OCCUPATION_TIMEOUT);
 				tmsg->setNodeEid(contact->getDestinationEid());
 				tmsg->setOccupation(occupation);
-				scheduleAfter(3, tmsg); //timer per la durata dell'ocupazione di un nodo da parte di un bundle, quando ricevo questo messaggio diminuisco di 1 l'occupazione del nodo
+				scheduleAfter(2, tmsg); //timer per la durata dell'ocupazione di un nodo da parte di un bundle, quando ricevo questo messaggio diminuisco di 1 l'occupazione del nodo
 			}
 		}
 		this->updateResidualVolume(&(*bestRoute), bundle);
