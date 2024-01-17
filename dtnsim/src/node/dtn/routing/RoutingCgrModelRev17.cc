@@ -665,12 +665,12 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 							}
 						}
 						if(nextContact->getSourceEid() == this->eid_){
-							sdr_->enqueueBundleToContact(bundle, nextContact->getId());
 							route.hops.erase(route.hops.begin());
 							Contact* nH = *(route.hops.begin());
 							route.nextHop = nH->getDestinationEid();
 							bundle->setNextHopEid(route.nextHop);
 							enqueued = true;
+							sdr_->enqueueBundleToContact(bundle, nextContact->getId());
 						}
 					}
 				}
@@ -686,13 +686,13 @@ void RoutingCgrModelRev17::cgrForward(BundlePkt * bundle) {
 						}
 					if(nextContact->getSourceEid() == this->eid_){
 						bundle->setSDNenabled(true);
-						sdr_->enqueueBundleToContact(bundle, nextContact->getId());
 						route->hops.erase(route->hops.begin());
 						Contact* nH = *(route->hops.begin());
 						route->nextHop = nH->getDestinationEid();
 						bundle->setSdnRoute(*(route));
 						bundle->setNextHopEid(nextContact->getDestinationEid());
 						enqueued = true;
+						sdr_->enqueueBundleToContact(bundle, nextContact->getId());
 					}
 				}
 			}

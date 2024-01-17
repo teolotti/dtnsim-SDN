@@ -735,7 +735,9 @@ SdnRoute Dtn::selectBestRoute(vector<SdnRoute> routes, BundlePkt* bundle){
 				tmsg->setKind(OCCUPATION_TIMEOUT);
 				tmsg->setNodeEid(contact->getDestinationEid());
 				tmsg->setOccupation(occupation);
-				scheduleAfter(2, tmsg); //timer per la durata dell'ocupazione di un nodo da parte di un bundle, quando ricevo questo messaggio diminuisco di 1 l'occupazione del nodo
+				scheduleAfter(2, tmsg); //timer per la durata dell'ocupazione di un nodo da parte di un bundle,
+				//quando ricevo questo messaggio diminuisco di 1 l'occupazione del nodo
+				//bundle->getArrivaltime()????
 			}
 		}
 		this->updateResidualVolume(&(*bestRoute), bundle);
