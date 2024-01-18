@@ -107,7 +107,7 @@ protected:
 	//control section
 	virtual SdnRoute computeRoute(BundlePkt *bundle);
 	virtual void findNextBestSdnRoute(vector<int> suppressedContactIds, BundlePkt *bundle, SdnRoute * route);
-	virtual void checkCongestion(vector <int>* suppressedContactIds);
+	virtual void checkCongestion(vector <int>* suppressedContactIds, BundlePkt* bundle);
 	virtual SdnRoute selectBestRoute(vector<SdnRoute> routes, BundlePkt* bundle);
 	static bool compareRoutes(SdnRoute i, SdnRoute j);
 	virtual void updateResidualVolume(SdnRoute* route, BundlePkt* bundle);

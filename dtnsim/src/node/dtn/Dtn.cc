@@ -638,7 +638,7 @@ SdnRoute Dtn::computeRoute(BundlePkt *bundle){
 
 	vector<int> suppressedContactIds;
 	//add to suppressedContacts the ones congested
-	checkCongestion(&suppressedContactIds);
+	checkCongestion(&suppressedContactIds, bundle);
 	//add to suppressedContacts the ones involving controller node
 	vector<Contact> allContacts = *(contactPlan_.getContacts());
 	for(auto contact : allContacts){
@@ -676,10 +676,10 @@ SdnRoute Dtn::computeRoute(BundlePkt *bundle){
 
 }
 
-void Dtn::checkCongestion(vector<int>* suppressedContactIds){
+void Dtn::checkCongestion(vector<int>* suppressedContactIds, BundlePkt* bundle){
 	int i = 0;
 	for(auto nodeOcc : *nodesState){
-		if (i>0 && (double)nodeOcc/(double)sdr_.getSize()>0.75){
+		if (i>0 && ((double)nodeOcc/(double)sdr_.getSize()>0.75 || (sdr_.getSize()-nodeOcc) < bundle->getBundleByteLength()*bundle->getControlBundleNumber())){
 			for(auto contact : contactPlan_.getContactsBySrc(i))
 				suppressedContactIds->push_back(contact.getId());
 			for(auto contact : contactPlan_.getContactsByDst(i))
