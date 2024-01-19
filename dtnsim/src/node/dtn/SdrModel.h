@@ -93,6 +93,16 @@ public:
 		this->sdnRouteTable = sdnRouteTable;
 	}
 
+	int getBytesStored() const
+	{
+		return bytesStored_;
+	}
+
+	void setBytesStored(int bytesStored)
+	{
+		bytesStored_ = bytesStored;
+	}
+
 private:
 
 	int size_;  		// Capacity of sdr in bytes

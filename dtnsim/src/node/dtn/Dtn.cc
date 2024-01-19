@@ -128,17 +128,19 @@ void Dtn::initialize(int stage)
 		int nodesNum = this->getParentModule()->getParentModule()->par("nodesNumber");
 		//Control Section
 		int controllerId = this->getParentModule()->par("controllerId");
-		sdr_.setIdController(controllerId);
-		if(this->eid_ == controllerId){
-			controller = true;
-			nodesState = new std::vector<int>(nodesNum+1);
+		if (controllerId != 0){
+			sdr_.setIdController(controllerId);
+			if(this->eid_ == controllerId){
+				controller = true;
+				nodesState = new std::vector<int>(nodesNum);
+			}
+			std::vector<SdnRoute*> sdnTable(nodesNum);
+			for (int i = 0; i <= nodesNum; ++i) {
+			    sdnTable[i] = new SdnRoute();
+			    sdnTable[i]->active = false;
+			}
+			sdr_.setSdnRouteTable(sdnTable);
 		}
-		std::vector<SdnRoute*> sdnTable(nodesNum + 1);
-		for (int i = 0; i <= nodesNum; ++i) {
-		    sdnTable[i] = new SdnRoute();
-		    sdnTable[i]->active = false;
-		}
-		sdr_.setSdnRouteTable(sdnTable);
 
 
 
@@ -168,6 +170,19 @@ void Dtn::initialize(int stage)
 		this->sdr_.setSize(par("sdrSize")); //capacity in bytes, default is 0(infinite), change in .ini file
 		this->sdr_.setNodesNumber(this->getParentModule()->getParentModule()->par("nodesNumber"));
 		this->sdr_.setContactPlan(&contactTopology_);
+		//Congestion Section
+		int initOccupation = par("sdrInitOccup");
+		if(!controller){
+			int randOcc = par("sdrInitOffset");
+			initOccupation += randOcc;
+			this->sdr_.setBytesStored(initOccupation);
+		} else if(controllerId != 0){
+			for(int i=1; i<nodesNum; i++){
+				int randOcc = this->getParentModule()->getParentModule()->getSubmodule("node", i)->getSubmodule("dtn")->par("sdrInitOffset");
+				nodesState->at(i) = initOccupation + randOcc;
+			}
+		}
+
 
 		if (routeString.compare("direct") == 0)
 			routing = new RoutingDirect(eid_, &sdr_, &contactPlan_);
@@ -535,7 +550,7 @@ void Dtn::handleMessage(cMessage *msg)
 					bundle->setXmitCopiesCount(0);
 
 					//cout<<"-----> sending bundle to node "<<bundle->getNextHopEid()<<endl;
-					send(bundle, "gateToCom$o");
+					sendDelayed(bundle, (double)sdr_.getBytesStored()/12500, "gateToCom$o");
 
 					if (saveBundleMap_)
 						bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
@@ -727,15 +742,17 @@ SdnRoute Dtn::selectBestRoute(vector<SdnRoute> routes, BundlePkt* bundle){
 		// Select best route
 		vector<SdnRoute>::iterator bestRoute;
 		bestRoute = min_element(routes.begin(), routes.end(), this->compareRoutes);
+		double routeOcc=0;
 		for(auto contact : bestRoute->hops){
 			if(contact->getDestinationEid() != bestRoute->terminusNode){
 				int occupation = (bundle->getBundleByteLength())*(bundle->getControlBundleNumber());
 				nodesState->at(contact->getDestinationEid()) += occupation;
+				routeOcc += (double)nodesState->at(contact->getDestinationEid());
 				OccupationTimeout* tmsg = new OccupationTimeout("Occupation Timeout");
 				tmsg->setKind(OCCUPATION_TIMEOUT);
 				tmsg->setNodeEid(contact->getDestinationEid());
 				tmsg->setOccupation(occupation);
-				scheduleAfter(2, tmsg); //timer per la durata dell'ocupazione di un nodo da parte di un bundle,
+				scheduleAfter(routeOcc/12500, tmsg); //timer per la durata dell'ocupazione di un nodo da parte di un bundle,
 				//quando ricevo questo messaggio diminuisco di 1 l'occupazione del nodo
 				//bundle->getArrivaltime()????
 			}
