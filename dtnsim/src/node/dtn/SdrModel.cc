@@ -353,7 +353,7 @@ void SdrModel::popNextBundleForContact(int contactId)
 		perContactBundleQueue_.erase(contactId);
 
 	bundlesNumber_--;
-	bytesStored_ -= size;
+	//bytesStored_ -= size;
 	notify();
 }
 

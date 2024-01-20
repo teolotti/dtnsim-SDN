@@ -132,9 +132,9 @@ void Dtn::initialize(int stage)
 			sdr_.setIdController(controllerId);
 			if(this->eid_ == controllerId){
 				controller = true;
-				nodesState = new std::vector<int>(nodesNum);
+				nodesState = new std::vector<int>(nodesNum+1);
 			}
-			std::vector<SdnRoute*> sdnTable(nodesNum);
+			std::vector<SdnRoute*> sdnTable(nodesNum+1);
 			for (int i = 0; i <= nodesNum; ++i) {
 			    sdnTable[i] = new SdnRoute();
 			    sdnTable[i]->active = false;
@@ -535,7 +535,7 @@ void Dtn::handleMessage(cMessage *msg)
 
 				// Calculate data rate and Tx duration
 				double dataRate = contactTopology_.getContactById(contactId)->getDataRate();
-				double txDuration = (double) bundle->getByteLength() / dataRate;
+				double txDuration = (double) bundle->getByteLength()/ dataRate; //changed
 				double linkDelay = contactTopology_.getRangeBySrcDst(eid_, neighborEid);
 
 				Contact *contact = contactTopology_.getContactById(contactId);
@@ -550,7 +550,11 @@ void Dtn::handleMessage(cMessage *msg)
 					bundle->setXmitCopiesCount(0);
 
 					//cout<<"-----> sending bundle to node "<<bundle->getNextHopEid()<<endl;
-					sendDelayed(bundle, (double)sdr_.getBytesStored()/12500, "gateToCom$o");
+					sendDelayed(bundle, (double)sdr_.getBytesStoredInSdr()/dataRate, "gateToCom$o");
+					PopBundle *popBundle = new PopBundle("popBundle", POP_BUNDLE);
+					popBundle->setSize(bundle->getByteLength());
+					scheduleAfter((double)sdr_.getBytesStoredInSdr()/dataRate, popBundle);
+
 
 					if (saveBundleMap_)
 						bundleMap_ << simTime() << "," << eid_ << "," << neighborEid << "," << bundle->getSourceEid() << "," << bundle->getDestinationEid() << "," << bundle->getBitLength() << "," << txDuration << endl;
@@ -647,6 +651,12 @@ void Dtn::handleMessage(cMessage *msg)
 
 		delete occTimeout;
 	}
+	else if (msg->getKind() == POP_BUNDLE)
+	{
+		PopBundle *popBundle = check_and_cast<PopBundle*>(msg);
+
+		sdr_.setBytesStored(sdr_.getBytesStoredInSdr()-popBundle->getSize());
+	}
 }
 
 SdnRoute Dtn::computeRoute(BundlePkt *bundle){
@@ -694,7 +704,7 @@ SdnRoute Dtn::computeRoute(BundlePkt *bundle){
 void Dtn::checkCongestion(vector<int>* suppressedContactIds, BundlePkt* bundle){
 	int i = 0;
 	for(auto nodeOcc : *nodesState){
-		if (i>0 && ((double)nodeOcc/(double)sdr_.getSize()>0.75 || (sdr_.getSize()-nodeOcc) < bundle->getBundleByteLength()*bundle->getControlBundleNumber())){
+		if (i>0 && i!=bundle->getSourceEid() && i!=bundle->getDestinationEid() && ((double)nodeOcc/(double)sdr_.getSize()>0.75 || (sdr_.getSize()-nodeOcc) < bundle->getBundleByteLength()*bundle->getControlBundleNumber())){
 			for(auto contact : contactPlan_.getContactsBySrc(i))
 				suppressedContactIds->push_back(contact.getId());
 			for(auto contact : contactPlan_.getContactsByDst(i))
@@ -752,7 +762,7 @@ SdnRoute Dtn::selectBestRoute(vector<SdnRoute> routes, BundlePkt* bundle){
 				tmsg->setKind(OCCUPATION_TIMEOUT);
 				tmsg->setNodeEid(contact->getDestinationEid());
 				tmsg->setOccupation(occupation);
-				scheduleAfter(routeOcc/12500, tmsg); //timer per la durata dell'ocupazione di un nodo da parte di un bundle,
+				scheduleAfter(routeOcc/contact->getRange(), tmsg); //timer per la durata dell'ocupazione di un nodo da parte di un bundle,
 				//quando ricevo questo messaggio diminuisco di 1 l'occupazione del nodo
 				//bundle->getArrivaltime()????
 			}

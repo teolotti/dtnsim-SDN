@@ -48,7 +48,7 @@
 					</folderInfo>
 					<fileInfo id="org.omnetpp.cdt.gnu.config.debug.79163353.310554060" name="dtnsim_demo.ini" rcbsApplicability="disable" resourcePath="simulations/dtnsim_demo/dtnsim_demo.ini" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry excluding="src/node/dtn/routing/unibocgr/dtnme|tests|dtnme" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="tests|dtnme|src/node/dtn/routing/unibocgr/dtnme" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -101,7 +101,7 @@
 					</folderInfo>
 					<fileInfo id="org.omnetpp.cdt.gnu.config.release.1611026188.92727951" name="dtnsim_demo.ini" rcbsApplicability="disable" resourcePath="simulations/dtnsim_demo/dtnsim_demo.ini" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry excluding="src/node/dtn/routing/unibocgr/dtnme|tests|dtnme" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="tests|dtnme|src/node/dtn/routing/unibocgr/dtnme" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

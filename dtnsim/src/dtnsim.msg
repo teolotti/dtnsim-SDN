@@ -133,4 +133,8 @@ message OccupationTimeout{
 	int occupation;
 };
 
+message PopBundle{
+	int size;
+};
+
 
