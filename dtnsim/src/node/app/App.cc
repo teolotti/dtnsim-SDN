@@ -130,11 +130,12 @@ void App::initialize()
 	}
 	//@NANDO: END DUMMY CODE FOR GENERATE TRAFFIC
 
-	// Register signals
 	appBundleSent = registerSignal("appBundleSent");
 	appBundleReceived = registerSignal("appBundleReceived");
 	appBundleReceivedHops = registerSignal("appBundleReceivedHops");
 	appBundleReceivedDelay = registerSignal("appBundleReceivedDelay");
+
+	// Register signals
 
 	//appBundleArrivalTime = registerSignal("appBundleArrivalTime");
 }
@@ -193,6 +194,7 @@ void App::handleMessage(cMessage *msg)
 			scheduleAt(simTime() + trafficGenMsg->getInterval(), msg);
 
 		send(bundle, "gateToDtn$o");
+
 		emit(appBundleSent, true);
 
 		return;
@@ -204,6 +206,7 @@ void App::handleMessage(cMessage *msg)
 
 		if (this->eid_ == destinationEid)
 		{
+
 			emit(appBundleReceived, true);
 			emit(appBundleReceivedHops, bundle->getHopCount());
 			emit(appBundleReceivedDelay, simTime() - bundle->getCreationTimestamp());
