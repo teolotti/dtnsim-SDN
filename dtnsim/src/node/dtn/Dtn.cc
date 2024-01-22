@@ -657,6 +657,8 @@ void Dtn::handleMessage(cMessage *msg)
 		PopBundle *popBundle = check_and_cast<PopBundle*>(msg);
 
 		sdr_.setBytesStored(sdr_.getBytesStoredInSdr()-popBundle->getSize());
+
+		delete popBundle;
 	}
 }
 
