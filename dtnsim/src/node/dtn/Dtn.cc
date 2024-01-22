@@ -1,5 +1,6 @@
 #include "src/node/dtn/Dtn.h"
 #include "src/node/app/App.h"
+#include <cmath>
 
 Define_Module(Dtn);
 
@@ -752,20 +753,19 @@ SdnRoute Dtn::selectBestRoute(vector<SdnRoute> routes, BundlePkt* bundle){
 		// Select best route
 		vector<SdnRoute>::iterator bestRoute;
 		bestRoute = min_element(routes.begin(), routes.end(), this->compareRoutes);
-		double routeOcc=0;
+		double routeOcc = 0.0;
 		for(auto contact : bestRoute->hops){
-			if(contact->getDestinationEid() != bestRoute->terminusNode){
-				int occupation = (bundle->getBundleByteLength())*(bundle->getControlBundleNumber());
-				nodesState->at(contact->getDestinationEid()) += occupation;
-				routeOcc += (double)nodesState->at(contact->getDestinationEid());
-				OccupationTimeout* tmsg = new OccupationTimeout("Occupation Timeout");
-				tmsg->setKind(OCCUPATION_TIMEOUT);
-				tmsg->setNodeEid(contact->getDestinationEid());
-				tmsg->setOccupation(occupation);
-				scheduleAfter(routeOcc/contact->getRange(), tmsg); //timer per la durata dell'ocupazione di un nodo da parte di un bundle,
-				//quando ricevo questo messaggio diminuisco di 1 l'occupazione del nodo
-				//bundle->getArrivaltime()????
-			}
+			int occupation = (bundle->getBundleByteLength())*(bundle->getControlBundleNumber());
+			nodesState->at(contact->getSourceEid()) += occupation;
+			routeOcc += (double)nodesState->at(contact->getSourceEid());
+			OccupationTimeout* tmsg = new OccupationTimeout("Occupation Timeout");
+			tmsg->setKind(OCCUPATION_TIMEOUT);
+			tmsg->setNodeEid(contact->getSourceEid());
+			tmsg->setOccupation(occupation);
+			scheduleAfter(routeOcc/contact->getDataRate(), tmsg); //timer per la durata dell'ocupazione di un nodo da parte di un bundle,
+			//quando ricevo questo messaggio diminuisco di 1 l'occupazione del nodo
+			//bundle->getArrivaltime()????
+
 		}
 		this->updateResidualVolume(&(*bestRoute), bundle);
 		bestRoute->active = true;
