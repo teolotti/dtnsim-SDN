@@ -23,6 +23,7 @@ typedef struct {
 	double maxVolume; 			// In Bytes
 	double residualVolume;		// In Bytes
 	bool filtered;
+	int totOccupation = 0;
 	vector<Contact*> hops;		// contact list
 } SdnRoute;
 

@@ -666,7 +666,7 @@ SdnRoute Dtn::computeRoute(BundlePkt *bundle){
 
 	vector<int> suppressedContactIds;
 	//add to suppressedContacts the ones congested
-	checkCongestion(&suppressedContactIds, bundle);
+	//checkCongestion(&suppressedContactIds, bundle);
 	//add to suppressedContacts the ones involving controller node
 	vector<Contact> allContacts = *(contactPlan_.getContacts());
 	for(auto contact : allContacts){
@@ -807,26 +807,33 @@ bool Dtn::compareRoutes(SdnRoute i, SdnRoute j) {
 	// If both are not filtered, then compare criteria,
 	// If both are filtered, return any of them.
 
-	// criteria 1) lowest arrival time
-	if (i.arrivalTime < j.arrivalTime)
+	// Congestion criteria : higher priority
+	if (i.totOccupation < j.totOccupation)
 		return true;
-	else if (i.arrivalTime > j.arrivalTime)
+	else if (i.totOccupation > j.totOccupation)
 		return false;
-	else {
-		// if equal, criteria 2) lowest hop count
-		if (i.hops.size() < j.hops.size())
+	else  {
+		// criteria 1) lowest arrival time
+		if (i.arrivalTime < j.arrivalTime)
 			return true;
-		else if (i.hops.size() > j.hops.size())
+		else if (i.arrivalTime > j.arrivalTime)
 			return false;
 		else {
-			// if equal, criteria 3) larger residual volume
-			if (i.residualVolume > j.residualVolume)
+			// if equal, criteria 2) lowest hop count
+			if (i.hops.size() < j.hops.size())
 				return true;
-			else if (i.residualVolume < j.residualVolume)
+			else if (i.hops.size() > j.hops.size())
 				return false;
 			else {
-				// if equal, first is better.
-				return true;
+				// if equal, criteria 3) larger residual volume
+				if (i.residualVolume > j.residualVolume)
+					return true;
+				else if (i.residualVolume < j.residualVolume)
+					return false;
+				else {
+					// if equal, first is better.
+					return true;
+				}
 			}
 		}
 	}
@@ -926,6 +933,8 @@ void Dtn::findNextBestSdnRoute(vector<int> suppressedContactIds, BundlePkt* bund
 			route->maxVolume = std::min(route->maxVolume, contact->getVolume());
 			route->residualVolume = std::min(route->residualVolume, contact->getResidualVolume());
 			route->confidence *= contact->getConfidence();
+			//Congestion
+			route->totOccupation += nodesState->at(contact->getSourceEid());
 		}
 	} else {
 		// No route found
