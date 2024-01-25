@@ -76,10 +76,10 @@ def main():
                     d[nodeNum] = values
                     statsDtn[statNames[i]] = d
 
-    cols = 2
-    rows = int(math.ceil(len(statsApp) / cols))
+    rows = 2
+    cols = int(math.ceil(len(statsApp) / rows))
     gs = gridspec.GridSpec(rows, cols)
-    fig = plt.figure(figsize=(20, 6))
+    fig = plt.figure(figsize=(6,10))
 
     k = 0
     for key in statsApp:
