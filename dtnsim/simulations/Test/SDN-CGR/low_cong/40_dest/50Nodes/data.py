@@ -90,10 +90,10 @@ def main():
             for nodeNum in statsApp[statName].keys():
                 #somma e poi calcola la media
                 if nodeNum != 0:
-                    count += 1
                     values = statsApp[statName][nodeNum]
                     mean = values[2]
                     if mean is not None:
+                        count += 1
                         sum += mean
             f.write("Hop mean: "+str(sum/count)+"\n")
 
@@ -103,10 +103,10 @@ def main():
             for nodeNum in statsApp[statName].keys():
                 #somma e poi calcola la media
                 if nodeNum != 0:
-                    count += 1
                     values = statsApp[statName][nodeNum]
                     mean = values[2]
                     if mean is not None:
+                        count += 1
                         sum += mean
             f.write("Delay mean: "+str(sum/count)+"\n")
 
