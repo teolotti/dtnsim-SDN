@@ -79,7 +79,7 @@ def main():
     rows = 2
     cols = int(math.ceil(len(statsApp) / rows))
     gs = gridspec.GridSpec(rows, cols)
-    fig = plt.figure(figsize=(6,10))
+    fig = plt.figure(figsize=(10,10))
 
     k = 0
     for key in statsApp:
