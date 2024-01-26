@@ -1,0 +1,3 @@
+Delay mean: 60.35003599999999
+Hop mean: 0.96
+Bytes Stored Jain's Fairness Index: 0.9961292526665109
