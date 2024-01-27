@@ -1,3 +1,7 @@
-Delay mean: 27.75057920000001
-Hop mean: 1.92
-Bytes Stored Jain's Fairness Index: 0.9442370458221784
+Delay mean: 42.791902
+Hop mean: 2.4
+Min hop: 2.0
+Max hop: 3.0
+Min delay: 20.3684
+Max delay: 70.03928
+Bytes Stored Jain's Fairness Index: 0.7928192074870024
